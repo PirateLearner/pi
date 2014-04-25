@@ -1,0 +1,20 @@
+{% load mptt_tags %}
+
+
+        <div class="tile-big">
+
+        {% recursetree nodes %}
+                <h3 class="tile-title">{{node.name}}</h3>
+                <div class="tile-image-container">
+                        <a href="{{node.get_absolute_url}}">
+		<img src="{{STATIC_URL}}images/gallery_image-1.png" class="tile-image" alt="Some image must have been here">
+		</a>
+                </div>
+                <div class="tile-category bottom-right">
+                        <span class="category">Blogging</span>
+                </div>  
+        {% endrecursetree %}
+        </div>
+
+
+

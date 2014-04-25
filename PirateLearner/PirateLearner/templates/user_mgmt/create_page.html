@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load cms_tags %}
+{% block base_content_block %}
+<div class="hero subhead">
+  <div class="container">
+    <h1>Create New Page!</h1>
+  </div>
+</div>
+<!--end hero markup -->
+<!--form -->
+<div class="full row clearfix">
+  <h2 class="h2">Hello! Is it me you're looking for?</h2>
+  <p>Reach out to me for your new projects.</p>
+
+    {% if form.errors %}
+        <p style="color: red;">
+            Please correct the error{{ form.errors|pluralize }} below.
+        </p>
+    {% endif %}
+<!--
+    <form action="" method="post">
+        <div class="field">
+            {{ form.title.errors }}
+            <label for="id_subject">Subject:</label>
+            {{ form.subject }}
+        </div>
+        <div class="field">
+            {{ form.body.errors }}
+            <label for="id_message">Message:</label>
+            {{ form.message }}
+        </div>
+        <input type="submit" value="Submit">
+    </form>
+-->
+{% if form.errors %}
+        <p style="color: red;">
+            Please correct the error{{ form.errors|pluralize }} below.
+        </p>
+    {% endif %}
+
+<form action="" method="post">
+        <table>
+            {{ form.as_table }}
+        </table>
+        {% csrf_token %}
+        <input type="submit" value="Submit">
+</form>
+
+
+</div>
+<!--end form -->
+{% endblock %}
+
