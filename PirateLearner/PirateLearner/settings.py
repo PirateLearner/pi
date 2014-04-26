@@ -43,22 +43,27 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = os.path.join(PROJECT_PATH, 'media')
+#MEDIA_ROOT = os.path.join(PROJECT_PATH, 'media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://example.com/media/", "http://media.example.com/"
-MEDIA_URL = '/media/'
+#MEDIA_URL = '/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = ''
+#STATIC_ROOT = ''
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
-STATIC_URL = '/static/'
+#STATIC_URL = '/static/'
+
+STATIC_ROOT = '/home/rai812/webapps/piratelearner_static/static'
+STATIC_URL = '/static/static/'
+MEDIA_ROOT = '/home/user/webapps/piratelearner_static/media'
+MEDIA_URL = '/static/media/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -125,10 +130,10 @@ LOGGING = {
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = (
-    os.path.join(PROJECT_PATH, 'static'),
-)
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#STATICFILES_DIRS = (
+#    os.path.join(PROJECT_PATH, 'static'),
+#)
 
 SITE_ID = 1
 
@@ -201,7 +206,6 @@ INSTALLED_APPS = (
     'djangocms_teaser',
     'djangocms_video',
     'reversion',
-    'polls',
 #    'aldryn_blog',
 #    'aldryn_common',
     'django_select2',
@@ -278,7 +282,12 @@ CMS_PLACEHOLDER_CONF = {}
 
 DATABASES = {
     'default':
-        {'ENGINE': 'django.db.backends.sqlite3', 'NAME': 'project.db', 'HOST': 'locahost', 'USER': '', 'PASSWORD': '', 'PORT': ''}
+        {'ENGINE': 'django.db.backends.mysql', 'NAME': 'piratedb', 'HOST': '127.0.0.1', 'USER': 'piratele_jack', 'PASSWORD': '8!@ckpe@r!', 'PORT': '3306'}
 }
 # default is 10 px
 MPTT_ADMIN_LEVEL_INDENT = 20
+SOUTH_MIGRATION_MODULES = {
+        'easy_thumbnails': 'easy_thumbnails.south_migrations',
+	'taggit': 'taggit.south_migrations',
+    }
+

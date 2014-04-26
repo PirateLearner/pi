@@ -1,0 +1,61 @@
+Metadata-Version: 1.1
+Name: djangocms-style
+Version: 1.3
+Summary: Style Plugin for django CMS
+Home-page: https://github.com/divio/djangocms-style
+Author: Divio AG
+Author-email: info@divio.ch
+License: LICENSE.txt
+Description: djangocms-style
+        ===============
+        
+        A Plugin for django CMS to add CSS classes to other plugins
+        
+        
+        Installation
+        ------------
+        
+        This plugin requires `django CMS` 2.4 or higher to be properly installed.
+        
+        * In your projects `virtualenv`_, run ``pip install djangocms-style``.
+        * Add ``'djangocms_style'`` to your ``INSTALLED_APPS`` setting.
+        * Run ``manage.py migrate cmsplugin_style``.
+        
+        
+        Usage
+        -----
+        
+        You can define styles in your settings.py:
+        
+        ```
+        CMS_STYLE_NAMES = (
+            ('info', _("info")),
+            ('new', _("new")),
+            ('hint', _("hint")),
+        )
+        ```
+        
+        After that you can place other plugins inside this style plugin.
+        It will create a div with a class that was prior selected around this plugin.
+        
+        Translations
+        ------------
+        
+        If you want to help translate the plugin please do it on transifex:
+        
+        https://www.transifex.com/projects/p/django-cms/resource/djangocms-style/
+        
+        
+Platform: OS Independent
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Topic :: Communications
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content :: Message Boards
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7
