@@ -282,7 +282,7 @@ CMS_PLACEHOLDER_CONF = {}
 
 DATABASES = {
     'default':
-        {'ENGINE': 'django.db.backends.mysql', 'NAME': 'piratedb', 'HOST': '127.0.0.1', 'USER': 'piratele_jack', 'PASSWORD': '8!@ckpe@r!', 'PORT': '3306'}
+        {'ENGINE': 'django.db.backends.mysql', 'NAME': 'sampledb', 'HOST': '127.0.0.1', 'USER': 'root', 'PASSWORD': 'root', 'PORT': '3306'}
 }
 # default is 10 px
 MPTT_ADMIN_LEVEL_INDENT = 20
