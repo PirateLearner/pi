@@ -1,7 +1,12 @@
 {% extends "blogging/base.html" %}
 
-{% block content_blog %}
+{% if parent %}
+{% block blog_breadcrumb %}
+{% include "blogging/includes/breadcumb.html" with nodes=parent only %}
+{% endblock %}
+{% endif %}
 
+{% block content_blog %}
 
 {% include "blogging/includes/section_view.html" with nodes=nodes only %}
 {% endblock %}

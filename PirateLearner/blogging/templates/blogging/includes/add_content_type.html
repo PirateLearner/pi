@@ -1,0 +1,45 @@
+
+<html>
+<head>
+{% load cms_tags staticfiles sekizai_tags menu_tags %}
+    <script src="http://code.jquery.com/jquery.js"></script>
+
+<title>Add {{ field }}</title>
+    <script src="{{ STATIC_URL }}admin/js/admin/RelatedObjectLookups.js"></script>
+    <script src="{{ STATIC_URL }}js/add_form.js"></script>
+    <script src="{{ STATIC_URL }}js/cms.ckeditor.js"></script>
+       <script type="text/javascript">
+           $(add = function() {
+               $('#formset_table tr').formset();
+           })
+       </script>
+</head>
+<body>
+
+    <h1>Add {{ field }}</h1>
+    <form method="POST" action=".">
+        {% csrf_token %}
+        {{ form1.errors }}
+        {{ form1.as_p }}
+	{{ form2.management_form }}
+	<p>
+	<table id= 'formset_table'>
+	 <tbody>
+                   {% for form in form2.forms %}
+                   <tr>
+                      <td>{{ form.field_name }}</td>
+                      <td>{{ form.errors }}</td>
+                      <td>{{ form.field_type }}</td>
+                      <td>{{ form.errors }}</td>
+                   </tr>
+			<p style=""><a class="delete" href="#">Delete</a></p>
+                   {% endfor %}
+               </tbody>
+	</table>
+	</p>
+	    <p><a id="add" href="javascript:add()">Add another item</a></p>
+
+        <p><input type="submit" /> | <a href="javascript:window.close()">Cancel</a></p>
+    </form>
+</body>
+</html>

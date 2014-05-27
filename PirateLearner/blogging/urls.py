@@ -1,10 +1,14 @@
 from django.conf.urls import patterns, url
 import blogging.views as view
-
+from .forms import *
 
 urlpatterns = patterns(
     '',
     url(r'^$', view.index, name='section-view'),
+    url(r'^create-post/$', view.new_page, name='create-post'),
+    url(r'^create-content/$', view.ContentWizard.as_view([ContentTypeForm, ContentForm])),
+#    url(r'^add-content-type/$', view.add_content_type, name='add-content-type'),
+    url(r'^add-model/(?P<model_name>[\w.+-/]+)/$', view.add_new_model, name='add-model-content-type'),
     url(r'^author/$', view.authors_list, name='author-list'),
     url(r'^author/(?P<slug>[\w.@+-]+)/(?P<post_id>\d+)$', view.author_post, name='author-posts'),
 #    url(r'^feed/$', LatestEntriesFeed(), name='latest-posts-feed'),
@@ -19,4 +23,3 @@ urlpatterns = patterns(
 #    url(r'^tag/(?P<tag>[-\w]+)/$', TaggedListView.as_view(), name='tagged-posts'),
 #    url(r'^tag/(?P<tag>[-\w]+)/feed/$', TagFeed(), name='tagged-posts-feed'),
 )
-

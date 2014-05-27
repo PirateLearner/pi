@@ -1,35 +1,66 @@
 from models import *
+import os
+from .create_class import CreateClass
+from cms.plugin_pool import plugin_pool
+import re
 
-def show_content(current_section = None):
-    list_content = []
-    if current_section is not None:
-        find_children(current_section,list_content)
-    else:
-        list_all_content(list_content)
-    print list_content
+def create_content_type(name,formset,is_leaf):
+	class_members = {}
+	filename = os.path.abspath(os.path.dirname(__file__))+"/"+name.lower()+".py"
+        flag = False
+        errorstring = filename
+        try:
+            fd = open(filename, 'r')
+        except IOError:
+            flag = True
+            print "No such file exists"
+            errorstring += "\nNo such file exists"
+        if flag:
+            #We are good to go. Create the Output string that must be put in it
+            print "We're in!"
+            errorstring += "\nWe're in!"
+	    for form in formset.forms:
+		class_members[form.cleaned_data['field_name']] = form.cleaned_data['field_type'][0]
+                print class_members[form.cleaned_data['field_name']]
+            create_class_object = CreateClass(name, class_members,is_leaf)
+            string = create_class_object.form_string()
+            try:
+                fd = os.fdopen(os.open(filename,os.O_CREAT| os.O_RDWR , 0555),'w')
+                fd.write(string)
+                fd.close()
+                print file(filename).read()
+                errorstring +="\n"+file(filename).read()
+		return True
+            except IOError:
+                print "Error Opening File for Writing"
+                errorstring += "\nError Opening file for writing"
+		return False
+	else:
+	    return False
+	   
 
-    return list_content
-
-def list_all_content(list_content = []):
-    section = BlogParent.objects.filter(parent_id = None)
-    for s in section:
-        find_children(s.name,list_content)
-
-def find_children(current_section,list_content = []):
-    #section = Section.objects.get(name = current_section)
-    section = get_object_or_404(BlogSection,name=current_section)
-    if section is None:
-        return []
-#    list_section.append(section)
-    if section.is_last:
-        list_children = section.content_set.all()
-        if list_children:
-            list_content.extend(list_children)
-    else:
-        list_sub_section = section.subsection.all()
-        for sub_section in list_sub_section:
-            list_sub_section_objects = find_children(sub_section.name,list_content)
-            if list_sub_section_objects:
-                list_content.append(list_sub_section_objects)
+def get_imageurl_from_data(data):
+	matches = re.findall(
+				r'(<img[^>]*?src\s*=\s*"([^"]+)")', data
+			)
+	if matches:
+		print str(matches[0][1])
+		return str(matches[0][1])
+	else:
+		return None
 
 
+
+def strip_image_from_data(data):
+	pat = r'(<img[^>]*?>)'
+	m = re.search(pat,data)
+	line= data
+	if m and m.groups() > 0:
+		line = data[:m.start(1)] + ' ' + data[m.end(1):]
+		print line
+	else:
+		print "the pattern didn't capture any text"
+	return line	
+	
+
+ 

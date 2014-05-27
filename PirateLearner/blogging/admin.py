@@ -1,7 +1,7 @@
 from django.contrib import admin
 from mptt.admin import MPTTModelAdmin
 from blogging.models import BlogContentType, BlogParent, BlogContent
-from blogging.forms import PostForm
+from blogging.forms import PostForm, ParentForm
 from cms.admin.placeholderadmin import FrontendEditableAdmin, PlaceholderAdmin
 
 
@@ -13,13 +13,14 @@ mark_published.short_description = "Mark selected content as published"
 
 class ParentAdmin(MPTTModelAdmin):
     fieldsets = [
-                 ('',     {'fields': ['name', 'parent','slug']} ),
+                 ('',     {'fields': ['title', 'parent','slug','data']} ),
                  ]
-    list_display = ('name', 'parent', 'level')
+    list_display = ('title', 'parent', 'level')
     list_filter = ['parent']
-    search_fields = ['name']
-    ordering = ['name']
-    prepopulated_fields = {'slug': ('name',), }
+    search_fields = ['title']
+    form = ParentForm
+    ordering = ['title']
+    prepopulated_fields = {'slug': ('title',), }
 
 class ContentAdmin(FrontendEditableAdmin,PlaceholderAdmin):
     

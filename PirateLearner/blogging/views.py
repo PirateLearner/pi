@@ -5,68 +5,176 @@ from django.http.request import HttpRequest
 from django.http import HttpResponseRedirect
 from models import *
 from django.http import HttpResponse
-
-
-#from utils import *
+from django.contrib.auth.decorators import login_required
+from .forms import *
+from .create_class import CreateClass
+from django.contrib.formtools.wizard.views import SessionWizardView
+from django.forms.formsets import formset_factory
+from django.utils.html import escape
+from .utils import *
+from wrapper import *
 import os
+from django.db.models import Q
+
+
 # Create your views here.
 
-"""
-def add_content_type(request):
-    class_members = {}
-    if request.method == 'POST':
-        #Read the POST variable for class name
-        name = request.POST.get('class_name','')
-        #validate if this class already exists
-        #until I know how to do that, and because I've decided to et each class get its own file
-        #lets just try to open that file and if it fails, we are good to go :P
-        filename = os.path.abspath(os.path.dirname(__file__))+"/"+name.lower()+".py"
-        flag = False
-        errorstring = filename
-        try:
-            fd = open(filename, 'r')
-        except IOError:
-            flag = True
-            print "No such file exists"
-            errorstring += "\nNo such file exists"
-        if flag:
-            #We are good to go. Create the Output string that must be put in it
-            print "We're in!"
-            errorstring += "\nWe're in!"
-            for i in range (1, int(request.POST.get('num_val',''))+1):
-                class_members[request.POST.get('val_%d' %i)] = request.POST.get('valtype_%d' %i)
-                print class_members[request.POST.get('val_%d' %i)]
-            create_class_object = CreateClass(name, class_members)
-            string = create_class_object.form_string()
+class ContentWizard(SessionWizardView):
+	def get_template_names(self):
+		return "blogging/create_post.html"
+	def get_form(self, step=None, data=None, files=None):
+#		form = super(ContentWizard, self).get_form(step, data, files)
+		# determine the step if not given
+		form = None
+		if step is None:
+			step = self.steps.current
+		print "this is step ", step
+		if step == '0':
+			form = ContentTypeForm() 
+		if step == '1':
+			data = self.get_cleaned_data_for_step('0') or {}
+			content_type = data.get('ContentType')
+			print type(content_type), content_type
+			#content_type_class = content_type.lower()
+			#from str(content_type_class)	import *
+			form1 = find_class('blogging.'+content_type.__str__().lower(),str(content_type)+'Form' )	
+			print type(form1), form1
+			form = form1()
+		return form
+
+	def done(self, form_list, **kwargs):
+		data = {}
+        	for form in form_list:
+            		data.update(form.cleaned_data)
+		print data
+		"""	
+		content_type = data.get('ContentType')
+		print type(content_type), content_type
+		#content_type_class = content_type.lower()
+		#from str(content_type_class)	import *
+		wrapper_class = find_class('blogging.'+content_type.__str__().lower(),str(content_type))
+		db_class = None
+		if data['is_leaf'] == True:
+			db_class = BlogContent()
+			wrapper_class.render_to_db(db_class)
+		else:
+			db_class = BlogParent()
+			wrapper_class.render_to_db(BlogParent)
+		
+		if db_class:
+			db_class.save()	
+		"""
+		return HttpResponseRedirect('/')
+
+
+@login_required
+def content_type(request):
+    if request.method == "POST":
+        form = ContentTypeForm(request.POST)
+        if form.is_valid():
+            content_info = form['ContentType']
+            request.session['content_info_id'] = content_info.id
+            return HttpResponseRedirect(
+                reverse("address_form"))
+    else:
+        if 'content_info_id' in request.session:
             try:
-                fd = os.fdopen(os.open(filename,os.O_CREAT| os.O_RDWR , 0555),'w')
-                fd.write(string)
-                fd.close()
-                print file(filename).read()
-                errorstring +="\n"+file(filename).read()
-	    except IOError:
-                print "Error Opening File for Writing"
-                errorstring += "\nError Opening file for writing"
+                content_info_obj = BlogContentType.objects.get(
+                    id=request.session['content_info_id']
+                )
+                form = ContentTypeForm()
+            except ObjectDoesNotExist:
+                del request.session['content_info_id']
+                form = ContentTypeForm()
         else:
-            errorstring+="\nFile already exists"
-            response = "<html><body>"+errorstring+"</body></html>"
-    template = loader.get_template('elements/admin/type_form.html')
-    context = RequestContext(request, {
-                                       'string': "i am not here",
-                                      })
-    return HttpResponse(template.render(context))
-"""
+            form = ContentTypeForm()
+    return render_to_response(
+        "app/user_info.html",
+        locals(), context_instance=RequestContext(request))	
+
+@login_required
+def add_new_model(request, model_name):
+	if (model_name.lower() == model_name):
+		normal_model_name = model_name.capitalize()
+	else:
+		normal_model_name = model_name
+	print normal_model_name
+
+	if normal_model_name == '0-ContentType' :
+		FieldFormSet = formset_factory(FieldTypeForm,extra=2,max_num=2)
+		if request.method == 'POST':
+                	form1 = ContentTypeCreationForm(request.POST)
+			form2 = FieldFormSet(request.POST)
+#			print form1.as_table()
+#			for form in form2:
+#				print(form.as_table())
+                	if form1.is_valid() and form2.is_valid():
+                        	try:
+					if (create_content_type(form1.cleaned_data['content_type'],form2,form1.cleaned_data['is_leaf']) == False ):
+						raise forms.ValidationError("something got wronged")
+                            		new_obj = form1.save() #TODO many things
+					print new_obj.content_type
+                        	except forms.ValidationError:
+                            		new_obj = None
+
+                        	if new_obj:
+                            		return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % \
+                                	(escape(new_obj._get_pk_val()), escape(new_obj)))
+				else:
+					
+		        		page_context = {'form1': form1,'form2':form2,  'field': normal_model_name}
+                			return render_to_response('blogging/includes/add_content_type.html', page_context, context_instance=RequestContext(request))
+			else:
+				print "form is not valid form1 ", form1.is_valid(), " form 2 ", form2.is_valid() 	
+		        	page_context = {'form1': form1,'form2':form2,  'field': normal_model_name}
+                		return render_to_response('blogging/includes/add_content_type.html', page_context, context_instance=RequestContext(request))
+                else:
+                 	form1 = ContentTypeCreationForm()
+			form2 = FieldFormSet(initial= [
+			{'field_name': 'title','field_type': 'Text'},
+			])
+			print form1.as_table()
+			print form2
+			for form in form2:
+				print(form.as_table())
+		        page_context = {'form1': form1,'form2':form2,  'field': normal_model_name}
+                	return render_to_response('blogging/includes/add_content_type.html', page_context, context_instance=RequestContext(request))
+
 def index(request):
 #    output = 'Welcome to the section page !!!'
 #    print "IP Address for debug-toolbar: " + request.META['REMOTE_ADDR']
 #    output += " ".join(path)
 #    print path
     template = loader.get_template('blogging/section.html')
+    nodes = BlogParent.objects.all().filter(~Q(title='Orphan'),level=0)
+    for node in nodes:
+    	print 'printing nodes url ', node.get_absolute_url()
+	
     context = RequestContext(request, {
-                                       'nodes': BlogParent.objects.all().filter(level=0),
+										'parent': None,
+                                       'nodes': nodes,
                                        'page': {'title':'Pirate Learner', 'tagline':'We learn from stolen stuff'},
                                       })
     return HttpResponse(template.render(context))
+
+@login_required
+def new_page(request):
+        if request.method == 'POST':
+                form = PostEditForm(request.POST)
+                if form.is_valid():
+                    cd = form.cleaned_data
+		    form.save()
+                    return HttpResponseRedirect('/')
+        else:
+                form = PostEditForm(
+                    initial={'title': 'Enter the page title'}
+                )
+                template = loader.get_template('blogging/create_page.html')
+                context = RequestContext(request, {
+                                               'form': form,
+                                      })
+                print form.media
+                return HttpResponse(template.render(context))
 
 
 def authors_list(request):
@@ -84,10 +192,11 @@ def teaser(request,slug):
 	try:
 		post_id = int(current_section)
 		print "This is Detail page "
-		
+		blogs = BlogContent.objects.get(pk=post_id)
 		template = loader.get_template('blogging/detail.html')
                 context = RequestContext(request, {
-                                       'nodes': BlogContent.objects.get(pk=post_id),
+										'parent': blogs.section.get_ancestors(include_self=True),		
+                                       'nodes': blogs,
                                        'page': {'title':'Pirate Learner', 'tagline':'We learn from stolen stuff'},
                                       })
 		return HttpResponse(template.render(context))
@@ -98,13 +207,19 @@ def teaser(request,slug):
 			return HttpResponse("Hi SomeThing Got Wrong!!! ")
 		if section.is_leaf_node():
 			template = loader.get_template('blogging/teaser.html')
-		        context = RequestContext(request, {
-                                       'nodes': BlogContent.objects.all().filter(section=section),
+			nodes = BlogContent.objects.all().filter(section=section)
+			for node in nodes:
+				node.data = strip_image_from_data(node.data)
+				print 'after replace data is : ', node.data
+			context = RequestContext(request, {
+										'parent':section.get_ancestors(include_self=True),
+                                       'nodes': nodes,
                                        'page': {'title':'Pirate Learner', 'tagline':'We learn from stolen stuff'},
                                       })
-                	return HttpResponse(template.render(context))
+			return HttpResponse(template.render(context))
 		template = loader.get_template('blogging/section.html')
 		context = RequestContext(request, {
+										'parent': section.get_ancestors(include_self=True),
                                        'nodes': section.get_descendants(),
                                        'page': {'title':'Pirate Learner', 'tagline':'We learn from stolen stuff'},
                                       })

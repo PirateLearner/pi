@@ -13,7 +13,11 @@ from filer.fields.image import FilerImageField
 from taggit.managers import TaggableManager
 from taggit.models import TaggedItem, Tag
 from cms.models.pluginmodel import CMSPlugin
+from djangocms_text_ckeditor.models import Text
+from blogging.utils import get_imageurl_from_data, strip_image_from_data
 
+
+#from south.v2 import DataMigration
 
 # Create your models here.
 
@@ -55,43 +59,55 @@ class PublishedManager(RelatedManager):
 
 
 class BlogContentType(models.Model):
-	content_type = models.CharField(max_length = 100)
+	content_type = models.CharField(max_length = 100,unique = True)
+	is_leaf = models.BooleanField('Is leaf node?', default = 0)
     	
 	def __unicode__(self):
         	return self.content_type
 
 class BlogParent(MPTTModel):
-	name = models.CharField(max_length = 50, unique=True)
-	parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
-	slug = models.SlugField()
-    	def __unicode__(self):
-        	return self.name
-
-	def save(self, *args, **kwargs):
-        	self.slug = slugify(self.name)
-		super(BlogParent, self).save(*args, **kwargs)
-
-	def form_url(self):
-		parent_list = self.get_ancestors(include_self=True)
-		return_path = '/'.join(word.slug for word in parent_list)
-		print return_path
-		return return_path
-
-    	def get_absolute_url(self):
-		kwargs = {'slug': str(self.form_url())}
-
-    		from django.core.urlresolvers import reverse
-	    	return reverse('blogging:teaser-view', kwargs=kwargs)
+    title = models.CharField(max_length = 50, unique=True)
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
+    data = models.TextField(null= False)
+    slug = models.SlugField()
+    def __unicode__(self):
+        return self.title
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        blogs = BlogContent.objects.filter(section=self.parent)
+        if blogs:
+            try:
+                orphan_parent = BlogParent.objects.get(title='Orphan')
+                for blog in blogs:
+                    blog.section = orphan_parent
+                    blog.save()
+            except:
+                print 'FATAL ERROR CAN DO NOTHING'            
+        super(BlogParent, self).save(*args, **kwargs)
+    
+    def form_url(self):
+        parent_list = self.get_ancestors(include_self=True)
+        return_path = '/'.join(word.slug for word in parent_list)
+        print "inside absolute URL ", return_path
+        return return_path
+    
+    def get_image_url(self):
+        return get_imageurl_from_data(self.data)
+    
+    def get_absolute_url(self):
+        kwargs = {'slug': str(self.form_url())}
+        from django.core.urlresolvers import reverse
+        return reverse('blogging:teaser-view', kwargs=kwargs)
 	
 	class MPTTMeta:
-            order_insertion_by = ['name']
+            order_insertion_by = ['title']
 
 
 class BlogContent(models.Model):
     title = models.CharField(max_length = 100)
     create_date = models.DateTimeField('date created', auto_now_add=True)
     author_id  = models.ForeignKey(auth.models.User)
-    data = HTMLField()
+    data = models.TextField(null= False)
     published_flag = models.BooleanField('is published?',default = 0)
     special_flag = models.BooleanField(default = 0)
     last_modified = models.DateTimeField('date modified',auto_now=True)
@@ -109,6 +125,13 @@ class BlogContent(models.Model):
 
         from django.core.urlresolvers import reverse
         return reverse('blogging:teaser-view', kwargs=kwargs)
+    
+    def get_image_url(self):
+        image =  get_imageurl_from_data(self.data)
+        if image:
+            return image
+        else:
+            return self.section.get_image_url()
 
 
     def find_path(self,section): 
@@ -137,7 +160,7 @@ class BlogContent(models.Model):
 class LatestEntriesPlugin(CMSPlugin):
 
     latest_entries = models.IntegerField(default=5, help_text=('The number of latests entries to be displayed.'))
-    parent_section = models.ForeignKey(BlogParent,null=True,blank=True, limit_choices_to={'children': None})
+    parent_section = models.ForeignKey(BlogParent,null=True,blank=True)
     tags = models.ManyToManyField('taggit.Tag', blank=True, help_text=('Show only the blog posts tagged with chosen tags.'))
 
     def __unicode__(self):
@@ -147,12 +170,46 @@ class LatestEntriesPlugin(CMSPlugin):
         self.tags = oldinstance.tags.all()
 
     def get_posts(self):
-	if self.parent_section:
-        	posts = BlogContent.published.filter(section=self.parent_section)
-	else:
-		posts = BlogContent.published.all()
+        if self.parent_section:
+            if self.parent_section.is_leaf_node():
+                posts = BlogContent.published.filter(section=self.parent_section)
+                print 'parent is leaf node'
+            else:
+                print 'parent is non leaf node'
+                parent_list = self.parent_section.get_descendants()
+                print 'parent list is ', parent_list
+                posts = BlogContent.published.filter(section__in=parent_list)
+        else:
+            posts = BlogContent.published.all()
+        
+        print posts
+        for post in posts:
+            post.data = strip_image_from_data(post.data)
         tags = list(self.tags.all())
         if tags:
             posts = posts.filter(tags__in=tags)
         return posts[:self.latest_entries]
+    
+class SectionPlugin(CMSPlugin):
 
+    section_count = models.IntegerField(default=None, blank=True,null=True, help_text=('The number of sections to be displayed.'))
+    parent_section = models.ForeignKey(BlogParent,null=True,blank=True)
+
+    def __unicode__(self):
+        return str(self.section_count)
+
+    def get_sections(self):
+        if self.parent_section:
+            sections = self.parent_section.get_children()
+        else:
+            sections = BlogParent.objects.all(~Q(title='Orphan'),level=0)
+        if self.section_count:
+            return sections[:self.section_count]
+        return sections
+    
+"""
+class Migration(DataMigration):
+	def forwards(self, orm):
+        	"Write your forwards methods here."
+        	BlogParent.objects.rebuild()
+"""

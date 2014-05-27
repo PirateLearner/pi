@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 {% load cms_tags staticfiles sekizai_tags menu_tags %}
 
-{% block extend_breadcrumb %}
+{% block breadcrumb %}
         {{ block.super }}
         {% block blog_breadcrumb %}
         {% endblock blog_breadcrumb %}
-{% endblock extend_breadcrumb%}
+{% endblock %}
 
 {% block content %}
-<div class="app app-blog">
+<link rel="stylesheet" href="{{ STATIC_URL }}css/tile.css">
+<div class="app app-blog container content clearfix">
         {% block content_blog %}{% endblock %}
 </div>
 {% endblock %}

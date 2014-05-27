@@ -1,26 +1,19 @@
 {% load url from future %}
-        <div class="tile-big">
+   <!-- Three columns of text below the carousel --> 
+    <div class="row">     
 	{% for node in nodes %}		
-                <div class="tile-date top-right">
-                        <span class="date">{{node.create_date}}</span>
-                </div>
+	<div class="col-lg-4">
+		<div class="nodeInner node-front">
+			<img class="img-circle" src="{{ node.get_image_url }}" class="img-circle" alt="Generic placeholder image" >
+                
 		{% load url from future %}
-                <h3 class="tile-title">{{node.title}}</h3>
-                <div class="tile-image-container">
-                        <a href=" {{node.get_absolute_url}} ">
-		<img src="{{STATIC_URL}}images/gallery_image-1.png" class="tile-image" alt="Some image must have been here">
-		</a>
-                </div>
+                <h2>{{node.title}}</h2>                
 		{% autoescape off %}
-                <p class="tile-summary"> {{node.data | truncatechars:30}} </p>
-		{% endautoescape %}
-                <div class="tile-author bottom-left">
-                        <span class="author"> {{node.author}} </span>
-                </div>
-                <div class="tile-category bottom-right">
-                        <span class="category">Blog</span>
-                </div> 
-	{% endfor %}
+                <p> {{node.data | truncatewords:30}} </p>
+		{% endautoescape %}                 
+        <p><a class="btn btn-default" href=" {{node.get_absolute_url}} " role="button">View details &raquo; </a> </p>
+        
         </div>
-
-
+        </div><!-- /.col-lg-4 -->
+	{% endfor %}
+	</div>

@@ -1,8 +1,17 @@
 {% extends "blogging/base.html" %}
 {% load cms_tags %}
+{% load disqus_tags %}
+{% disqus_dev %}
+
+{% if parent %}
+{% block blog_breadcrumb %}
+{% include "blogging/includes/breadcumb.html" with nodes=parent only %}
+{% endblock %}
+{% endif %}
 
 {% block content_blog %}
 <h1>{% render_model nodes "title" %}</h1>
 <h2> {% render_model nodes "data" %} <h2>
+{% disqus_show_comments %}
 {% endblock %}
 

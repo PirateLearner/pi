@@ -3,18 +3,16 @@
 
 
         {% recursetree nodes %}
-        <div class="tile-big">
-                <h3 class="tile-title">{{node.name}}</h3>
+        <div class="col-lg-4">
+        	<div class="nodeInner node-front tile-big">
+                <h2>{{node.title}}</h2>
                 <div class="tile-image-container">
-                        <a href="{{node.get_absolute_url}}">
-		<img src="{% static "images/gallery_image-1.png" %}" class="tile-image" alt="Some image must have been here">
+                        <a href="{{ node.get_absolute_url }}">
+		<img src="{{ node.get_image_url }}"  class="tile-image img-circle" alt="Some image must have been here">
 		</a>
                 </div>
-                <div class="tile-category bottom-right">
-                        <span class="category">Blogging  {{ STATIC_URL }}</span>
-                </div>  
+                <p><a class="btn btn-default" href=" {{ node.get_absolute_url }} " role="button">Browse Section &raquo; </a> </p>
+            </div>
         </div>
         {% endrecursetree %}
-
-
 
