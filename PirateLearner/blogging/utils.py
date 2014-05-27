@@ -1,6 +1,6 @@
 from models import *
 import os
-from .create_class import CreateClass
+from blogging.create_class import CreateClass
 from cms.plugin_pool import plugin_pool
 import re
 

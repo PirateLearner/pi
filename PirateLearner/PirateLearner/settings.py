@@ -16,7 +16,7 @@ MANAGERS = ADMINS
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['piratelocal.com']
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -60,16 +60,16 @@ USE_TZ = True
 # Example: "http://example.com/static/", "http://static.example.com/"
 #STATIC_URL = '/static/'
 
-STATIC_ROOT = '/home/rai812/webapps/piratelearner_static/static'
+STATIC_ROOT = ''
 STATIC_URL = '/static/static/'
-MEDIA_ROOT = '/home/user/webapps/piratelearner_static/media'
-MEDIA_URL = '/static/media/'
-
+MEDIA_ROOT = '/home/abhishek/git/PirateLearnerStatic/media'
+MEDIA_URL = '/media/'
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    '/home/abhishek/git/PirateLearnerStatic/static',
 )
 
 # List of finder classes that know how to find static files in
@@ -223,6 +223,8 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.stackexchange',
     'allauth.socialaccount.providers.twitter',
     'blogging',
+    'ckeditor',
+    'disqus',
 
 )
 
@@ -252,7 +254,9 @@ CMS_LANGUAGES = {
 CMS_TEMPLATES = (
     ## Customize this
     ('page.html', 'Page'),
-    ('feature.html', 'Page with Feature')
+    ('feature.html', 'Page with Feature'),
+    ('content_page.html', 'About Page'),
+    ('content_page.html', 'Contact Us'),
 )
 
 # allauth related settings
@@ -291,3 +295,20 @@ SOUTH_MIGRATION_MODULES = {
 	'taggit': 'taggit.south_migrations',
     }
 
+
+
+THUMBNAIL_ALIASES = {
+    '': {
+        'teaser': {'size': (50, 50), 'crop': True},
+    },
+}
+CKEDITOR_UPLOAD_PATH = 'images/'
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Full',
+        'justifyClasses': [ 'AlignLeft', 'AlignCenter', 'AlignRight', 'AlignJustify' ],
+    },
+}
+
+DISQUS_API_KEY = 'QJezRiHWxv2FzzrMuOSvQPn99oil0LLyhZxdCAEd3s5cZTf6GUI5019NKznCEONu'
+DISQUS_WEBSITE_SHORTNAME = 'piratelocal'
