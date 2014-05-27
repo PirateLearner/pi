@@ -4,7 +4,7 @@
 /* Relation with children */
 
 /* Style for surrounding container */
-.container {
+.container-tile {
 	position: relative; /* Must stack w.r.t. siblings, but children must use new coordinate system*/
 	display: block; /* Display entire thing as block. */
 	width: 100%;
@@ -12,10 +12,16 @@
 	overflow: hidden;
 	padding-top: 10px; /* Absolute positioning of elements may clip here otherwise.*/
 	padding-bottom: 10px;
+	margin-top: 20px;
 }
 /* Introduce a margin of 5px on the first child(any) of the container element. Others already sum up to 5+5 */
-.container *:first-child{
+.container-tile *:first-child{
 	margin-left: 10px;
+}
+
+/* Content Container must have a padding of at least the fixed top*/
+body >.content, .content {
+	padding-top: 100px;
 }
 
 /* Styles for tile */
@@ -23,16 +29,16 @@
 	position: relative; /* Will stack along other siblings in the DOM in its parent */
 	float: left; /* All such elements will float to the left so that they may stack side by side */
 	
-	padding: 10px 5px 5px 5px;
-	border: solid black 1px;
+	/* padding: 10px 5px 5px 5px; */
+	/* border: solid black 1px;*/
 	max-width: 305px; /* For now, in a 3 column layout on 960px screen (305px+2px+10px)*3 + 5px */
-	background: skyblue; /* Testing */
+	/* background: skyblue;*/ /* Testing */
 
 	
-	margin-left:5px;
-	margin-right: 5px;
-	margin-top:5px;
-	margin-bottom:5px;
+	/* margin-left:5px; */
+	/* margin-right: 5px; */
+	/* margin-top:5px; */
+	/* margin-bottom:5px; */
 }
 
 /* Now for each tile separately */
@@ -103,8 +109,8 @@ h3.tile-title {
 .tile-big .tile-image {
 	margin: 0px auto 0px; /* Center the image w.r.t. container */
 	
-	max-height: 220px; /* Just a capricious value for now */
-	max-width: 300px;
+	max-height: 140px; /* Just a capricious value for now */
+	max-width: 140px;
 	size: auto; /* Based on max-height, image should automatically adjust */
 	padding-top: 1px;
 	padding-bottom: 2px;

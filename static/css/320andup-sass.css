@@ -1,0 +1,79 @@
+/*
+Syntax error: Invalid CSS after "device-width": expected expression (e.g. 1px, bold), was "; }"
+        on line 15 of sass/_site.sass
+        from line 20 of /home/craft/Downloads/html5/mobilefirst_book-master/ch5/after/320andup/sass/320andup-sass.sass
+
+10: /* Page ===================================================
+11: 
+12: // 1. ROOT 					==============================
+13: 
+14: @-webkit-viewport { 
+15: width : device-width; }
+16: 
+17: @-moz-viewport { 
+18: width : device-width; }
+19: 
+20: @-ms-viewport { 
+
+Backtrace:
+sass/_site.sass:15
+/home/craft/Downloads/html5/mobilefirst_book-master/ch5/after/320andup/sass/320andup-sass.sass:20
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/scss/parser.rb:1314:in `expected'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/script/lexer.rb:216:in `expected!'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/script/parser.rb:600:in `assert_done'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/script/parser.rb:57:in `parse'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/script/parser.rb:177:in `parse'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/script.rb:27:in `parse'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/engine.rb:1129:in `parse_script'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/engine.rb:728:in `parse_property'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/engine.rb:699:in `parse_property_or_rule'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/engine.rb:665:in `parse_line'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/engine.rb:543:in `build_tree'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/engine.rb:562:in `block in append_children'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/engine.rb:561:in `each'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/engine.rb:561:in `append_children'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/engine.rb:412:in `_to_tree'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/engine.rb:305:in `to_tree'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/tree/visitors/perform.rb:295:in `block in visit_import'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/stack.rb:88:in `block in with_import'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/stack.rb:121:in `with_frame'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/stack.rb:88:in `with_import'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/tree/visitors/perform.rb:294:in `visit_import'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/tree/visitors/base.rb:36:in `visit'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/tree/visitors/perform.rb:152:in `block in visit'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/stack.rb:79:in `block in with_base'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/stack.rb:121:in `with_frame'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/stack.rb:79:in `with_base'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/tree/visitors/perform.rb:152:in `visit'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/tree/visitors/base.rb:52:in `block in visit_children'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/tree/visitors/base.rb:52:in `map'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/tree/visitors/base.rb:52:in `visit_children'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/tree/visitors/perform.rb:161:in `block in visit_children'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/tree/visitors/perform.rb:173:in `with_environment'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/tree/visitors/perform.rb:160:in `visit_children'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/tree/visitors/base.rb:36:in `block in visit'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/tree/visitors/perform.rb:180:in `visit_root'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/tree/visitors/base.rb:36:in `visit'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/tree/visitors/perform.rb:151:in `visit'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/tree/visitors/perform.rb:8:in `visit'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/tree/root_node.rb:36:in `css_tree'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/tree/root_node.rb:20:in `render'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/engine.rb:274:in `render'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/plugin/compiler.rb:414:in `update_stylesheet'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/plugin/compiler.rb:189:in `block in update_stylesheets'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/plugin/compiler.rb:186:in `each'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/plugin/compiler.rb:186:in `update_stylesheets'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/plugin/compiler.rb:221:in `watch'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/plugin.rb:108:in `method_missing'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/exec.rb:509:in `watch_or_update'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/exec.rb:346:in `process_result'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/exec.rb:43:in `parse'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/lib/sass/exec.rb:22:in `parse!'
+/var/lib/gems/1.9.1/gems/sass-3.3.7/bin/sass:13:in `<top (required)>'
+/usr/local/bin/sass:23:in `load'
+/usr/local/bin/sass:23:in `<main>'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Syntax error: Invalid CSS after \"device-width\": expected expression (e.g. 1px, bold), was \"; }\"\A         on line 15 of sass/_site.sass\A         from line 20 of /home/craft/Downloads/html5/mobilefirst_book-master/ch5/after/320andup/sass/320andup-sass.sass\A \A 10: /* Page ===================================================\A 11: \A 12: // 1. ROOT 					==============================\A 13: \A 14: @-webkit-viewport { \A 15: width : device-width; }\A 16: \A 17: @-moz-viewport { \A 18: width : device-width; }\A 19: \A 20: @-ms-viewport { "; }
