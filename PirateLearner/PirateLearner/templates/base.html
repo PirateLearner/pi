@@ -21,9 +21,9 @@
 	
 	<!-- For all browsers -->
 	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css">
+	<!--<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css">-->
 	<!-- Bootstrap core CSS -->
-    <!--<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 	<!-- <link rel="stylesheet" href="{{ STATIC_URL }}css/320andup-scss.css"> -->
 	<link rel="stylesheet" href="{{ STATIC_URL }}css/sticky-footer-navbar.css">
 	<!--[if (lt IE 9) & (!IEMobile)]>
@@ -99,6 +99,7 @@
 		          {% show_menu 0 1 100 100 "menu.html" %}
 					{% if user.is_authenticated %}
 	                <li><a href="{% url 'account_email' %}">Change E-mail</a></li>
+                    <li><a href="{% url 'dashboard' %}">Profile</a></li>
 	                <li><a href="{% url 'account_logout' %}">Sign Out</a></li>
 	                {% else %}
 	                <li><a href="{% url 'account_login' %}">Sign In</a></li>
