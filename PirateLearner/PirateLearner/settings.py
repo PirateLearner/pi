@@ -69,7 +69,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/home/abhishek/git/PirateLearnerStatic/static',
+    '/home/aquasan/pirate_learner/',
 )
 
 # List of finder classes that know how to find static files in
@@ -225,6 +225,7 @@ INSTALLED_APPS = (
     'blogging',
     'ckeditor',
     'disqus',
+    'dashboard',
 
 )
 
@@ -286,7 +287,7 @@ CMS_PLACEHOLDER_CONF = {}
 
 DATABASES = {
     'default':
-        {'ENGINE': 'django.db.backends.mysql', 'NAME': 'sampledb', 'HOST': '127.0.0.1', 'USER': 'root', 'PASSWORD': 'root', 'PORT': '3306'}
+        {'ENGINE': 'django.db.backends.mysql', 'NAME': 'sampledb', 'HOST': '127.0.0.1', 'USER': 'root', 'PASSWORD': 'xycicdork', 'PORT': '3306'}
 }
 # default is 10 px
 MPTT_ADMIN_LEVEL_INDENT = 20
