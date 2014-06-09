@@ -14,26 +14,31 @@ Prerequisites:
 
 MySQL [if you're not using integrated sqlite db]
 -----
-  --> It can be installed using {apt-get install } method.
-  --> libmysqlclient-dev will be required, in case it is not installed before.
+   It can be installed using {apt-get install } method.
+   libmysqlclient-dev will be required, in case it is not installed before.
 
 pip
 ---
-  --> Installed using the get_pip.py file from their webserver. 
+   Installed using the get_pip.py file from their webserver. 
       (sudo python2.7 get_pip.py)
 virtualenv
 ----------
-  --> (sudo pip install virtualenv)
+   (sudo pip install virtualenv)
 
 python-MySQLdb connector
 ------------------------
-  --> sudo apt-get install python-mysqldb
+   sudo apt-get install python-mysqldb
 
 Optionally(for developers)
-  --> Install eclipse and 'pydev' plugin on eclipse
+--------------------------
+   Install eclipse and 'pydev' plugin on eclipse
 
-Clone this git repository, and its auxilliary repo for static files - PirateLearnerStatic(That contains most static files which you might not want to use in your projects), to a folder from where you'd be running your site. [Our's is ~/git/ as cloned directly through eclipse]
+Clone this git repository 
+-------------------------
+and its auxilliary repo for static files - PirateLearnerStatic(That contains most static files which you might not want to use in your projects), to a folder from where you'd be running your site. [Our's is ~/git/ as cloned directly through eclipse]
 
+Install Steps:
+==============
 1. Create a virtual environment where all libraries will be installed to:
    virtualenv env
 2. Activate the newly created virtualenv box
@@ -63,8 +68,10 @@ Clone this git repository, and its auxilliary repo for static files - PirateLear
    This should create various tables related to the site in the database.
 
 Now, try running the test server :
+----------------------------------
 
 python manage.py runserver
+
 
 From the browser, visit: 127.0.0.1:8000
 
@@ -85,6 +92,7 @@ So far so good. Feel free to contact us in case of doubt, or if you want to sugg
 
 
 This last command is to install modules into a path different from default configured path:
+-------------------------------------------------------------------------------------------
 
 export TEMP=$HOME/tmp
 cd pi/piratelearner
