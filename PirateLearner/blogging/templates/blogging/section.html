@@ -6,6 +6,12 @@
 {% endblock %}
 {% endif %}
 
+{% block title %}
+PirateLearner | {{ page.title }}
+{% endblock %}
+
+
+
 {% block content_blog %}
 
 {% include "blogging/includes/section_view.html" with nodes=nodes only %}

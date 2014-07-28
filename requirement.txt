@@ -35,3 +35,4 @@ django_select2
 easy_thumbnails
 django-taggit
 django-allauth
+django-crispy-forms

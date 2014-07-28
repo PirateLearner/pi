@@ -15,7 +15,8 @@ from taggit.models import TaggedItem, Tag
 from cms.models.pluginmodel import CMSPlugin
 from djangocms_text_ckeditor.models import Text
 from blogging.utils import get_imageurl_from_data, strip_image_from_data
-
+from blogging.tag_lib import strip_tag_from_data
+from django.utils.html import strip_tags
 
 #from south.v2 import DataMigration
 
@@ -69,6 +70,7 @@ class BlogParent(MPTTModel):
     title = models.CharField(max_length = 50, unique=True)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
     data = models.TextField(null= False)
+    content_type = models.ForeignKey(BlogContentType,null=True,default=None)
     slug = models.SlugField()
     def __unicode__(self):
         return self.title
@@ -88,11 +90,13 @@ class BlogParent(MPTTModel):
     def form_url(self):
         parent_list = self.get_ancestors(include_self=True)
         return_path = '/'.join(word.slug for word in parent_list)
-        print "inside absolute URL ", return_path
+        #print "inside absolute URL ", return_path
         return return_path
     
     def get_image_url(self):
-        return get_imageurl_from_data(self.data)
+        image = get_imageurl_from_data(self.data)
+        print image 
+        return image
     
     def get_absolute_url(self):
         kwargs = {'slug': str(self.form_url())}
@@ -121,19 +125,29 @@ class BlogContent(models.Model):
     published = PublishedManager()
 
     def get_absolute_url(self):
-	kwargs = {'slug': self.url_path,}
-
-        from django.core.urlresolvers import reverse
-        return reverse('blogging:teaser-view', kwargs=kwargs)
+       kwargs = {'slug': self.url_path,}
+       print "LOGS:: Fetching URI for node"
+       from django.core.urlresolvers import reverse
+       return reverse('blogging:teaser-view', kwargs=kwargs)
     
     def get_image_url(self):
         image =  get_imageurl_from_data(self.data)
+        print "LOGS:: Fetching Image for node"
         if image:
+            print image
             return image
         else:
             return self.section.get_image_url()
 
-
+    def get_summary(self):
+        summary = self.data
+        print "LOGS:: Fetching Node summary"
+        summary = strip_tag_from_data(summary)
+        summary = strip_image_from_data(summary)
+        summary = strip_tags(summary)
+        
+        return summary
+    
     def find_path(self,section): 
 	parent_list = section.get_ancestors(include_self=True)
 	return_path = '/'.join(word.slug for word in parent_list)
@@ -206,6 +220,14 @@ class SectionPlugin(CMSPlugin):
         if self.section_count:
             return sections[:self.section_count]
         return sections
+
+class ContactPlugin(CMSPlugin):
+    to_email = models.EmailField(default= 'captain@piratelearner.com')
+    thanks_text = models.CharField(max_length=100,default = 'Thanks for reaching out to Us. We will get back to you soon.')
+    def __unicode__(self):
+        return 'ContactPlugin'
+    def thanks(self):
+        return self.thanks_text
     
 """
 class Migration(DataMigration):

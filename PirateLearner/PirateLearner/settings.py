@@ -8,6 +8,9 @@ TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
+     ('Abhishek Rai', 'abnith.rai812@gmail.com'),
+     ('Anshul Thakur','anshulthakurjourneyendless@gmail.com'),
+     ('Captain','captain@piratelearner.com')
 )
 
 MANAGERS = ADMINS
@@ -225,6 +228,7 @@ INSTALLED_APPS = (
     'blogging',
     'ckeditor',
     'disqus',
+    'crispy_forms'
 
 )
 
@@ -312,3 +316,5 @@ CKEDITOR_CONFIGS = {
 
 DISQUS_API_KEY = 'QJezRiHWxv2FzzrMuOSvQPn99oil0LLyhZxdCAEd3s5cZTf6GUI5019NKznCEONu'
 DISQUS_WEBSITE_SHORTNAME = 'piratelocal'
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+EMAIL_SUBJECT_PREFIX = '[PirateLearner]'

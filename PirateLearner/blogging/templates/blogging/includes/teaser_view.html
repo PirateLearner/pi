@@ -1,15 +1,17 @@
 {% load url from future %}
+{% load thumbnail %}
    <!-- Three columns of text below the carousel --> 
     <div class="row">     
 	{% for node in nodes %}		
 	<div class="col-lg-4">
-		<div class="nodeInner node-front">
+		<div class="pannel pannel-default nodeInner node-front">
+
 			<img class="img-circle" src="{{ node.get_image_url }}" class="img-circle" alt="Generic placeholder image" >
                 
 		{% load url from future %}
                 <h2>{{node.title}}</h2>                
 		{% autoescape off %}
-                <p> {{node.data | truncatewords:30}} </p>
+                <p> {{node.get_summary |truncatewords:30 }} </p> 
 		{% endautoescape %}                 
         <p><a class="btn btn-default" href=" {{node.get_absolute_url}} " role="button">View details &raquo; </a> </p>
         

@@ -1,0 +1,23 @@
+{% if attribute_name %}
+
+{{ attribute }}
+
+{% else %}
+
+	{% for field in attribute_list %}		
+
+	{% if field.name == "title" %}
+	<p class="text-center" >
+		<h1> 	{{ field.value }} </h1>
+	</p>
+	{% else %}
+
+	{% autoescape off %}
+	{{ field.value }}
+	{% endautoescape %}
+	
+		{% endif %}
+		
+	{% endfor %}
+
+{% endif %}

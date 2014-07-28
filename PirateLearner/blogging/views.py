@@ -1,3 +1,8 @@
+"""@package PirateDocs 
+	This is main view module for Blogging app supporting various view provided to the User.
+"""
+
+
 from django.template import RequestContext, loader
 from django.shortcuts import get_object_or_404, render_to_response
 from django.contrib import auth
@@ -13,84 +18,122 @@ from django.forms.formsets import formset_factory
 from django.utils.html import escape
 from .utils import *
 from wrapper import *
-import os
+import os, errno
 from django.db.models import Q
+from django.core.mail import send_mail, mail_admins
+from django.core.exceptions import ObjectDoesNotExist
+from django.template.defaultfilters import slugify
+import reversion
+from reversion.helpers import generate_diffs
 
 
 # Create your views here.
 
-class ContentWizard(SessionWizardView):
-	def get_template_names(self):
-		return "blogging/create_post.html"
-	def get_form(self, step=None, data=None, files=None):
-#		form = super(ContentWizard, self).get_form(step, data, files)
-		# determine the step if not given
-		form = None
-		if step is None:
-			step = self.steps.current
-		print "this is step ", step
-		if step == '0':
-			form = ContentTypeForm() 
-		if step == '1':
-			data = self.get_cleaned_data_for_step('0') or {}
-			content_type = data.get('ContentType')
-			print type(content_type), content_type
-			#content_type_class = content_type.lower()
-			#from str(content_type_class)	import *
-			form1 = find_class('blogging.'+content_type.__str__().lower(),str(content_type)+'Form' )	
-			print type(form1), form1
-			form = form1()
-		return form
-
-	def done(self, form_list, **kwargs):
-		data = {}
-        	for form in form_list:
-            		data.update(form.cleaned_data)
-		print data
-		"""	
-		content_type = data.get('ContentType')
-		print type(content_type), content_type
-		#content_type_class = content_type.lower()
-		#from str(content_type_class)	import *
-		wrapper_class = find_class('blogging.'+content_type.__str__().lower(),str(content_type))
-		db_class = None
-		if data['is_leaf'] == True:
-			db_class = BlogContent()
-			wrapper_class.render_to_db(db_class)
-		else:
-			db_class = BlogParent()
-			wrapper_class.render_to_db(BlogParent)
-		
-		if db_class:
-			db_class.save()	
-		"""
-		return HttpResponseRedirect('/')
-
 
 @login_required
 def content_type(request):
-    if request.method == "POST":
-        form = ContentTypeForm(request.POST)
-        if form.is_valid():
-            content_info = form['ContentType']
-            request.session['content_info_id'] = content_info.id
-            return HttpResponseRedirect(
-                reverse("address_form"))
-    else:
-        if 'content_info_id' in request.session:
-            try:
-                content_info_obj = BlogContentType.objects.get(
-                    id=request.session['content_info_id']
-                )
-                form = ContentTypeForm()
-            except ObjectDoesNotExist:
-                del request.session['content_info_id']
-                form = ContentTypeForm()
-        else:
-            form = ContentTypeForm()
-    return render_to_response(
-        "app/user_info.html",
-        locals(), context_instance=RequestContext(request))	
+	"""
+	This view ask user to choose content type from the existing one or 
+	create new content type to fit for his/her needs to create post.
+	Operations: 
+	NEXT -- Go to next page for creation of New content based on selected content type.
+	DELETE -- Delete the current selected content type (requires admin authorizations )
+	NEW -- Create New content type.
+	"""
+	if request.method == "POST":
+	    form = ContentTypeForm(request.POST)
+	    if form.is_valid():
+	    	action = request.POST.get('submit')
+	    	content_info = form.cleaned_data['ContentType']
+	    	
+	    	if action == 'next':
+		        
+		        print content_info, type(content_info)
+		        request.session['content_info_id'] = content_info.id
+		        return HttpResponseRedirect(
+		            reverse("blogging:create-post"))
+	        if action == 'delete':
+	        	try:
+	        		filename = os.path.abspath(os.path.dirname(__file__))+"/"+content_info.__str__().lower()+".py"
+	        		os.remove(filename)
+        		except OSError as e: # this would be "except OSError, e:" before Python 2.6
+			        if e.errno != errno.ENOENT: # errno.ENOENT = no such file or directory
+			            raise # re-raise exception if a different error occured
+   	        	content_info.delete()
+
+	else:
+	    if 'content_info_id' in request.session:
+	        try:
+	            content_info_obj = BlogContentType.objects.get(
+	                id=request.session['content_info_id']
+	            )
+	            form = ContentTypeForm()
+	        except ObjectDoesNotExist:
+	            del request.session['content_info_id']
+	            form = ContentTypeForm()
+	    else:
+	        form = ContentTypeForm()
+	return render_to_response(
+	    "blogging/content_type.html",
+	    locals(), context_instance=RequestContext(request))	
+
+@login_required
+def new_post(request):
+	"""
+	Used for creating new post depending upon the content type chosen by the user in previous step.
+	If content type is not selected then redirect to content-type page for selection of appropriate content type.
+	Operations:
+	BACK -- Go back to previous step for selecting new content type.
+	SAVE -- Save the content as draft for later revision.
+	SUBMIT -- Submit the post for moderation and publication. 
+	"""
+	if 'content_info_id' not in request.session:
+		return HttpResponseRedirect(reverse("blogging:content-type"))
+    
+	content_info_obj = BlogContentType.objects.get(
+	        id=request.session['content_info_id']
+    )
+	print request.session['content_info_id'], content_info_obj
+	form = find_class('blogging.'+content_info_obj.__str__().lower(),str(content_info_obj)+'Form' )
+	if request.method == "POST":
+		post_form = form(request.POST)
+		
+		if post_form.is_valid():
+			wrapper_class = post_form.save()
+			db_class = None
+			
+			if content_info_obj.is_leaf == True:
+				db_class = BlogContent()
+				wrapper_class.render_to_db(db_class)
+				db_class.section = post_form.cleaned_data['section']
+				m_tags = post_form.cleaned_data['tags']
+				db_class.content_type = content_info_obj
+				db_class.slug = slugify(db_class.title)
+				db_class.author_id =  request.user
+				db_class.save()
+				db_class.tags.add(*m_tags)
+				
+			else:
+				db_class = BlogParent()
+				wrapper_class.render_to_db(db_class)
+				db_class.parent = post_form.cleaned_data['parent']
+				db_class.slug = slugify(db_class.title)
+				db_class.save()
+			del request.session['content_info_id']
+			context = {'success':True}
+			return render_to_response(
+									"blogging/create_page.html",
+	    				context, context_instance=RequestContext(request))
+
+		    ## Send them to a thank you page
+	else:
+		post_form = form()
+	context = {'form':post_form}
+	return render_to_response(
+	    "blogging/create_page.html",
+	    context, context_instance=RequestContext(request))
+
+
 
 @login_required
 def add_new_model(request, model_name):
@@ -99,46 +142,41 @@ def add_new_model(request, model_name):
 	else:
 		normal_model_name = model_name
 	print normal_model_name
-
-	if normal_model_name == '0-ContentType' :
-		FieldFormSet = formset_factory(FieldTypeForm,extra=2,max_num=2)
+	
+	if normal_model_name == 'ContentType' :
+		FieldFormSet = formset_factory(FieldTypeForm,extra=4,max_num=1)
+		helper = FormsetHelper()
 		if request.method == 'POST':
-                	form1 = ContentTypeCreationForm(request.POST)
+			form1 = ContentTypeCreationForm(request.POST)
 			form2 = FieldFormSet(request.POST)
-#			print form1.as_table()
-#			for form in form2:
-#				print(form.as_table())
-                	if form1.is_valid() and form2.is_valid():
-                        	try:
-					if (create_content_type(form1.cleaned_data['content_type'],form2,form1.cleaned_data['is_leaf']) == False ):
-						raise forms.ValidationError("something got wronged")
-                            		new_obj = form1.save() #TODO many things
-					print new_obj.content_type
-                        	except forms.ValidationError:
-                            		new_obj = None
-
-                        	if new_obj:
-                            		return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % \
-                                	(escape(new_obj._get_pk_val()), escape(new_obj)))
-				else:
-					
-		        		page_context = {'form1': form1,'form2':form2,  'field': normal_model_name}
-                			return render_to_response('blogging/includes/add_content_type.html', page_context, context_instance=RequestContext(request))
-			else:
-				print "form is not valid form1 ", form1.is_valid(), " form 2 ", form2.is_valid() 	
-		        	page_context = {'form1': form1,'form2':form2,  'field': normal_model_name}
-                		return render_to_response('blogging/includes/add_content_type.html', page_context, context_instance=RequestContext(request))
-                else:
-                 	form1 = ContentTypeCreationForm()
-			form2 = FieldFormSet(initial= [
-			{'field_name': 'title','field_type': 'Text'},
-			])
-			print form1.as_table()
-			print form2
-			for form in form2:
-				print(form.as_table())
-		        page_context = {'form1': form1,'form2':form2,  'field': normal_model_name}
-                	return render_to_response('blogging/includes/add_content_type.html', page_context, context_instance=RequestContext(request))
+	#			print form1.as_table()
+	#			for form in form2:
+	#				print(form.as_table())
+	            	if form1.is_valid() and form2.is_valid():
+	                    	try:
+								if (create_content_type(form1.cleaned_data['content_type'],form2,form1.cleaned_data['is_leaf']) == False ):
+									raise forms.ValidationError("something got wronged")
+								new_obj = form1.save() #TODO many things
+								print new_obj.content_type
+	                    	except forms.ValidationError:
+	                        		new_obj = None
+	
+	                    	if new_obj:
+                        		return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % \
+                            	(escape(new_obj._get_pk_val()), escape(new_obj)))
+                    		else:
+				        		page_context = {'form1': form1,'formset':form2,  'field': normal_model_name}
+			            			return render_to_response('blogging/includes/add_content_type.html', page_context, context_instance=RequestContext(request))
+            		else:
+						print "form is not valid form1 ", form1.is_valid(), " form 2 ", form2.is_valid() 	
+						page_context = {'form1': form1,'formset':form2,  'field': normal_model_name}
+						return render_to_response('blogging/includes/add_content_type.html', page_context, context_instance=RequestContext(request))
+		else:
+			form = ContentTypeCreationForm()
+			formset = FieldFormSet()
+			print form.as_table()
+	        page_context = {'form1': form,'formset':formset,  'field': normal_model_name }
+        	return render_to_response('blogging/includes/add_content_type.html', page_context, context_instance=RequestContext(request))
 
 def index(request):
 #    output = 'Welcome to the section page !!!'
@@ -153,28 +191,10 @@ def index(request):
     context = RequestContext(request, {
 										'parent': None,
                                        'nodes': nodes,
-                                       'page': {'title':'Pirate Learner', 'tagline':'We learn from stolen stuff'},
+                                       'page': {'title':'Explore', 'tagline':'We learn from stolen stuff'},
                                       })
     return HttpResponse(template.render(context))
 
-@login_required
-def new_page(request):
-        if request.method == 'POST':
-                form = PostEditForm(request.POST)
-                if form.is_valid():
-                    cd = form.cleaned_data
-		    form.save()
-                    return HttpResponseRedirect('/')
-        else:
-                form = PostEditForm(
-                    initial={'title': 'Enter the page title'}
-                )
-                template = loader.get_template('blogging/create_page.html')
-                context = RequestContext(request, {
-                                               'form': form,
-                                      })
-                print form.media
-                return HttpResponse(template.render(context))
 
 
 def authors_list(request):
@@ -191,13 +211,25 @@ def teaser(request,slug):
 #	print current_section
 	try:
 		post_id = int(current_section)
-		print "This is Detail page "
+		print "LOGS:: This is Detail page"
 		blogs = BlogContent.objects.get(pk=post_id)
 		template = loader.get_template('blogging/detail.html')
-                context = RequestContext(request, {
+		content_class_name = find_class('blogging.'+blogs.content_type.__str__().lower(),blogs.content_type.__str__() )
+		content_class = content_class_name()
+		content_class.render_to_template(blogs)
+		
+		available_versions = reversion.get_for_object(blogs)
+		patch_html = ""
+		if len(available_versions) > 1 :
+			old_version = available_versions[0]
+			new_version = available_versions[1]
+			patch_html = generate_diffs(old_version, new_version, "data",cleanup="semantic")
+		context = RequestContext(request, {
 										'parent': blogs.section.get_ancestors(include_self=True),		
                                        'nodes': blogs,
+                                       'content':content_class,
                                        'page': {'title':'Pirate Learner', 'tagline':'We learn from stolen stuff'},
+                                       'patch': patch_html,
                                       })
 		return HttpResponse(template.render(context))
 	except ValueError:
@@ -207,21 +239,34 @@ def teaser(request,slug):
 			return HttpResponse("Hi SomeThing Got Wrong!!! ")
 		if section.is_leaf_node():
 			template = loader.get_template('blogging/teaser.html')
-			nodes = BlogContent.objects.all().filter(section=section)
-			for node in nodes:
-				node.data = strip_image_from_data(node.data)
-				print 'after replace data is : ', node.data
+			print "LOGS:: This is Leaf Node"
+			nodes = BlogContent.published.filter(section=section)
 			context = RequestContext(request, {
 										'parent':section.get_ancestors(include_self=True),
                                        'nodes': nodes,
-                                       'page': {'title':'Pirate Learner', 'tagline':'We learn from stolen stuff'},
+                                       'page': {'title':section.title, 'tagline':'We learn from stolen stuff'},
                                       })
 			return HttpResponse(template.render(context))
 		template = loader.get_template('blogging/section.html')
+		print "LOGS:: This is NON Leaf Node"
 		context = RequestContext(request, {
 										'parent': section.get_ancestors(include_self=True),
                                        'nodes': section.get_descendants(),
-                                       'page': {'title':'Pirate Learner', 'tagline':'We learn from stolen stuff'},
+                                       'page': {'title':section.title, 'tagline':'We learn from stolen stuff'},
                                       })
 		return HttpResponse(template.render(context))
 	
+def ContactUs(request):
+	if request.method == 'POST':
+		form = ContactForm(request.POST)
+		if form.is_valid():
+			subject = 'Contact mail from PirateLearner'
+			message = 'Name: ' + form.cleaned_data['name'] + '\n' + 'email: ' + form.cleaned_data['email'] + '\n Body: ' + form.cleaned_data['content']
+			mail_admins(subject, message, fail_silently=False)
+			template = loader.get_template('blogging/contact_success.html')
+			context = RequestContext(request)
+			return HttpResponse(template.render(context))
+			print 'error during sending mail to Captain'
+	else:
+		form = ContactForm()
+	return render_to_response('blogging/contact.html', {'example_form': form}, context_instance=RequestContext(request))

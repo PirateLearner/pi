@@ -1,4 +1,9 @@
 {% extends "blogging/base.html" %}
+{% block extra_script %}
+<script src="{{ STATIC_URL }}ckeditor/ckeditor/ckeditor.js"></script>
+{% endblock %}
+
+
 {% load cms_tags %}
 {% load disqus_tags %}
 {% disqus_dev %}
@@ -9,9 +14,19 @@
 {% endblock %}
 {% endif %}
 
+{% block title %}
+PirateLearner | {{ content.title }}
+{% endblock %}
+
+
+
 {% block content_blog %}
-<h1>{% render_model nodes "title" %}</h1>
-<h2> {% render_model nodes "data" %} <h2>
+
+{% load blogging_tags %}
+
+{% render_content content %}
+
+
 {% disqus_show_comments %}
 {% endblock %}
 
