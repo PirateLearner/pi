@@ -226,6 +226,7 @@ INSTALLED_APPS = (
     'ckeditor',
     'disqus',
     'dashboard',
+    'pl_messages',
 
 )
 

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+    <link href="{% static "css/jquery.jscrollpane.css" %}" rel="stylesheet"/>
+{% endblock %}
+{% block content %}
+    <div class="navbar navbar-default"></div>
+    <div class="container">
+        <div class="row">
+            {% include 'leftbar.html' %}
+            <div class="col-md-6">
+                <p align="center"><a href=""><small>View More Older Messages</small></a> </p>
+                {% for message in messages %}
+                                <div class="media media-border" data-url="{% url 'thread_messages' thread.pk %}">
+                                  <a class="pull-left" href="#">
+                                    <img class="media-object" src="{% static "img/avatar/default.jpg" %}" alt="...">
+                                  </a>
+                                  <div class="media-body">
+                                    <h4 class="media-heading">
+                                        <a href="">
+                                            {{ message.sender.first_name }} {{ message.sender.last_name }}
+                                        </a>
+                                        <div class="pull-right timesince">{{ message.created|timesince }}</div>
+                                    </h4>
+                                    {{ message.body }}
+                                  </div>
+                                </div>
+                {% endfor %}
+
+                <div class="media media-border" data-url="{% url 'thread_messages' thread.pk %}">
+                      <div class="media-body">
+                        <form  class="form form-horizontal" method="post" action="{% url 'thread_messages' thread_id %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <textarea name="body" class="form-control" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-2 col-md-offset-10">
+                                    <input type="submit"  class="btn btn-primary" value="Reply">
+                                </div>
+
+                            </div>
+
+                        </form>
+                      </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript" src="{% static "js/jquery.mousewheel.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/jquery.jscrollpane.min.js" %}"></script>
+    <script>
+
+    </script>
+{% endblock %}
