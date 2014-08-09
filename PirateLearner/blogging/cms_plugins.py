@@ -50,7 +50,7 @@ class ContactPlugin(BlogPlugin):
             subject = 'Contact mail from PirateLearner'
             message = 'Name: ' + form.cleaned_data['name'] + '\n' + 'email: ' + form.cleaned_data['email'] + '\n Body: ' + form.cleaned_data['content']
             recipient_list = [instance.to_email]
-            send_mail(subject, message, 'root@localhost', recipient_list, fail_silently=False)
+            mail_admins(subject, message, fail_silently=False)
             context.update({
                 'contact': instance,
             })
