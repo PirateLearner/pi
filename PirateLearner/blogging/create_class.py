@@ -49,7 +49,7 @@ class CreateClass():
         self.class_dbfuntion_string += '\t\tfor tag_name in self.tag_list:\n'
         self.class_dbfuntion_string += '\t\t\tcurrent_field = tag_lib.get_field_name_from_tag(str(tag_name[\'name\']))\n'
         self.class_dbfuntion_string += '\t\t\ttag_start = "%% " + str(tag_name["name"]) + " %% " \n'
-        self.class_dbfuntion_string += '\t\t\ttag_end = "%% endtag " + str(tag_name["name"]) + " %%\n"\n'
+        self.class_dbfuntion_string += '\t\t\ttag_end = "%% endtag " + str(tag_name["name"]) + " %%"\n'
         
         for member_name, member_type in member_dict.iteritems():
             
