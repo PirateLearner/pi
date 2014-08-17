@@ -6,8 +6,6 @@ from django.contrib.auth.models import User
 
 from generic_relations.relations import GenericRelatedField 
 
-
-
 class BlogContentSerializer(serializers.ModelSerializer):
     #annotation = serializers.RelatedField()
     author_id = serializers.Field(source='author_id.username')
@@ -38,5 +36,9 @@ class UserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ('username', 'id', 'blogcontent', 'annotations')
+        fields = ('username', 'id', 'blogcontent', 'annotations')  
         
+class AnonymousUserSerializer(serializers.Serializer):
+    username = serializers.CharField();
+    
+ 

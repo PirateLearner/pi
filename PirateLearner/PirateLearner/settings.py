@@ -233,7 +233,6 @@ INSTALLED_APPS = (
     'crispy_forms',
     'annotation',
     'rest_framework',
-    'djangojs',
 )
 
 LANGUAGES = (

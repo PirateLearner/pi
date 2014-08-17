@@ -2,7 +2,7 @@ from django.conf.urls import *
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, routers
 
-from views.rest import UserViewSet, BlogContentViewSet, api_root, AnnotationViewSet, BlogContentCommentView
+from views.rest import UserViewSet, BlogContentViewSet, api_root, AnnotationViewSet, BlogContentCommentView, CurrentUserView
 
 from rest_framework.urlpatterns import format_suffix_patterns
 
@@ -59,6 +59,7 @@ urlpatterns = patterns('annotation.views',
     url(r'^blogcontent/(?P<pk>[0-9]+)/$', blogcontent_detail, name='blogcontent-detail'),
     url(r'^blogcontent/(?P<pk>[0-9]+)/comments/$', BlogContentCommentView.as_view(), name='blogcontent-comments'),
     url(r'^users/$', user_list, name='user-list'),
+    url(r'^users/current/$', CurrentUserView.as_view(), name='current-user'),
     url(r'^users/(?P<pk>[0-9]+)/$', user_detail, name='user-detail'),
     url(r'^annotations/$', annotation_list, name='annotation-list'),
     url(r'^annotations/(?P<pk>[0-9]+)/$', annotation_detail, name='annotation-detail'),

@@ -42,7 +42,8 @@ def api_root(request, format=None):
     return Response({
         'blogcontent': reverse('annotation:blogcontent-list', request=request, format=format),
         'user': reverse('annotation:user-list', request=request, format=format),
-        'annotations': reverse('annotation:annotation-list', request=request, format=format)             
+        'annotations': reverse('annotation:annotation-list', request=request, format=format),
+        'currentUser': reverse('annotation:current-user', request=request, format=format),            
         })
     
 
@@ -74,6 +75,16 @@ class BlogContentCommentView(APIView):
         serializer = AnnotationSerializer(annotations, many=True)
         return Response(serializer.data)
         
-    
-     
+
+class CurrentUserView(APIView):
+     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+     def get(self, request, format=None):
+         user_obj = self.request.user
+         if(user_obj.id != None):
+             serializer = UserSerializer(user_obj)
+         else:
+             serializer = AnonymousUserSerializer(user_obj)
+             print(serializer.data)
+             
+         return Response(serializer.data)
 

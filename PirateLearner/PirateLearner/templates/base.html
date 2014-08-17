@@ -30,12 +30,13 @@
 	
 	<!-- JavaScript -->
 	<script src="{{ STATIC_URL }}js/modernizr-2.5.3-min.js"></script>
-	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>    
     
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="{{STATIC_URL }}/js/docs.min.js"></script>   
+    <script src="{{STATIC_URL }}js/docs.min.js"></script>   
      
+    <script type="text/javascript" src="{{ STATIC_URL }}js/annotation/masterinclude.js"></script>
+    
 {% render_block "js" %}
 {% block extra_script %} 
 {% endblock %}

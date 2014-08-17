@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 {% load cms_tags staticfiles sekizai_tags menu_tags %}
-{% load js %}
-
 {% block breadcrumb %}
         {{ block.super }}
         {% block blog_breadcrumb %}
@@ -86,12 +84,26 @@
 			
 			
 		    </div>
+		    <div id="myModal" class="modal fade">
+			    <div class="modal-dialog">
+			        <div class="modal-content">
+			            <div class="modal-header">
+			                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			                <h4 class="modal-title panel-warn">Service Unavailable: Unauthenticated User</h4>
+			            </div>
+			            <div class="modal-body">
+			                <p>You need to be logged in to use this feature.</p>
+			                <h3> Login now, it is free! :-)</h3>
+			            </div>
+			            <div class="modal-footer">
+			                <span type="button" class="btn btn-default" data-dismiss="modal">Later</span>
+			                <a class="btn btn-primary" href="http://piratelocal.com/en/accounts/login/">Login</a>
+			            </div>
+			        </div>
+			    </div>
+			</div>
   </div>
  <!-- Django loaded Javascripts -->
-{% django_js %}
-<script type="text/javascript">
-	console.log(Django.user.username);
-</script>
 
 {% endblock %}
 

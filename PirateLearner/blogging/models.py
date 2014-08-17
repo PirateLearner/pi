@@ -18,6 +18,10 @@ from blogging.utils import get_imageurl_from_data, strip_image_from_data
 from blogging.tag_lib import strip_tag_from_data
 from django.utils.html import strip_tags
 
+
+from django.contrib.contenttypes.generic import GenericRelation
+from annotation.models import Annotation
+
 #from south.v2 import DataMigration
 
 # Create your models here.
@@ -110,7 +114,7 @@ class BlogParent(MPTTModel):
 class BlogContent(models.Model):
     title = models.CharField(max_length = 100)
     create_date = models.DateTimeField('date created', auto_now_add=True)
-    author_id  = models.ForeignKey(auth.models.User)
+    author_id  = models.ForeignKey(auth.models.User, related_name="blogcontent")
     data = models.TextField(null= False)
     published_flag = models.BooleanField('is published?',default = 0)
     special_flag = models.BooleanField(default = 0)
@@ -123,6 +127,8 @@ class BlogContent(models.Model):
     publication_start = models.DateTimeField(('Published Since'), default=timezone.now, help_text=('Used for automatic delayed publication. For this feature to work published_flag must be on.'))
     objects = RelatedManager()    
     published = PublishedManager()
+    
+    annotation = GenericRelation(Annotation, content_type_field='content_type', object_id_field='object_pk')
 
     def get_absolute_url(self):
        kwargs = {'slug': self.url_path,}
