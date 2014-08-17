@@ -6,18 +6,18 @@
 
 	{% for field in attribute_list %}		
 
-	{% if field.name == "title" %}
-	<p class="text-center" >
-		<h1> 	{{ field.value }} </h1>
-	</p>
-	{% else %}
-
-	{% autoescape off %}
-	{{ field.value }}
-	{% endautoescape %}
-	
+		{% if field.name == "title" %}
+		<div class="page-header heading">
+       		<span id="trigger-overlay" type="button" class="icon overlay-open pl-expand"></span>
+				<h1> 	{{ field.value }} </h1>       	
+       	</div>			
+		{% else %}
+		<div class="paper paper-raise" >
+			{% autoescape off %}
+				{{ field.value }}
+			{% endautoescape %}
+		</div>		
 		{% endif %}
-		
 	{% endfor %}
 
 {% endif %}

@@ -116,7 +116,7 @@ class ContentTypeCreationForm(forms.ModelForm):
 		model = BlogContentType
 
 class FieldTypeForm(forms.Form):
-	field_name = forms.CharField('Field Name')
+	field_name = forms.CharField()
 	field_type = forms.ChoiceField(widget = forms.Select(),choices=CUSTOM_FIELD_TYPE)
 	
 

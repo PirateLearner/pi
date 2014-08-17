@@ -43,7 +43,7 @@ def create_content_type(name,formset,is_leaf):
 
 def get_imageurl_from_data(data):
 	matches = re.findall(
-				r'(<img[^>]*?src\s*=\s*"([^"]+)")', data
+				r'(<img[^>].*?src\s*=\s*"([^"]+)")', data
 			)
 	if matches:
 		return str(matches[0][1])

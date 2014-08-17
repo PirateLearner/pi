@@ -1,6 +1,7 @@
 import os
 gettext = lambda s: s
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
+ABSOLUTE_PATH = lambda x: os.path.join(os.path.abspath(os.path.dirname(__file__)), x)
 # Django settings for PirateLearner project.
 
 DEBUG = True
@@ -62,17 +63,17 @@ USE_TZ = True
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
 #STATIC_URL = '/static/'
-
-STATIC_ROOT = ''
+STATIC_ROOT = '/home/craft/git/PirateLearnerStatic/static/'
 STATIC_URL = '/static/static/'
-MEDIA_ROOT = '/home/abhishek/git/PirateLearnerStatic/media'
+#MEDIA_ROOT = '/home/craft/git/PirateLearnerStatic/media'
+  
+MEDIA_ROOT = ABSOLUTE_PATH('../../../PirateLearnerStatic/media/')
 MEDIA_URL = '/media/'
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/home/abhishek/git/PirateLearnerStatic/static',
 )
 
 # List of finder classes that know how to find static files in
@@ -228,8 +229,11 @@ INSTALLED_APPS = (
     'blogging',
     'ckeditor',
     'disqus',
-    'crispy_forms'
-
+    'django_mathjax',
+    'crispy_forms',
+    'annotation',
+    'rest_framework',
+    'djangojs',
 )
 
 LANGUAGES = (
@@ -318,3 +322,30 @@ DISQUS_API_KEY = 'QJezRiHWxv2FzzrMuOSvQPn99oil0LLyhZxdCAEd3s5cZTf6GUI5019NKznCEO
 DISQUS_WEBSITE_SHORTNAME = 'piratelocal'
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 EMAIL_SUBJECT_PREFIX = '[PirateLearner]'
+
+
+MATHJAX_ENABLED=True
+MATHJAX_LOCAL_PATH = 'js/MathJax/'
+MATHJAX_CONFIG_FILE = "TeX-AMS-MML_HTMLorMML"
+MATHJAX_CONFIG_DATA = {
+    "tex2jax": {
+      "inlineMath":
+        [
+            ['$','$'],
+            ['\\(','\\)']
+        ]
+    }
+  }
+
+REST_FRAMEWORK = {
+    # Use hyperlinked styles by default.
+    # Only used if the `serializer_class` attribute is not set on a view.
+    'DEFAULT_MODEL_SERIALIZER_CLASS':
+        'rest_framework.serializers.HyperlinkedModelSerializer',
+
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}

@@ -1,8 +1,4 @@
 {% extends "blogging/base.html" %}
-{% block extra_script %}
-<script src="{{ STATIC_URL }}ckeditor/ckeditor/ckeditor.js"></script>
-{% endblock %}
-
 
 {% load cms_tags %}
 {% load disqus_tags %}
@@ -15,7 +11,7 @@
 {% endif %}
 
 {% block title %}
-PirateLearner | {{ content.title }}
+{{ site }} | {{ content.title }}
 {% endblock %}
 
 
@@ -23,10 +19,18 @@ PirateLearner | {{ content.title }}
 {% block content_blog %}
 
 {% load blogging_tags %}
-
+<div class="header-ribbon" id="overlay-target">
+	<div>
 {% render_content content %}
-
+	</div>
+</div>
 
 {% disqus_show_comments %}
+{% endblock %}
+
+{% block extra_script %}
+<script src="{{ STATIC_URL }}ckeditor/ckeditor/ckeditor.js"></script>
+<script src="{{ STATIC_URL }}js/overlay.js"></script>
+<link rel="stylesheet" href="{{ STATIC_URL }}css/overlay.css"></link>
 {% endblock %}
 

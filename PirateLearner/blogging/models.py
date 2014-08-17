@@ -149,12 +149,18 @@ class BlogContent(models.Model):
         return summary
     
     def find_path(self,section): 
-	parent_list = section.get_ancestors(include_self=True)
-	return_path = '/'.join(word.slug for word in parent_list)
-	return_path = return_path + str("/") + self.slug + str("/") + str(self.id)
-	print return_path
-	return return_path
-
+        parent_list = section.get_ancestors(include_self=True)
+        return_path = '/'.join(word.slug for word in parent_list)
+        return_path = return_path + str("/") + self.slug + str("/") + str(self.id)
+        print return_path
+        return return_path
+    
+    def get_parent(self):
+        return self.section
+    
+    def get_tags(self):
+        return self.tags.all()
+    
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -197,12 +203,17 @@ class LatestEntriesPlugin(CMSPlugin):
             posts = BlogContent.published.all()
         
         print posts
-        for post in posts:
-            post.data = strip_image_from_data(post.data)
+        #for post in posts:
+        #    post.data = strip_image_from_data(post.data)
         tags = list(self.tags.all())
         if tags:
             posts = posts.filter(tags__in=tags)
         return posts[:self.latest_entries]
+    
+    def get_section(self):
+        return self.parent_section
+
+    
     
 class SectionPlugin(CMSPlugin):
 

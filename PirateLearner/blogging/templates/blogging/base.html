@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load cms_tags staticfiles sekizai_tags menu_tags %}
+{% load js %}
 
 {% block breadcrumb %}
         {{ block.super }}
@@ -8,9 +9,91 @@
 {% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{{ STATIC_URL }}css/tile.css">
-<div class="app app-blog container content clearfix">
-        {% block content_blog %}{% endblock %}
-</div>
+<div class="row main-content-wrapper">  	
+        	<div class="col-sm-12 col-md-8 col-lg-9">
+ 				       {% block content_blog %}
+ 				       {% endblock %}
+  			</div>
+  			<div class="col-sm-12 col-md-4 col-lg-3 aside-wrapper">
+            	<div class="panel panel-default panel-success col-sm-12 col-md-12 col-lg-12">
+					  <h2 class="panel-heading">Login Karo to jaano!</h2>
+                 <p class="panel-body">Why you should sign up?</p>
+                 <p class="panel-body"><a href="#" target="_blank" class="btn btn-success btn-medium">Sign Up now! &raquo;</a></p>
+            	</div>
+            	<div class="panel panel-default panel-success col-sm-12 col-md-12 col-lg-12">
+					  <h2 class="panel-heading">What people are saying?</h2>
+                 <p class="panel-body">These guys are phunny!</p>
+                 <p class="panel-body"><a href="#" class="btn btn-success btn-medium">Read what they never said. &raquo;</a></p>
+            	</div>
+            	<div class="panel panel-default panel-success col-sm-12 col-md-12 col-lg-12">
+                 	<div class="panel-heading text-center"> Work in Progress </div>
+							<div class="panel-body feature-list">
+							<ul class="list-group">
+								<li class="feature-item list-group-item">
+									<p class="feature-name">Implement feature list</p>
+									<div class="progress fix">
+										<div class="progress-bar progress-bar-success" style="width: 60%;">
+											<span class="sr-only">60% complete</span>				
+										</div>
+										<p class="fix-bar"><strong>60% complete</strong></p>
+									</div>		
+								</li>	
+								
+								<li class="feature-item list-group-item">
+									<p class="feature-name">Distraction-Free View</p>
+									<div class="progress fix">
+										<div class="progress-bar progress-bar-warning" style="width: 20%;">
+											<span class="sr-only">20% complete</span>				
+										</div>
+										<p class="fix-bar"><strong>20% complete</strong></p>
+									</div>		
+								</li>	
+								
+								<li class="feature-item list-group-item">
+									<p class="feature-name">User Dashboard</p>
+									<div class="progress fix">
+										<div class="progress-bar progress-bar-error" style="width: 5%;">
+											<span class="sr-only">5% complete</span>				
+										</div>
+										<p class="fix-bar"><strong>5% complete</strong></p>
+									</div>		
+								</li>	
+								
+								<li class="feature-item list-group-item">
+									<p class="feature-name">Own Frontend Tethering</p>
+									<div class="progress fix">
+										<div class="progress-bar" style="width: 0%;">
+											<span class="sr-only">0% complete</span>				
+										</div>
+										<p class="fix-bar"><strong>0% complete</strong></p>
+									</div>		
+								</li>
+							</ul>	
+							
+							<div class="btn btn-lg btn-primary">Suggest a feature</div>
+							</div>
+            	</div>
+					<div class="panel panel-default panel-success col-sm-12 col-md-12 col-lg-12">
+					  <h2 class="panel-heading">Recent Blog Entries</h2>
+                 <ul class="panel-body list-unstyled">
+							<li class="panel-body">Lazy imagination.</li>
+							<li class="panel-body">But when it works...</li>
+							<li class="panel-body">It really does work well</li>                 
+                 </ul>
+            	</div>
+            </div>
+            <div class="overlay" id="overlay-container">
+			
+			
+		    </div>
+  </div>
+ <!-- Django loaded Javascripts -->
+{% django_js %}
+<script type="text/javascript">
+	console.log(Django.user.username);
+</script>
+
 {% endblock %}
+
+
 

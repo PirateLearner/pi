@@ -1,83 +1,130 @@
 {% extends "base.html" %}
 {% load cms_tags staticfiles sekizai_tags menu_tags %}
 
+
 {% block content %}
-<!-- <div> -->
-  <!-- Carousel
-    ================================================== -->
-    <div id="myCarousel" class="carousel slide" data-ride="carousel">
-      <!-- Indicators -->
-      <ol class="carousel-indicators">
-        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-        <li data-target="#myCarousel" data-slide-to="1"></li>
-        <li data-target="#myCarousel" data-slide-to="2"></li>
-      </ol>
-      <div class="carousel-inner">
-        <div class="item active">
-          <img src= "{{ STATIC_URL}}images/carousel1.jpg" alt="First slide" style="opacity:0.5" class="center-block">
-          <div class="container ">
-            <div class="carousel-caption">
-              <h1>Our vision</h1>
-              <p>“We are on record as holding that unlimited educational opportunity- or, speaking practically, educational opportunity that is limited only by individual desire, ability, and need- is the most valuable service that society can provide for its members. That we do not know how to provide that kind of opportunity is no reason to give up the attempt."</p>
-              <p><a class="btn btn-lg btn-primary" href="http://piratelearner.com/about/" role="button">About Us</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <img src= "{{ STATIC_URL}}images/carousel3.jpg" alt="Second slide" style="opacity:0.5" class="center-block">
-          <div class="container ">
-            <div class="carousel-caption">
-              <h1>Hear us.</h1>
-              <p>Our blog where we post insights, announcements and development progress reports</p>
-              <p><a class="btn btn-lg btn-primary" href="http://piratelearner.com/blog/" role="button">Learn more</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <img src= "{{ STATIC_URL}}images/carousel2.jpg" alt="Third slide" style="opacity:0.5" class="center-block">
-          <div class="container">
-            <div class="carousel-caption">
-              <h1>Read at leisure</h1>
-              <p>Read articles and share your feedback :-)</p>
-              <p><a class="btn btn-lg btn-primary" href="http://piratelearner.com/explore/" role="button">Browse gallery</a></p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
-      <a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+<link rel="stylesheet" href="{{ STATIC_URL }}css/carousel.css"></link>
+    	<div id="myCarousel jumbotron" class="carousel slide" data-ride="carousel">
+      	<!-- Indicators -->
+      	<ol class="carousel-indicators">
+        		<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        		<li data-target="#myCarousel" data-slide-to="1"></li>
+        		<li data-target="#myCarousel" data-slide-to="2"></li>
+      	</ol>
+      	<div class="carousel-inner">
+        		<div class="item active">
+          		<img src= "{{ STATIC_URL}}images/carousel1.jpg" alt="First slide" style="opacity:0.5;" class="center-block">
+          		<div class="container ">
+            		<div class="carousel-caption">
+              			<h1>Our vision</h1>
+              			<p>“We are on record as holding that unlimited educational opportunity- or, speaking practically, educational opportunity that is limited only by individual desire, ability, and need- is the most valuable service that society can provide for its members. That we do not know how to provide that kind of opportunity is no reason to give up the attempt."</p>
+              			<p><a class="btn btn-lg btn-primary" href="http://piratelearner.com/about/" role="button">About Us</a></p>
+            		</div>
+          		</div>
+        		</div>
+        		<div class="item">
+          		<img src= "{{ STATIC_URL}}images/carousel3.jpg" alt="Second slide" style="opacity:0.5;" class="center-block">
+          		<div class="container ">
+            		<div class="carousel-caption">
+              			<h1>Hear us.</h1>
+              			<p>Our blog where we post insights, announcements and development progress reports</p>
+              			<p><a class="btn btn-lg btn-primary" href="http://piratelearner.com/blog/" role="button">Learn more</a></p>
+            		</div>
+          		</div>
+        		</div>
+        		<div class="item">
+          		<img src= "{{ STATIC_URL}}images/carousel2.jpg" alt="Third slide" style="opacity:0.5;" class="center-block">
+          		<div class="container">
+            		<div class="carousel-caption">
+              			<h1>Read at leisure</h1>
+              			<p>Read articles and share your feedback :-)</p>
+              			<p><a class="btn btn-lg btn-primary" href="http://piratelearner.com/explore/" role="button">Browse gallery</a></p>
+            		</div>
+          		</div>
+        		</div>
+      	</div>
+      	<a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+      	<a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
     </div><!-- /.carousel -->
-  <div class="container marketing">
+    
+    
+  <div class="row main-content-wrapper">
+  	
+        	<div class="col-sm-12 col-md-8 col-lg-9">
+
   {% placeholder "content" %}
-        <!-- START THE FEATURETTES -->
 
-      <hr class="featurette-divider">
-
-      <div class="row featurette">
-        <div class="col-md-7">
-          <h2 class="featurette-heading">We envision <span class="text-primary">PirateLearner as a one-stop learning resource</span> for all people interested in learning.</h2>
-          <p class="lead text-justify">We recognize that no two people are the same, neither can be the way they learn. So we will try to do what one of the greatest minds of the 20th century, Richard Feynman proposed. We'll be chaotic (and yet organized)</p>
-        </div>
-        <div class="col-md-5">
-          <iframe width="420" height="315" src="//www.youtube.com/embed/VFZbYO0QWD4" frameborder="0" allowfullscreen></iframe>
-        </div>
-      </div>
-      <hr class="featurette-divider">
-<!--
-      <div class="row featurette">
-        <div class="col-md-5">
-          <img class="featurette-image img-responsive" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
-        </div>
-        <div class="col-md-7">
-          <h2 class="featurette-heading">Oh yeah, it's that good. <span class="text-muted">See for yourself.</span></h2>
-          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-        </div>
-      </div>
-
-      <hr class="featurette-divider">
--->
-      <!-- /END THE FEATURETTES -->
-
-    </div><!-- /.container -->
-	<!-- </div> -->
+  			</div>
+  			<div class="col-sm-12 col-md-4 col-lg-3 aside-wrapper">
+            	<div class="panel panel-default panel-success col-sm-12 col-md-12 col-lg-12">
+					  <h2 class="panel-heading">Login Karo to jaano!</h2>
+                 <p class="panel-body">Why you should sign up?</p>
+                 <p class="panel-body"><a href="#" target="_blank" class="btn btn-success btn-medium">Sign Up now! &raquo;</a></p>
+            	</div>
+            	<div class="panel panel-default panel-success col-sm-12 col-md-12 col-lg-12">
+					  <h2 class="panel-heading">What people are saying?</h2>
+                 <p class="panel-body">These guys are phunny!</p>
+                 <p class="panel-body"><a href="#" class="btn btn-success btn-medium">Read what they never said. &raquo;</a></p>
+            	</div>
+            	<div class="panel panel-default panel-success col-sm-12 col-md-12 col-lg-12">
+                 	<div class="panel-heading text-center"> Work in Progress </div>
+							<div class="panel-body feature-list">
+							<ul class="list-group">
+								<li class="feature-item list-group-item">
+									<p class="feature-name">Implement feature list</p>
+									<div class="progress fix">
+										<div class="progress-bar progress-bar-success" style="width: 60%;">
+											<span class="sr-only">60% complete</span>				
+										</div>
+										<p class="fix-bar"><strong>60% complete</strong></p>
+									</div>		
+								</li>	
+								
+								<li class="feature-item list-group-item">
+									<p class="feature-name">Distraction-Free View</p>
+									<div class="progress fix">
+										<div class="progress-bar progress-bar-warning" style="width: 20%;">
+											<span class="sr-only">20% complete</span>				
+										</div>
+										<p class="fix-bar"><strong>20% complete</strong></p>
+									</div>		
+								</li>	
+								
+								<li class="feature-item list-group-item">
+									<p class="feature-name">User Dashboard</p>
+									<div class="progress fix">
+										<div class="progress-bar progress-bar-error" style="width: 5%;">
+											<span class="sr-only">5% complete</span>				
+										</div>
+										<p class="fix-bar"><strong>5% complete</strong></p>
+									</div>		
+								</li>	
+								
+								<li class="feature-item list-group-item">
+									<p class="feature-name">Own Frontend Tethering</p>
+									<div class="progress fix">
+										<div class="progress-bar" style="width: 0%;">
+											<span class="sr-only">0% complete</span>				
+										</div>
+										<p class="fix-bar"><strong>0% complete</strong></p>
+									</div>		
+								</li>
+							</ul>	
+							
+							<div class="btn btn-lg btn-primary">Suggest a feature</div>
+							</div>
+            	</div>
+					<div class="panel panel-default panel-success col-sm-12 col-md-12 col-lg-12">
+					  <h2 class="panel-heading">Recent Blog Entries</h2>
+                 <ul class="panel-body list-unstyled">
+							<li class="panel-body">Lazy imagination.</li>
+							<li class="panel-body">But when it works...</li>
+							<li class="panel-body">It really does work well</li>                 
+                 </ul>
+            	</div>
+            </div>
+  </div>
+	
 {% endblock content %}
+
+
