@@ -1,0 +1,15 @@
+
+<ul>
+{% for feature in features %}
+
+<li>
+<h2>
+{{ feature.name }}
+<h2>
+<p> Progress {{ feature.status }}
+
+{{ contact_url }}
+ </p>
+</li>
+{% endfor %}
+</ul>
