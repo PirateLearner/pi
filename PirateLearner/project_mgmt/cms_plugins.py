@@ -28,7 +28,7 @@ class WishlistPlugin(MgmtPlugin):
                  started.append(element)
             else:
                  pending.append(element)
-        render_list = completed[0:instance.completed_number] + started[0:instance.started_number] + pending[0:instance.pending_number] 
+        render_list = pending[0:instance.pending_number] + started[0:instance.started_number] + completed[0:instance.completed_number] 
         context.update({
                 'features': render_list,
                 'instance': instance,
@@ -37,4 +37,4 @@ class WishlistPlugin(MgmtPlugin):
         return context
     
     
-#plugin_pool.register_plugin(WishlistPlugin)
+plugin_pool.register_plugin(WishlistPlugin)

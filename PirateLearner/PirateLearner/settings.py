@@ -233,6 +233,7 @@ INSTALLED_APPS = (
     'crispy_forms',
     'annotation',
     'rest_framework',
+    'project_mgmt',
 )
 
 LANGUAGES = (

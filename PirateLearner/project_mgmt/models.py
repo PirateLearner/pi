@@ -124,6 +124,8 @@ class Task(models.Model):
     completion_date = models.DateTimeField(blank=False)
     estimated_hours = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     applied_hours = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+"""
+
 
 class WishlistPlugin(CMSPlugin):
     completed_number = models.IntegerField(default= '2')
@@ -136,6 +138,6 @@ class WishlistPlugin(CMSPlugin):
     def get_suggestion_url(self):
         #page = Page.objects.get(title='Contact Us') or None
         from django.core.urlresolvers import reverse
-        return reverse('http://127.0.0.1:8000/en/contact-us/', kwargs={'contact_type':'Queries'})
+        return ('http://piratelocal.com/en/contact-us/?contact_type=Feature')
     
-""" 
+ 
