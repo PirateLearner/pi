@@ -2,7 +2,7 @@ from django.conf.urls import *
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, routers
 
-from views.rest import UserViewSet, BlogContentViewSet, api_root, AnnotationViewSet, BlogContentCommentView, CurrentUserView
+from views.rest import UserViewSet, BlogContentViewSet, api_root, AnnotationViewSet, BlogContentCommentView, CurrentUserView, BlogParentViewSet
 
 from rest_framework.urlpatterns import format_suffix_patterns
 
@@ -12,6 +12,14 @@ router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'blogcontent', BlogContentViewSet)
 '''
+
+blogparent_list = BlogParentViewSet.as_view({
+    'get': 'list'
+})
+
+blogparent_detail = BlogParentViewSet.as_view({
+    'get': 'retrieve'
+})
 
 blogcontent_list = BlogContentViewSet.as_view({
     'get': 'list',
@@ -55,6 +63,8 @@ urlpatterns = patterns('annotation.views',
     url(r'^approve/(\d+)/$', 'moderation.approve',          name='annotation-approve'),
     url(r'^approved/$',      'moderation.approve_done',     name='annotation-approve-done'),
     
+    url(r'^blogparent/$', blogparent_list, name='blogparent-list'),
+    url(r'^blogparent/(?P<pk>[0-9]+)/$', blogparent_detail, name='blogparent-detail'),
     url(r'^blogcontent/$', blogcontent_list, name='blogcontent-list'),
     url(r'^blogcontent/(?P<pk>[0-9]+)/$', blogcontent_detail, name='blogcontent-detail'),
     url(r'^blogcontent/(?P<pk>[0-9]+)/comments/$', BlogContentCommentView.as_view(), name='blogcontent-comments'),

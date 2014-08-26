@@ -1,10 +1,17 @@
 from rest_framework import serializers
 from models import Annotation
 
-from blogging.models import BlogContent
+from blogging.models import BlogContent, BlogParent
 from django.contrib.auth.models import User
 
-from generic_relations.relations import GenericRelatedField 
+from generic_relations.relations import GenericRelatedField
+
+class BlogParentSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = BlogParent
+        fields = ('title', 'parent', 'data')
+     
 
 class BlogContentSerializer(serializers.ModelSerializer):
     #annotation = serializers.RelatedField()
@@ -15,8 +22,10 @@ class BlogContentSerializer(serializers.ModelSerializer):
         model = BlogContent
         fields = ('title','create_date','author_id',
                   'data','published_flag','special_flag',
-                  'last_modified','url_path', 'section',
-                  'content_type', 'slug','annotation')
+                  'last_modified','url_path', 
+                  'slug','annotation',)
+        #exclude = ('section','content_type',)
+        
 
 class AnnotationSerializer(serializers.ModelSerializer):
     user = serializers.Field(source='user.username')
@@ -27,7 +36,7 @@ class AnnotationSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Annotation
-        fields = ('paragraph_id', 'body', 'user', 'privacy', 'privacy_override_flag', 'shared_with', 'submit_date', 'last_modify_date','content_object', 'site')
+        fields = ('id','paragraph_id', 'body', 'user', 'privacy', 'privacy_override_flag', 'shared_with', 'submit_date', 'last_modify_date','content_object', 'site')
 
 
 class UserSerializer(serializers.ModelSerializer):

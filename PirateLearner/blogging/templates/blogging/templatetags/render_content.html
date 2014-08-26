@@ -12,7 +12,7 @@
 				<h1> 	{{ field.value }} </h1>       	
        	</div>			
 		{% else %}
-		<div class="paper paper-raise" >
+		<div class="paper paper-raise" id="commentable-container" >
 			{% autoescape off %}
 				{{ field.value }}
 			{% endautoescape %}

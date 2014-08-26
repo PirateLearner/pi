@@ -1,5 +1,5 @@
 from annotation.models import Annotation
-from blogging.models import BlogContent
+from blogging.models import BlogContent, BlogParent
 from django.contrib.auth.models import User
 
 from rest_framework import viewsets
@@ -19,6 +19,11 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+class BlogParentViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = BlogParent.objects.all()
+    serializer_class = BlogParentSerializer
+    
     
 class BlogContentViewSet(viewsets.ModelViewSet):
     """
