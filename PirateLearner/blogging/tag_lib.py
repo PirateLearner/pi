@@ -1,4 +1,5 @@
 import re
+
 from bs4 import BeautifulSoup
 
 
@@ -23,6 +24,7 @@ def parse_content(db_object, tag):
     ## DOTALL flag for including new line also
     patt = re.compile(final_pattern,flags=re.DOTALL)
     print "pattern  ", patt
+
 #     print "data ", db_object.data
     result = patt.search(db_object.data)
 #     print result
@@ -153,4 +155,3 @@ def insert_tag_id(data,id_count):
     return_dict['pid_count'] = id_count 
     
     return return_dict
- 

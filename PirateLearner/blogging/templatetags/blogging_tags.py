@@ -7,6 +7,7 @@ from django import template
 from blogging.tag_lib import get_field_name_from_tag
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
+
 import sys
 
 register = template.Library()

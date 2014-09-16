@@ -1,6 +1,7 @@
 import os
 gettext = lambda s: s
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
+ABSOLUTE_PATH = lambda x: os.path.join(os.path.abspath(os.path.dirname(__file__)), x)
 # Django settings for PirateLearner project.
 
 DEBUG = True
@@ -8,6 +9,9 @@ TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
+     ('Abhishek Rai', 'abnith.rai812@gmail.com'),
+     ('Anshul Thakur','anshulthakurjourneyendless@gmail.com'),
+     ('Captain','captain@piratelearner.com')
 )
 
 MANAGERS = ADMINS
@@ -59,9 +63,9 @@ USE_TZ = True
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
 #STATIC_URL = '/static/'
-
-STATIC_ROOT = ''
+STATIC_ROOT = '/home/craft/git/PirateLearnerStatic/static/'
 STATIC_URL = '/static/static/'
+
 MEDIA_ROOT = '/home/abhishek/pi_cms/PirateLearnerStatic/media'
 MEDIA_URL = '/media/'
 # Additional locations of static files
@@ -230,6 +234,7 @@ INSTALLED_APPS = (
     'dashboard',
     'rest_framework',
     'meta_tags',
+    'django_mathjax',
 )
 
 LANGUAGES = (
@@ -319,6 +324,22 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 DISQUS_API_KEY = 'QJezRiHWxv2FzzrMuOSvQPn99oil0LLyhZxdCAEd3s5cZTf6GUI5019NKznCEONu'
 DISQUS_WEBSITE_SHORTNAME = 'piratelocal'
 
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+EMAIL_SUBJECT_PREFIX = '[PirateLearner]'
+
+
+MATHJAX_ENABLED=True
+MATHJAX_LOCAL_PATH = 'js/MathJax/'
+MATHJAX_CONFIG_FILE = "TeX-AMS-MML_HTMLorMML"
+MATHJAX_CONFIG_DATA = {
+    "tex2jax": {
+      "inlineMath":
+        [
+            ['$','$'],
+            ['\\(','\\)']
+        ]
+    }
+  }
 
 REST_FRAMEWORK = {
     # Use hyperlinked styles by default.
@@ -332,6 +353,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
 
 META_SITE_PROTOCOL = 'http'
 # META_SITE_DOMAIN = 'pirateLearner.com' using META_USE_SITE SETTING
@@ -347,3 +369,4 @@ META_USE_SITES = True
 META_PUBLISHER_FB_ID = 'https://www.facebook.com/PirateLearner' # can use PAGE URL or Publisher id ID
 META_PUBLISHER_GOOGLE_ID = 'https://plus.google.com/116465481265465787624' # Google+ ID 
 META_FB_APP_ID = ''
+

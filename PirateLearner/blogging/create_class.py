@@ -3,7 +3,6 @@ class CreateClass():
     """ This class will generate the required class of desired content type
     and form the string that will be written to the python script file
     """
-
     
     def __init__(self, name, member_dict,is_leaf):
         self.import_string = 'from blogging import tag_lib\nfrom django.db import models\nfrom blogging.models import *\nfrom django import forms\n' + \
@@ -34,7 +33,6 @@ class CreateClass():
         member_dict.update({'title':'CharField'})
         if is_leaf == True:
             member_dict.update({'pid_count':'IntegerField'})
-
         self.class_name = name
         self.class_formclass_meta_string +=  self.class_name + '\n'
         self.class_formclass_save_string +=  self.class_name + '()\n'
@@ -67,6 +65,7 @@ class CreateClass():
                 self.class_member_tag_list += current_tag
                 
                 #self.class_initfunctionprot_string += ', ' + str(member_name)
+
 #                 self.class_initfunctiondef_string += '\t\tself.' + str(member_name) + ' = " "\n'
                 
                 self.class_templatefuntion_string += "\t\t\tif current_field == '" + str(member_name) + "' : \n"
@@ -120,6 +119,7 @@ class CreateClass():
         for member in self.class_member_string_list:
             #print final_string
             final_string += member
+
         final_string += self.class_member_tag_list 
         final_string += self.class_strfunction_string + self.class_templatefuntion_string + self.class_dbfuntion_string + self.class_formclass_string \
                         + self.class_formclass_meta_string + self.class_formclass_save_string

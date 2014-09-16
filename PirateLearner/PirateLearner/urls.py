@@ -24,6 +24,8 @@ urlpatterns = i18n_patterns('',
     url(r'^select2/', include('django_select2.urls')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': {'cmspages': CMSSitemap}}),
+    url(r'^annotation/', include('annotation.urls', namespace='annotation')),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^', include('cms.urls')),
 )
 

@@ -2,6 +2,7 @@
 	This is main view module for Blogging app supporting various view provided to the User.
 """
 
+
 import sys
 from django.template import RequestContext, loader
 from django.shortcuts import get_object_or_404, render_to_response
@@ -25,6 +26,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.template.defaultfilters import slugify
 import reversion
 from reversion.helpers import generate_diffs
+
 from meta_tags.views import Meta 
 from blogging.utils import strip_image_from_data
 from blogging.tag_lib import strip_tag_from_data
@@ -91,6 +93,7 @@ def new_post(request):
 	Operations:
 	BACK -- Go back to previous step for selecting new content type.
 	SAVE -- Save the content as draft for later revision. todo:
+
 	SUBMIT -- Submit the post for moderation and publication. 
 	"""
 	if 'content_info_id' not in request.session:
@@ -101,13 +104,13 @@ def new_post(request):
     )
 	print request.session['content_info_id'], content_info_obj
 	form = find_class('blogging.custom.'+content_info_obj.__str__().lower(),str(content_info_obj)+'Form' )
+
 	if request.method == "POST":
 		post_form = form(request.POST)
 		
 		if post_form.is_valid():
 			wrapper_class = post_form.save()
 			db_class = None
-			
 			if content_info_obj.is_leaf == True: 
 				db_class = BlogContent()
 				## set the pid_count to 0 and call render_to_db --> this function will
@@ -133,6 +136,7 @@ def new_post(request):
 			return render_to_response(
 									"blogging/create_page.html",
 	    				context, context_instance=RequestContext(request))
+
 	else:
 		post_form = form()
 	context = {'form':post_form}
@@ -200,7 +204,7 @@ def edit_post(request,post_id):
 			fname,lineno,fn,text = frame
 			print "Error in %s on line %d" % (fname, lineno)
 		raise Http404
-	
+
 
 @login_required
 def add_new_model(request, model_name):
@@ -239,10 +243,12 @@ def add_new_model(request, model_name):
 				print "form is not valid form1 ", form1.is_valid(), " form 2 ", form2.is_valid() 	
 				page_context = {'form1': form1,'formset':form2,  'field': normal_model_name}
 				return render_to_response('blogging/includes/add_content_type.html', page_context, context_instance=RequestContext(request))
+
 		else:
 			form = ContentTypeCreationForm()
 			formset = FieldFormSet()
 			print form.as_table()
+
 			page_context = {'form1': form,'formset':formset,  'field': normal_model_name }
 			return render_to_response('blogging/includes/add_content_type.html', page_context, context_instance=RequestContext(request))
 
@@ -301,6 +307,7 @@ def teaser(request,slug):
 		except:
 			print "Unexpected error:", sys.exc_info()[0]
 			raise Http404
+
 		context = RequestContext(request, {
 										'parent': blogs.section.get_ancestors(include_self=True),		
                                        'nodes': blogs,

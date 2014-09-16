@@ -1,7 +1,8 @@
 import os
 from blogging.create_class import CreateClass
 import re
-
+from django.template.defaultfilters import removetags
+from django.utils.html import strip_tags
 
 
 def create_content_type(name,form_dict,is_leaf):
@@ -31,6 +32,7 @@ def create_content_type(name,form_dict,is_leaf):
 			print "Error Opening File for Writing"
 			errorstring += "\nError Opening file for writing"
 			return False
+
 	else:
 		return False
 
@@ -49,8 +51,7 @@ def get_imageurl_from_data(data):
 
 
 
-def strip_image_from_data(data):
-	
+def strip_image_from_data(data):	
 	p = re.compile(r'<img.*?/>',flags=re.DOTALL)
 	line = p.sub('', data)
 	print "LOGS:: Stripping images from data"
