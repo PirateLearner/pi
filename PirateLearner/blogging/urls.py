@@ -5,9 +5,10 @@ from .forms import *
 urlpatterns = patterns(
     '',
     url(r'^$', view.index, name='section-view'),
-    url(r'^create-post/$', view.new_page, name='create-post'),
-    url(r'^create-content/$', view.ContentWizard.as_view([ContentTypeForm, ContentForm])),
-#    url(r'^add-content-type/$', view.add_content_type, name='add-content-type'),
+    url(r'^contact/$', view.ContactUs, name='contact-us'),
+    url(r'^create-post/$', view.new_post, name='create-post'),
+#    url(r'^create-content/$', view.ContentWizard.as_view([ContentTypeForm, ContentForm])),
+    url(r'^content-type/$', view.content_type, name='content-type'),
     url(r'^add-model/(?P<model_name>[\w.+-/]+)/$', view.add_new_model, name='add-model-content-type'),
     url(r'^author/$', view.authors_list, name='author-list'),
     url(r'^author/(?P<slug>[\w.@+-]+)/(?P<post_id>\d+)$', view.author_post, name='author-posts'),

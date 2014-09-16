@@ -1,25 +1,33 @@
-{% extends "base.html" %}
+{% extends "blogging/base.html" %}
 {% block extra_script %}
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/css/forms.css"/>
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/css/base.css"/>
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/css/widgets.css"/>
 
-<script type="text/javascript" src="/admin/jsi18n/"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/core.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/admin/RelatedObjectLookups.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/jquery.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/jquery.init.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/actions.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/calendar.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/admin/DateTimeShortcuts.js"></script>
 
 {{ form.media }}
 
 {% endblock %}
 
+{% block title %}
+Create Content | Phase-2
+{% endblock %}
+
 
 {% load cms_tags %}
-{% block content %}
+
+
+
+
+{% block content_blog %}
+{% if success %}
+
+<h1> Save Success! Thank You For Time. </h1> 
+
+
+{% else %}
+
+
 {% if form.errors %}
         <p style="color: red;">
             Please correct the error{{ form.errors|pluralize }} below.
@@ -28,12 +36,12 @@
 
 <form action="" method="post">
         <table>
-            {{ form.as_table }}
+            {{ form.as_p }}
         </table>
         {% csrf_token %}
         <input type="submit" value="Submit">
 </form>
 
-
+{% endif %}
 {% endblock %}
 

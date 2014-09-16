@@ -1,7 +1,12 @@
 {% extends "blogging/base.html" %}
+
 {% load cms_tags %}
 {% load disqus_tags %}
 {% disqus_dev %}
+
+{% block meta %}
+{% include "meta.html" with meta=meta only %}
+{% endblock %}
 
 {% if parent %}
 {% block blog_breadcrumb %}
@@ -9,9 +14,27 @@
 {% endblock %}
 {% endif %}
 
+{% block title %}
+{{ site }} | {{ content.title }}
+{% endblock %}
+
+
+
 {% block content_blog %}
-<h1>{% render_model nodes "title" %}</h1>
-<h2> {% render_model nodes "data" %} <h2>
+
+{% load blogging_tags %}
+<div class="header-ribbon" id="overlay-target">
+	<div>
+{% render_content content %}
+	</div>
+</div>
+
 {% disqus_show_comments %}
+{% endblock %}
+
+{% block extra_script %}
+<script src="{{ STATIC_URL }}ckeditor/ckeditor/ckeditor.js"></script>
+
+<link rel="stylesheet" href="{{ STATIC_URL }}css/overlay.css"></link>
 {% endblock %}
 

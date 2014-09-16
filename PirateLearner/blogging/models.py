@@ -15,7 +15,12 @@ from taggit.models import TaggedItem, Tag
 from cms.models.pluginmodel import CMSPlugin
 from djangocms_text_ckeditor.models import Text
 from blogging.utils import get_imageurl_from_data, strip_image_from_data
+from blogging.tag_lib import strip_tag_from_data
+from django.utils.html import strip_tags
 
+
+from django.contrib.contenttypes.generic import GenericRelation
+from annotation.models import Annotation
 
 #from south.v2 import DataMigration
 
@@ -69,6 +74,7 @@ class BlogParent(MPTTModel):
     title = models.CharField(max_length = 50, unique=True)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
     data = models.TextField(null= False)
+    content_type = models.ForeignKey(BlogContentType,null=True,default=None)
     slug = models.SlugField()
     def __unicode__(self):
         return self.title
@@ -88,11 +94,13 @@ class BlogParent(MPTTModel):
     def form_url(self):
         parent_list = self.get_ancestors(include_self=True)
         return_path = '/'.join(word.slug for word in parent_list)
-        print "inside absolute URL ", return_path
+        #print "inside absolute URL ", return_path
         return return_path
     
     def get_image_url(self):
-        return get_imageurl_from_data(self.data)
+        image = get_imageurl_from_data(self.data)
+        print image 
+        return image
     
     def get_absolute_url(self):
         kwargs = {'slug': str(self.form_url())}
@@ -106,7 +114,7 @@ class BlogParent(MPTTModel):
 class BlogContent(models.Model):
     title = models.CharField(max_length = 100)
     create_date = models.DateTimeField('date created', auto_now_add=True)
-    author_id  = models.ForeignKey(auth.models.User)
+    author_id  = models.ForeignKey(auth.models.User, related_name="blogcontent")
     data = models.TextField(null= False)
     published_flag = models.BooleanField('is published?',default = 0)
     special_flag = models.BooleanField(default = 0)
@@ -119,28 +127,46 @@ class BlogContent(models.Model):
     publication_start = models.DateTimeField(('Published Since'), default=timezone.now, help_text=('Used for automatic delayed publication. For this feature to work published_flag must be on.'))
     objects = RelatedManager()    
     published = PublishedManager()
+    
+    annotation = GenericRelation(Annotation, content_type_field='content_type', object_id_field='object_pk')
 
     def get_absolute_url(self):
-	kwargs = {'slug': self.url_path,}
-
-        from django.core.urlresolvers import reverse
-        return reverse('blogging:teaser-view', kwargs=kwargs)
+       kwargs = {'slug': self.url_path,}
+       print "LOGS:: Fetching URI for node"
+       from django.core.urlresolvers import reverse
+       return reverse('blogging:teaser-view', kwargs=kwargs)
     
     def get_image_url(self):
         image =  get_imageurl_from_data(self.data)
+        print "LOGS:: Fetching Image for node"
         if image:
+            print image
             return image
         else:
             return self.section.get_image_url()
 
-
+    def get_summary(self):
+        summary = self.data
+        print "LOGS:: Fetching Node summary"
+        summary = strip_tag_from_data(summary)
+        summary = strip_image_from_data(summary)
+        summary = strip_tags(summary)
+        
+        return summary
+    
     def find_path(self,section): 
-	parent_list = section.get_ancestors(include_self=True)
-	return_path = '/'.join(word.slug for word in parent_list)
-	return_path = return_path + str("/") + self.slug + str("/") + str(self.id)
-	print return_path
-	return return_path
-
+        parent_list = section.get_ancestors(include_self=True)
+        return_path = '/'.join(word.slug for word in parent_list)
+        return_path = return_path + str("/") + self.slug + str("/") + str(self.id)
+        print return_path
+        return return_path
+    
+    def get_parent(self):
+        return self.section
+    
+    def get_tags(self):
+        return self.tags.all()
+    
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -183,12 +209,17 @@ class LatestEntriesPlugin(CMSPlugin):
             posts = BlogContent.published.all()
         
         print posts
-        for post in posts:
-            post.data = strip_image_from_data(post.data)
+        #for post in posts:
+        #    post.data = strip_image_from_data(post.data)
         tags = list(self.tags.all())
         if tags:
             posts = posts.filter(tags__in=tags)
         return posts[:self.latest_entries]
+    
+    def get_section(self):
+        return self.parent_section
+
+    
     
 class SectionPlugin(CMSPlugin):
 
@@ -206,6 +237,14 @@ class SectionPlugin(CMSPlugin):
         if self.section_count:
             return sections[:self.section_count]
         return sections
+
+class ContactPlugin(CMSPlugin):
+    to_email = models.EmailField(default= 'captain@piratelearner.com')
+    thanks_text = models.CharField(max_length=100,default = 'Thanks for reaching out to Us. We will get back to you soon.')
+    def __unicode__(self):
+        return 'ContactPlugin'
+    def thanks(self):
+        return self.thanks_text
     
 """
 class Migration(DataMigration):

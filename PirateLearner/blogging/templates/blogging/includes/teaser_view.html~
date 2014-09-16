@@ -1,0 +1,49 @@
+{% load url from future %}
+{% load thumbnail %}
+	<div class="row  panel panel-primary">
+        				<div class="panel-heading text-center"> Electronics </div>
+        				<div class="panel-body row-sm-height row-md-height">
+        				
+        				<div class="col-sm-12 col-md-4 col-lg-4 col-sm-height col-md-height col-middle">
+							<div class=" section-bucket ">
+								<div class="section-bucket-item">
+									<a href="explore.html" class="section-collectionItem" style="background-image:url(http://piratelearner.com/static/media/images/2014/06/04/electronics.jpg);">
+									<div class="">
+										<div class="section-collectionItem-title"> Electronics </div>
+									</div>
+									</a>						
+								</div> 					
+							</div>
+						</div>
+						<!-- Featured posts from section -->
+						<div class="col-sm-12 col-md-8 col-lg-8 col-sm-height col-md-height col-middle">
+							<!-- Stacked Featured posts for this section -->
+								
+							{% for node in nodes %}
+							                		
+                		<div class="media feature">
+                			<a  class="image" href="{{node.get_absolute_url}}" class="pull-left">
+								<img class="img-responsive" src="{{ node.get_image_url }}" class="media-object"></img>                	
+                			</a>
+                			<div class="feature-heading">
+                				<span class="eyebrow">Electronics</span>
+                				<a class="title" href="{{node.get_absolute_url}}">
+	              	  				 {{ node.title }}
+                				</a>
+                			</div>
+                			<div class="feature-tags"><span class="glyphicon glyphicon-tags"></span> <b>Tags:</b> 
+                					<ul class="post-tags">
+                					 <li> <a href="#"> tag 1</a></li> 
+                					 <li> <a href="#">tag2 </a></li> 
+                					 <li><a href="#">tag3</a></li>
+                					 
+                					 </ul>
+                					
+                			</div>
+                		</div>
+                		{% endfor %}					
+						</div>
+					</div>
+						       			
+</div>
+

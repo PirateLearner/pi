@@ -3,7 +3,7 @@ from mptt.admin import MPTTModelAdmin
 from blogging.models import BlogContentType, BlogParent, BlogContent
 from blogging.forms import PostForm, ParentForm
 from cms.admin.placeholderadmin import FrontendEditableAdmin, PlaceholderAdmin
-
+import reversion
 
 def mark_published(modeladmin, request, queryset):
     queryset.update(published_flag = 1)
@@ -11,9 +11,9 @@ mark_published.short_description = "Mark selected content as published"
 
 
 
-class ParentAdmin(MPTTModelAdmin):
+class ParentAdmin(MPTTModelAdmin,reversion.VersionAdmin):
     fieldsets = [
-                 ('',     {'fields': ['title', 'parent','slug','data']} ),
+                 ('',     {'fields': ['title', 'parent','slug','data','content_type']} ),
                  ]
     list_display = ('title', 'parent', 'level')
     list_filter = ['parent']
@@ -22,7 +22,7 @@ class ParentAdmin(MPTTModelAdmin):
     ordering = ['title']
     prepopulated_fields = {'slug': ('title',), }
 
-class ContentAdmin(FrontendEditableAdmin,PlaceholderAdmin):
+class ContentAdmin(FrontendEditableAdmin,PlaceholderAdmin,reversion.VersionAdmin):
     
     list_display = ('title', 'create_date', 'published_flag','publication_start')
     list_filter = ['create_date']
@@ -36,6 +36,7 @@ class ContentAdmin(FrontendEditableAdmin,PlaceholderAdmin):
                  ('Info',     {'fields': ['title','slug', 'data','publication_start']} ),
                  ('Other',     {'fields': ['section', 'author_id', 'published_flag', 'special_flag', 'content_type','tags']} )
                  ]
+    
 
 admin.site.register(BlogParent, ParentAdmin)
 admin.site.register(BlogContentType)

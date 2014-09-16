@@ -1,8 +1,14 @@
 {% extends "base.html" %}
 {% load cms_tags staticfiles sekizai_tags menu_tags %}
 
+{% block breadcrumb %}
+
+{% show_breadcrumb %}
+
+{% endblock %}
+
 {% block content %}
-
+<div class="container content">
 {% placeholder about %}
-
+</div>
 {% endblock %}

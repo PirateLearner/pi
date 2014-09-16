@@ -1,6 +1,7 @@
 {% load mptt_tags staticfiles %}
+<ol class="breadcrumb container">
 {% recursetree nodes %}
-<li> 
+<li class="test">
 <span class= separator> &raquo; </span>
 <a href='{{ node.get_absolute_url }}'>
 {{ node.title }} 
@@ -10,3 +11,4 @@
                     {{ children }}
             {% endif %}
 {% endrecursetree %}
+</ol>
