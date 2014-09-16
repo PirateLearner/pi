@@ -4,48 +4,129 @@
 
 {% block content %}
 <link rel="stylesheet" href="{{ STATIC_URL }}css/carousel.css"></link>
-    	<div id="myCarousel jumbotron" class="carousel slide" data-ride="carousel">
-      	<!-- Indicators -->
-      	<ol class="carousel-indicators">
-        		<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-        		<li data-target="#myCarousel" data-slide-to="1"></li>
-        		<li data-target="#myCarousel" data-slide-to="2"></li>
-      	</ol>
-      	<div class="carousel-inner">
-        		<div class="item active">
-          		<img src= "{{ STATIC_URL}}images/carousel1.jpg" alt="First slide" style="opacity:0.5;" class="center-block">
-          		<div class="container ">
-            		<div class="carousel-caption">
-              			<h1>Our vision</h1>
-              			<p>“We are on record as holding that unlimited educational opportunity- or, speaking practically, educational opportunity that is limited only by individual desire, ability, and need- is the most valuable service that society can provide for its members. That we do not know how to provide that kind of opportunity is no reason to give up the attempt."</p>
-              			<p><a class="btn btn-lg btn-primary" href="http://piratelearner.com/about/" role="button">About Us</a></p>
-            		</div>
-          		</div>
-        		</div>
-        		<div class="item">
-          		<img src= "{{ STATIC_URL}}images/carousel3.jpg" alt="Second slide" style="opacity:0.5;" class="center-block">
-          		<div class="container ">
-            		<div class="carousel-caption">
-              			<h1>Hear us.</h1>
-              			<p>Our blog where we post insights, announcements and development progress reports</p>
-              			<p><a class="btn btn-lg btn-primary" href="http://piratelearner.com/blog/" role="button">Learn more</a></p>
-            		</div>
-          		</div>
-        		</div>
-        		<div class="item">
-          		<img src= "{{ STATIC_URL}}images/carousel2.jpg" alt="Third slide" style="opacity:0.5;" class="center-block">
-          		<div class="container">
-            		<div class="carousel-caption">
-              			<h1>Read at leisure</h1>
-              			<p>Read articles and share your feedback :-)</p>
-              			<p><a class="btn btn-lg btn-primary" href="http://piratelearner.com/explore/" role="button">Browse gallery</a></p>
-            		</div>
-          		</div>
-        		</div>
-      	</div>
-      	<a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
-      	<a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
-    </div><!-- /.carousel -->
+<link rel="stylesheet" href="{{ STATIC_URL }}css/slideshow.css"></link>
+    	
+<div class="show row" id="slideshow">
+	<div class="slide-frame clearfix" id="slide-1">
+		<div class="slide-handle ">
+			<p class="vertical-text"><b>ENGAGE</b></p>
+			<span class="slide-number">1</span>
+		</div>
+		<div class="frame" >
+			<img src="{{ STATIC_URL }}images/Slides/6006122396_52078141fe_o.png" alt="Right Tools" class="img-responsive">	
+			<div class="caption-center">
+				<h2 class="slide-title"> Trustworthy </h2>
+				<h2 class="slide-title"> courseware </h2>
+				<h2 class="slide-title"> resources </h2>
+			</div>	
+		</div>
+		<div class="frame-text">
+			<ul class="caption-left slide-salient">
+					<li class="slide-text">
+						<span class="slide-text-title"><h2>Count on us: </h2></span> 
+						<span class="slide-text-content">Content read, written and endorsed for passionate learners by engineers in industry </span>
+					</li>
+					<li class="slide-text">
+						<span class="slide-text-title"><h2>Student first:</h2></span>
+						<span class="slide-text-content">Bringing the best coursework resources in one place </span> 
+					</li>
+					<li class="slide-text">
+						<span class="slide-text-title"><h2>Practical Approach:</h2> </span>
+						<span class="slide-text-content">Bridging the divide between theory and practice </span>
+					</li>
+					<li class="slide-text">
+						<span class="slide-text-title"><h2>Incremental Improvement Model:</h2></span> 
+						<span class="slide-text-content">Everyday we do a little bit more, until it is perfect</span>
+					</li>
+				</ul>
+		</div>
+	</div>
+	<div class="slide-frame clearfix" id="slide-2">
+		<div class="slide-handle ">
+			<p class="vertical-text"><b>FOCUS</b></p>
+			<span class="slide-number">2</span>
+		</div>
+		<div class="frame" >
+			<img src="{{ STATIC_URL }}images/Slides/basic_instinct.jpg" alt="Cut down the bullshit" class="img-responsive">	
+			<div class="caption-center">
+				<h2 class="slide-title"> Cut </h2>
+				<h2 class="slide-title"> down the </h2>
+				<h2 class="slide-title"> Clutter </h2>
+			</div>	
+		</div>
+		<div class="frame-text">
+			<ul class="caption-left slide-salient">
+					<li class="slide-text">
+						<span class="slide-text-title"><h2>Easy Login:</h2> </span> 
+						<span class="slide-text-content">Just use any popular social networking account. </span>
+					</li>
+					<li class="slide-text">
+						<span class="slide-text-title"><h2>Hassle Free:</h2></span>
+						<span class="slide-text-content">Freedom from remembering 'yet another password'. </span> 
+					</li>
+					<li class="slide-text">
+						<span class="slide-text-title"><h2>Less Clutter:</h2> </span>
+						<span class="slide-text-content">Login to curtail distracting advertisements. </span>
+					</li>
+					<li class="slide-text">
+						<span class="slide-text-title"><h2>Reading Mode:</h2></span> 
+						<span class="slide-text-content">Peace of mind, and the power to focus.</span>
+					</li>
+					</li>
+					<li class="slide-text">
+						<span class="slide-text-title"><h2>Premium Features</h2></span> 
+						<span class="slide-text-content">At zero price.</span>
+					</li>
+				</ul>
+		</div>
+	</div>
+	<div class="slide-frame clearfix" id="slide-3">
+		<div class="slide-handle ">
+			<p class="vertical-text"><b>GROW</b></p>
+			<span class="slide-number">3</span>
+		</div>
+		<div class="frame" >
+			<img src="{{ STATIC_URL }}images/Slides/Bulbs-Idea.jpg" alt="Community Creates Ideas" class="img-responsive">	
+			<div class="caption-center">
+				<h2 class="slide-title"> S </h2>
+				<h2 class="slide-title"> T </h2>
+				<h2 class="slide-title"> U </h2>
+				<h2 class="slide-title"> D </h2>
+				<h2 class="slide-title"> Y </h2>
+			</div>	
+		</div>
+		<div class="frame-text">
+			<ul class="caption-left slide-salient">
+					<li class="slide-text">
+						<span class="slide-text-title"><h2>Share </h2></span> 
+						<span class="slide-text-content">hat useful things you know, and find. </span>
+					</li>
+					<li class="slide-text">
+						<span class="slide-text-title"><h2>Create</h2></span>
+						<span class="slide-text-content">projects with us, or independently, while we showcase them. </span> 
+					</li>
+					<li class="slide-text">
+						<span class="slide-text-title"><h2>Discuss</h2> </span>
+						<span class="slide-text-content">Ideas, Problems, Questions and Solutions. </span>
+					</li>
+					<li class="slide-text">
+						<span class="slide-text-title"><h2>Understand</h2></span> 
+						<span class="slide-text-content">like never before: Audio visual aids and immersive content.</span>
+					</li>
+					</li>
+					<li class="slide-text">
+						<span class="slide-text-title"><h2>Enjoy</h2></span> 
+						<span class="slide-text-content">while learning things you didn't know you could do.</span>
+					</li>
+					<li class="slide-text">
+						<span class="slide-text-title"><h2>Suggest</h2></span> 
+						<span class="slide-text-content">a new feature.</span>
+					</li>
+				</ul>
+		</div>
+	</div>
+</div>
+<script src="{{ STATIC_URL }}js/slideshow.js"></script>   
     
     
   <div class="row main-content-wrapper">
