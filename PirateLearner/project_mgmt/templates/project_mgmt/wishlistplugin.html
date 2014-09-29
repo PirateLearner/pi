@@ -1,12 +1,3 @@
-{% extends "project_mgmt/base.html" %}
-
-
-
-{% block title %}
-PirateLearner | Features Wishlist
-{% endblock %}
-
-{% block content_mgmt %}
 {% include "project_mgmt/includes/wishlist_view.html" with features=features contact_url=instance.get_suggestion_url %}
-{% endblock %}
+
 

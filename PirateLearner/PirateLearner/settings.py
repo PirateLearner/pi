@@ -235,6 +235,7 @@ INSTALLED_APPS = (
     'pl_messages',
     'rest_framework',
     'meta_tags',
+    'project_mgmt',
 #     'django_mathjax',
 )
 

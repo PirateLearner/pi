@@ -1,15 +1,21 @@
+<div class="panel panel-default panel-success col-sm-12 col-md-12 col-lg-12">
+                 	<div class="panel-heading text-center"> Work in Progress </div>
+							<div class="panel-body feature-list">
+							<ul class="list-group">
+								{% for feature in features %}
+								<li class="feature-item list-group-item">
+									<p class="feature-name">{{ feature.name }}</p>
+									<div class="progress fix">
+										<div class="progress-bar progress-bar-success" style="width: {{ feature.status }}%;">
+											<span class="sr-only">{{ feature.status }}% complete</span>				
+										</div>
+										<p class="fix-bar"><strong>{{ feature.status }}% complete</strong></p>
+									</div>		
+								</li>	
+								{% endfor %}
+							</ul>	
+							
+							<div class="btn btn-lg btn-primary"><a href="{{ contact_url }}">Suggest a feature</a></div>
+							</div>
+            	</div>
 
-<ul>
-{% for feature in features %}
-
-<li>
-<h2>
-{{ feature.name }}
-<h2>
-<p> Progress {{ feature.status }}
-
-{{ contact_url }}
- </p>
-</li>
-{% endfor %}
-</ul>

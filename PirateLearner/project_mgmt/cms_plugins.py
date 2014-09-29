@@ -35,6 +35,5 @@ class WishlistPlugin(MgmtPlugin):
         })
 
         return context
-    
-    
-#plugin_pool.register_plugin(WishlistPlugin)
+        
+plugin_pool.register_plugin(WishlistPlugin)
