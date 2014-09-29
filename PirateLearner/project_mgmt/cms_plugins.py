@@ -23,17 +23,18 @@ class WishlistPlugin(MgmtPlugin):
         pending = []
         for element in feature_list:
             if element['completed'] == 'YES':
-                 completed.append(element)
+                completed.append(element)
             elif element['status'] != '0':
-                 started.append(element)
+                started.append(element)
             else:
-                 pending.append(element)
-        render_list = completed[0:instance.completed_number] + started[0:instance.started_number] + pending[0:instance.pending_number] 
+                pending.append(element)
+
+        render_list = pending[0:instance.pending_number] + started[0:instance.started_number] + completed[0:instance.completed_number] 
         context.update({
                 'features': render_list,
                 'instance': instance,
         })
 
         return context
-        
+
 plugin_pool.register_plugin(WishlistPlugin)
