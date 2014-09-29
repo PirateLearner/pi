@@ -1,3 +1,6 @@
-{% include "project_mgmt/includes/wishlist_view.html" with features=features contact_url=instance.get_suggestion_url %}
-
-
+<div class="panel panel-default panel-success col-sm-12 col-md-12 col-lg-12">
+	<div class="panel-heading text-center"> Work in Progress </div>
+		<div class="panel-body feature-list">
+	{% include "project_mgmt/includes/wishlist_view.html" with features=features contact_url=instance.get_suggestion_url %}
+		</div>
+</div>
