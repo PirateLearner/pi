@@ -1,0 +1,27 @@
+{% extends 'base.html'%}
+{% block content %}
+        <div class="row-fluid" style="min-height: 200px;">
+            <div class="col-md-2 col-md-offset2">
+                <ul class="nav nav-list">
+                    <li><a href=" {% url 'account_email'%}">Account Settings</a> </li>
+                    <li><a href="">Messages</a> </li>
+                    <li class="active"><a href="">Profile</a> </li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+    			<p><img width="50" height="50" src="{{ profile.get_avatar_url }}" /></p>
+    			<p>Username: {{ profile.get_username }}</p>
+    			<p>First Name: {{ profile.get_first_name }}</p>
+    			<p>Last Name: {{ profile.get_last_name }}</p>
+    			<p>Gender: {{ profile.get_gender }}</p>
+    			<p>Birthday: {{ profile.get_birthday }}</p>
+    			<p>Interest: {{ profile.get_interest }}</p>
+    			<p>Occupation: {{ profile.get_occupation }}</p>
+    			<p>Address: {{ profile.get_address }}</p>
+    			{% for account in user.socialaccount_set.all %}
+    				<p>{{ account.provider }} Profile Link: <a href="{{ account.extra_data.link }}">{{ account.extra_data.link }}</a></p>
+    			{% endfor %}
+            </div>
+        </div>
+
+{% endblock %}
