@@ -7,6 +7,6 @@
 <path>/${PROJECT_DIR_NAME}/PirateLearner</path>
 </pydev_pathproperty>
 <pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
-<path>/home/abhishek/ENV/lib/python2.7/site-packages</path>
+<path>/home/craft/pirateenv/lib/python2.7/site-packages</path>
 </pydev_pathproperty>
 </pydev_project>

@@ -66,14 +66,13 @@ USE_TZ = True
 STATIC_ROOT = '/home/craft/git/PirateLearnerStatic/static/'
 STATIC_URL = '/static/static/'
 
-MEDIA_ROOT = '/home/abhishek/pi_cms/PirateLearnerStatic/media'
+MEDIA_ROOT = '/home/craft/git/PirateLearnerStatic/media'
 MEDIA_URL = '/media/'
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-   '/home/abhishek/pi_cms/PirateLearnerStatic/static',
 )
 
 # List of finder classes that know how to find static files in
