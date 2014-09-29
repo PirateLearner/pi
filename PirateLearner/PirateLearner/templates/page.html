@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load cms_tags staticfiles sekizai_tags menu_tags %}
 
+{% block breadcrumb %}
+        {% show_breadcrumb "blogging/includes/breadcrumb.html" %}
+{% endblock %}
+
 
 {% block content %}
 <link rel="stylesheet" href="{{ STATIC_URL }}css/carousel.css"></link>
@@ -140,7 +144,8 @@
             	<div class="panel panel-default panel-success col-sm-12 col-md-12 col-lg-12">
 					  <h2 class="panel-heading">Login Karo to jaano!</h2>
                  <p class="panel-body">Why you should sign up?</p>
-                 <p class="panel-body"><a href="#" target="_blank" class="btn btn-success btn-medium">Sign Up now! &raquo;</a></p>
+                 <p class="panel-body"><div class="btn btn-lg btn-primary" id="login-now">Sign Up now! &raquo;</div></p>
+                 
             	</div>
             	<div class="panel panel-default panel-success col-sm-12 col-md-12 col-lg-12">
 					  <h2 class="panel-heading">What people are saying?</h2>

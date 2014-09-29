@@ -45,7 +45,7 @@ class CreateClass():
         self.class_templatefuntion_string += '\t\t\tcurrent_field = tag_lib.get_field_name_from_tag(str(tag_name[\'name\']))\n'
         self.class_templatefuntion_string += '\t\t\tresult_field = tag_lib.parse_content(db_object,tag_name)\n'
         
-        
+        self.class_dbfuntion_string += '\t\ttemp_data = ""\n'
         self.class_dbfuntion_string += '\t\tfor tag_name in self.tag_list:\n'
         self.class_dbfuntion_string += '\t\t\tcurrent_field = tag_lib.get_field_name_from_tag(str(tag_name[\'name\']))\n'
         self.class_dbfuntion_string += '\t\t\ttag_start = "%% " + str(tag_name["name"]) + " %% " \n'
@@ -57,27 +57,39 @@ class CreateClass():
                 continue
             else:
                 self.class_member_name = member_name + ' = '
-                self.class_member_type = 'models.' + member_type+ '()\n'
+                if member_type == 'CharField':
+                    self.class_member_type = 'models.' + member_type+ '(max_length=100)\n'
+                else:
+                    self.class_member_type = 'models.' + member_type+ '()\n'
                 member_string = self.class_member + self.class_member_name + self.class_member_type
                 self.class_member_string_list.append(member_string)
                 
                 current_tag = " { 'name':'" + member_name + "_tag" + "' , 'type' :'" + member_type + "'} ,"
                 self.class_member_tag_list += current_tag
                 
-                #self.class_initfunctionprot_string += ', ' + str(member_name)
-
-#                 self.class_initfunctiondef_string += '\t\tself.' + str(member_name) + ' = " "\n'
-                
                 self.class_templatefuntion_string += "\t\t\tif current_field == '" + str(member_name) + "' : \n"
-                #self.class_templatefuntion_string += "\t\t\t\ttagged_field = tag_start + self." +  str(member_name) + " + tag_end \n"
-                self.class_templatefuntion_string += "\t\t\t\tself." + str(member_name) + " = result_field \n\n" 
-                
-                self.class_dbfuntion_string += "\t\t\tif current_field == '" + str(member_name) + "' : \n"
-                self.class_dbfuntion_string += "\t\t\t\ttagged_field = tag_start + self."+str(member_name) + " + tag_end \n"
-                if str(member_name) == 'title':
-                    self.class_dbfuntion_string += "\t\t\t\tdb_object.title = self.title \n\n"
+                if str(member_name) == "pid_count":
+                    self.class_templatefuntion_string += "\t\t\t\tself." + str(member_name) + " = int(result_field) \n\n"
                 else:
-                    self.class_dbfuntion_string += "\t\t\t\tdb_object.data += tagged_field \n\n"
+                    self.class_templatefuntion_string += "\t\t\t\tself." + str(member_name) + " = result_field \n\n" 
+                
+                
+                if str(member_name) == 'title':
+                    self.class_dbfuntion_string += "\t\t\tif current_field == '" + str(member_name) + "' : \n"
+                    self.class_dbfuntion_string += "\t\t\t\ttagged_field = tag_start + self."+str(member_name) + " + tag_end \n"
+                    self.class_dbfuntion_string += "\t\t\t\tdb_object.title = self.title \n\n"
+                elif str(member_name) != 'pid_count' and is_leaf == True:
+                    self.class_dbfuntion_string += "\t\t\tif current_field == '" + str(member_name) + "' : \n"
+                    self.class_dbfuntion_string += "\t\t\t\ttemp_dict = tag_lib.insert_tag_id(self."+str(member_name) + ", self.pid_count)\n"
+                    self.class_dbfuntion_string += "\t\t\t\tself."+str(member_name) +" = str(temp_dict['content'])\n"
+                    self.class_dbfuntion_string += "\t\t\t\tself.pid_count = int(temp_dict['pid_count'])\n"
+                    self.class_dbfuntion_string += "\t\t\t\ttagged_field = tag_start + self."+str(member_name) + " + tag_end \n"
+                    self.class_dbfuntion_string += "\t\t\t\ttemp_data += tagged_field \n\n"
+                elif str(member_name) != 'pid_count':
+                    self.class_dbfuntion_string += "\t\t\tif current_field == '" + str(member_name) + "' : \n"
+                    self.class_dbfuntion_string += "\t\t\t\ttagged_field = tag_start + self."+str(member_name) + " + tag_end \n"
+                    self.class_dbfuntion_string += "\t\t\t\ttemp_data += tagged_field \n\n"
+                    
                 
                 # in case of PID_COUNT do not save any information in form
                 if str(member_name) == 'pid_count':
@@ -88,15 +100,15 @@ class CreateClass():
                 if str(member_name) != 'content_list' and str(member_name) != 'title':
                     if str(member_type) == 'TextField':
                         self.class_formclass_string += '\t' + self.class_member_name + ' forms.CharField(widget = CKEditorWidget())\n'
-#                     if str(member_name) == 'pid_count':
-#                         self.class_formclass_string += '\t' + self.class_member_name + ' forms.IntegerField(widget = forms.HiddenInput(),initial=0)\n'
                     if str(member_type) == 'CharField':
                         self.class_formclass_string += '\t' + self.class_member_name + ' forms.CharField()\n'
 
-        #self.class_initfunctionprot_string += '):\n'
-#         self.class_initfunction_string = self.class_initfunctionprot_string + self.class_initfunctiondef_string 
+        if is_leaf == True:
+            self.class_dbfuntion_string += "\t\ttagged_field = ' %% pid_count_tag %% ' + str(self.pid_count) + '%% endtag pid_count_tag %%'\n"
+            self.class_dbfuntion_string += "\t\ttemp_data += tagged_field\n"
+        self.class_dbfuntion_string += "\t\tdb_object.data = temp_data\n\n"
+        
         self.class_member_tag_list += "]\n\n"
-        #self.class_formclass_string += '\tclass Meta:\n' +'\t\tmodel = '
         self.class_formclass_save_string += '\t\treturn instance\n'
         if is_leaf == True:
             self.class_formclass_string += '\tsection = forms.ModelChoiceField(\n' + \

@@ -220,11 +220,11 @@ INSTALLED_APPS = (
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.github',
+#     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.linkedin',
-    'allauth.socialaccount.providers.linkedin_oauth2',
-    'allauth.socialaccount.providers.stackexchange',
+#     'allauth.socialaccount.providers.linkedin',
+#     'allauth.socialaccount.providers.linkedin_oauth2',
+#     'allauth.socialaccount.providers.stackexchange',
     'allauth.socialaccount.providers.twitter',
     'crispy_forms',
     'blogging',
@@ -234,7 +234,7 @@ INSTALLED_APPS = (
     'dashboard',
     'rest_framework',
     'meta_tags',
-    'django_mathjax',
+#     'django_mathjax',
 )
 
 LANGUAGES = (

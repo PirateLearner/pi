@@ -11,7 +11,7 @@ from dashboard.forms import ProfileEditForm
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from taggit.models import Tag
-
+from allauth.account.views import LoginView
 
 @receiver(pre_social_login)
 def CreateProfile(sender, request, sociallogin, **kwargs):
@@ -124,3 +124,21 @@ def public_profile(request,user_id):
     except User.DoesNotExist:
         raise Http404
     
+class CustomLoginClass(LoginView):
+    
+    def get_template_names(self):
+        if self.request.is_ajax():
+            print "LOGS: get_template() LOGIN through ajax "
+            return "socialaccount/login.html"
+        else:
+            print "LOGS: get_template() LOGIN through http request "
+            return "account/login.html"
+            
+    def get_context_data(self, **kwargs):
+        ret = super(CustomLoginClass, self).get_context_data(**kwargs)
+        if self.request.is_ajax():
+            ret.update({"ajax_request": True},)
+            print "LOGS: LOGIN through ajax "
+        return ret
+    
+custom_login =  CustomLoginClass.as_view()         

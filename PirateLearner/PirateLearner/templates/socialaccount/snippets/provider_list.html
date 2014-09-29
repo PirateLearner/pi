@@ -1,0 +1,27 @@
+{% load socialaccount %}
+
+<div class="col-sm-12 col-md-6 col-lg-6 login-block">
+	<ul class="list-group login-group">
+		{% for provider in socialaccount.providers %}
+			{% if provider.id == "openid" %}
+				{% for brand in provider.get_brands %}
+					<li class="feature-item list-group-item btn btn-lg btn-primary {{brand.name}}" style="background-color:#3B5999;">
+						<a title="{{brand.name}}" 
+			 					class="socialaccount_provider {{provider.id}} {{brand.id}}" 
+			 					href="{% provider_login_url provider.id openid=brand.openid_url process=process next=redirect_field_value %}"
+							>
+						<span class="icon pl-facebook2 {{brand.name}} icon-responsive " style="background-color:#354F88;"></span> Sign in with {{brand.name}}
+						</a>	
+					</li>	
+				{% endfor %}
+			{% endif %}
+			<li class="feature-item list-group-item btn btn-lg btn-primary {{provider.name}}" style="background-color:#3B5999;">
+				<a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}" 
+		     		href="{% provider_login_url provider.id process=process next=redirect_field_value %}"
+		 		>
+		 			<span class="icon pl-facebook2 {{provider.name}} icon-responsive " style="background-color:#354F88;"></span> Sign in with {{provider.name}}
+				</a>	
+			</li>	
+		{% endfor %}
+	</ul>	
+</div>

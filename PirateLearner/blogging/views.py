@@ -341,7 +341,19 @@ def teaser(request,slug):
                                        'page': {'title':section.title, 'tagline':'We learn from stolen stuff'},
                                       })
 		return HttpResponse(template.render(context))
-	
+
+def tagged_post(request,tag):
+	try:
+		posts = BlogContent.objects.filter(tags__name = tag)
+		template = loader.get_template('blogging/teaser.html')
+		context = RequestContext(request, {
+                                       'nodes': posts,
+                                       'page': {'title':tag, 'tagline':'We learn from stolen stuff'},
+                                      })
+		return HttpResponse(template.render(context))
+	except ObjectDoesNotExist:
+		raise Http404
+
 def ContactUs(request):
 	if request.method == 'POST':
 		form = ContactForm(request.POST)

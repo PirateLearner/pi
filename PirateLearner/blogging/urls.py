@@ -17,10 +17,11 @@ urlpatterns = patterns(
     url(r'^(?P<year>\d{4})/(?P<month>\d{1,2})/$', view.archive, name='archive-month'),
     url(r'^(?P<year>\d{4})/(?P<month>\d{1,2})/(?P<day>\d{1,2})/$', view.archive, name='archive-day'),
 #    url(r'^(?P<slug>[\w.+-/]+)/(?P<post_id>\d+)$', view.detail, name='post-detail'),
+    url(r'^tag/(?P<tag>[-\w]+)/$', view.tagged_post, name='tagged-posts'),
     url(r'^(?P<slug>[\w.+-/]+)/$', view.teaser, name='teaser-view'),
 #    url(r'^(?P<slug>\D+)(?P<post_id>\d+)$', view.detail, name='post-detail'),
 #    url(r'^(?P<path>\D*)$', view.teaser, name='teaser-view'),
 #    url(r'^tag/$', TagsListView.as_view(), name='tag-list'),
-#    url(r'^tag/(?P<tag>[-\w]+)/$', TaggedListView.as_view(), name='tagged-posts'),
+
 #    url(r'^tag/(?P<tag>[-\w]+)/feed/$', TagFeed(), name='tagged-posts-feed'),
 )

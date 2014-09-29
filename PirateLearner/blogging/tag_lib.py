@@ -38,6 +38,8 @@ def strip_tag_from_data(data):
 
     
 def has_no_id(tag):
+    
+    print "tag return has no id ", tag.has_attr('id')
     return  not tag.has_attr('id')
 
 
@@ -118,6 +120,13 @@ def insert_tag_id(data,id_count):
     
 #    print soup.body.contents
     soup = BeautifulSoup(data)
+
+    print "printing original html "
+    initial_content = ''.join(str(tag) for tag in soup.body.contents)
+    initial_content = initial_content.replace('\xc2\xa0', ' ')
+    print initial_content
+
+    
     for tag in soup.body.children:
         
         if tag.name == 'p' and has_no_id(tag):

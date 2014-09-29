@@ -3,7 +3,7 @@
 
 {% if parent %}
 {% block blog_breadcrumb %}
-{% include "blogging/includes/breadcumb.html" with nodes=parent only %}
+{% include "blogging/includes/breadcrumb.html" with nodes=parent only %}
 {% endblock %}
 {% endif %}
 
@@ -17,6 +17,6 @@ PirateLearner | {{ page.title }}
 {% block content_blog %}
 
 
-{% include "blogging/includes/teaser_view.html" with nodes=nodes %}
+{% include "blogging/includes/teaser_list.html" with nodes=nodes %}
 {% endblock %}
 

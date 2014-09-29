@@ -1,0 +1,46 @@
+    <div class="col-sm-12 col-md-4 col-lg-4">
+        <div class="panel panel-default user-dashboard-profile-card texture-{{ provider_name|lower }}  paper paper-raise">
+            <div class="user-dashboard-pic-container vertical-center">
+                <img class="user-dashboard-card-pic img-circle" src="{{ profile_image }}" alt="profile image"/>
+            </div>
+            <div class="panel user-dashboard-profile-listing">
+                <table class="user-dashboard-profile-detail table">
+                        <tr>
+                                <td><label for="{{ provider_name|lower }}-profile-name">Name</label></td>
+                                <td><span id="{{ provider_name|lower }}-profile-name">{{ profile_username }}</span></td>
+                </tr>
+                <tr>
+                                <td><label for="{{ provider_name|lower }}-profile-gender">Gender</label></td>
+                                <td><span id="{{ provider_name|lower }}-profile-gender">{{ profile_gender }}</span></td>
+                </tr>
+                <tr>
+                                <td><label for="{{ provider_name|lower }}-profile-url">URL</label></td>
+                                <td><span id="{{ provider_name|lower }}-profile-url"><a href="{{ profile_url }}"> {{ provider_name}} Link</a></span></td>
+                </tr>
+                <tr>
+                                <td><label for="{{ provider_name|lower }}-profile-mail">Email</label></td>
+                                <td><span id="{{ provider_name|lower }}-profile-email">{{ profile_email }}</span></td>
+                </tr>
+                </table>
+			</div>
+			<div class="user-dashboard-profile-name texture-inverse-{{ provider_name|lower }}">
+			{% if provider_name == "Google"%}
+			 	<span class="icon pl-googleplus icon-responsive absolute-center"></span>
+			{% else %}
+				<span class="icon pl-{{ provider_name|lower }} icon-responsive absolute-center"></span>
+			{% endif %}
+				<span class="sr-only">{{ provider_name }} Profile</span>
+			</div>
+			
+			
+			{% if profile_disable %}
+			<!-- Conditional overlay block -->
+            <div class="user-dashboard-card-overlay">
+                    <div class="user-dashboard-pic-container vertical-center">
+                            <img class="user-dashboard-card-pic img-circle" src="{{ profile_image }}" alt=""/>
+                    </div>
+                            <div class="user-dashboard-card-overlay-add-button img-circle absolute-center" title="Click to connect account"><span>+</span><span class="sr-only">Integrate Accounts</span></div>
+            </div>
+			{% endif %}
+        </div>
+    </div>

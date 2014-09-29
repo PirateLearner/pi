@@ -21,7 +21,6 @@ class Testing(models.Model):
 		return "Testing"
 
 	def render_to_template(self,db_object):
-		print "LOGS: tag list  ", self.tag_list
 		for tag_name in self.tag_list:
 			
 			current_field = tag_lib.get_field_name_from_tag(str(tag_name['name']))

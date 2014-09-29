@@ -1,7 +1,7 @@
 import datetime
 from collections import Counter
 from django.utils import timezone
-
+import sys
 from django.db import models
 from django.db.models import Q
 
@@ -17,7 +17,8 @@ from djangocms_text_ckeditor.models import Text
 from blogging.utils import get_imageurl_from_data, strip_image_from_data
 from blogging.tag_lib import strip_tag_from_data
 from django.utils.html import strip_tags
-
+from django.core.urlresolvers import reverse
+import traceback
 
 from django.contrib.contenttypes.generic import GenericRelation
 from annotation.models import Annotation
@@ -55,20 +56,20 @@ class RelatedManager(models.Manager):
         return sorted(tags, key=lambda x: -x.count)
 
 class PublishedManager(RelatedManager):
-	def get_query_set(self):
-		qs = super(PublishedManager, self).get_query_set()
-		now = timezone.now()
-		qs = qs.filter(publication_start__lte=now)
-		qs = qs.filter(Q(published_flag=True))
-		return qs
+    def get_query_set(self):
+        qs = super(PublishedManager, self).get_query_set()
+        now = timezone.now()
+        qs = qs.filter(publication_start__lte=now)
+        qs = qs.filter(Q(published_flag=True))
+        return qs
 
 
 class BlogContentType(models.Model):
-	content_type = models.CharField(max_length = 100,unique = True)
-	is_leaf = models.BooleanField('Is leaf node?', default = 0)
-    	
-	def __unicode__(self):
-        	return self.content_type
+    content_type = models.CharField(max_length = 100,unique = True)
+    is_leaf = models.BooleanField('Is leaf node?', default = 0)
+
+    def __unicode__(self):
+        return self.content_type
 
 class BlogParent(MPTTModel):
     title = models.CharField(max_length = 50, unique=True)
@@ -104,10 +105,10 @@ class BlogParent(MPTTModel):
     
     def get_absolute_url(self):
         kwargs = {'slug': str(self.form_url())}
-        from django.core.urlresolvers import reverse
         return reverse('blogging:teaser-view', kwargs=kwargs)
-	
-	class MPTTMeta:
+    def get_menu_title(self):
+        return self.title
+    class MPTTMeta:
             order_insertion_by = ['title']
 
 
@@ -131,10 +132,9 @@ class BlogContent(models.Model):
     annotation = GenericRelation(Annotation, content_type_field='content_type', object_id_field='object_pk')
 
     def get_absolute_url(self):
-       kwargs = {'slug': self.url_path,}
-       print "LOGS:: Fetching URI for node"
-       from django.core.urlresolvers import reverse
-       return reverse('blogging:teaser-view', kwargs=kwargs)
+        kwargs = {'slug': self.url_path,}
+        print "LOGS:: Fetching URI for node"
+        return reverse('blogging:teaser-view', kwargs=kwargs)
     
     def get_image_url(self):
         image =  get_imageurl_from_data(self.data)
@@ -160,12 +160,34 @@ class BlogContent(models.Model):
         return_path = return_path + str("/") + self.slug + str("/") + str(self.id)
         print return_path
         return return_path
-    
+
+    def get_menu_title(self):
+        return self.title
+
     def get_parent(self):
         return self.section
-    
+
     def get_tags(self):
-        return self.tags.all()
+        tags = self.tags.all()
+        tag_list = []
+        print "LOGS:Get Tags Called for ", self.title
+        print "LOGS: tags are ", tags
+        for tag in tags:
+            print "LOGS: hey there!!!"
+            try:
+                tmp = {}
+                tmp['name'] = tag.name
+                kwargs = {'tag': tag.name,}
+                tmp['url'] = reverse('blogging:tagged-posts',kwargs=kwargs)
+                print "LOGS: TAG NAME ", tmp['name'],"URL ", tmp['url']
+                tag_list.append(tmp)
+                print "LOGS: Printing tags ", tmp
+            except:
+                print "Unexpected error:", sys.exc_info()[0]
+                for frame in traceback.extract_tb(sys.exc_info()[2]):
+                    fname,lineno,fn,text = frame
+                    print "Error in %s on line %d" % (fname, lineno)
+        return tag_list
     
 
     def save(self, *args, **kwargs):
