@@ -119,6 +119,7 @@ def insert_tag_id(data,id_count):
 
     
 #    print soup.body.contents
+    print "Entering Soup"
     soup = BeautifulSoup(data)
 
     print "printing original html "

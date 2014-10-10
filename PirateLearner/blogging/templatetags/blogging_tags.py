@@ -60,7 +60,10 @@ class ContentRender(InclusionTag):
                 attribute_name = get_field_name_from_tag(tag['name'])
                 print "tag field name ", attribute_name
                 attribute_value = getattr(instance, attribute_name, '')
-                attribute_list.append({'name':attribute_name,'value':attribute_value})
+                if attribute_name == 'title':
+                    extra_context['title'] = attribute_value
+                else:
+                    attribute_list.append({'name':attribute_name,'value':attribute_value})
             print "attribute list ", attribute_list
             extra_context['attribute_list'] = attribute_list
         return extra_context

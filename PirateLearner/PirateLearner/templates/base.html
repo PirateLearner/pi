@@ -30,6 +30,7 @@
 	<!-- Bootstrap core CSS -->
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL }}css/piratelearner.css">
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL }}css/dashboard.css">
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL }}css/font.css">
 	<!--[if (lt IE 9) & (!IEMobile)]>
 	<script src="{{ STATIC_URL }}js/selectivizr-min.js"></script>
 	<![endif]-->
@@ -108,22 +109,25 @@
             		<span class="icon-bar"></span>
         		</button>
 
-        		<a href="http://piratelearner.com" class="navbar-brand"><img src="{{ STATIC_URL }}images/pl_smallest.png"></a>
+        		<a href="http://piratelearner.com" class="navbar-brand" id="site-name"><!--<img src="{{ STATIC_URL }}images/LOGO_2_big_text_v3.svg">--><span  class="icon-logo">Pirate Learner</span></a>
 
     		</div>
     <!-- Collection of nav links, forms, and other content for toggling -->
 		   <div class="navbar-collapse collapse" id="navbarCollapse">
-		     	<div class="nav">
-		          <ul class="nav navbar-nav navbar-right">
-		   			{% if user.is_authenticated %}
-	             	<li><a href="{% url 'account_email' %}">Change E-mail</a></li>
-	              	<li><a href="{% url 'account_logout' %}">Sign Out</a></li>
-	           		{% else %}
-	              	<li><a href="{% url 'account_login' %}">Sign In</a></li>
-	           		{% endif %}
-		     		</ul>
+		     	<div class="nav" id="top-bar">
+		     	  <div class="offset-nav clearfix">
+			          <ul class="nav navbar-nav navbar-right">
+			   			{% if user.is_authenticated %}
+		             	<li><a href="{% url 'account_email' %}">Change E-mail</a></li>
+		              	<li><a href="{% url 'account_logout' %}">Sign Out</a></li>
+		           		{% else %}
+		              	<li><a href="{% url 'account_login' %}">Sign In</a></li>
+		           		{% endif %}
+			     		</ul>
+		     	 	</div>
 		      </div>
 		   	<div class="navbar-default navbar-lower">
+		   			<div class="site-logo push-left"><img src="{{ STATIC_URL }}images/LOGO_V5.svg"></div>
 		        	<ul class="nav navbar-nav navbar-left">
 		          		{% show_menu 0 1 100 100 "menu.html" %}
 		        	</ul>
@@ -177,7 +181,8 @@
             	<div class="clearfix visible-md visible-lg"></div>
 			   </div>
 				<div class="fix-footer">
-             	<p class="text-muted">&copy; Copyright 2014 {{ SITE }}</p>        
+             	<p class="text-muted">&copy; Copyright 2014 {{ SITE }}</p>  
+             	<span class="icon-logo-pl_logo_font"></span>      
         		</div>
 	    </footer>
         <!-- </div> -->

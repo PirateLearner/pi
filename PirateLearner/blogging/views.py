@@ -173,12 +173,15 @@ def edit_post(request,post_id):
 					## set the pid counts and save values in db
 					wrapper_class.pid_count = old_wrapper_class.pid_count  
 					db_class = blog
+					print "LOGS: Entering render_to_db"
 					wrapper_class.render_to_db(db_class)
+					print "LOGS: Returning from render_to_db"
 					
 					db_class.section = post_form.cleaned_data['section']
 					m_tags = post_form.cleaned_data['tags']
 					db_class.slug = slugify(db_class.title)
 					db_class.save()
+					print "LOGS: Returning from save"
 					db_class.tags.set(*m_tags)
 				
 				context = {'success':True}
