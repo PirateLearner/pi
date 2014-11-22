@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load cms_tags staticfiles sekizai_tags menu_tags %}
+{% block breadcrumb %}
+        {% show_breadcrumb "blogging/includes/breadcrumb.html" %}
+        {% block blog_breadcrumb %}
+        {% endblock blog_breadcrumb %}
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}

@@ -32,7 +32,7 @@ from blogging.utils import strip_image_from_data
 from blogging.tag_lib import strip_tag_from_data
 from blogging.utils import trucncatewords
 from django.utils.html import strip_tags
-from django.utils.html import escape
+
 import traceback
 # Create your views here.
 

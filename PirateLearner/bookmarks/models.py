@@ -3,8 +3,17 @@ import urlparse
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-
+from taggit.managers import TaggableManager
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
+import traceback
+import sys
+
+PRIVACY = (
+    ('pub','public'),
+    ('priv','private'),
+)
+
 
 class Bookmark(models.Model):
     
@@ -27,7 +36,8 @@ class BookmarkFolderInstance(models.Model):
     
     title = models.CharField(_("title"), max_length=100)
     description = models.TextField(_("description"), blank=True)
-    
+    def __unicode__(self):
+        return _("%(title)s") % {"title":self.title}
 
 class BookmarkInstance(models.Model):
     
@@ -37,19 +47,25 @@ class BookmarkInstance(models.Model):
     
     title = models.CharField(_("title"), max_length=100)
     description = models.TextField(_("description"), blank=True)
+    note = models.TextField(_("note"), blank=True)
     image_url = models.URLField()
     folder = models.ForeignKey(BookmarkFolderInstance, verbose_name=_("folder"))
-    
-
-    def save(self, force_insert=False, force_update=False):
-        if getattr(self, 'url', None):
-            try:
-                bookmark = Bookmark.objects.get(url=self.url)
-            except Bookmark.DoesNotExist:
-                # has_favicon=False is temporary as the view for adding bookmarks will change it
-                bookmark = Bookmark(url=self.url, description=self.description, title=self.title, adder=self.user)
-                bookmark.save()
-            self.bookmark = bookmark
+    privacy_level = models.CharField(choices=PRIVACY,max_length=4)
+    tags = TaggableManager(blank=True)
+    def save(self, url,force_insert=False, force_update=False):
+        try:
+            bookmark = Bookmark.objects.get(url=url)
+        except Bookmark.DoesNotExist:
+            # has_favicon=False is temporary as the view for adding bookmarks will change it
+            bookmark = Bookmark(url=url, adder=self.user)
+            bookmark.save()
+#         try:
+#             folder = BookmarkFolderInstance.objects.get(adder = self.user,title=folder_name )
+#         except BookmarkFolderInstance.DoesNotExist:
+#             folder = BookmarkFolderInstance(adder = self.user,title=folder_name,description= self.description )
+#             folder.save()
+        self.bookmark = bookmark
+#         self.folder = folder
         super(BookmarkInstance, self).save(force_insert, force_update)
     
     def delete(self):
@@ -60,3 +76,56 @@ class BookmarkInstance(models.Model):
     
     def __unicode__(self):
         return _("%(bookmark)s for %(user)s") % {"bookmark":self.bookmark, "user":self.user}
+    
+    def get_absolute_url(self):
+        return self.bookmark.url
+    
+    def get_image_url(self):
+        return self.image_url
+    
+    def get_title(self):
+        return self.title
+    
+    def get_description(self):
+        return self.description
+    
+    def get_parent_title(self):
+        return self.folder.title
+    
+    def get_tags(self):
+        tags = self.tags.all()
+        tag_list = []
+        for tag in tags:
+            try:
+                tmp = {}
+                tmp['name'] = tag.name
+                kwargs = {'tag': tag.name,}
+                tmp['url'] = reverse('bookmarks:tagged-bookmarks',kwargs=kwargs)
+                tag_list.append(tmp)
+            except:
+                print "Unexpected error:", sys.exc_info()[0]
+                for frame in traceback.extract_tb(sys.exc_info()[2]):
+                    fname,lineno,fn,text = frame
+                    print "Error in %s on line %d" % (fname, lineno)
+        return tag_list
+
+    
+def get_user_bookmark(url,user):
+    try:
+        bookmark_instance = BookmarkInstance.objects.get(bookmark___url = url,user = user)
+        if bookmark_instance:
+            return bookmark_instance
+        else:
+            return None
+    except:
+        return None
+    
+def get_bookmark(url):
+    try:
+        bookmark_instance = BookmarkInstance.objects.filter(bookmark___url = url)[0]
+        if bookmark_instance:
+            return bookmark_instance 
+        else:
+            return None
+    except:
+        return None

@@ -232,7 +232,7 @@ INSTALLED_APPS = (
     'ckeditor',
     'disqus',
     'dashboard',
-
+    'bookmarks',
     'pl_messages',
     'rest_framework',
     'meta_tags',
@@ -372,3 +372,5 @@ META_PUBLISHER_FB_ID = 'https://www.facebook.com/PirateLearner' # can use PAGE U
 META_PUBLISHER_GOOGLE_ID = 'https://plus.google.com/116465481265465787624' # Google+ ID 
 META_FB_APP_ID = ''
 
+# ftech the bookmark from web pages depending upon the tags written for social networking sites
+BOOKMARK_FETCH_PRIORITY = ['facebook','google','twitter','None']

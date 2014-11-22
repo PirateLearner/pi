@@ -230,9 +230,6 @@ class LatestEntriesPlugin(CMSPlugin):
         else:
             posts = BlogContent.published.all()
         
-        print posts
-        #for post in posts:
-        #    post.data = strip_image_from_data(post.data)
         tags = list(self.tags.all())
         if tags:
             posts = posts.filter(tags__in=tags)
