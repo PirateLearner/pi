@@ -30,7 +30,7 @@ class BlogContentSerializer(serializers.ModelSerializer):
 class AnnotationSerializer(serializers.ModelSerializer):
     user = serializers.Field(source='user.username')
     content_object = GenericRelatedField({
-        BlogContent: serializers.HyperlinkedRelatedField(view_name='annotation:blogcontent-detail'),
+        BlogContent: serializers.HyperlinkedRelatedField(view_name='rest:annotation:blogcontent-detail'),
         #BlogContent: BlogContentSerializer(),
     }, read_only=False)
     

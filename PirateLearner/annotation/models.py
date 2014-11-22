@@ -328,7 +328,7 @@ def get_annotation_for_model(content_object, include_moderated=False):
     """
     Return the QuerySet with all annotations for a given model.
     """
-    qs = annotation.get_model().objects.for_model(content_object)
+    qs = Annotation.get_model().objects.for_model(content_object)
 
     if not include_moderated:
         qs = qs.filter(privacy_level = privacy_levels['public'])

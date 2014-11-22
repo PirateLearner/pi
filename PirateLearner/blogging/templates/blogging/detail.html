@@ -2,8 +2,9 @@
 
 {% load cms_tags %}
 {% load disqus_tags %}
-{% disqus_dev %}
 
+
+{% disqus_dev %}
 {% block meta %}
 {% include "meta.html" with meta=meta only %}
 {% endblock %}
@@ -38,5 +39,6 @@
 <script src="{{ STATIC_URL }}ckeditor/ckeditor/ckeditor.js"></script>
 
 <link rel="stylesheet" href="{{ STATIC_URL }}css/overlay.css"></link>
+
 {% endblock %}
 

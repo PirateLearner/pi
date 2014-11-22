@@ -2,7 +2,7 @@ from django.conf.urls import *
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, routers
 
-from views.rest import UserViewSet, BlogContentViewSet, api_root, AnnotationViewSet, BlogContentCommentView, CurrentUserView, BlogParentViewSet
+from views.rest import UserViewSet, BlogContentViewSet, AnnotationViewSet, BlogContentCommentView, CurrentUserView, BlogParentViewSet
 
 from rest_framework.urlpatterns import format_suffix_patterns
 
@@ -52,7 +52,6 @@ annotation_detail = AnnotationViewSet.as_view({
 })
 
 urlpatterns = patterns('annotation.views',
-    url(r'^$', api_root),
     url(r'^post/ajax/$', 'annotations.post_annotation_ajax', name='annotation-post-comment-ajax'),
     url(r'^post/$',          'annotations.post_annotation',       name='annotation-post-comment'),
     url(r'^posted/$',        'annotations.annotation_done',       name='annotation-comment-done'),

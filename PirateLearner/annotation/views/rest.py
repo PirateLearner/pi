@@ -39,18 +39,7 @@ class BlogContentViewSet(viewsets.ModelViewSet):
 
     def pre_save(self, obj):
         obj.author_id = self.request.user
-
-@api_view(('GET',))
-#If not set, the API root will assert for not having appropriate permissions.
-@permission_classes((permissions.IsAuthenticatedOrReadOnly, ))
-def api_root(request, format=None):
-    return Response({
-        'blogcontent': reverse('annotation:blogcontent-list', request=request, format=format),
-        'user': reverse('annotation:user-list', request=request, format=format),
-        'annotations': reverse('annotation:annotation-list', request=request, format=format),
-        'currentUser': reverse('annotation:current-user', request=request, format=format),            
-        })
-    
+   
 
 class AnnotationViewSet(viewsets.ModelViewSet):
     
@@ -82,14 +71,14 @@ class BlogContentCommentView(APIView):
         
 
 class CurrentUserView(APIView):
-     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-     def get(self, request, format=None):
-         user_obj = self.request.user
-         if(user_obj.id != None):
-             serializer = UserSerializer(user_obj)
-         else:
-             serializer = AnonymousUserSerializer(user_obj)
-             print(serializer.data)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    def get(self, request, format=None):
+        user_obj = self.request.user
+        if(user_obj.id != None):
+            serializer = UserSerializer(user_obj)
+        else:
+            serializer = AnonymousUserSerializer(user_obj)
+            print(serializer.data)
              
-         return Response(serializer.data)
+        return Response(serializer.data)
 

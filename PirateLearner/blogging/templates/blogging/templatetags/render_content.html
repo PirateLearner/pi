@@ -3,20 +3,20 @@
 {{ attribute }}
 
 {% else %}
-
-		<div class="page-header heading">
+		<h1> 	{{ title }} </h1>
+		<span> by John Doe </span>       	
+		<div class="article-actions">
        		<span id="trigger-overlay" type="button" class="icon overlay-open pl-expand"></span>
-				<h1> 	{{ title }} </h1>       	
        	</div>			
-
 
 	{% for field in attribute_list %}		
 
-		<div class="paper paper-raise" id="commentable-container" >
+		<div class="article-body" id="commentable-container" >
 			{% autoescape off %}
 				{{ field.value }}
 			{% endautoescape %}
-		</div>		
+		</div>
+		
 	{% endfor %}
 
 {% endif %}

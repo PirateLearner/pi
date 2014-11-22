@@ -7,6 +7,16 @@ from cms.sitemaps import CMSSitemap
 from django.utils.functional import curry
 from django.views.defaults import *
 
+from voting.views import vote_on_object
+from blogging.models import BlogContent
+
+tip_dict = {
+    'model': BlogContent,
+    'template_object_name': 'blogcontent',
+    'slug_field': 'slug',
+    'allow_xmlhttprequest': 'true',
+}
+
 handler500 = curry(server_error, template_name='error_404.html')
 handler404 = curry(page_not_found, template_name='error_404.html')
 handler403 = curry(permission_denied, template_name='error_404.html')
@@ -25,8 +35,9 @@ urlpatterns = i18n_patterns('',
     url(r'^accounts/login/$', 'dashboard.views.custom_login'),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': {'cmspages': CMSSitemap}}),
-    url(r'^annotation/', include('annotation.urls', namespace='annotation')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r"^ratings/", include("agon_ratings.urls")),
+    url(r'^rest/', include("rest.urls", namespace="rest")),
     url(r'^', include('cms.urls')),
 )
 
