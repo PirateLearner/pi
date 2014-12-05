@@ -1,0 +1,46 @@
+{% extends "bookmarks/base.html" %}
+
+{% load cms_tags %}
+{% load disqus_tags %}
+
+
+{% disqus_dev %}
+{% block meta %}
+{% include "meta.html" with meta=meta only %}
+{% endblock %}
+
+
+{% block title %}
+{{ site }} | {{ bookmark.get_title }}
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="header-ribbon" id="overlay-target">
+
+		<h1> 	{{ bookmark.get_title }} </h1>
+		<span> by John Doe </span>       	
+		<div class="article-actions">
+       		<span id="trigger-overlay" type="button" class="icon overlay-open pl-expand"></span>
+       	</div>			
+
+		
+		<div class="article-body" id="commentable-container" >
+		
+		<p> {{ bookmark.get_note }} </p>
+		
+		</div>
+		
+
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script src="{{ STATIC_URL }}ckeditor/ckeditor/ckeditor.js"></script>
+
+<link rel="stylesheet" href="{{ STATIC_URL }}css/overlay.css"></link>
+
+{% endblock %}
+

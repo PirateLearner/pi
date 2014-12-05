@@ -63,16 +63,17 @@ USE_TZ = True
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
 #STATIC_URL = '/static/'
-STATIC_ROOT = '/home/craft/git/PirateLearnerStatic/static/'
+STATIC_ROOT = ''
 STATIC_URL = '/static/static/'
 
-MEDIA_ROOT = '/home/craft/git/PirateLearnerStatic/media'
+MEDIA_ROOT = '/home/abhishek/pi_cms/PirateLearnerStatic/media'
 MEDIA_URL = '/media/'
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    '/home/abhishek/pi_cms/PirateLearnerStatic/static/',
 )
 
 # List of finder classes that know how to find static files in
@@ -237,6 +238,7 @@ INSTALLED_APPS = (
     'meta_tags',
     'project_mgmt',
 #     'django_mathjax',
+    'spotlight',
 )
 
 LANGUAGES = (
@@ -371,4 +373,5 @@ META_PUBLISHER_GOOGLE_ID = 'https://plus.google.com/116465481265465787624' # Goo
 META_FB_APP_ID = ''
 
 # ftech the bookmark from web pages depending upon the tags written for social networking sites
-BOOKMARK_FETCH_PRIORITY = ['facebook','google','twitter','None']
+BOOKMARK_FETCH_PRIORITY = ['facebook','google','twitter','extra','None']
+BOOKMARK_DEFAULT_IMAGE = STATIC_URL + 'images/bookmark.png'

@@ -1,0 +1,31 @@
+{% extends "bookmarks/base.html" %}
+{% load cms_tags staticfiles sekizai_tags menu_tags %}
+
+{% block content %}
+
+{% load url from future %}
+{% load thumbnail %}
+	<div class="row  panel panel-primary">
+			<!-- Stacked Featured posts for this section -->
+				{% for node in featured_posts %}
+				<div class="media feature">
+                	<a  class="image" href="{{node.object.get_absolute_url}}" class="pull-left">
+						<img class="img-responsive" src="{{ node.object.get_image_url }}" class="media-object"></img>                	
+                	</a>
+                	<div class="feature-heading">
+                		<a class="title" href="{{node.object.get_absolute_url}}">
+                			 {{ node.object.get_title }}
+                		</a>
+                	</div>
+                	<div class="feature-tags"><span class="glyphicon glyphicon-tags"></span> <b>Tags:</b> 
+                		<ul class="post-tags">
+                			{% for tag in node.object.get_tags %}
+                			 <li> <a href="{{ tag.url }}"> {{ tag.name }}</a></li>
+                			{% endfor %} 
+                		</ul>
+                	</div>
+                </div>
+                {% endfor %}					
+	</div>
+	
+	{% endblock %}	

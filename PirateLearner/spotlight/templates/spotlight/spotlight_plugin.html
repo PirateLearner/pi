@@ -1,0 +1,31 @@
+{% load url from future %}
+{% load thumbnail %}
+
+{% for node in instance.get_spotlights %}
+
+
+	<div class="media feature content-block-featured paper unit-tile-2">    
+	   <div class="unit-tile-image"><img src="{{ node.content_object.get_image_url }}" alt="SpotLight"/></div>                   
+									<div class="unit-tile-title"><p>
+									{{ node.content_object.get_title }}
+									</p></div>                                                                   
+									<div class="unit-tile-blurb-box">                                     
+										<div class="unit-tile-blurb-text"> 
+										{{ node.content_object.get_summary }}
+										</div>                                              
+									</div>                                                                
+									<div class="unit-tile-tags">
+									{% for tag in node.content_object.get_tags %}
+									 <li> <a href="{{ tag.url }}"> {{ tag.name }}</a></li>
+									{% endfor %} 									
+									
+
+									</div>               
+									<div class="unit-tile-date">2 August, 1989</div>                      
+									<div class="unit-tile-author">John Doe</div>                          
+									<div class="unit-tile-stats">Avg. Score: 4.5/10</div>                 
+									<div class="unit-tile-overlay">                                       
+										<div class="unit-tile-overlay-call">Read full post</div>									    
+									</div>	                                                               
+                		</div>
+{% endfor %} 

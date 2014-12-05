@@ -154,6 +154,10 @@ class BlogContent(models.Model):
         
         return summary
     
+    def get_title(self):
+        return self.title
+    
+    
     def find_path(self,section): 
         parent_list = section.get_ancestors(include_self=True)
         return_path = '/'.join(word.slug for word in parent_list)

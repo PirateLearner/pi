@@ -23,7 +23,8 @@ import traceback
 from django.contrib.auth.decorators import permission_required
 import sys
 from django.core.exceptions import ObjectDoesNotExist
-
+from meta_tags.views import Meta 
+from blogging.utils import trucncatewords
 
 def bookmarks(request):
     bookmarks = BookmarkInstance.objects.exclude(privacy_level = 'priv',user__is_staff=True).order_by("-saved")
@@ -77,13 +78,13 @@ def add(request):
                 initial["url"] = request.GET["url"]
                 bookmark_instance = get_user_bookmark(initial["url"], request.user)
                 if bookmark_instance:
-                    initial['image_url'] = bookmark_instance.image_url
+                    initial['image_list'] = [bookmark_instance.image_url]
                     initial['title'] = bookmark_instance.title
                     initial['description'] = bookmark_instance.description
                 else:
                     bookmark_instance = get_bookmark(initial["url"])
                     if bookmark_instance:
-                        initial['image_url'] = bookmark_instance.image_url
+                        initial['image_list'] = [bookmark_instance.image_url]
                         initial['title'] = bookmark_instance.title
                         initial['description'] = bookmark_instance.description
                     else:
@@ -193,6 +194,29 @@ def add_folder(request,model_name):
 
 
 
+def bookmark_details(request,slug):
+    current_section = slug.split("/")[-1]
+    print current_section
+    try:
+        post_id = int(current_section)
+        print "LOGS:: This is Detail page of bookmarks"
+        try:
+            bookmark = BookmarkInstance.objects.get(pk=post_id)
+            meta = Meta(title = bookmark.title, description = trucncatewords(bookmark.description,120), section= bookmark.folder.title, url = bookmark.get_absolute_url(),
+                    image = bookmark.get_image_url(), author = bookmark.user, date_time = bookmark.saved ,
+                    object_type = 'article', keywords = [ tags.name for tags in bookmark.tags.all()])
+            return render_to_response("bookmarks/detail.html", {'bookmark':bookmark,'meta':meta,} ,context_instance=RequestContext(request))
+
+        except:
+            print "Unexpected error:", sys.exc_info()[0]
+            for frame in traceback.extract_tb(sys.exc_info()[2]):
+                fname,lineno,fn,text = frame
+                print "Error in %s on line %d" % (fname, lineno)
+            return Http404
+    except ValueError:
+        print "Unexpected error invalid URL:", sys.exc_info()[0]
+        return Http404
+        
 
 
 
