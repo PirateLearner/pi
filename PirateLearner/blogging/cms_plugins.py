@@ -50,7 +50,7 @@ class ContactPlugin(BlogPlugin):
 #        instance.render_template = getattr(form, 'template', self.render_template)
 
         if request.method == "POST" and form.is_valid():
-            subject = 'Contact mail from PirateLearner'
+            subject = 'Contact mail from PirateLearner( ' + form.cleaned_data['contact_type'] + ' )'
             message = 'Name: ' + form.cleaned_data['name'] + '\n' + 'email: ' + form.cleaned_data['email'] + '\n Body: ' + form.cleaned_data['content']
             recipient_list = [instance.to_email]
             mail_admins(subject, message, fail_silently=False)
