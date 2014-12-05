@@ -36,10 +36,13 @@ class ContactPlugin(BlogPlugin):
     model = models.ContactPlugin
     
     def create_form(self, instance, request):
+        contact_type = request.GET.get('contact_type') or None
+        if contact_type is None:
+            contact_type = 'Queries'
         if request.method == "POST":
             return ContactForm(data=request.POST)
         else:
-            return ContactForm()    
+            return ContactForm(initial={'contact_type':contact_type})    
     def render(self, context, instance, placeholder):
         request = context['request']
 
