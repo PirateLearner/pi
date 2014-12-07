@@ -1,9 +1,9 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from bookmarks.models import BookmarkInstance, BookmarkFolderInstance, PRIVACY
+from bookmarks.models import BookmarkInstance, BookmarkFolderInstance, PRIVACY, LatestBookmarksPlugin
 from taggit.models import Tag
-from django_select2.fields import AutoModelSelect2TagField, AutoSelect2Field, AutoModelSelect2Field
+from django_select2.fields import AutoModelSelect2TagField,AutoModelSelect2MultipleField
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from crispy_forms.layout import Layout, Field, Fieldset, ButtonHolder, Submit
@@ -199,5 +199,15 @@ class BookmarkInstanceUpdateForm(forms.Form):
         instance.folder = self.cleaned_data["folder"]
         instance.privacy_level = self.cleaned_data["privacy_level"]
         return instance
-        
+
+class TagSelectField(AutoModelSelect2MultipleField):
+    queryset = Tag.objects.all()
+    search_fields = ['name__icontains', ]
+    def get_model_field_values(self, value):
+        return {'name': value}
+
     
+class LatestBookmarksForm(forms.ModelForm):
+    tags = TagSelectField()
+    class Meta:
+        model = LatestBookmarksPlugin

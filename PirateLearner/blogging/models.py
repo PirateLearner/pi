@@ -27,6 +27,14 @@ from annotation.models import Annotation
 
 # Create your models here.
 
+LATEST_PLUGIN_TEMPLATES = (
+  ('blogging/plugin/plugin_teaser.html', 'Teaser View'),
+  ('blogging/plugin/plugin_section.html', 'Section View'),
+  ('blogging/plugin/sidebar_list.html', 'Text List'),
+  ('blogging/plugin/teaser_list.html', 'Stacked List'),
+)
+ 
+
 class RelatedManager(models.Manager):
 
     def get_query_set(self):
@@ -154,6 +162,10 @@ class BlogContent(models.Model):
         
         return summary
     
+    def get_title(self):
+        return self.title
+    
+    
     def find_path(self,section): 
         parent_list = section.get_ancestors(include_self=True)
         return_path = '/'.join(word.slug for word in parent_list)
@@ -189,6 +201,9 @@ class BlogContent(models.Model):
                     print "Error in %s on line %d" % (fname, lineno)
         return tag_list
     
+    def get_author(self):
+        return self.author_id.first_name or self.author_id.username
+    
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -210,7 +225,8 @@ class LatestEntriesPlugin(CMSPlugin):
     latest_entries = models.IntegerField(default=5, help_text=('The number of latests entries to be displayed.'))
     parent_section = models.ForeignKey(BlogParent,null=True,blank=True)
     tags = models.ManyToManyField('taggit.Tag', blank=True, help_text=('Show only the blog posts tagged with chosen tags.'))
-
+    template = models.CharField('Template', max_length=255,
+                                choices = LATEST_PLUGIN_TEMPLATES, default='blogging/plugin/plugin_teaser.html')
     def __unicode__(self):
         return str(self.latest_entries)
 

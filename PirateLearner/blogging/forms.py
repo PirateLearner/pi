@@ -22,7 +22,12 @@ CUSTOM_FIELD_TYPE = (
 #	('IntegerField', 'Number'),
 )
 
-
+CONTACT_TYPE = (
+			('Queries','Make a Query!'),
+			('FeedBack','Give Your Feedback!'),
+			('Feature','Suggest A Feature!'),
+			('Join','Join Us!'),
+			)
 
 def validate_empty(value):
     if value :
@@ -182,6 +187,8 @@ class SectionPluginForm(forms.ModelForm):
 		self.fields['parent_section'].choices = choices
 
 class ContactForm(forms.Form):
+	contact_type = forms.ChoiceField(label="Choose Type of Contact",required=True,
+									widget = forms.Select(),choices=CONTACT_TYPE)
 	name = forms.CharField(
         label="What is your name?",
         max_length=80,
@@ -220,6 +227,7 @@ class ContactForm(forms.Form):
 		self.helper.layout = Layout(
 				Fieldset(
                 'Queries, Questions, Suggestions, Feedback or for giving a pat on our back, please feel free to contact Us',
+                'contact_type',
                 'name',
                 'email',
                 'content',

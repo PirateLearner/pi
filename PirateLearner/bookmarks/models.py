@@ -4,10 +4,14 @@ import urlparse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from taggit.managers import TaggableManager
+from django.db.models import Q
+
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from cms.models.pluginmodel import CMSPlugin
 import traceback
 import sys
+from django.template.defaultfilters import slugify
 
 PRIVACY = (
     ('pub','public'),
@@ -78,13 +82,25 @@ class BookmarkInstance(models.Model):
         return _("%(bookmark)s for %(user)s") % {"bookmark":self.bookmark, "user":self.user}
     
     def get_absolute_url(self):
+        kwargs = {'slug': slugify(self.title)+'/'+str(self.id),}
+        return reverse('bookmarks:detail-view', kwargs=kwargs)
+    
+    def get_external_url(self):
         return self.bookmark.url
+    
     
     def get_image_url(self):
         return self.image_url
     
     def get_title(self):
         return self.title
+
+    def get_note(self):
+        return self.note
+
+
+    def get_summary(self):
+        return self.description
     
     def get_description(self):
         return self.description
@@ -108,6 +124,29 @@ class BookmarkInstance(models.Model):
                     fname,lineno,fn,text = frame
                     print "Error in %s on line %d" % (fname, lineno)
         return tag_list
+
+class LatestBookmarksPlugin(CMSPlugin):
+
+    latest_entries = models.IntegerField(default=5, help_text=('The number of latests entries to be displayed.'))
+    tags = models.ManyToManyField('taggit.Tag', blank=True, help_text=('Show only the bookmarks tagged with chosen tags.'))
+
+    def __unicode__(self):
+        return str(self.latest_entries)
+
+    def copy_relations(self, oldinstance):
+        self.tags = oldinstance.tags.all()
+
+    def get_bookmarks(self):
+        posts = BookmarkInstance.objects.all().filter(user__is_staff=True,privacy_level='pub').order_by('-saved')
+        print 'Printing get_bookmarks'
+        for post in posts:
+            print post
+        
+        tags = list(self.tags.all())
+        if tags:
+            posts = posts.filter(tags__in=tags)
+        return posts[:self.latest_entries]
+
 
     
 def get_user_bookmark(url,user):

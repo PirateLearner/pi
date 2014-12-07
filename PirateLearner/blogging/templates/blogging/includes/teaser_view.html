@@ -3,7 +3,7 @@
 
 			<!-- Stacked Featured posts for this section -->
 	{% for node in nodes %}
-	<div class="media feature content-block-article paper">
+	<div class="media feature content-block-article paper" data-groups='["articles"]'>
     	<a  class="image" href="{{node.get_absolute_url}}" class="pull-left">
 			<img class="img-responsive" src="{{ node.get_image_url }}" class="media-object"></img>                	
     	</a>

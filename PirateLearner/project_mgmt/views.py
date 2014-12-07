@@ -16,11 +16,11 @@ def index(request):
     for element in feature_list:
         print element['status'], element['completed']
         if element['completed'] == 'YES':
-             completed.append(element)
+            completed.append(element)
         elif element['status'] != '0':
-             started.append(element)
+            started.append(element)
         else:
-             pending.append(element)
+            pending.append(element)
               
     render_list = completed[0:2] + started[0:2] + pending[0:1] 
     

@@ -119,6 +119,9 @@ def insert_tag_id(data,id_count):
 
     
 #    print soup.body.contents
+
+    filter_elements = ['p','span','img']
+
     print "Entering Soup"
     soup = BeautifulSoup(data)
 
@@ -150,10 +153,12 @@ def insert_tag_id(data,id_count):
             id_count = id_count + 1
             tag['id'] = id_count
             
+            
     for tag_child in soup.body.descendants:
         
-        if tag_child.name == 'span':
+        if tag_child.name in filter_elements:
             tag_child['style'] = " "
+
         
     print "Now printing altered html "
     final_content = ''.join(str(tag) for tag in soup.body.contents)

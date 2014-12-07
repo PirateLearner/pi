@@ -118,7 +118,11 @@ in generic_relations/relations.py by:
             # Necessary because of context, field resolving etc.
             serializer.initialize(self.parent, field_name)
             return serializer.to_native(value)
-     
+
+Note: Upgrading blogging plugin schema     
+--------------------------------------
+
+ALTER TABLE `blogging_latestentriesplugin` ADD COLUMN `template` varchar(255) NOT NULL DEFAULT 'blogging/plugin/plugin_teaser.html';
 
 
 

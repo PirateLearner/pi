@@ -50,6 +50,7 @@ from cms.models.pluginmodel import CMSPlugin
 from cms.models import Page
 from django.core.validators import MinValueValidator, MaxValueValidator
 
+from PirateLearner import settings
 # Create your models here.
 """
 class Project(models.Model):
@@ -137,5 +138,5 @@ class WishlistPlugin(CMSPlugin):
     def get_suggestion_url(self):
         #page = Page.objects.get(title='Contact Us') or None
         from django.core.urlresolvers import reverse
-        return ('http://piratelocal.com/en/contact-us/?contact_type=Feature')
+        return (settings.DOMAIN_URL+'en/contact-us/?contact_type=Feature')
 

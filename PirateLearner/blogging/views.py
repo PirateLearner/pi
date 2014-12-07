@@ -309,6 +309,9 @@ def teaser(request,slug):
 				patch_html = generate_diffs(old_version, new_version, "data",cleanup="semantic")
 		except:
 			print "Unexpected error:", sys.exc_info()[0]
+			for frame in traceback.extract_tb(sys.exc_info()[2]):
+				fname,lineno,fn,text = frame
+				print "Error in %s on line %d" % (fname, lineno)
 			raise Http404
 
 		context = RequestContext(request, {

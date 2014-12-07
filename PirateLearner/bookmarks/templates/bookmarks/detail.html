@@ -1,0 +1,55 @@
+{% extends "bookmarks/base.html" %}
+
+{% load cms_tags %}
+{% load disqus_tags %}
+
+
+{% disqus_dev %}
+{% block meta %}
+{% include "meta.html" with meta=meta only %}
+{% endblock %}
+
+
+{% block title %}
+{{ bookmark.get_title }} | {{ request.get_host }}
+{% endblock %}
+
+{% block bookmark_title %}
+{% endblock %}
+
+{% block bookmark_content %}
+		<div class="header-ribbon" id="overlay-target">
+			<h1> 	{{ bookmark.get_title }} </h1>    	
+			<div class="article-actions">
+				<div class="article-actions__button">
+		       		<span class="glyphicon glyphicon-share-alt"></span>
+		       		<span class="icon-helper">
+		       			<a href="{{ bookmark.get_external_url }}" target="_blank" rel="nofollow">Visit Page</a>
+		       		</span>
+	       		</div>
+	       	</div>				
+			<div class="article-body" id="commentable-container" >
+				<img class="img-responsive article-image" src="{{ bookmark.get_image_url }}"/>
+				<p> {{ bookmark.get_note }} </p>
+			</div>
+			<div class="article-footer clearfix">
+				<div class="bookmark-button btn btn-primary">
+					<a href="{{ bookmark.get_external_url }}" target="_blank" rel="nofollow">Visit Page</a>
+				</div>
+			</div>
+		</div>
+		
+{% ifequal bookmark.privacy_level 'pub' %}			
+	{% load disqus_tags %}
+	{% disqus_show_comments %}
+{% endifequal %}
+		
+{% endblock %}
+
+{% block extra_script %}
+<script src="{{ STATIC_URL }}ckeditor/ckeditor/ckeditor.js"></script>
+
+<link rel="stylesheet" href="{{ STATIC_URL }}css/overlay.css"></link>
+
+{% endblock %}
+

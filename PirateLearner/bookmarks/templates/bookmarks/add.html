@@ -22,7 +22,7 @@
 {% load cms_tags staticfiles sekizai_tags menu_tags %}
 
 
-{% block content %}
+{% block bookmark_content %}
 
 {% if messages %}
 <ul class="messages" id="message_head">
@@ -50,25 +50,8 @@
      </div>
 </div>
 
-
 {% load crispy_forms_tags %}
 
 {% crispy bookmark_form bookmark_form.helper %}
-
-	<div class="row  panel panel-primary hidden" id="snippet_header" >
-			<!-- Stacked Featured posts for this section -->
-				<div class="media feature">
-                	<a  class="image" href="#" class="pull-left">
-						<img class="img-responsive" src="" id="snippet_image" class="media-object"></img>                	
-                	</a>
-                	<div class="feature-heading">
-                		<span class="eyebrow" > </span>
-                		<a class="title" id="snippet_title" href="#">
-
-                		</a>
-                	</div>
-                </div>
-	</div>
-
 
 	{% endblock %}	

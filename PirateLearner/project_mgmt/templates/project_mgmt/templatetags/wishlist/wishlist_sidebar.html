@@ -1,0 +1,19 @@
+<div class="tile col-sm-12 col-md-12 col-lg-12 paper paper-raise paper-vintage">
+	<div class="tile-heading text-center"> Work in Progress </div>
+		<div class="tile-body feature-list">
+			<ul class="list-group">
+				{% for feature in features %}
+					<li class="list-group-item">
+						<p class="feature-name">{{ feature.name }}</p>
+						<div class="progress fix">
+							<div class="progress-bar progress-bar-{{ feature.color }}" style="width: {{ feature.status }}%;">
+								<span class="sr-only">{{ feature.status }}% complete</span>				
+							</div>
+							<p class="fix-bar"><strong>{{ feature.status }}% complete</strong></p>
+						</div>		
+					</li>
+				{% endfor %}
+				</ul>
+				<div class="btn btn-lg btn-primary" type="button" onClick="document.location.href = ('{{ contact_url }}');">Suggest a feature</div>		
+		</div>
+</div>

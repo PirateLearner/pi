@@ -1,0 +1,32 @@
+{% extends "spotlight/base.html" %}
+{% load cms_tags staticfiles sekizai_tags menu_tags %}
+
+{% block spotlight_content %}
+
+{% load url from future %}
+{% load thumbnail %}
+				<!-- Stacked Featured posts for this section -->
+				{% for node in featured_posts %}
+				<div class="media feature content-stack-article paper">
+                	<a  class="image" href="{{node.object.get_absolute_url}}" class="pull-left">
+						<img class="img-responsive" src="{{ node.object.get_image_url }}" class="media-object"></img>                	
+                	</a>
+                	<div class="feature-heading">
+                		<a class="title" href="{{node.object.get_absolute_url}}">
+                			 {{ node.object.get_title }}
+                		</a>
+                	</div>
+                	<div class="feature-body">
+                		{{ node.object.get_summary }}
+                	</div>
+                	<div class="feature-tags"><span class="glyphicon glyphicon-tags"></span> <b>Tags:</b> 
+                		<ul class="post-tags">
+                			{% for tag in node.object.get_tags %}
+                			 <li> <a href="{{ tag.url }}"> {{ tag.name }}</a></li>
+                			{% endfor %} 
+                		</ul>
+                	</div>
+                </div>
+                {% endfor %}					
+	
+	{% endblock %}	
