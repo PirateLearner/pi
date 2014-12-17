@@ -102,19 +102,22 @@ class UserProfile(models.Model):
             else:
                 return None
             
-        
-        account_uid = SocialAccount.objects.filter(user_id=self.user.id, provider='facebook')
-        if len(account_uid):
-            return account_uid[0]
-
-        account_uid = SocialAccount.objects.filter(user_id=self.user.id, provider='google')
-        if len(account_uid):
-            return account_uid[0]
-
-        account_uid = SocialAccount.objects.filter(user_id=self.user.id, provider='twitter')
-        if len(account_uid):
-            return account_uid[0]
-
+        try:
+            account_uid = SocialAccount.objects.filter(user_id=self.user.id, provider='facebook')
+            if len(account_uid):
+                return account_uid[0]
+    
+            account_uid = SocialAccount.objects.filter(user_id=self.user.id, provider='google')
+            if len(account_uid):
+                return account_uid[0]
+    
+            account_uid = SocialAccount.objects.filter(user_id=self.user.id, provider='twitter')
+            if len(account_uid):
+                return account_uid[0]
+        except:
+            return None
+        else:
+            return None
     
     def is_social_account_exist(self,provider):
             account_uid = SocialAccount.objects.filter(user_id=self.user.id, provider=provider)

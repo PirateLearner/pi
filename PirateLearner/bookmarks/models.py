@@ -12,7 +12,7 @@ from cms.models.pluginmodel import CMSPlugin
 import traceback
 import sys
 from django.template.defaultfilters import slugify
-
+from bookmarks import settings
 PRIVACY = (
     ('pub','public'),
     ('priv','private'),
@@ -90,7 +90,10 @@ class BookmarkInstance(models.Model):
     
     
     def get_image_url(self):
-        return self.image_url
+        if self.image_url:
+            return self.image_url
+        else:
+            return settings.BOOKMARK_DEFAULT_IMAGE
     
     def get_title(self):
         return self.title

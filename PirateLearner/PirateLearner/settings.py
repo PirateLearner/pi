@@ -16,7 +16,7 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-
+DOMAIN_URL = '//piratelocal.com/'
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -177,6 +177,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'allauth.account.context_processors.account',
     'allauth.socialaccount.context_processors.socialaccount',
+    'PirateLearner.context_processors.site_processor'
 )
 
 TEMPLATE_DIRS = (
@@ -239,6 +240,7 @@ INSTALLED_APPS = (
     'project_mgmt',
 #     'django_mathjax',
     'spotlight',
+    'django_comments',
 )
 
 LANGUAGES = (
@@ -287,7 +289,8 @@ SOCIALACCOUNT_QUERY_EMAIL = True
 SOCIALACCOUNT_PROVIDERS = {
     'facebook': {
         'SCOPE': ['email', 'publish_stream'],
-        'METHOD': 'js_sdk'  # instead of 'oauth2'
+#         'METHOD': 'js_sdk'  # instead of 'oauth2'
+        'METHOD': 'oauth2'  # instead of 'oauth2'
     }
 }
 
@@ -374,4 +377,4 @@ META_FB_APP_ID = ''
 
 # ftech the bookmark from web pages depending upon the tags written for social networking sites
 BOOKMARK_FETCH_PRIORITY = ['facebook','google','twitter','extra','None']
-BOOKMARK_DEFAULT_IMAGE = STATIC_URL + 'images/bookmark.png'
+BOOKMARK_DEFAULT_IMAGE = DOMAIN_URL + STATIC_URL + 'images/bookmark.png'

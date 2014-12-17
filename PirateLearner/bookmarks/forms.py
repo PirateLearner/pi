@@ -10,7 +10,7 @@ from crispy_forms.layout import Layout, Field, Fieldset, ButtonHolder, Submit
 from bookmarks.widgets import SelectWithPopUp
 from django.core.urlresolvers import reverse
 from bookmarks import utils
-
+from bookmarks import settings
 class TagField(AutoModelSelect2TagField):
     queryset = Tag.objects.all()
     search_fields = ['name__icontains', ]
@@ -116,6 +116,7 @@ class BookmarkInstanceForm(forms.ModelForm):
         if not self.cleaned_data.get("url", None):
             return self.cleaned_data
         self.cleaned_data["url"] = utils.strip_url(self.cleaned_data["url"])
+            
         if BookmarkInstance.objects.filter(bookmark__url=self.cleaned_data["url"], user=self.user).count() > 0:
             raise forms.ValidationError(_("You have already bookmarked this link."))
         return self.cleaned_data

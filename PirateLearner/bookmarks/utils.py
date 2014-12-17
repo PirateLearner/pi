@@ -19,13 +19,20 @@ def truncate_words(mystring,numberofwords=100):
     return ' '.join(mystring.split()[:numberofwords])
     
 
-def get_domain_from_url(url):
-    parsed_uri = urlparse( url )
-    domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
-    print domain
-    return domain
-
-
+def get_domain_from_url(url,image):
+    # first check if netloc exist in image (for wikipedia)
+    parsed_image = urlparse( url )
+    net_loc = '{uri.netloc}/'.format(uri=parsed_image)
+    if net_loc:
+        parsed_uri = urlparse( url )
+        domain = '{uri.scheme}:'.format(uri=parsed_uri)
+        print domain
+        return domain
+    else:
+        parsed_uri = urlparse( url )
+        domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
+        print domain
+        return domain
 
 def validate_image_url(image):
     validate = URLValidator()
@@ -37,7 +44,7 @@ def validate_image_url(image):
         return False
 
 def convert_rel_images(image_list,url):
-    image_list = [image if validate_image_url(image) else get_domain_from_url(url)+image for image in image_list]
+    image_list = [image if validate_image_url(image) else get_domain_from_url(url,image)+image for image in image_list]
     print "LOGS: after coversion ", image_list
     return image_list
 

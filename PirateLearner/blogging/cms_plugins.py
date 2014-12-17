@@ -14,12 +14,14 @@ class BlogPlugin(CMSPluginBase):
 
 class LatestEntriesPlugin(BlogPlugin):
 
-    render_template = 'blogging/plugin/plugin_teaser.html'
+    render_template = models.LATEST_PLUGIN_TEMPLATES[0][0]
     name = _('Latest Blog Entries')
     model = models.LatestEntriesPlugin
     form = LatestEntriesForm
 
     def render(self, context, instance, placeholder):
+        if instance and instance.template:
+            self.render_template = instance.template
         context['instance'] = instance
 #	context['nodes'] = self.model.get_post()
         return context
@@ -36,12 +38,19 @@ class ContactPlugin(BlogPlugin):
     model = models.ContactPlugin
     
     def create_form(self, instance, request):
-        contact_type = request.GET.get('contact_type') or None
+        contact_type = request.GET.get('contact_type',None)
+        
+        
         if contact_type is None:
             contact_type = 'Queries'
+        
+        print "Contact form contact_type : ", contact_type
+            
         if request.method == "POST":
+            print "Contact form inside post"
             return ContactForm(data=request.POST)
         else:
+            print "Contact form inside get"
             return ContactForm(initial={'contact_type':contact_type})    
     def render(self, context, instance, placeholder):
         request = context['request']
