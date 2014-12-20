@@ -5,3 +5,5 @@
 .project
 .settings
 *.*~
+blogging/custom
+blogging/custom/*

@@ -16,6 +16,7 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+#Domain name
 DOMAIN_URL = '//piratelocal.com/'
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
@@ -160,7 +161,8 @@ MIDDLEWARE_CLASSES = (
     'cms.middleware.page.CurrentPageMiddleware',
     'cms.middleware.toolbar.ToolbarMiddleware',
     'cms.middleware.language.LanguageCookieMiddleware',
-    'django.middleware.transaction.TransactionMiddleware'
+    'django.middleware.transaction.TransactionMiddleware',
+    'django.contrib.redirects.middleware.RedirectFallbackMiddleware'
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -177,7 +179,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'allauth.account.context_processors.account',
     'allauth.socialaccount.context_processors.socialaccount',
-    'PirateLearner.context_processors.site_processor'
+    'PirateLearner.context_processors.site_processor',
 )
 
 TEMPLATE_DIRS = (
@@ -240,6 +242,7 @@ INSTALLED_APPS = (
     'project_mgmt',
 #     'django_mathjax',
     'spotlight',
+    'django.contrib.redirects',
     'django_comments',
 )
 
@@ -270,7 +273,7 @@ CMS_TEMPLATES = (
     ## Customize this
     ('page.html', 'Page'),
     ('feature.html', 'Page with Feature'),
-    ('content_page.html', 'About Page'),
+    ('about.html', 'About Page'),
     ('content_page.html', 'Contact Us'),
 )
 
@@ -377,4 +380,4 @@ META_FB_APP_ID = ''
 
 # ftech the bookmark from web pages depending upon the tags written for social networking sites
 BOOKMARK_FETCH_PRIORITY = ['facebook','google','twitter','extra','None']
-BOOKMARK_DEFAULT_IMAGE = DOMAIN_URL + STATIC_URL + 'images/bookmark.png'
+BOOKMARK_DEFAULT_IMAGE = DOMAIN_URL+STATIC_URL+'images/death_and_friends.jpg'

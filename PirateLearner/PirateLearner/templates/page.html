@@ -2,7 +2,6 @@
 {% load cms_tags staticfiles sekizai_tags menu_tags %}
 
 {% block breadcrumb %}
-        {% show_breadcrumb "blogging/includes/breadcrumb.html" %}
 {% endblock %}
 
 
@@ -58,6 +57,17 @@
         <feMergeNode in="SourceGraphic" />
     </feMerge>
     </filter>
+    
+    <filter id="filter4850" height="1.9540706" width="1.199769" y="-0.47703531" x="-0.099884511">
+   		<feGaussianBlur id="feGaussianBlur4852" stdDeviation="2.1218026"/>
+  	</filter>
+  <filter id="filter4905" height="1" width="1" color-interpolation-filters="sRGB" y="0" x="0">
+   	<feTurbulence id="feTurbulence4907" baseFrequency="1" seed="0" result="result0" numOctaves="3" type="fractalNoise"/>
+   	<feColorMatrix id="feColorMatrix4909" type="saturate" values="0" result="result4"/>
+   	<feComposite id="feComposite4911" in2="result4" k3="0.5" k2="0.5" k1="1.25" result="result2" in="SourceGraphic" operator="arithmetic"/>
+   	<feBlend id="feBlend4913" mode="normal" in="result2" in2="SourceGraphic" result="result5"/>
+   	<feComposite id="feComposite4915" operator="in" result="result3" in2="SourceGraphic" in="result5"/>
+  </filter>
     
     <linearGradient id="purpleGradient" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" style="stop-color:#AE96DD;stop-opacity:1" />
@@ -267,8 +277,8 @@
   <g id="billboard"  transform="translate(640,0)">
     <g id="Billboard-Text" class="visible billboard">
       <text  class="billboard-slogan" x="0" y="60" > Start Learning Now! </text>
-      <a xlink:href="#" class="billboard-link">
-      <rect class="buttonSVG" width="240" height="50" x="-120" y="120" rx="5" ry="5"/>
+      <a xlink:href="/bookmarks/" class="billboard-link">
+      	<rect class="buttonSVG" width="240" height="50" x="-120" y="120" rx="5" ry="5"></rect>
         <text id="BillboardButtonLabel" class="visible billboard-link" x="0" y="155" >Get started. </text>
       </a>
     </g>
@@ -277,10 +287,10 @@
         <tspan class="billboard-slogan" x="0" y="60"> Best learning resources in one place</tspan>
         <tspan class="billboard-tagline" x="0" y="97">Most helpful tutorials curated from across the internet to make coursework easier and fun.</tspan>
       </text>
-      <a xlink:href="#" class="billboard-link">
-      <rect class="buttonSVG" width="240" height="50" x="-120" y="120" rx="5" ry="5"/>
+      <a xlink:href="/bookmarks/" class="billboard-link">
+      	<rect class="buttonSVG" width="240" height="50" x="-120" y="120" rx="5" ry="5"/>
         <text id="BillboardButtonLabel" class="visible billboard-link" x="0" y="155" >Start now </text>
-    </a>
+	  </a>
     </g>
     <g id="Create-Text" class="billboard">
       <text  class="billboard-slogan" x="0" y="60"> </text>
@@ -289,7 +299,7 @@
         <tspan class="billboard-tagline" x="0" y="97">Know a better way to explain a concept? Share it with others!</tspan>
       </text>
       <a xlink:href="#" class="billboard-link">
-      <rect class="buttonSVG" width="240" height="50" x="-120" y="120" rx="5" ry="5"/>
+      	<rect class="buttonSVG" width="240" height="50" x="-120" y="120" rx="5" ry="5"/>
         <text id="BillboardButtonLabel" class="visible billboard-link" x="0" y="155" >Know more </text>
     </a>
     </g>    
@@ -305,7 +315,7 @@
     </g>
     <g  id="Announce-Text" class="billboard">
       <text class="billboard-slogan" x="0" y="60" > Share the good word, join us on these social networks! </text>
-           <a xlink:href="https://facebook.com" class="billboard-link">
+           <a xlink:href="https://www.facebook.com/PirateLearner" class="billboard-link">
         <g
      id="facebook-button"
      inkscape:label="#g3997" transform="translate(-600,0)">
@@ -326,7 +336,7 @@
        style="fill:#ffffff;stroke:#3c5a98;stroke-width:0.30000000999999998;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;fill-opacity:1" />
   </g>
   </a>
-  <a xlink:href="https://plus.google.com" class="billboard-link">
+  <a xlink:href="https://plus.google.com/116465481265465787624" class="billboard-link">
   <g
      id="googleplus"
      inkscape:label="#g4007" transform="translate(-600,0)">
@@ -358,7 +368,7 @@
            style="fill:#dd4c39;stroke:none;stroke-width:0.20000000000000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;fill-opacity:1" />
   </g>
   </a>
-  <a xlink:href="https://twitter.com" class="billboard-link">
+  <a xlink:href="http://twitter.com/PirateLearner" class="billboard-link">
   <g
      id="twitter"
      inkscape:label="#g4031" transform="translate(-600,0)">
@@ -563,9 +573,9 @@
 
   </g>
   
-  <g id="Orange" onmouseenter="doAnimate(event, 1);" onmouseleave="doAnimate(event,-1);" transform="translate(140,300)"
+  <g id="Orange" transform="translate(140,300)"
     ><circle id="OrangeCircle" class="outcircle" cx="0" cy="0" r="45"
-    /><g class="content" transform="matrix(1 0 0 1 0 0)">
+    /><g class="content">
       <circle class="incircle" cx="0" cy="0" r="40"/>
       <g class="content-inner" transform="translate(0,-40)"
         ><g transform="matrix(1,0,0,1,0,0)">
@@ -593,7 +603,7 @@
     </g>
   </g>
    
-  <g id="Green" onmouseenter="doAnimate(event, 1);" onmouseleave="doAnimate(event,-1);" transform="translate(315,265)"
+  <g id="Green" transform="translate(315,265)"
     ><circle id="GreenCircle" class="outcircle" cx="0" cy="0" r="30" style="fill:#ffffff;stroke:#009F9F;stroke-width:5.31496048;
                                           stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none" 
     /><g class="content">
@@ -658,7 +668,7 @@
       <text class="text" x="-18" y="12" transform="matrix(1 0 0 1 0 0)">Create</text>
     </g>
   </g>
-  <g id="Purple" onmouseenter="doAnimate(event, 1);" onmouseleave="doAnimate(event,-1);" transform="translate(470,390)"
+  <g id="Purple" transform="translate(470,390)"
     ><circle id="PurpleCircle" class="outcircle" cx="0" cy="0" r="50" 
               style="fill-rule:nonzero;stroke-width:5.31496048;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;
                 fill:#f5edfc;stroke:#9468cc;stroke-opacity:0.63470321" 
@@ -775,7 +785,7 @@
         <text class="text" x="-18" y="27" transform="matrix(1 0 0 1 0 0)">Share</text>
       </g>
   </g>
-  <g id="Blue" onmouseenter="doAnimate(event, 1);" onmouseleave="doAnimate(event,-1);" transform="translate(855,310)"
+  <g id="Blue" transform="translate(855,310)"
     ><circle id="BlueCircle" class="outcircle" cx="0" cy="0" r="60" 
               style="fill-rule:nonzero;stroke-width:5.31496048;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;
               fill:#f4f4f4;fill-opacity:0.6894977;stroke:#5eb9e4;stroke-opacity:0.73515984" 
@@ -842,7 +852,7 @@
         <text class="text" x="-32" y="25" transform="matrix(1 0 0 1 0 0)">Announce</text>        
       </g>
   </g>
-  <g id="Yellow" onmouseenter="doAnimate(event, 1);" onmouseleave="doAnimate(event,-1);" transform="translate(1070,390)"
+  <g id="Yellow" transform="translate(1070,390)"
     ><circle id="YellowCircle" class="outcircle" cx="0" cy="0" r="75" 
               style="fill-rule:nonzero;stroke-width:5.31496048;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;
               fill:#fffef1;stroke:#f6e017;stroke-opacity:0.90588235" 
@@ -892,7 +902,42 @@
         <text class="text" x="-22" y="35" transform="matrix(1 0 0 1 0 0)">Join Us</text>        
       </g>
   </g>
-    
+  
+  <g
+     id="dude"
+     transform="translate(532.43038,342.27848)">
+    <g
+       id="g4866"
+       style="fill:#808eaa">
+      <path
+         id="path4216"
+         d="m 108.59,234.0404 c 0.41338,-4.8444 0.7579,-9.9642 0.50633,-17.468 -23.2,-19.119 -16.602,-33.449 -23.038,-49.873 -2.9224,-0.45364 -7.2422,-0.0243 -7.5949,-8.1013 0.30899,-9.0247 -0.65774,-11.739 -3.7975,-26.835 0.53887,-4.6622 1.708,-7.9669 6.5823,-3.2911 1.0531,0.88086 1.3682,-0.45252 1.7722,-1.519 -1.8212,-2.8477 1.3286,-5.4657 0.7595,-11.899 -19.094,-3.4871 -5.2465,-2.1584 -23.038,-5.8228 0.68121,8.8979 0.3983,11.678 1.1598,11.76 5.1404,0.54902 3.6989,2.4767 4.4098,4.1899 -2.3139,30.619 -0.0912,68.668 1.3924,73.418 1.4382,11.753 -0.66113,17.527 -2.6582,17.975 -4.601,-1.3373 -5.7231,12.694 -9.8734,1.2658 2.1853,-8.9228 -5.1592,-7.7359 -4.0506,-12.405 -5.0534,-6.3193 -1.671,-52.647 -3.7975,-80.506 -0.0412,-3.0723 3.6613,-3.0248 7.5949,-2.7848 0.15708,-3.8092 0.51837,-7.4141 1.0126,-10.886 0.28757,-4.4355 -3.1371,-3.7667 -5.3164,-4.8101 -9.6736,-1.181 -23.818,-4.8178 -28.101,-3.038 -3.4758,0.68424 -5.1516,-0.29692 -4.9367,-5.3164 36.124,-38.392 37.36,-28.538 108.06,-87.207 10.215,-10.947 6.7299,-8.7702 14.177,-3.4357 14.945,15.611 12.199,5.4349 34.371,25.062 50.386,43.48 65.665,49.251 78.05,51.914 7.1109,2.4877 8.9862,7.7746 0.35803,11.457 -5.7407,0.53904 -20.115,5.727 -31.507,9.3088 -8.6514,1.9232 -0.41149,7.2104 -10.025,7.8766 -34.729,4.7234 -27.031,11.647 -28.553,20.855 2.9249,-0.44122 8.0296,-5.8651 6.355,4.2068 -2.2483,17.673 -0.43358,25.57 0,29.269 -0.80148,8.3238 -6.6969,4.6535 -9.6668,4.3859 -1.0692,20.453 -7.7828,34.321 -18.976,42.963 l 0.35803,19.692 z"
+         inkscape:connector-curvature="0" />
+      <path
+         id="path4218"
+         d="m 99.729,241.8904 c -93.384,22.65 -96.871,31.75 -97.469,56.25 l 259.75,-0.2532 c 4.276,-32.359 -37.007,-39.48 -94.925,-54.955 -3.23,-1.573 -6.1608,-5.8302 -6.7202,-10.741 l -51.581,0.13438 c -0.39035,4.3084 -4.6773,7.96 -9.0516,9.6125 z"
+         inkscape:connector-curvature="0" />
+    </g>
+    <path
+       id="path4812"
+       d="m 109.2,218.25 c 13.775,4.806 14.352,4.5122 24.004,7.0703 0.62379,0.16532 4.65,-0.34815 4.65,-0.34815 8.7153,-2.2675 14.07,-5.3277 22.329,-8.5083 l -0.0893,-1.7857 c -8.5726,3.937 -13.451,5.6062 -21.865,8.4289 0.1346,0.003 -4.2735,0.27066 -6.3786,-0.0285 -7.7422,-1.1004 -14.16,-3.1232 -22.56,-6.4361 z"
+       inkscape:connector-curvature="0"
+       style="fill:#526684;fill-opacity:0.79908675;filter:url(#filter4850)" />
+    <g
+       id="g4866-1"
+       transform="translate(0.54934337,-0.02582155)"
+       style="opacity:0.09876541;fill:#808eaa;filter:url(#filter4905)">
+      <path
+         id="path4216-3"
+         d="m 108.59,234.0404 c 0.41338,-4.8444 0.7579,-9.9642 0.50633,-17.468 -23.2,-19.119 -16.602,-33.449 -23.038,-49.873 -2.9224,-0.45364 -7.2422,-0.0243 -7.5949,-8.1013 0.30899,-9.0247 -0.65774,-11.739 -3.7975,-26.835 0.53887,-4.6622 1.708,-7.9669 6.5823,-3.2911 1.0531,0.88086 1.3682,-0.45252 1.7722,-1.519 -1.8212,-2.8477 1.3286,-5.4657 0.7595,-11.899 -19.094,-3.4871 -5.2465,-2.1584 -23.038,-5.8228 0.68121,8.8979 0.3983,11.678 1.1598,11.76 5.1404,0.54902 3.6989,2.4767 4.4098,4.1899 -2.3139,30.619 -0.0912,68.668 1.3924,73.418 1.4382,11.753 -0.66113,17.527 -2.6582,17.975 -4.601,-1.3373 -5.7231,12.694 -9.8734,1.2658 2.1853,-8.9228 -5.1592,-7.7359 -4.0506,-12.405 -5.0534,-6.3193 -1.671,-52.647 -3.7975,-80.506 -0.0412,-3.0723 3.6613,-3.0248 7.5949,-2.7848 0.15708,-3.8092 0.51837,-7.4141 1.0126,-10.886 0.28757,-4.4355 -3.1371,-3.7667 -5.3164,-4.8101 -9.6736,-1.181 -23.818,-4.8178 -28.101,-3.038 -3.4758,0.68424 -5.1516,-0.29692 -4.9367,-5.3164 36.124,-38.392 37.36,-28.538 108.06,-87.207 10.215,-10.947 6.7299,-8.7702 14.177,-3.4357 14.945,15.611 12.199,5.4349 34.371,25.062 50.386,43.48 65.665,49.251 78.05,51.914 7.1109,2.4877 8.9862,7.7746 0.35803,11.457 -5.7407,0.53904 -20.115,5.727 -31.507,9.3088 -8.6514,1.9232 -0.41149,7.2104 -10.025,7.8766 -34.729,4.7234 -27.031,11.647 -28.553,20.855 2.9249,-0.44122 8.0296,-5.8651 6.355,4.2068 -2.2483,17.673 -0.43358,25.57 0,29.269 -0.80148,8.3238 -6.6969,4.6535 -9.6668,4.3859 -1.0692,20.453 -7.7828,34.321 -18.976,42.963 l 0.35803,19.692 z"
+         inkscape:connector-curvature="0" />
+      <path
+         id="path4218-0"
+         d="m 99.729,241.8904 c -93.384,22.65 -96.871,31.75 -97.469,56.25 l 259.75,-0.2532 c 4.276,-32.359 -37.007,-39.48 -94.925,-54.955 -3.23,-1.573 -6.1608,-5.8302 -6.7202,-10.741 l -51.581,0.13438 c -0.39035,4.3084 -4.6773,7.96 -9.0516,9.6125 z"
+         inkscape:connector-curvature="0" />
+    </g>
+  </g> 
+  
   <g
      class="satellites"
      stroke-linejoin="round"
@@ -956,555 +1001,12 @@
        stroke="#9b65c7"
        stroke-width="7.08661417" />     
   </g> 
- <!-- 
-  <g
-    id="green-orbit"
-    style="fill-rule:nonzero;stroke:#3ecfca;stroke-width:3;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:10 10">
-    
-    <circle cx="550" cy="400" r="141.4214" style="fill:none"/>
-  </g>
-  <g
-    id="orange-orbit"
-    style="fill-rule:nonzero;stroke:#ef8e14;stroke-width:3;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:10 10">
-    
-    <circle cx="300" cy="500" r="180.2776" style="fill:none"/>
-  </g>
-    <g
-    id="blue-orbit"
-    style="fill-rule:nonzero;stroke:blue;stroke-width:3;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:10 10">
-    
-    <circle cx="850" cy="500" r="223.6068" style="fill:none"/>
-  </g>
-  --> 
 </svg>
 		</div>
 		
-		<script type="text/javascript">
-		  //Global Data:
-		  
-		  /* A matrix of global object properties */
-		  /* ['ID', 'x', 'y', 'r','max-scale', 'expansion-time(ms)',SloganID] */
-		  var objects = [['OrangeCircle', 140, 300, 45, 'planet',1.5,500,'Learn-Text'], //0
-		                 ['GreenCircle', 315, 265, 30, 'planet',2.3, 700,'Create-Text'], //1
-		                 ['PurpleCircle',470, 390, 50, 'planet',1.7, 700,'Share-Text'], //2
-		                 ['BlueCircle',855, 310, 60, 'planet',1.5,700,'Announce-Text'],  //3
-		                 ['YellowCircle',1070, 390, 75, 'planet',1.3,700,'Join-Text'], //4
-		                 ['Or-Gr', 250, 325, 12, 'satellite',0,0,''],//5
-		                 ['Gr-Gr1', 270, 190, 9, 'satellite',0,0,''],//6
-		                 ['Gr-Gr2', 300, 400, 9, 'satellite',0,0,''],//7
-		                 ['Gr-Pu', 425, 300, 15, 'satellite',0,0,''],//8
-		                 ['Pu-Pu1', 535, 295, 11, 'satellite',0,0,''],//9
-		                 ['Pu-Pu2', 510, 485, 10, 'satellite',0,0,''],//10
-		                 ['Bl-Bl1', 780, 210, 7, 'satellite',0,0,''],//11
-		                 ['Bl-Bl2', 920, 180, 25, 'satellite',0,0,''],//12
-		                 ['Bl-Ye', 940, 380, 20, 'satellite',0,0,''],//13
-		                 ['Ye-Ye1', 1205, 355, 12, 'satellite',0,0,''],//14
-		                 ['Ye-Ye2', 997, 575, 18, 'satellite',0,0,''],//15
-		                 ['Ye-Ye3', 875, 470, 15, 'satellite',0,0,''],//16
-		                 ];
-		  /* A connectivity graph to show who is connected to whom */
-		  /* Index corresponds to object in objects array*/
-		  var connectGraph = [[1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0], // 0th object is connected to 2nd object (and itself)
-		                      [0,1,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0], // 1st object is connected to 2nd and itself
-		                      [0,0,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0], // 2nd object is connected to 0th and 1st
-		                      [0,0,0,1,0,0,0,0,0,0,0,1,1,1,0,0,0], // 3
-		                      [0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,1], //4
-		                      [1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0], //5
-		                      [0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0], //6
-		                      [0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0], //7
-		                      [0,1,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0], //8
-		                      [0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
-		                      [0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
-		                      [0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0],
-		                      [0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0],
-		                      [0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0,0],
-		                      [0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0],
-		                      [0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0],
-		                      [0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1]]; 
-		  /* Path matrix to find the ID of connector elements for each pair */
-		  var pathMatrix = [[0,0,0,0,0,'OrangeConnect',0,0,0,0,0,0,0,0,0,0,0], //0th element is connected to 2nd element via a connector named 'orangeConnect'
-		                    [0,0,0,0,0,'GreenConnect','GreenConnect2','GreenConnect3','GreenConnect4',0,0,0,0,0,0,0,0],
-		                    [0,0,0,0,0,0,0,0,'PurpleConnect','PurpleConnect2','PurpleConnect3',0,0,0,0,0,0],
-		                    [0,0,0,0,0,0,0,0,0,0,0,'BlueConnect2','BlueConnect3','BlueConnect',0,0,0],
-		                    [0,0,0,0,0,0,0,0,0,0,0,0,0,'YellowConnect','YellowConnect2','YellowConnect3','YellowConnect4'],
-		                    ['OrangeConnect','GreenConnect',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		                    [0,'GreenConnect2',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		                    [0,'GreenConnect3',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		                    [0,'GreenConnect4','PurpleConnect',0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		                    [0,0,'PurpleConnect2',0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		                    [0,0,'PurpleConnect3',0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		                    [0,0,0,'BlueConnect2',0,0,0,0,0,0,0,0,0,0,0,0,0],
-		                    [0,0,0,'BlueConnect3',0,0,0,0,0,0,0,0,0,0,0,0,0],
-		                    [0,0,0,'BlueConnect','YellowConnect',0,0,0,0,0,0,0,0,0,0,0,0],
-		                    [0,0,0,0,'YellowConnect2',0,0,0,0,0,0,0,0,0,0,0,0],
-		                    [0,0,0,0,'YellowConnect3',0,0,0,0,0,0,0,0,0,0,0,0],
-		                    [0,0,0,0,'YellowConnect4',0,0,0,0,0,0,0,0,0,0,0,0]];
-		                    
-		  var delay= 16;
-		  var transformObject;
-		  
-		  /* make a fixed planet, moving planet dependency chart that will run when animation is triggered */
-		  /* for each planet, there can be more than one satellites connected, and each will need to move */
-		  /* This is done by iterating through the dependency chart */
-		  /* Current Object: [moving planet, satellite, fixed planet, lineFromMovingToSat, line2] */
-		  var connections ={};
-		  
-      for(i=0;i<objects.length;i++){
-        //console.log(objects[i][4])
-        if(objects[i][4]=='planet'){
-          //console.log('Found Planet: '+ objects[i][0]);
-          numSats = 0;
-          initIndex = 0;
-          
-          connections[objects[i][0]]= {};
-          connections[objects[i][0]].sequences =[];
-
-          
-          /* Object is a planet. Add it to list */
-          /* First find the number of satellites it has */
-          for(j=0;j<connectGraph[i].length;j++){
-            if(connectGraph[i][j] == 1 && j!=i){
-              /* Found: Add it as satellite */
-              numSats +=1;
-            }
-          }
-          //console.log("Number of satellites: "+ numSats);
-          /* Find its satellites and their fixed planet */
-          for(j=0;j<connectGraph[i].length;j++){
-            if(connectGraph[i][j] == 1 && j!=i){
-              /* Found: Add it as satellite */
-             // console.log("Satellite found: "+objects[j]);
-              connections[objects[i][0]].sequences[initIndex] = [];
-              
-              connections[objects[i][0]].sequences[initIndex][0]= objects[i];
-              connections[objects[i][0]].sequences[initIndex][1] = objects[j];
-              /* Put Connector Information : From Planet to Satellite */
-              connections[objects[i][0]].sequences[initIndex][3] = pathMatrix[i][j];
-              /* Find the fixed planet for this satellite */
-              for(z=0;z<connectGraph[j].length;z++){
-                if(connectGraph[j][z] == 1 && z!=j && z!=i){
-                  /* Found fixed planet */
-                  connections[objects[i][0]].sequences[initIndex][2] = objects[z];
-                  /* Put Connector Information: From satellite to next planet */ 
-                  connections[objects[i][0]].sequences[initIndex][4] = pathMatrix[j][z];
-                }
-              }
-              /* We've added satellite and planet. Next satellite must be added to new index */
-              if(initIndex < numSats){
-                initIndex +=1;
-              }
-              else{
-                /* Found all satellites.*/
-                break;
-              }
-            }
-          }          
-        }
-      }
-       
-      
-		  svgElement = document.getElementById('motion');
-		  transformObject = svgElement.createSVGTransform();
-		  var movingPlanetName;
-      var movingPlanet;
-		  
-		  /* Now:
-		     When a particular planet must expand or contract, its satellites will move, and must
-		     maintain their equations with the neighbouring fixed planets.
-		     
-		     Thus, the calculations must be done for all satellites (sequences) in a single loop, 
-		     keeping movingPlanet same, and changing the fixed planets, and the satellite.
-		     
-		     Plus, it is also possible that there is no fixed planet connected at the other end of
-		     the satellite. Then, its motion will be linear
-		     
-		  */
-		  function doAnimate(event, expanding){
-		      node = event.target;
-//		      console.log(node);
-		      movingPlanetName = node.childNodes[0].getAttribute('id'); /* Circle is always the first element */
-//	        console.log(movingPlanetName);
-	        //Current Implementation is for two objects only:
-	        //Initial conditions:
-	        //console.log(connections[movingPlanetName].sequences[1]);
-          movingPlanet = connections[movingPlanetName].sequences[0][0];
-          movingPlanet.name= movingPlanet[0];
-          movingPlanet.instance = document.getElementById(movingPlanet.name);
-          movingPlanet.x = movingPlanet[1];
-          movingPlanet.y = -movingPlanet[2];
-          movingPlanet.rInit = movingPlanet[3];
-          movingPlanet.expansionRate = rate(movingPlanet[3], (movingPlanet[3]*movingPlanet[5]), movingPlanet[6]); //Radial expansion in pixels per 16ms
-          movingPlanet.expansion = {};
-          movingPlanet.maxScale = movingPlanet[5];
-          movingPlanet.expanding = expanding;
-          node.childNodes[1].transform.baseVal.appendItem(transformObject);
-          node.getElementsByClassName('text')[0].classList.toggle('visible');
-          document.getElementById('Billboard-Text').classList.remove('visible');
-          if(expanding=1){
-            for(i=0;i<objects.length;i++){
-              /* Remove visibility from all elements */
-              console.log(objects[i][7]);
-              if(objects[i][7] !=''){
-                document.getElementById(objects[i][7]).classList.remove('visible');            
-              }
-            }
-          }
-          /* Make current text visible */
-          document.getElementById(movingPlanet[7]).classList.add('visible');
-      //      console.log("Connection Matrix: \n"+ connections[movingPlanetName].sequences);    
-      //      console.log('movingPlanet:\n'+movingPlanet);
-          
-
-      //      console.log("Initial edge of movingPlanet: ("+ initEdge.x + ","+ initEdge.y +")");
-      //      console.log("Initial edge of fixedPlanet: ("+ fixEdge.x + ","+ fixEdge.y +")");
-          //Animation Variables [Globals]
-          time = 0;
-	        var requestAnimationFrameID = requestAnimationFrame(doAnim);
-	        
-      }
-		  
-      function doAnim(){
-              time +=1;      
-          /* Do these computations for each sequence */
-          for(i=0;i<connections[movingPlanetName].sequences.length;i++){
-        //      console.log('Rate = '+(movingPlanet.expanding*movingPlanet.expansionRate * time));              
-              node.childNodes[1].transform.baseVal.getItem(0).setScale(
-                      (movingPlanet.instance.r.baseVal.value)/(movingPlanet.rInit),
-                      (movingPlanet.instance.r.baseVal.value)/(movingPlanet.rInit));
-              node.childNodes[1].getElementsByClassName('content-inner')[0].childNodes[0].transform.baseVal.getItem(0).setTranslate(0,0);
-              node.childNodes[1].getElementsByClassName('content-inner')[0].childNodes[0].transform.baseVal.getItem(0).setScale(
-              (movingPlanet.rInit)/(movingPlanet.instance.r.baseVal.value),(movingPlanet.rInit)/(movingPlanet.instance.r.baseVal.value));
-              
-              var satellite = connections[movingPlanetName].sequences[i][1];
-              satellite.name = satellite[0];
-              satellite.instance = document.getElementById(satellite.name);
-              if(time==1 && movingPlanet.expanding == 1){
-                satellite.x = satellite.instance.cx.baseVal.value;
-                satellite.y = -satellite.instance.cy.baseVal.value;
-              }
-              else if(time!=1 && movingPlanet.expanding == -1){
-                satellite.x = satellite.x;
-                satellite.y = satellite.y;              
-              }
-              else{
-                satellite.x = satellite[1];
-                satellite.y = -satellite[2];              
-              }
-              satellite.rInit = satellite[3];
-
-        //      console.log('Satellite:\n'+satellite);
-              movingPlanet.initSlope = slope(movingPlanet,satellite);
-              var initTheta = movingPlanet.initSlope.radian;
-
-              //Computed Values: Expansion rate must scale down according to number of satellites
-              //This is because the for loop will make it run faster.
-              movingPlanet.expansion.x = ((movingPlanet.expansionRate) * Math.cos(initTheta));
-              movingPlanet.expansion.y = ((movingPlanet.expansionRate) * Math.sin(initTheta));
-   
-              var initEdge = edgeCoordAtTime(movingPlanet, 
-                                             0, 
-                                             movingPlanet.expansion, 
-                                             movingPlanet.initSlope, 
-                                             movingPlanet.rInit, 
-                                             true);              
-              var varPtoSat = document.getElementById(connections[movingPlanetName].sequences[i][3]); /*Variable Planet to Satellite */
-              varPtoSat.initX1 = movingPlanet.x;
-              varPtoSat.initY1 = movingPlanet.y;
-              varPtoSat.initX2 = satellite.x;
-              varPtoSat.initY2 = satellite.y; 
-              
-              /* For fixed planet and satellite system */
-              fixPlanetPresent = false;
-              /* Fixed Planet Computations */
-              if(typeof connections[movingPlanetName].sequences[i][2] != 'undefined'){
-                
-                fixPlanetPresent = true;                
-                var fixedPlanet = connections[movingPlanetName].sequences[i][2];
-                fixedPlanet.name= fixedPlanet[0];
-                fixedPlanet.instance = document.getElementById(fixedPlanet.name);
-                fixedPlanet.x = fixedPlanet[1];
-                fixedPlanet.y = -fixedPlanet[2];
-                fixedPlanet.rInit = fixedPlanet[3];
-                fixedPlanet.expansionRate = rate(fixedPlanet[3], fixedPlanet[5], fixedPlanet[6]); //Radial expansion of 50 pixels per sec
-                fixedPlanet.expansion = {};
-              
-                fixedPlanet.initSlope = slope(fixedPlanet,satellite);
-                var initTheta2 = fixedPlanet.initSlope.radian;
-        //      console.log('Initial Theta (Radians) = '+ initTheta2);
-        //      console.log('Initial Theta (Degrees) = '+ (initTheta2* (180/Math.PI)));
-              
-                fixedPlanet.expansion.x = (fixedPlanet.expansionRate) * Math.cos(initTheta2);
-                fixedPlanet.expansion.y = (fixedPlanet.expansionRate) * Math.sin(initTheta2);
-              
-                var fixEdge = edgeCoordAtTime(fixedPlanet, 0, fixedPlanet.expansion, fixedPlanet.initSlope, fixedPlanet.rInit, true);
-                   
-                var fixedPtoSat = document.getElementById(connections[movingPlanetName].sequences[i][4]); /* Fixed planet to satellite */
-                fixedPtoSat.initX1 = fixedPlanet.x;
-                fixedPtoSat.initY1 = fixedPlanet.y;
-                fixedPtoSat.initX2 = satellite.x;
-                fixedPtoSat.initY2 = satellite.y; 
-              }
-           
-              if(movingPlanet.instance.r.baseVal.value <= movingPlanet.rInit && movingPlanet.expanding == -1){
-//                if(movingPlanet.expanding == -1){
-                  /* We were contracting. Stop now */
-                                                          
-                  window.cancelAnimationFrame(requestAnimationFrameID);           
-                  movingPlanet.expanding = -1;
-                  return;
-//                }
-//                movingPlanet.expanding = 1;
-              }
-              else if(movingPlanet.instance.r.baseVal.value >= (movingPlanet.maxScale*movingPlanet.rInit) 
-                      && movingPlanet.expanding == 1){
-//                movingPlanet.expanding = -1;
-                  /* Stop expanding */
-                  //node.getElementsByClassName('text')[0].style.display = 'block';
-                  window.cancelAnimationFrame(requestAnimationFrameID);           
-                  movingPlanet.expanding = -1;
-                  return;
-              }
-              movingPlanet.instance.r.baseVal.value += (movingPlanet.expanding * (movingPlanet.expansionRate))
-                                                          /connections[movingPlanetName].sequences.length;
-                                                          
-              instantEdge = edgeCoordAtTime(movingPlanet, 
-                                            time, 
-                                            movingPlanet.expansion, 
-                                            movingPlanet.initSlope, 
-                                            movingPlanet.instance.r.baseVal.value, 
-                                            movingPlanet.expanding); 
-              
-
- //             console.log("\n["+time+"] Edge of planet1: ("+ instantEdge.x + ","+ instantEdge.y +")");
-              
-              /* Solving Quadratic Equation: Ax^2 + Bx + c = 0 */
-              /*
-              A = Math.pow(time,2);
-              B = 2*(satellite.x - satellite.y - instantEdge.x + instantEdge.y)*time;
-              C = -(Math.pow((initEdge.x - satellite.x),2) + Math.pow((initEdge.y - satellite.y),2) 
-                    - Math.pow((instantEdge.x - satellite.x),2) - Math.pow((instantEdge.y - satellite.y),2));
-              */
-              /* Rate of translation of satellite */      
-              //bRate = (-B + Math.sqrt(Math.pow(B,2) - (4*A*C)))/(2*A);
-              
-              //console.log(bRate); 
-              if(fixPlanetPresent){
-                /* If fixed planet is present, motion is circular given by equations below */
-                S = (1/2)*(Math.sqrt(
-                              Math.pow(((2*(fixEdge.x - instantEdge.x ))/time),2) +
-                              Math.pow(((2*(instantEdge.y - fixEdge.y))/time),2)
-                          ));
-                B1 = Math.pow(initEdge.x - satellite.x,2) + Math.pow(initEdge.y - satellite.y,2)
-                    - Math.pow((instantEdge.x - satellite.x),2) - Math.pow((instantEdge.y - satellite.y),2);
-                              
-                A = -1*(2/time)*(instantEdge.x - satellite.x);
-                B = (2/time)*(instantEdge.y - satellite.y);
-                C = -B1/Math.pow(time,2);
-                
-                D = -1*(2/time)*(fixEdge.x - satellite.x);
-                E = (2/time)*(fixEdge.y - satellite.y);
-                F = 0;
-                
-                r0 = (1/2)*(Math.sqrt(Math.pow(A,2)+Math.pow(B,2)-(4*C)));
-                r1 = (1/2)*(Math.sqrt(Math.pow(D,2)+Math.pow(E,2)-(4*F)));
-                
-                del = (1/4)*(Math.sqrt((S+r0+r1)*(S+r0-r1)*(S-r0+r1)*(-S+r0+r1)));
-                /* 
-                  If angle between connectors at satellite is less that 180 degree then 'x' negative
-                  and 'y' positive 
-                */
-                /* This method has a problem of determing which side of angle was computed */
-                /*
-                //Angle of line from Fixed Planet to Satellite
-                m2 = (satellite.instance.cy.baseVal.value - fixEdge.y)/(satellite.instance.cx.baseVal.value - fixEdge.x);
-                //Angle of line from Moving Planet to Satellite
-                m1 = (satellite.instance.cy.baseVal.value - instantEdge.y)/(satellite.instance.cx.baseVal.value - instantEdge.x);
-                
-                calcAngle = Math.atan((m2-m1)/(1+(m2*m1)))*(180/Math.PI);
-                */
-                /*
-                //This too does not give the right angle (gives the lesser angle
-                origin = {};
-                origin.x = movingPlanet.x;
-                origin.y = fixedPlanet.y;
-                console.log('Origin: ('+origin.x+','+origin.y+')');
-                satPos = {};
-                satPos.x =  satellite.instance.cx.baseVal.value;
-                satPos.y =  -satellite.instance.cy.baseVal.value;
-                console.log('Satellite : ('+satPos.x+','+satPos.y+')');                
-                calcAngle = slope(origin, satPos);
-               
-                console.log(calcAngle.degree);
-                */
-                
-                if(fixedPlanet.name =='GreenCircle' && movingPlanet.name =='PurpleCircle'){
-                /* Makeshift correction for svg */
-
-                  rateX = ((A-D)*((Math.pow(r0,2)-Math.pow(r1,2)))/(4*Math.pow(S,2)))
-                        - ((A+D)/4) + (((E-B)/Math.pow(S,2))*del);
-                
-                  rateY = ((B-E)*((Math.pow(r0,2)-Math.pow(r1,2)))/(4*Math.pow(S,2)))
-                        - ((B+E)/4) - (((D-A)/Math.pow(S,2))*del);          
-                }
-                else if(fixedPlanet.name =='PurpleCircle' && movingPlanet.name =='GreenCircle'){
-                /* Makeshift correction for svg */
-                  rateX = ((A-D)*((Math.pow(r0,2)-Math.pow(r1,2)))/(4*Math.pow(S,2)))
-                        - ((A+D)/4) - (((E-B)/Math.pow(S,2))*del);
-                
-                  rateY = ((B-E)*((Math.pow(r0,2)-Math.pow(r1,2)))/(4*Math.pow(S,2)))
-                        - ((B+E)/4) + (((D-A)/Math.pow(S,2))*del);          
-                }
-                else if(satellite.x < movingPlanet.x ){
-                  rateX = ((A-D)*((Math.pow(r0,2)-Math.pow(r1,2)))/(4*Math.pow(S,2)))
-                        - ((A+D)/4) - (((E-B)/Math.pow(S,2))*del);
-                
-                  rateY = ((B-E)*((Math.pow(r0,2)-Math.pow(r1,2)))/(4*Math.pow(S,2)))
-                        - ((B+E)/4) + (((D-A)/Math.pow(S,2))*del);
-                }
-                else{
-                  rateX = ((A-D)*((Math.pow(r0,2)-Math.pow(r1,2)))/(4*Math.pow(S,2)))
-                        - ((A+D)/4) + (((E-B)/Math.pow(S,2))*del);
-                
-                  rateY = ((B-E)*((Math.pow(r0,2)-Math.pow(r1,2)))/(4*Math.pow(S,2)))
-                        - ((B+E)/4) - (((D-A)/Math.pow(S,2))*del);          
-                }
-                /* Update coordinates of satellite */
-                satellite.newX = satellite.x + (rateX * time);
-                satellite.newY = satellite.y - (rateY * time);
-                
-                satellite.instance.cx.baseVal.value = satellite.newX;
-                satellite.instance.cy.baseVal.value = -satellite.newY;
-                
-              }//If block end
-              else{
-                /* Satellite translation is linear */
-                if(movingPlanet.expanding == -1 && time == 1){
-                  /* Satellite's position must be determined from its extreme position */
-                  satellite.x = satellite.instance.cx.baseVal.value;
-                  satellite.y = -satellite.instance.cy.baseVal.value;              
-                }
-                if(movingPlanet.expanding == -1){
-
-                  satellite.newX = satellite.x + 
-                                movingPlanet.expanding * 
-                                (((movingPlanet.expansionRate)*time))*Math.cos(movingPlanet.initSlope.radian);
-                  satellite.newY = (satellite.y +
-                                movingPlanet.expanding * 
-                                (((movingPlanet.expansionRate)*time))*Math.sin(movingPlanet.initSlope.radian));   
-                }
-                else{
-                  satellite.newX = satellite.x + 
-                                  movingPlanet.expanding * 
-                                  (((movingPlanet.expansionRate)*time))*Math.cos(movingPlanet.initSlope.radian);
-                  satellite.newY = (satellite.y +
-                                  movingPlanet.expanding * 
-                                  (((movingPlanet.expansionRate)*time))*Math.sin(movingPlanet.initSlope.radian));                  
-                }
-                satellite.instance.cx.baseVal.value = satellite.newX;
-                satellite.instance.cy.baseVal.value = -satellite.newY;    
-                
-               //console.log("X:"+satellite.instance.cx.baseVal.value+" Y: "+satellite.instance.cy.baseVal.value);                                          
-              }
-
-              /* Re-draw connectors for varPtoSat*/
-              varPtoSat.x1.baseVal.value = instantEdge.x;
-              varPtoSat.y1.baseVal.value = -instantEdge.y;
-              varPtoSat.x2.baseVal.value = satellite.newX;
-              varPtoSat.y2.baseVal.value = -satellite.newY;
-              
-              if(fixPlanetPresent){              
-                fixedPtoSat.x1.baseVal.value = fixEdge.x;
-                fixedPtoSat.y1.baseVal.value = -fixEdge.y;
-                fixedPtoSat.x2.baseVal.value = satellite.newX;
-                fixedPtoSat.y2.baseVal.value = -satellite.newY;
-              }
-            }//end for
-          
-          requestAnimationFrameID = requestAnimationFrame(doAnim);          
-      }
-              
-
-      function edgeCoordAtTime(initCoord, time, rate, theta, radius, expanding){
-          /* Method to compute instantanous coordinates of object, given :
-              - its initial co-ordinates 'initCoord.x initCoord.y'
-              - time at which co-ordinates are required 'time'
-              - rate of change 'rate.x, rate.y'
-              - angle at which coordinate must be calculated 'theta'
-              - whether rate of expansion is positive or negative 'expanding':+1/-1   
-              
-              It returns a coordinate object obj(x,y)
-          */
-            edge = {};
-            /*
-            console.log("initX: "+ initCoord.x+" initY: "+ initCoord.y); 
-            console.log("theta: "+theta.degree);
-            console.log(
-              'Rate.x '+ rate.x+
-              'Rate.y '+ rate.y
-            );
-            
-            
-            console.log("Radius: "+radius);
-            */
-            rateRadial = expanding*(Math.pow((Math.pow(s2d(rate.x),2)+(Math.pow(s2d(rate.y),2))),1/2));/* r = sqrt(x^2 + y^2) */
-            
-            //console.log('Radial Rate = '+rateRadial);
- 
-            edge.x = initCoord.x + (radius + (rateRadial*time))*Math.cos(theta.radian);
-            edge.y = initCoord.y + (radius + (rateRadial*time))*Math.sin(theta.radian);            
-                      
-            //console.log("X: "+ edge.x+" Y: "+ edge.y);
-            return edge;
-           }
-           
-     function s2d(s){
-      /*
-        The function name "s2d" means "speed to displacement". This function returns the required
-        displacement value for an object traveling at "s" pixels per second. This function assumes the following:
-
-           * The parameter s is in pixels per second.
-           * "constants.delay" is a valid global constant.
-           * The SVG viewport is set up such that 1 user unit equals 1 pixel.
-      */ 
-      return (s / 1000) * delay; 
-      // Given "constants.delay", return the object's displacement such that it will travel at s pixels per second across the screen.
-    }
-    
-    function slope(a,b){
-      /* The function returns the slope of the line from a to b with corrected radians */
-      delX = b.x - a.x;
-      delY = b.y - a.y;
-      slopeVal = delY/delX;
- //     console.log("Slope = \n"+ slopeVal);
-      slopeAngle = {};
-      if(delX>=0 && delY>=0){
-        /* First quadrant */
-        slopeAngle.radian = Math.abs(Math.atan(slopeVal));
-      }
-      else if(delX<0 && delY>0){
-        slopeAngle.radian = Math.PI - Math.abs(Math.atan(slopeVal));
-      }
-      else if(delX<0 && delY<0){
-        slopeAngle.radian = Math.abs(Math.atan(slopeVal)) + Math.PI;
-      }
-      else{
-        slopeAngle.radian = Math.atan(slopeVal) + ((Math.PI)*2);
-      }
-      slopeAngle.degree = slopeAngle.radian *(180/Math.PI);
-      
-      return slopeAngle;
-    }
-    
-    function rate(init, final, time){
-      dist = Math.abs(final-init);
-      ratePerSec = dist/time;//per ms
-      return (ratePerSec * 16); //return speed per 16 ms
-    }
-      
-		</script>  
+<script type="text/javascript" src="{{ STATIC_URL }}js/svg-effects.js"></script>
            
 <div class="major-menu clearfix">
-	<div class="img-dude"><img src="/static/static/images/dude.png" alt="dude"/></div>
 	<ul class="main-menu clearfix">
 		<li class="pl-col-sm pl-col-md clearfix"><a href="#" class="clearfix"><div class="main-menu-item shift-up"><span class="menu-name">Computer Science</span></div></a></li>							
 		<li class="pl-col-sm pl-col-md clearfix"><a href="#" class="clearfix"><div class="main-menu-item"><span class="menu-name">Embedded Systems</span></div></a></li>
@@ -1515,50 +1017,78 @@
     	<div class="content-area clearfix">
         	<div class="col-80">
 				<div class="plugin-wrap-articles clearfix">
-  					{% placeholder "articles" %}
+					<div class="plugin-wrap-title"><a href="http://{{ site.domain }}/C/courses/">Recently, we learned about</a></div>
+					<div id="contentApp" class="plugin-wrap-content clearfix">					
+  						{% placeholder "articles" %}
+  						<div class="feature content-block-article shuffle_sizer"></div>
+  					</div>
   				</div>
   				<div class="plugin-row clearfix">
   					<div class="plugin-wrap-featured clearfix">
-  						{% placeholder "featured" %}
+  						<div class="plugin-wrap-title"><a href="http://{{ site.domain }}/spotlight/">Best delicacies</a></div>
+  						<div class="plugin-wrap-content clearfix">
+  							{% placeholder "featured" %}
+  						</div>
   					</div>
   					<div class="plugin-wrap-bookmarks clearfix">
-  						{% placeholder "bookmarks" %}
+  						<div class="plugin-wrap-title"><a href="http://{{ site.domain }}/bookmarks">Fresh food from the internet sea.</a></div>
+  						<div id="grid" class="plugin-wrap-content clearfix">
+  							{% placeholder "bookmarks" %}
+  							<!-- sizer -->
+  							<div class="feature content-block-bookmark shuffle_sizer"></div>
+  						</div>	  
   					</div>
   				</div>
 
   			</div><!-- col-80 ends -->  
   			
-  			<div class="col-20 aside-wrapper">
+  			<div class="col-20 aside-wrapper clearfix">
   				<div class="tile col-sm-12 col-md-12 col-lg-12 paper paper-raise paper-vintage">
+  				  {% if user.is_authenticated %}
+  				  	<h3 class="tile-body text-center"><a href="{% url 'account_logout' %}">Logout</a></h3>
+  				  {% else %}
 				  <h2 class="tile-heading">Login Karo to jaano!</h2>
-				  <div class="tile-body text-center login-icons">
-						<a class="col-sm-4 col-md-4 col-lg-4" href="#"><span class="icon pl-facebook2 icon-responsive logo-facebook"></span></a>
-						<a class="col-sm-4 col-md-4 col-lg-4" href="#"><span class="icon pl-twitter2 icon-responsive logo-twitter"></span></a>
-						<a class="col-sm-4 col-md-4 col-lg-4" href="#"><span class="icon pl-googleplus3 icon-responsive logo-google"></span></a>					  
-				  </div>                 
-        		</div> 
+				  <div class="tile-body text-center login-icons clearfix">
+						<a class="col-sm-4 col-md-4 col-lg-4" href="javascript:allauth.facebook.login('', 'authenticate', 'login')"><span class="icon pl-facebook2 icon-responsive logo-facebook"></span></a>
+						<a class="col-sm-4 col-md-4 col-lg-4" href="/en/accounts/twitter/login/?process=login"><span class="icon pl-twitter2 icon-responsive logo-twitter"></span></a>
+						<a class="col-sm-4 col-md-4 col-lg-4" href="/en/accounts/google/login/?process=login""><span class="icon pl-googleplus3 icon-responsive logo-google"></span></a>					  
+				  </div>
+				  {% endif %}                 
+        		</div>
+        		<div class="tile col-sm-12 col-md-12 col-lg-12 paper paper-raise paper-vintage social-tile">
+					<div class="fb-like text-center" data-href="https://www.facebook.com/PirateLearner" data-width="254" data-layout="standard" data-action="like" data-show-faces="true" data-share="true">
+					</div>
+					<div class="text-center twitter-sidebar">
+						<a class="twitter-follow-button"
+						  href="https://twitter.com/PirateLearner"
+						  data-show-count="false"
+						  data-lang="en">
+						Follow @PirateLearner
+						</a>
+					</div>
+				</div> 
+				<div class="tile col-sm-12 col-md-12 col-lg-12 paper paper-raise paper-vintage social-tile">
+					<div class="g-page text-center" data-width="254" data-href="//plus.google.com/u/0/116465481265465787624" data-rel="publisher"></div>
+				</div>
+				
+				
 	   			{% placeholder "sidebar" %}
 	   			{% block sides %}
-		   				        	
+		   			<!--	        	
 		        	<div class="tile col-sm-12 col-md-12 col-lg-12 paper paper-raise paper-vintage">
 					  	 <h2 class="tile-heading">What people are saying?</h2>
 		                 <p class="tile-body">These guys are phunny!</p>
 		                 <p class="tile-body"><a href="#" class="btn btn-success btn-medium">Read what they never said. &raquo;</a></p>
 		        	</div>
-		            	
-					<div class="tile col-sm-12 col-md-12 col-lg-12 paper paper-raise paper-vintage">
-					  	 <h2 class="tile-heading">Recent Blog Entries</h2>
-		                 <ul class="tile-body list-unstyled">
-							<li class="tile-body">Lazy imagination.</li>
-							<li class="tile-body">But when it works...</li>
-							<li class="tile-body">It really does work well</li>                 
-		                 </ul>
-		        	</div>
+		            -->	
 	   			
 	   			{% endblock %}
             </div><!-- col-20 -->            
        	</div><!-- content-area clearfix -->
 	</div><!-- main-content-wrapper -->
+	<script src="{{ STATIC_URL }}js/debounce.js"></script>
+    <script src="{{ STATIC_URL }}js/shuffle/jquery.shuffle.js"></script>
+<script type="text/javascript" src="/static/static/js/bookmark_plugin.js"> </script>
 {% endblock content %}
 
 

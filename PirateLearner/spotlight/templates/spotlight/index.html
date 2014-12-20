@@ -1,14 +1,13 @@
-{% extends "bookmarks/base.html" %}
+{% extends "spotlight/base.html" %}
 {% load cms_tags staticfiles sekizai_tags menu_tags %}
 
-{% block content %}
+{% block spotlight_content %}
 
 {% load url from future %}
 {% load thumbnail %}
-	<div class="row  panel panel-primary">
-			<!-- Stacked Featured posts for this section -->
+				<!-- Stacked Featured posts for this section -->
 				{% for node in featured_posts %}
-				<div class="media feature">
+				<div class="media feature content-stack-article paper">
                 	<a  class="image" href="{{node.object.get_absolute_url}}" class="pull-left">
 						<img class="img-responsive" src="{{ node.object.get_image_url }}" class="media-object"></img>                	
                 	</a>
@@ -16,6 +15,9 @@
                 		<a class="title" href="{{node.object.get_absolute_url}}">
                 			 {{ node.object.get_title }}
                 		</a>
+                	</div>
+                	<div class="feature-body">
+                		{{ node.object.get_summary }}
                 	</div>
                 	<div class="feature-tags"><span class="glyphicon glyphicon-tags"></span> <b>Tags:</b> 
                 		<ul class="post-tags">
@@ -26,6 +28,5 @@
                 	</div>
                 </div>
                 {% endfor %}					
-	</div>
 	
 	{% endblock %}	

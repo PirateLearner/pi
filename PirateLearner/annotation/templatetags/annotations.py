@@ -88,7 +88,7 @@ class BaseAnnotationNode(template.Node):
     
     There can be 5 or 6 tokens in a statement.
     
-    <method> for <content_object> as <name>
+    <method> for <content_object>     as  <name>
     0        1            2            3    4        5    
     <method> for <content_type_id> <object_pk> as <name>
     0        1        2                3        4    5

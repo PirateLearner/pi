@@ -10,7 +10,7 @@
   <head>
 	<meta charset="utf-8">
 
-    <title>{% block title %}Home | {{ site.name }}{% endblock title %}</title>
+    <title>{% block title %}Home {% endblock title %}| {{ site.name }}</title>
   
     
     {% block meta %}
@@ -29,7 +29,6 @@
 	<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css">
 	<!-- Bootstrap core CSS -->
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL }}css/piratelearner.css">
-	<link rel="stylesheet" type="text/css" href="{{STATIC_URL }}css/dashboard.css">
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL }}css/font.css">
 	<!--[if (lt IE 9) & (!IEMobile)]>
 	<script src="{{ STATIC_URL }}js/selectivizr-min.js"></script>
@@ -37,7 +36,7 @@
 	
 
 	<!-- JavaScript -->
-	<script src="{{ STATIC_URL }}js/modernizr-2.5.3-min.js"></script>
+	<script src="{{ STATIC_URL }}js/modernizr.custom.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>    
     
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
@@ -102,15 +101,15 @@
 	<nav class="navbar navbar-default navbar-static-top" role="navigation">	
 		<div class="container">
     		<div class="navbar-header">
-        		<button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+        		<button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle" aria-expanded="false" aria-controls="navbar">
             		<span class="sr-only">Toggle navigation</span>
             		<span class="icon-bar"></span>
             		<span class="icon-bar"></span>
             		<span class="icon-bar"></span>
         		</button>
-
-        		<a href="http://piratelearner.com" class="navbar-brand" id="site-name"><!--<img src="{{ STATIC_URL }}images/LOGO_2_big_text_v3.svg">--><span  class="icon-logo">Pirate Learner</span></a>
-
+        		<a href="http://{{ site.domain }}" class="navbar-brand icon-logo" id="site-name">
+        			<span  class="icon-logo">Pirate Learner</span>
+        		</a>
     		</div>
     <!-- Collection of nav links, forms, and other content for toggling -->
 		   <div class="navbar-collapse collapse" id="navbarCollapse">
@@ -118,19 +117,18 @@
 		     	  <div class="offset-nav clearfix">
 			          <ul class="nav navbar-nav navbar-right">
 			   			{% if user.is_authenticated %}
-		             	<li><a href="{% url 'account_email' %}">Change E-mail</a></li>
 		              	<li><a href="{% url 'account_logout' %}">Sign Out</a></li>
-		           		{% else %}
-		              	<li><a href="{% url 'account_login' %}">Sign In</a></li>
 		           		{% endif %}
 			     		</ul>
 		     	 	</div>
 		      </div>
 		   	<div class="navbar-default navbar-lower">
-		   			<div class="site-logo push-left"><img src="{{ STATIC_URL }}images/LOGO_V5.svg"></div>
-		        	<ul class="nav navbar-nav navbar-left">
-		          		{% show_menu 0 1 100 100 "menu.html" %}
-		        	</ul>
+		   			<div class="site-logo"><a href="http://{{ site.domain }}"><img src="{{ STATIC_URL }}images/LOGO_V5.svg"/></a></div>
+		   			<div class="offset-nav clearfix">
+		        		<ul class="nav navbar-nav navbar-left">
+		          			{% show_menu 0 1 100 100 "menu.html" %}
+		        		</ul>
+		        	</div>
 		      </div>
 		   </div><!--/.navbar-collapse -->
 		</div>
@@ -144,7 +142,6 @@
 		
 		{% endblock %}  
 
-
 	    <footer class="footer">
          	<div class="container">
 		       	<div class="col-sm-6 col-md-4 col-lg-4">
@@ -154,7 +151,7 @@
 							<a class="col-sm-3 col-md-3 col-lg-3" href="https://www.facebook.com/PirateLearner"><span class="icon pl-facebook2 icon-responsive logo-facebook"></span></a>
 							<a class="col-sm-3 col-md-3 col-lg-3" href="http://twitter.com/PirateLearner"><span class="icon pl-twitter2 icon-responsive logo-twitter"></a>
 							<a class="col-sm-3 col-md-3 col-lg-3" href="https://plus.google.com/116465481265465787624" rel="publisher"><span class="icon pl-googleplus3 icon-responsive logo-google"></a>
-							<a class="col-sm-3 col-md-3 col-lg-3" href="https://github.com/PirateLearner/"><span class="icon pl-feed2 icon-responsive logo-rss"></a>
+							<a class="col-sm-3 col-md-3 col-lg-3" href="https://github.com/PirateLearner/"><span class="icon pl-github icon-responsive logo-github"></a>
 						</div>                
                 </div>
             	</div>
@@ -163,15 +160,10 @@
 							<h3 class="panel-heading">Links</h3>
 							<div class="row panel-body">
 							<div class="col-sm-12 col-md-6 col-lg-6">
-								<p><a href="#">Sitemap</a></p>
-								<p><a href="#">Sign up</a></p>
-								<p><a href="#">Sign in</a></p>
-								<p><a href="#">About Us</a></p>
+								<p><a href="/about/">About Us</a></p>
 							</div>
 							<div class="col-sm-12 col-md-6 col-lg-6">
-								<p><a href="#">Sitemap</a></p>
-								<p><a href="#">Sign in</a></p>
-								<p><a href="#">About Us</a></p>
+								<p><a href="/blog/">Blog</a></p>
 							</div> 
 							</div>               
                 	</div>
@@ -179,12 +171,52 @@
             	<div class="clearfix visible-md visible-lg"></div>
 			   </div>
 				<div class="fix-footer">
-             	<p class="text-muted">&copy; Copyright 2014 {{ SITE }}</p>  
+             	<p class="text-muted">&copy; Copyright 2014 {{ site.name }}</p>  
+		<p class="text-muted">All content hosted on {{ site.name }} is licensed under a <a href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_GB" target="_blank">Creative Commons Attribution-ShareAlike 3.0 Unported License.</a></p>
              	<span class="icon-logo-pl_logo_font"></span>      
         		</div>
 	    </footer>
         <!-- </div> -->
+{% load socialaccount %}
 
+{% providers_media_js %}
+<!-- GPLus Script -->
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<!-- Twitter Script -->
+ 
+ <script type="text/javascript">
+window.twttr = (function (d, s, id) {
+  var t, js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src= "https://platform.twitter.com/widgets.js";
+  fjs.parentNode.insertBefore(js, fjs);
+  return window.twttr || (t = { _e: [], ready: function (f) { t._e.push(f) } });
+}(document, "script", "twitter-wjs"));
+</script>
+
+
+<div id="fb-root"></div>
+<!-- FB Like Script -->
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=781484728528833&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<!-- analytics -->
+{% if request.user.is_staff != True %}
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-51345450-1', 'piratelearner.com');
+  ga('send', 'pageview');
+</script>
+{% endif %}
   </body>
 
 </html>

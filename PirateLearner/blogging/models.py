@@ -30,6 +30,8 @@ from annotation.models import Annotation
 LATEST_PLUGIN_TEMPLATES = (
   ('blogging/plugin/plugin_teaser.html', 'Teaser View'),
   ('blogging/plugin/plugin_section.html', 'Section View'),
+  ('blogging/plugin/sidebar_list.html', 'Text List'),
+  ('blogging/plugin/teaser_list.html', 'Stacked List'),
 )
  
 
@@ -198,6 +200,9 @@ class BlogContent(models.Model):
                     fname,lineno,fn,text = frame
                     print "Error in %s on line %d" % (fname, lineno)
         return tag_list
+    
+    def get_author(self):
+        return self.author_id.first_name or self.author_id.username
     
 
     def save(self, *args, **kwargs):

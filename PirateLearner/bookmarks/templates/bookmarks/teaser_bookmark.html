@@ -2,9 +2,12 @@
 {% load thumbnail %}
 
 {% for node in instance.get_bookmarks %}
-<div class="media feature content-block-bookmark paper">
+<div class="media feature content-block-bookmark paper" data-groups='["bookmarks"]'>
 	<div class="unit-tile-image">
-		<img src="{{ node.get_image_url }}" alt="Knowledge transfer"/>
+		<a  class="" href="{{node.get_absolute_url}}" rel="nofollow">
+			<img src="{{ node.get_image_url }}" alt="Knowledge transfer"/>
+		</a>
+
 	</div>
 	<div class="unit-tile-title">
 		<a class="title" href="{{node.get_absolute_url}}">
@@ -12,17 +15,10 @@
 		</a>
 	</div>
 	<div class="unit-tile-tags">
-		<ul class="post-tags">
 			{% for tag in node.get_tags %}
-			 <li> <a href="{{ tag.url }}"> {{ tag.name }}</a></li>
+			 <a href="{{ tag.url }}"> {{ tag.name }}</a>
 			{% endfor %}
-		</ul> 
 	</div>
-	<div class="unit-tile-stats">Avg. Score: 4.5/10</div>
-	<div class="unit-tile-overlay">
-		<div class="unit-tile-overlay-call">
-			{{ node.get_description }}
-		</div>									
-	</div>
+	<div class="unit-tile-stats"></div>
 </div>
 			{% endfor %}

@@ -14,7 +14,9 @@ six==1.3.0
 djangocms-admin-style==0.1.2
 
 # Optional, recommended packages
-Pillow==2.0.0
+
+#Anshul commented Pillow
+#Pillow==2.0.0
 django-filer==0.9.5
 cmsplugin-filer==0.9.5
 django-reversion==1.7
@@ -38,7 +40,8 @@ django-allauth
 django-crispy-forms
 
 beautifulsoup4
-djangorestframework
+djangorestframework==2.3.14
 rest_framework_generic_relations
+lxml
 
 agon_ratings

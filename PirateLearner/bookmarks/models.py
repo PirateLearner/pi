@@ -12,7 +12,6 @@ from cms.models.pluginmodel import CMSPlugin
 import traceback
 import sys
 from django.template.defaultfilters import slugify
-from bookmarks import settings
 PRIVACY = (
     ('pub','public'),
     ('priv','private'),
@@ -140,7 +139,14 @@ class LatestBookmarksPlugin(CMSPlugin):
         self.tags = oldinstance.tags.all()
 
     def get_bookmarks(self):
+<<<<<<< HEAD
         posts = BookmarkInstance.objects.all().filter(user__is_staff=True,privacy_level='pub').order_by('saved')
+=======
+        posts = BookmarkInstance.objects.all().filter(user__is_staff=True,privacy_level='pub').order_by('-saved')
+        print 'Printing get_bookmarks'
+        for post in posts:
+            print post
+>>>>>>> 924025d3476d3671e604ba8669eac4f0bf4cdce8
         
         tags = list(self.tags.all())
         if tags:

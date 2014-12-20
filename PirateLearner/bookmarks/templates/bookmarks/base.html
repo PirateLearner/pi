@@ -1,12 +1,33 @@
 {% extends "base.html" %}
 {% load cms_tags staticfiles sekizai_tags menu_tags %}
+{% load wishlist %}
+
+{% block title %}Bookmarks{% endblock title %}
+
 {% block breadcrumb %}
-        {% show_breadcrumb "blogging/includes/breadcrumb.html" %}
         {% block blog_breadcrumb %}
         {% endblock blog_breadcrumb %}
 {% endblock %}
 
 {% block content %}
 
-
+<div class="row main-content-wrapper">  	
+   	<div class="content-area clearfix">
+   		{% block bookmark_title %}
+	   	<div class="page-title">
+			<h2>Bookmarks</h2>
+		</div>
+		{% endblock %}
+   		<div class="col-sm-12 col-md-8 col-lg-9">
+			{% block bookmark_content %}
+   			{% endblock %}
+  		</div>
+  		{% include "sidebar.html" %}
+            <div class="overlay" id="overlay-container">
+			
+			
+		    </div>
+   	</div>
+</div>	
 {% endblock %}
+	

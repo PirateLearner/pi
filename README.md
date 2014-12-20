@@ -1,7 +1,15 @@
 pi
 ==
 
-Python Based CMS Framework
+__Pi__ is a python based _Suite of apps_, currently piggybacked on Django CMS 3.0 and in process of developing
+into a standalone CMS framework. 
+
+It offers dynamic article layout creation without fragmenting content into multiple tables as long 
+necessary by providing a virtual transform layer on top of the database Models, which converts data 
+from Database into meaningful HTML content and back into DB data while saving.
+
+The project is Open Sourced, community driven and leverages on existing open source apps, extending them
+where ever necessary.
 
 
 Install Instructions
@@ -118,7 +126,11 @@ in generic_relations/relations.py by:
             # Necessary because of context, field resolving etc.
             serializer.initialize(self.parent, field_name)
             return serializer.to_native(value)
-     
+
+Note: Upgrading blogging plugin schema     
+--------------------------------------
+
+ALTER TABLE `blogging_latestentriesplugin` ADD COLUMN `template` varchar(255) NOT NULL DEFAULT 'blogging/plugin/plugin_teaser.html';
 
 
 

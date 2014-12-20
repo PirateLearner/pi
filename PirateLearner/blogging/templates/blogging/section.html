@@ -2,14 +2,12 @@
 
 {% if parent %}
 {% block blog_breadcrumb %}
-{% include "blogging/includes/breadcrumb.html" with nodes=parent only %}
 {% endblock %}
 {% endif %}
 
 {% block title %}
-PirateLearner | {{ page.title }}
+{{ page.title }}
 {% endblock %}
-
 
 
 {% block content_blog %}

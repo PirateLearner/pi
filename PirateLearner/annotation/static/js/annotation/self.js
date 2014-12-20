@@ -410,7 +410,7 @@ function showForm(object){
 	//console.log(el);
 	
 	var cObj = getObjectById(pirateLearnerGlobal.form_element, 'content_object');
-	cObj.value='http://piratelocal.com/en/annotation/blogcontent/'+ pirateLearnerGlobal.pk +'/';
+	cObj.value='http://piratelocal.com/en/rest/annotation/blogcontent/'+ pirateLearnerGlobal.pk +'/';
 	/* Revision 1: Now we want to attach the form to the element itself, not the parent */
 	/* attachElementToObject(pirateLearnerGlobal.form_element, parent); */
 	//attachElementToObject(pirateLearnerGlobal.form_element, parent);
@@ -481,7 +481,7 @@ function postNewAnnotation(e){
     //Save Form Data........
     $.ajax({
         cache: false,
-        url : "http://piratelocal.com/en/annotation/annotations/",
+        url : "http://piratelocal.com/en/rest/annotation/annotations/",
         type: "POST",
         dataType : "json",
         contentType: "application/json;",
@@ -533,7 +533,7 @@ function deleteComment(){
     //Save Form Data........
     $.ajax({
         cache: false,
-        url : "http://piratelocal.com/en/annotation/annotations/"+id+"/",
+        url : "http://piratelocal.com/en/rest/annotation/annotations/"+id+"/",
         type: 'delete',        
         //data : {"_method":"DELETE"},
         success : removeComment,
