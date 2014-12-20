@@ -91,8 +91,6 @@ class BookmarkInstance(models.Model):
     def get_image_url(self):
         if self.image_url:
             return self.image_url
-        else:
-            return settings.BOOKMARK_DEFAULT_IMAGE
     
     def get_title(self):
         return self.title
@@ -139,14 +137,10 @@ class LatestBookmarksPlugin(CMSPlugin):
         self.tags = oldinstance.tags.all()
 
     def get_bookmarks(self):
-<<<<<<< HEAD
-        posts = BookmarkInstance.objects.all().filter(user__is_staff=True,privacy_level='pub').order_by('saved')
-=======
         posts = BookmarkInstance.objects.all().filter(user__is_staff=True,privacy_level='pub').order_by('-saved')
         print 'Printing get_bookmarks'
         for post in posts:
             print post
->>>>>>> 924025d3476d3671e604ba8669eac4f0bf4cdce8
         
         tags = list(self.tags.all())
         if tags:
