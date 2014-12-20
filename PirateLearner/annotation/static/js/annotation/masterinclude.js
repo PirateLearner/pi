@@ -43,7 +43,7 @@ pirateLearnerGlobal.annotationIncludes = [/* JavaScripts */['js/annotation/self.
                           						/* CSS */['css/annotation/styles.css'],
 						 							];
 //Field Value Lookup Ruleset
-pirateLearnerGlobal.scriptRuleSet = [['C', pirateLearnerGlobal.annotationIncludes,'BlogContent','/annotation/blogcontent/'],
+pirateLearnerGlobal.scriptRuleSet = [['C', pirateLearnerGlobal.annotationIncludes,'BlogContent','/rest/annotation/blogcontent/'],
                    						 ['D', '', 'Testing', '']
                    						];//The last one is just for testing
 
@@ -63,7 +63,7 @@ pirateLearnerGlobal.language = 'en';
 pirateLearnerGlobal.app = 'C';
 pirateLearnerGlobal.pk = 0;
 pirateLearnerGlobal.contentType = 'BlogContent';
-pirateLearnerGlobal.contentResource = 'annotation/blogcontent/'
+pirateLearnerGlobal.contentResource = 'rest/annotation/blogcontent/'
 
 
 pirateLearnerGlobal.user = null;

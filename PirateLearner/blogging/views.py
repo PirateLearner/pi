@@ -285,7 +285,10 @@ def teaser(request,slug):
 		print "LOGS:: This is Detail page"
 		if request.GET.get('edit',None) == 'True':
 			return edit_post(request,post_id)
-		blogs = BlogContent.objects.get(pk=post_id)
+		try:
+			blogs = BlogContent.objects.get(pk=post_id)
+		except BlogContent.DoesNotExist:
+			raise Http404
 		template = loader.get_template('blogging/detail.html')
 		try:
 			content_class_name = find_class('blogging.custom.'+blogs.content_type.__str__().lower(),blogs.content_type.__str__() )

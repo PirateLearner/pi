@@ -12,7 +12,7 @@
 	  {% endif %}                  
 	</div>
 	<div class="tile col-sm-12 col-md-12 col-lg-12 paper paper-raise paper-vintage social-tile">
-		<div class="fb-like" data-href="https://www.facebook.com/PirateLearner" data-width="284" data-layout="standard" data-action="like" data-show-faces="true" data-share="true">
+		<div class="fb-like" data-href="https://www.facebook.com/PirateLearner" data-width="254" data-layout="standard" data-action="like" data-show-faces="true" data-share="true">
 		</div>
 		<div class="text-center">
 			<a class="twitter-follow-button"
@@ -24,7 +24,7 @@
 		</div>
 	</div>
 	<div class="tile col-sm-12 col-md-12 col-lg-12 paper paper-raise paper-vintage social-tile">
-		<div class="g-page" data-width="288" data-href="//plus.google.com/u/0/116465481265465787624" data-rel="publisher"></div>
+		<div class="g-page" data-width="254" data-href="//plus.google.com/u/0/116465481265465787624" data-rel="publisher"></div>
 	</div>
 	
           
@@ -38,14 +38,6 @@
 	-->
 	{% load wishlist %}
 	{% get_wishlist_list %}
-	<div class="panel panel-default panel-success col-sm-12 col-md-12 col-lg-12">
-		  <h2 class="panel-heading">Recent Blog Entries</h2>
-         <ul class="panel-body list-unstyled">
-					<li class="panel-body">Lazy imagination.</li>
-					<li class="panel-body">But when it works...</li>
-					<li class="panel-body">It really does work well</li>                 
-         </ul>
-	</div>
 </div>
 <div id="myModal" class="modal fade">
     <div class="modal-dialog">
@@ -57,10 +49,14 @@
             <div class="modal-body">
                 <p>You need to be logged in to use this feature.</p>
                 <h3> Login now, it is free! :-)</h3>
+                <div class="text-center clearfix">
+                	<a class="col-sm-4 col-md-4 col-lg-4" href="javascript:allauth.facebook.login('', 'authenticate', 'login')"><span class="icon pl-facebook2 icon-responsive logo-facebook"></span></a>
+					<a class="col-sm-4 col-md-4 col-lg-4" href="/en/accounts/twitter/login/?process=login"><span class="icon pl-twitter2 icon-responsive logo-twitter"></span></a>
+					<a class="col-sm-4 col-md-4 col-lg-4" href="/en/accounts/google/login/?process=login""><span class="icon pl-googleplus3 icon-responsive logo-google"></span></a>
+                </div>
             </div>
             <div class="modal-footer">
                 <span type="button" class="btn btn-default" data-dismiss="modal">Later</span>
-                <a class="btn btn-primary" href="http://piratelocal.com/en/accounts/login/">Login</a>
             </div>
         </div>
     </div>

@@ -12,29 +12,43 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from taggit.models import Tag
 from allauth.account.views import LoginView
+from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
+from allauth.socialaccount.models import SocialAccount
 
-@receiver(pre_social_login)
-def CreateProfile(sender, request, sociallogin, **kwargs):
+from django.contrib.auth.signals import user_logged_in
+
+@receiver(user_logged_in)
+def CreateProfile(sender, request, user,**kwargs):
     """
     This function catches the signal for social login or social account add and check for the User profile object: if exist then do nothing,
     if not then create it and set the gender field.
     """
-    print "LOGS: Caught the signal--> Printing extra data of the acccount: \n", sociallogin.account.extra_data
-    user = sociallogin.account.user
     try:
+        
         profile = UserProfile.objects.get(user = user)
         print "LOGS: User profile exist do nothing"
     except UserProfile.DoesNotExist:
         print "LOGS: User profile does not exist"
-        user.first_name = sociallogin.account.extra_data['first_name']
-        user.last_name = sociallogin.account.extra_data['last_name']
-        user.save()
-
+  
         profile = UserProfile()
         profile.user = user
-        profile.gender = sociallogin.account.extra_data['gender']
+        try:
+            sociallogin = SocialAccount.objects.get(user=user)
+            print "LOGS: Caught the signal--> Printing extra data of the acccount: \n", sociallogin.extra_data
+            if('google' == sociallogin.provider ):
+                user.first_name = sociallogin.extra_data['given_name']
+                user.last_name = sociallogin.extra_data['family_name']
+                user.save()
+            elif ('facebook' == sociallogin.provider ):
+                user.first_name = sociallogin.extra_data['first_name']
+                user.last_name = sociallogin.extra_data['last_name']
+                user.save()
+            profile.gender = sociallogin.extra_data['gender']
+        except:
+            print "LOGS: Gender does not exist in social account"
         profile.save()
-        
+              
+
     
 @login_required
 def dashboard_home(request):

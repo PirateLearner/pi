@@ -20,7 +20,7 @@ pirateLearnerGlobal.user = null;
 		//Using the core $.ajax() method
 		$.ajax({
 		    // the URL for the request
-		    url: '/annotation/users/current/',
+		    url: '/rest/annotation/users/current/',
 		 
 		    // the data to send (will be converted to a query string)
 		    data: {
