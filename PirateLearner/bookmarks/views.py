@@ -18,13 +18,14 @@ from django.contrib.sites.models import Site
 import json
 from bookmarks.forms import BookmarkInstanceForm, BookmarkFolderForm,\
     BookmarkInstanceUpdateForm
-from django.utils.html import escape
+from django.utils.html import escape, strip_tags
 import traceback
 from django.contrib.auth.decorators import permission_required
 import sys
 from django.core.exceptions import ObjectDoesNotExist
 from meta_tags.views import Meta 
-from blogging.utils import trucncatewords
+from blogging.utils import truncatewords
+from bookmarks.utils import count_words
 
 def bookmarks(request):
     bookmarks = BookmarkInstance.objects.exclude(privacy_level = 'priv',user__is_staff=True).order_by("-saved")
@@ -150,14 +151,13 @@ def update(request, bookmark_instance_id):
                        
                        }
             bookmark_form = BookmarkInstanceUpdateForm(bookmark_instance.user,bookmark_instance_id,initial = initial)
-            
+        return render_to_response("bookmarks/update.html", {"bookmark_form": bookmark_form,}, context_instance=RequestContext(request))
     except:
         print "Unexpected error:", sys.exc_info()[0]
         for frame in traceback.extract_tb(sys.exc_info()[2]):
             fname,lineno,fn,text = frame
             print "Error in %s on line %d" % (fname, lineno)
 
-    return render_to_response("bookmarks/update.html", {"bookmark_form": bookmark_form,}, context_instance=RequestContext(request))
 
 
 
@@ -202,7 +202,10 @@ def bookmark_details(request,slug):
         print "LOGS:: This is Detail page of bookmarks"
         try:
             bookmark = BookmarkInstance.objects.get(pk=post_id)
-            meta = Meta(title = bookmark.title, description = trucncatewords(bookmark.description,120), section= bookmark.folder.title, url = bookmark.get_absolute_url(),
+            description = strip_tags(bookmark.note)
+            if count_words(description)<5:
+                description = bookmark.description
+            meta = Meta(title = bookmark.title, description = truncatewords(description,120), section= bookmark.folder.title, url = bookmark.get_absolute_url(),
                     image = bookmark.get_image_url(), author = bookmark.user, date_time = bookmark.saved ,
                     object_type = 'article', keywords = [ tags.name for tags in bookmark.tags.all()])
             return render_to_response("bookmarks/detail.html", {'bookmark':bookmark,'meta':meta,} ,context_instance=RequestContext(request))

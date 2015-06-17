@@ -1,6 +1,6 @@
 {% load url from future %}
 {% load thumbnail %}
-
+{% load voting_tags %}
 			<!-- Stacked Featured posts for this section -->
 	{% for node in nodes %}
 	<div class="media feature content-block-article paper .paper-blue" data-groups='["articles"]'>
@@ -9,8 +9,10 @@
     	</a>
     	<div class="feature-heading">
     	{% if not parent %}
-    		<span class="eyebrow"> {{ node.get_parent.title }}</span>
-  					{% endif %}              		
+    		<span class="eyebrow"> <a href="{{ node.get_parent.get_absolute_url }}">{{ node.get_parent.title }}</a></span>
+  					{% endif %}          
+       		{% score_for_object node as score %}
+            <span class="eyebrow pull-right">Score: {{ score.score }}</span>                		    		
     		<a class="title" href="{{node.get_absolute_url}}">
     			 {{ node.title }}
     		</a>

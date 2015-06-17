@@ -67,7 +67,7 @@ label = "Select Parent")
 	tags = TagField(help_text= "comma seperated fields for tags")
 	class Meta:
 		model = Testing
-		exclude=('pid_count')
+		exclude=('pid_count',)
 	def save(self):
 		instance = Testing()
 		instance.title = self.cleaned_data["title"]

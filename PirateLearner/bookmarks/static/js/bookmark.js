@@ -7,6 +7,30 @@ var pirateLearnerGlobal = pirateLearnerGlobal || {};
 pirateLearnerGlobal.bookMarks = {};
 pirateLearnerGlobal.bookMarks.prevURL = '';
 
+pirateLearnerGlobal.ckeditor = {};
+pirateLearnerGlobal.ckeditor.toolbar = {
+										'titles':[],
+										'admin':[],
+										'user':[],
+									};
+pirateLearnerGlobal.ckeditor.toolbar.titles = [
+	                                             ["Bold", "Italic", "Underline","Subscript", "Superscript"],	                                             
+	                                             ['Undo', 'Redo'],
+	                                            ];
+pirateLearnerGlobal.ckeditor.toolbar.admin = [
+	                                             ["Bold", "Italic", "Underline", "Strike"],
+	                                             ['NumberedList', 'BulletedList', "Indent", "Outdent", 'JustifyLeft', 'JustifyCenter',
+	                                        'JustifyRight', 'JustifyBlock'],
+	                                             ["Image", "Table", "Link", "Unlink", "Anchor", "SectionLink", "Subscript", "Superscript"], 
+	                                             ['Undo', 'Redo'], ["Source"],["Maximize"],
+	                                            ];
+pirateLearnerGlobal.ckeditor.toolbar.user = [
+	                                             ["Bold", "Italic", "Underline", "Strike"],
+	                                             ['NumberedList', 'BulletedList', "Indent", "Outdent", 'JustifyLeft', 'JustifyCenter',
+	                                        'JustifyRight', 'JustifyBlock'],
+	                                             ["Image", "Table", "Link", "Unlink", "Anchor", "SectionLink", "Subscript", "Superscript"], 
+	                                             ['Undo', 'Redo'], ["Source"],["Maximize"],
+	                                            ];
 
 var hideAllMessages = function (){
 
@@ -54,6 +78,8 @@ var rollLeft = function(){
 	}
 	activeImage.removeClass('hidden');
 	activeImage.addClass('active');
+	/* Update the value of image field also */
+	$("#id_image_url").val(activeImage.attr('src'));
 }
 
 /**
@@ -77,7 +103,9 @@ var rollRight = function(){
 		activeImage = $('div.bookmark-form img:eq('+(activeImage.index()+1)+')');
 	}
 	activeImage.removeClass('hidden');
-	activeImage.addClass('active');	
+	activeImage.addClass('active');
+	/* Update the value of image field also */
+	$("#id_image_url").val(activeImage.attr('src'));
 }
 
 /**
@@ -96,6 +124,9 @@ var createSnippet = function(numImages){
 			else{
 				imageContainer.append('<img class="hidden" id="slide_'+i+'"/>');
 			}
+		}
+		if(numImages>0){
+			imageContainer.append('<div class="bookmark-form-image__slide close-cross"><span class="glyphicon glyphicon-remove"></span></div>');
 		}
 		if(numImages>1){
 			/* Allow arrows to cycle through images and select one*/
@@ -122,12 +153,19 @@ var createSnippet = function(numImages){
 		
 		$('.left-arrow').click(rollLeft);
 		$('.right-arrow').click(rollRight);
+		$('.close-cross').click(function(){
+			console.log('Removing Images');
+			$("#id_image_url").val('');
+			console.log($("#id_image_url").val());
+			$(".bookmark-form__image").addClass('hidden');
+		});
 	}/* endof if typeof(pirateLearnerGlobal.snippetElement) */
 	
 	else{
 		/* Just remove the previous images element and construct only them while blanking out the rest of the fields */
 		$('.left-arrow').unbind("click", rollLeft);
 		$('.right-arrow').unbind("click", rollRight);
+		$('.close-cross').unbind("click");
 		$('.bookmark-form__image').remove();
 		imageContainer= $('<div class="bookmark-form__image"></div>');
 		for(i=0 ; i<numImages; i++){
@@ -138,6 +176,9 @@ var createSnippet = function(numImages){
 			else{
 				imageContainer.append('<img class="hidden" id="slide_'+i+'"/>');
 			}
+		}
+		if(numImages>0){
+			imageContainer.append('<div class="bookmark-form-image__slide close-cross"><span class="glyphicon glyphicon-remove"></span></div>');
 		}
 		if(numImages>1){
 			/* Allow arrows to cycle through images and select one*/
@@ -156,6 +197,12 @@ var createSnippet = function(numImages){
 		$('.bookmark-form__description').val('');
 		$('.left-arrow').click(rollLeft);
 		$('.right-arrow').click(rollRight);
+		$('.close-cross').click(function(){
+			console.log('Removing Images');
+			$("#id_image_url").val('');
+			console.log($("#id_image_url").val());
+			$(".bookmark-form__image").addClass('hidden');
+		});
 	}	
 }
 
@@ -168,6 +215,7 @@ var setup_snippet = function(data){
 			if(is_request)
 			{
 				hideMessage(lastMessage);
+				hideAllMessages();
 			}				
 			/*
 			 * Create a snippet element with number of retrieved images as input parameter
@@ -201,6 +249,10 @@ var setup_snippet = function(data){
 			showMessage(data);
 			is_request = true;
 			lastMessage = data.message_type;
+			
+			/* Enable Inline editing */
+			CKEDITOR.inline('snippet_title', {'toolbar':pirateLearnerGlobal.ckeditor.toolbar.titles});
+			CKEDITOR.inline('snippet_description', {'toolbar':pirateLearnerGlobal.ckeditor.toolbar.user});
 		}
 		else if(data.message_type == 'danger'){
 			if(is_request)
@@ -248,7 +300,7 @@ var setup_snippet = function(data){
 		 
 		$.ajax({
 		    // the URL for the request
-		    url: 'http://piratelocal.com/bookmarks/add/',
+		    url: 'http://piratelearner.com/bookmarks/add/',
 		 
 		    // the data to send (will be converted to a query string)
 		    data: {

@@ -27,10 +27,13 @@
 		       			<a href="{{ bookmark.get_external_url }}" target="_blank" rel="nofollow">Visit Page</a>
 		       		</span>
 	       		</div>
+	       		<span id="trigger-overlay" type="button" class="icon icon-helper overlay-open pl-expand"></span>
 	       	</div>				
 			<div class="article-body" id="commentable-container" >
 				<img class="img-responsive article-image" src="{{ bookmark.get_image_url }}"/>
-				<p> {{ bookmark.get_note }} </p>
+				{% autoescape off %}
+					{{ bookmark.get_note }}
+				{% endautoescape %}
 			</div>
 			<div class="article-footer clearfix">
 				<div class="bookmark-button btn btn-primary">

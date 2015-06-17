@@ -33,7 +33,8 @@
 	<!--[if (lt IE 9) & (!IEMobile)]>
 	<script src="{{ STATIC_URL }}js/selectivizr-min.js"></script>
 	<![endif]-->
-	
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL }}js/syntaxhighlighter/styles/shCore.css">
+	<link rel="stylesheet" type="text/css" href="{{STATIC_URL }}js/syntaxhighlighter/styles/shThemeDefault.css">
 
 	<!-- JavaScript -->
 	<script src="{{ STATIC_URL }}js/modernizr.custom.js"></script>
@@ -42,9 +43,6 @@
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script src="{{STATIC_URL }}js/docs.min.js"></script>   
      
-    <script type="text/javascript" src="{{ STATIC_URL }}js/annotation/masterinclude.js"></script>
-
-
 	<!-- Icons -->
 	
 	<!-- 16x16 -->
@@ -86,11 +84,20 @@
 	<meta http-equiv="cleartype" content="on">
 	    <script src="{{ STATIC_URL }}/js/login_ajax.js"></script>
    <script src="{{ STATIC_URL }}/js/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+   <!-- Syntax highlighter -->
+<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shCore.js"></script>
+<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushSass.js"></script>
+<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushPython.js"></script>
+<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushCpp.js"></script>
+<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushJScript.js"></script>
+<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushXml.js"></script>
+<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushBash.js"></script>
     {% render_block "css" %}
     <!--<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/tile.css"> -->
   	<!-- JavaScript -->
 
-    
+    <!-- GPLus Script -->
+<script src="https://apis.google.com/js/platform.js" async defer></script>
 {% render_block "js" %}
   {% block extra_script %} 
 {% endblock %}
@@ -180,8 +187,6 @@
 {% load socialaccount %}
 
 {% providers_media_js %}
-<!-- GPLus Script -->
-<script src="https://apis.google.com/js/platform.js" async defer></script>
 <!-- Twitter Script -->
  
  <script type="text/javascript">
@@ -206,6 +211,7 @@ window.twttr = (function (d, s, id) {
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
 
+
 <!-- analytics -->
 {% if request.user.is_staff != True %}
 <script>
@@ -217,6 +223,10 @@ window.twttr = (function (d, s, id) {
   ga('send', 'pageview');
 </script>
 {% endif %}
+<!-- Syntax Highlight -->
+  	<script type="text/javascript">
+  		 SyntaxHighlighter.all()
+  	</script>
   </body>
 
 </html>

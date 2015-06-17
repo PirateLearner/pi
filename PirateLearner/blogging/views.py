@@ -9,28 +9,27 @@ from django.shortcuts import get_object_or_404, render_to_response
 from django.contrib import auth
 from django.http.request import HttpRequest
 from django.http import HttpResponseRedirect, Http404
-from models import *
+from blogging.models import *
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .forms import *
-from .create_class import CreateClass
+from blogging.forms import *
+from blogging.create_class import CreateClass
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.forms.formsets import formset_factory
 from django.utils.html import escape
-from .utils import *
-from wrapper import *
+from blogging.utils import *
+from blogging.wrapper import *
 import os, errno
 from django.db.models import Q
 from django.core.mail import send_mail, mail_admins
 from django.core.exceptions import ObjectDoesNotExist
 from django.template.defaultfilters import slugify
 import reversion
-from reversion.helpers import generate_diffs
 
 from meta_tags.views import Meta 
 from blogging.utils import strip_image_from_data
 from blogging.tag_lib import strip_tag_from_data
-from blogging.utils import trucncatewords
+from blogging.utils import truncatewords
 from django.utils.html import strip_tags
 
 import traceback
@@ -218,7 +217,7 @@ def add_new_model(request, model_name):
 	print normal_model_name
 	
 	if normal_model_name == 'ContentType' :
-		FieldFormSet = formset_factory(FieldTypeForm,extra=4,max_num=1)
+		FieldFormSet = formset_factory(FieldTypeForm)
 		if request.method == 'POST':
 			form1 = ContentTypeCreationForm(request.POST)
 			form2 = FieldFormSet(request.POST)
@@ -300,7 +299,7 @@ def teaser(request,slug):
 			# Instantiate the Meta class
 			description = strip_tags(blogs.data)
 			description  = strip_tag_from_data(strip_image_from_data(description))
-			meta = Meta(title = blogs.title, description = trucncatewords(description,120), section= blogs.section.title, url = blogs.get_absolute_url(),
+			meta = Meta(title = blogs.title, description = truncatewords(description,120), section= blogs.section.title, url = blogs.get_absolute_url(),
 					image = blogs.get_image_url(), author = blogs.author_id, date_time = blogs.publication_start ,
 					object_type = 'article', keywords = [ tags.name for tags in blogs.tags.all()])
 			
@@ -309,7 +308,7 @@ def teaser(request,slug):
 			if len(available_versions) > 1 :
 				old_version = available_versions[0]
 				new_version = available_versions[1]
-				patch_html = generate_diffs(old_version, new_version, "data",cleanup="semantic")
+				patch_html = reversion.helpers.generate_diffs(old_version, new_version, "data",cleanup="semantic")
 		except:
 			print "Unexpected error:", sys.exc_info()[0]
 			for frame in traceback.extract_tb(sys.exc_info()[2]):
@@ -324,6 +323,7 @@ def teaser(request,slug):
                                        'page': {'title':'Pirate Learner', 'tagline':'We learn from stolen stuff'},
                                        'patch': patch_html,
                                        'meta' : meta,
+                                       'author': blogs.get_author(),
                                       })
 		return HttpResponse(template.render(context))
 	except ValueError:

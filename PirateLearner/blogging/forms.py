@@ -1,10 +1,11 @@
 from django import forms
-from djangocms_text_ckeditor.fields import HTMLField
+
+from django.conf import settings
+
 from django.contrib.admin import widgets
 from blogging.models import *
 import django_select2
 import taggit
-from djangocms_text_ckeditor.widgets import TextEditorWidget
 from blogging.widgets import SelectWithPopUp
 from django.db import models
 from ckeditor.widgets import CKEditorWidget
@@ -149,43 +150,44 @@ class ContentForm(forms.ModelForm):
 
 class PostEditForm(forms.ModelForm):
 
-    class Meta:
-        model = BlogContent
-        widgets = {'tags': PostTagWidget,
+	class Meta:
+	    model = BlogContent
+	    widgets = {'tags': PostTagWidget,
 		   'publication_start': widgets.AdminSplitDateTime }
-        exclude = (
-            'page',
-            'create_date',
-            'author_id',
-            'special_flag',
-            'published_flag',
+	    exclude = (
+	        'page',
+	        'create_date',
+	        'author_id',
+	        'special_flag',
+	        'published_flag',
 	    'last_modefied',
 	    'url_path',
 	    'objects',
 	    'slug',
-        )
+	    )
 
-class LatestEntriesForm(forms.ModelForm):
+if 'cms' in settings.INSTALLED_APPS:
+	class LatestEntriesForm(forms.ModelForm):
 
-    class Meta:
-
-        widgets = {
-            'tags': django_select2.Select2MultipleWidget
-        }
-class SectionPluginForm(forms.ModelForm):
-	
-	class Meta:
-		model = SectionPlugin
-	
-	def __init__(self, *args, **kwargs):
-		super(SectionPluginForm, self).__init__(*args, **kwargs)
-		choices = [self.fields['parent_section'].choices.__iter__().next()]
-		for page in self.fields['parent_section'].queryset:
-			choices.append(
-				(page.id, ''.join(['-' * page.level, page.__unicode__()]))
-			)
-		self.fields['parent_section'].choices = choices
-
+	    class Meta:
+	        widgets = {
+	            'tags': django_select2.Select2MultipleWidget
+	        }
+        
+	class SectionPluginForm(forms.ModelForm):
+		
+		class Meta:
+			model = SectionPlugin
+		
+		def __init__(self, *args, **kwargs):
+			super(SectionPluginForm, self).__init__(*args, **kwargs)
+			choices = [self.fields['parent_section'].choices.__iter__().next()]
+			for page in self.fields['parent_section'].queryset:
+				choices.append(
+					(page.id, ''.join(['-' * page.level, page.__unicode__()]))
+				)
+			self.fields['parent_section'].choices = choices
+		
 class ContactForm(forms.Form):
 	contact_type = forms.ChoiceField(label="Choose Type of Contact",required=True,
 									widget = forms.Select(),choices=CONTACT_TYPE)

@@ -21,16 +21,28 @@ def truncate_words(mystring,numberofwords=100):
 
 def get_domain_from_url(url,image):
     # first check if netloc exist in image (for wikipedia)
-    parsed_image = urlparse( url )
-    net_loc = '{uri.netloc}/'.format(uri=parsed_image)
-    if net_loc:
+    parsed_image = urlparse( image )
+    print "Getting domain of ", image
+    print "After parsing ", parsed_image
+#     net_loc = '{uri.netloc}/'.format(uri=parsed_image)
+    print "Net location is ", parsed_image.netloc
+    if parsed_image.netloc:
         parsed_uri = urlparse( url )
         domain = '{uri.scheme}:'.format(uri=parsed_uri)
+#         domain = parsed_uri.scheme 
         print domain
         return domain
     else:
         parsed_uri = urlparse( url )
-        domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
+        img_string = str(image)
+        if img_string.startswith('/'):
+            domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
+        else:
+            relative_loc = parsed_uri.path.split('/')[:-1]
+            print relative_loc
+            relative_loc = '/'.join(x for x in relative_loc)
+            domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
+            domain = domain + relative_loc + '/'
         print domain
         return domain
 
@@ -45,7 +57,7 @@ def validate_image_url(image):
 
 def convert_rel_images(image_list,url):
     image_list = [image if validate_image_url(image) else get_domain_from_url(url,image)+image for image in image_list]
-    print "LOGS: after coversion ", image_list
+    print "LOGS: after conversion ", image_list
     return image_list
 
 

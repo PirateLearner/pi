@@ -57,7 +57,7 @@ def strip_image_from_data(data):
 	print "LOGS:: Stripping images from data"
 	return line
 	
-def trucncatewords(Value,limit=30):
+def truncatewords(Value,limit=30):
 	try:
 		limit = int(limit)
 		# invalid literal for int()

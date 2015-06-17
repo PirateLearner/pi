@@ -28,7 +28,10 @@ def parse_content(db_object, tag):
 #     print "data ", db_object.data
     result = patt.search(db_object.data)
 #     print result
-    return result.group(1)
+    if result:
+    	return result.group(1)
+    else:
+	return ""
 
 def strip_tag_from_data(data):
     p = re.compile('\\%\\% .*? \\%\\%',flags=re.DOTALL)

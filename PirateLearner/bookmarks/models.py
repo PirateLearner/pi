@@ -13,6 +13,8 @@ import traceback
 import sys
 from django.template.defaultfilters import slugify
 
+from bookmarks import settings
+
 PRIVACY = (
     ('pub','public'),
     ('priv','private'),
@@ -52,7 +54,7 @@ class BookmarkInstance(models.Model):
     title = models.CharField(_("title"), max_length=100)
     description = models.TextField(_("description"), blank=True)
     note = models.TextField(_("note"), blank=True)
-    image_url = models.URLField()
+    image_url = models.URLField(blank=True, null=True)
     folder = models.ForeignKey(BookmarkFolderInstance, verbose_name=_("folder"))
     privacy_level = models.CharField(choices=PRIVACY,max_length=4)
     tags = TaggableManager(blank=True)
@@ -90,7 +92,10 @@ class BookmarkInstance(models.Model):
     
     
     def get_image_url(self):
-        return self.image_url
+        if len(self.image_url)>0:
+            return self.image_url
+        else:
+            return(settings.BOOKMARK_DEFAULT_IMAGE)
     
     def get_title(self):
         return self.title

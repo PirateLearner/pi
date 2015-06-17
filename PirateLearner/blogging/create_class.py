@@ -116,11 +116,11 @@ class CreateClass():
                                     'empty_label=None,\n' + \
                                     'required = True,\n' + \
                                     'label = "Select Parent")\n'
-            self.class_formclass_meta_string += "\t\texclude=('pid_count')\n"
+            self.class_formclass_meta_string += "\t\texclude=('pid_count',)\n"
             self.class_formclass_string += '\ttags = TagField(help_text= "comma seperated fields for tags")\n'
             #self.class_formclass_string += '\t\twidgets = {"tags": PostTagWidget,"data": CKEditorWidget}\n'
         else:
-            self.class_formclass_string += '\tparent = TreeNodeChoiceField(queryset=BlogParent.objects.all().filter(~Q(title="Orphan"),~Q(title="Blog")),required=True,' + \
+            self.class_formclass_string += '\tparent = TreeNodeChoiceField(queryset=BlogParent.objects.all().filter(~Q(title="Orphan"),~Q(title="Blog")),required=False,' + \
                                             'empty_label=None, label = "Select Parent" )\n'
 
 
