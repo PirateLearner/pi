@@ -11,6 +11,14 @@
 				<h4 class="article-title"> 	{{ title }} </h4>
 			</div>       	
 			<div class="article-actions">
+				{% if request.user.is_staff == True %}
+				<div class="article-actions__button">
+   					<a id="trigger-edit" href="{{ content.edit }}" type="button" class="icon pl-pencil"></a>
+		       		<span class="icon-helper" id="upvote_count">
+		       			Edit
+		       		</span>
+	       		</div>
+				{% endif %}
 	       		<div class="article-actions__button text-muted vote" id="upvote">
 		       		<span class="glyphicon glyphicon-chevron-up"></span>
 		       		<span class="icon-helper" id="upvote_count">
@@ -31,6 +39,6 @@
 				{{ field.value }}
 			{% endautoescape %}		
 		{% endfor %}
-		</div>
+		</article>
 		
 {% endif %}

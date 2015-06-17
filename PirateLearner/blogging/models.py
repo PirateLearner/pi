@@ -21,7 +21,7 @@ if 'cms' in settings.INSTALLED_APPS:
     except ImportError:
         print 'CMS not installed'
     
-from blogging.utils import get_imageurl_from_data, trucncatewords, slugify_name
+from blogging.utils import get_imageurl_from_data, truncatewords, slugify_name
 from django.utils.html import strip_tags
 from django.core.urlresolvers import reverse
 import traceback
@@ -163,7 +163,7 @@ class BlogContent(models.Model):
         json_obj = json.loads(self.data)
         # Instantiate the Meta class
         description = strip_tags(json_obj.values()[0])
-        return trucncatewords(description,120)
+        return truncatewords(description,120)
     
     def get_title(self):
         return self.title

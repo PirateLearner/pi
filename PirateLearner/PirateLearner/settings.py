@@ -230,7 +230,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.twitter',
     'crispy_forms',
     'blogging',
-    'annotation',
+    'annotations',
     'ckeditor',
     'disqus',
     'dashboard',
@@ -243,6 +243,7 @@ INSTALLED_APPS = (
     'spotlight',
     'django.contrib.redirects',
     'django_comments',
+    'voting',
 )
 
 LANGUAGES = (

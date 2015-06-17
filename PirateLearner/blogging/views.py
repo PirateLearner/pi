@@ -29,7 +29,7 @@ from reversion.helpers import generate_diffs
 from meta_tags.views import Meta 
 from blogging.utils import strip_image_from_data
 from blogging.tag_lib import strip_tag_from_data
-from blogging.utils import trucncatewords,slugify_name
+from blogging.utils import truncatewords,slugify_name
 from django.utils.html import strip_tags
 
 import traceback
@@ -343,7 +343,7 @@ def teaser(request,slug):
 			json_obj['edit'] = reverse('blogging:edit-post',args = (post_id,))
 			# Instantiate the Meta class
 			description = strip_tags(json_obj.values()[0])
-			meta = Meta(title = blogs.title, description = trucncatewords(description,120), section= blogs.section.title, url = blogs.get_absolute_url(),
+			meta = Meta(title = blogs.title, description = truncatewords(description,120), section= blogs.section.title, url = blogs.get_absolute_url(),
 					image = blogs.get_image_url(), author = blogs.author_id, date_time = blogs.publication_start ,
 					object_type = 'article', keywords = [ tags.name for tags in blogs.tags.all()])
 			

@@ -18,39 +18,76 @@
 {{ content.title }}
 {% endblock %}
 
+{% block edit_content %}
+
+{% endblock %}
 
 {% block content_blog %}
 
 
-<div class="header-ribbon" id="overlay-target" itemscope itemtype="http://schema.org/Article">
+<section class="header-ribbon" id="overlay-target" itemscope itemtype="http://schema.org/Article">
 
 	<!--<div> -->
+		<span class="hidden rest" data-id="{{ nodes.id }}" data-content-type="54"></span>
 		<h1 class="article-title" itemprop="headline"> 	{{ content.title }} </h1>
 		<meta itemprop="datePublished" content=" {{ meta.date_time }} "/>
 		<span class="article-author"> by Admin</span>       	
-		<div class="article-actions">
-		{% if request.user.is_staff == True %}
-		<a id="trigger-edit" href="{{ content.edit }}" type="button" class="icon pl-pencil"></a>
-		{% endif %}
-       		<span id="trigger-overlay" type="button" class="icon overlay-open pl-expand"></span>
+		<div class="article-actions_outer" data-spy="affix">
+			<div class="article-actions-title-small">
+				<h4 class="article-title"> 	{{ content.title  }} </h4>
+			</div>       	
+			<div class="article-actions">
+				{% if request.user.is_staff == True %}
+				<div class="article-actions__button pull-right">
+   					<a id="trigger-edit" href="{{ content.edit }}" type="button">
+   						<span class="glyphicon glyphicon-edit"></span>
+   						<span class="icon-helper">
+		       			Edit
+		       			</span>
+   					</a>
+	       		</div>
+				{% endif %}
+	       		<div class="article-actions__button text-muted vote" id="upvote">
+		       		<span class="glyphicon glyphicon-chevron-up"></span>
+		       		<span class="icon-helper" id="upvote_count">
+		       			0
+		       		</span>
+	       		</div>
+	       		<div class="article-actions__button text-muted vote" id="downvote">
+		       		<span class="glyphicon glyphicon-chevron-down"></span>
+		       		<span class="icon-helper" id="downvote_count">0	       			
+		       		</span>
+	       		</div>	
+	       	</div>			
        	</div>			
 
-		<div class="article-body" id="commentable-container"  itemprop="articleBody">
+		<article class="article-body" id="commentable-container"  itemprop="articleBody">
 			{% block custom_detail %}
 			{% endblock %}
-		</div>
+		</article>
 		
 	<!-- </div> -->
+</section>
+<div class="article-adjunct">
+    <nav class="article-adjunct-nav">
+        <ul class="article-adjunct-nav--list">
+            <li class="nav-tab article-adjunct-nav--item active"><a href="#article-adjunct-tab-discuss"><span>Discussions</span></a></li>
+            <li class="nav-tab article-adjunct-nav--item"><a href="#article-adjunct-tab-notes"><span>Notes</span></a></li>
+        </ul>
+    </nav>
+    <div class="article-adjunct-block">
+        <div class="article-adjunct-tab" id="article-adjunct-tab-discuss">
+			{% disqus_show_comments %}
+        </div>
+        <div class="article-adjunct-tab active comments-container" id="article-adjunct-tab-notes">
+            
+        </div>
+    </div>
 </div>
-
-{% disqus_show_comments %}
-
-
 {% endblock %}
 
 {% block extra_script %}
 <script src="{{ STATIC_URL }}ckeditor/ckeditor/ckeditor.js"></script>
-<script src="{{ STATIC_URL }}js/annotation/self.js"></script>
 <script src="{{ STATIC_URL }}js/getuser.js"></script>
 <link rel="stylesheet" href="{{ STATIC_URL }}css/overlay.css"></link>
 

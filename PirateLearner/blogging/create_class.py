@@ -97,7 +97,7 @@ class CreateTemplate():
         self.member_list = []
         self.end_string = '\t\t{% endautoescape %}\n\t{% endblock %}\n'
         for member_name, member_type in member_dict.iteritems():
-            member_string = '\t\t<div class="row">\n\t\t\t{{ content.' + member_name + ' }}\n\t\t</div>'
+            member_string = '\n\t\t\t{{ content.' + member_name + ' }}\n'
             self.member_list.append(member_string)
     
     def form_string(self):
