@@ -4,6 +4,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 from django.conf import settings
 from cms.sitemaps import CMSSitemap
+from blogging.sitemaps import BlogSitemap,BlogParentSitemap
+from bookmarks.sitemaps import BookmarkSitemap
 from django.utils.functional import curry
 from django.views.defaults import *
 
@@ -26,8 +28,10 @@ admin.autodiscover()
 urlpatterns = i18n_patterns('',
 #    url(r'^polls/', include('polls.urls')),
     url(r'^ckeditor/', include('ckeditor.urls')),
+    url(r'^core/', include('core.urls',namespace='core')),
     url(r'^C/', include('blogging.urls',namespace='blogging')),
     url(r'^dashboard/', include('dashboard.urls',namespace='dashboard')),
+    url(r'^dash/', include('dash.urls')),
     url(r'^bookmarks/', include('bookmarks.urls',namespace='bookmarks')),
     url(r'^spotlight/', include('spotlight.urls',namespace='spotlight')),
     url(r'^admin/', include(admin.site.urls)),
@@ -37,7 +41,8 @@ urlpatterns = i18n_patterns('',
     url(r'^accounts/login/$', 'dashboard.views.custom_login'),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',{'next_page': '/'}),
     url(r'^accounts/', include('allauth.urls')),
-    url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': {'cmspages': CMSSitemap}}),
+    url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': {'cmspages': CMSSitemap,'blog':BlogSitemap,'sections':BlogParentSitemap,
+                                                                                  'bookmarks':BookmarkSitemap}}),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 #     url(r"^ratings/", include("agon_ratings.urls")),
     url(r'^rest/', include("rest.urls", namespace="rest")),

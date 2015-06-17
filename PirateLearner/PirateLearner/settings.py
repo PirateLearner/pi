@@ -244,6 +244,18 @@ INSTALLED_APPS = (
     'spotlight',
     'django.contrib.redirects',
     'django_comments',
+    'core',
+    'dash',
+    'dash.contrib.layouts.android',
+    'dash.contrib.layouts.bootstrap2',
+    'dash.contrib.layouts.windows8',
+    'dash.contrib.plugins.dummy',
+    'dash.contrib.plugins.image',
+    'dash.contrib.plugins.memo',
+    'dash.contrib.plugins.rss_feed',
+    'dash.contrib.plugins.url',
+    'dash.contrib.plugins.video',
+    'dash.contrib.plugins.weather',
 )
 
 LANGUAGES = (
@@ -303,7 +315,7 @@ CMS_PLACEHOLDER_CONF = {}
 
 DATABASES = {
     'default':
-        {'ENGINE': 'django.db.backends.mysql', 'NAME': 'sampledb', 'HOST': '127.0.0.1', 'USER': 'root', 'PASSWORD': 'root', 'PORT': '3306'}
+        {'ENGINE': 'django.db.backends.mysql', 'NAME': 'pirate_db', 'HOST': '127.0.0.1', 'USER': 'root', 'PASSWORD': 'root', 'PORT': '3306'}
 }
 # default is 10 px
 MPTT_ADMIN_LEVEL_INDENT = 20
@@ -377,6 +389,9 @@ META_USE_SITES = True
 META_PUBLISHER_FB_ID = 'https://www.facebook.com/PirateLearner' # can use PAGE URL or Publisher id ID
 META_PUBLISHER_GOOGLE_ID = 'https://plus.google.com/116465481265465787624' # Google+ ID 
 META_FB_APP_ID = ''
+
+#blogging app settings
+BLOGGING_MAX_ENTRY_PER_PAGE = 3
 
 # ftech the bookmark from web pages depending upon the tags written for social networking sites
 BOOKMARK_FETCH_PRIORITY = ['facebook','google','twitter','extra','None']

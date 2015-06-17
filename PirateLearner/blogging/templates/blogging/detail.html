@@ -27,15 +27,18 @@
 	<!--<div> -->
 {% render_content content %}
 	<!-- </div> -->
-
 </div>
 
 {% disqus_show_comments %}
+
+{% render_contact_form %}
+
 {% endblock %}
 
 {% block extra_script %}
 <script src="{{ STATIC_URL }}ckeditor/ckeditor/ckeditor.js"></script>
-
+<script src="{{ STATIC_URL }}js/annotation/self.js"></script>
+<script src="{{ STATIC_URL }}js/getuser.js"></script>
 <link rel="stylesheet" href="{{ STATIC_URL }}css/overlay.css"></link>
 
 {% endblock %}

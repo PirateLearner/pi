@@ -196,7 +196,7 @@ def add_folder(request,model_name):
 
 def bookmark_details(request,slug):
     current_section = slug.split("/")[-1]
-    print current_section
+#     print current_section
     try:
         post_id = int(current_section)
         print "LOGS:: This is Detail page of bookmarks"

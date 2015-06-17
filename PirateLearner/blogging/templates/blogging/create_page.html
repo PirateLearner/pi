@@ -38,20 +38,8 @@ Create Content - Phase-2
 
 {% else %}
 
-
-{% if form.errors %}
-        <p style="color: red;">
-            Please correct the error{{ form.errors|pluralize }} below.
-        </p>
-    {% endif %}
-
-<form action="" method="post">
-        <table>
-            {{ form.as_p }}
-        </table>
-        {% csrf_token %}
-        <input type="submit" value="Submit">
-</form>
+{% load crispy_forms_tags %}
+{% crispy form %}
 
 {% endif %}
 {% endblock %}

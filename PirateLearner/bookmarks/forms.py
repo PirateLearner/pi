@@ -212,3 +212,6 @@ class LatestBookmarksForm(forms.ModelForm):
     tags = TagSelectField()
     class Meta:
         model = LatestBookmarksPlugin
+        
+
+    

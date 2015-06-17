@@ -13,6 +13,10 @@ from crispy_forms.layout import Submit
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from crispy_forms.layout import Layout, Field, Fieldset, ButtonHolder, Submit
+from django_select2.fields import AutoModelSelect2TagField,AutoModelSelect2MultipleField
+import json
+from blogging import tag_lib
+from blogging.utils import slugify_name
 
 CUSTOM_FIELD_TYPE = (
 	('CharField', 'TextField'),
@@ -29,9 +33,15 @@ CONTACT_TYPE = (
 			('Join','Join Us!'),
 			)
 
+class TagField(AutoModelSelect2TagField):
+	queryset = Tag.objects.all()
+	search_fields = ['name__icontains', ]
+	def get_model_field_values(self, value):
+		return {'name': value}
+
 def validate_empty(value):
-    if value :
-        raise ValidationError(u'It seems you are not human!!!')
+	if value :
+		raise ValidationError(u'It seems you are not human!!!')
 
 """
 class LatestEntriesForm(forms.ModelForm):
@@ -118,6 +128,8 @@ class ContentTypeCreationForm(forms.ModelForm):
 		self.helper1.form_tag = False
 #		self.helper1.template = 'blogging/inline_field.html'
 
+
+	
 	class Meta:
 		model = BlogContentType
 
@@ -125,6 +137,10 @@ class FieldTypeForm(forms.Form):
 	field_name = forms.CharField()
 	field_type = forms.ChoiceField(widget = forms.Select(),choices=CUSTOM_FIELD_TYPE)
 	
+	def clean_field_name(self):
+		print "LOGS: clean_field_name called"
+		data = slugify_name(self.cleaned_data['field_name'])
+		return data
 
 	
 class FormsetHelper(FormHelper):
@@ -241,6 +257,68 @@ class ContactForm(forms.Form):
 			
 			)
 #		self.helper.add_input(Submit('submit', 'Submit'))
+
+class TestFormClass(forms.Form):
+	title = forms.CharField(max_length = 100)
+	description = forms.CharField(widget=forms.Textarea, required=False)
+	note = forms.CharField(widget=forms.Textarea, required=False)
+	tags = TagField()
+	section = forms.ModelChoiceField(queryset= BlogParent.objects.filter(children=None) , empty_label=None)
+	pid_count = forms.IntegerField(required=False)
+	def __init__(self, *args, **kwargs):
+		self.helper = FormHelper()
+		
+		self.helper.form_id = 'id-TestFormClass'
+#		self.helper.form_class = 'blueForms'
+		self.helper.form_class = 'form-horizontal'
+		self.helper.label_class = 'col-lg-2'
+		self.helper.field_class = 'col-lg-8'
+		self.helper.form_method = 'post'
+		self.helper.form_action = reverse('blogging:testing-view')
+		self.helper.layout = Layout(
+				Fieldset(
+                'Testing the JSON FORM',
+                'title',
+                'description',
+                'note',
+                'tags',
+                'section',
+                Field('pid_count', type="hidden"),
+            ),
+			
+            ButtonHolder(
+                Submit('submit', 'Submit', css_class='button white')
+            ),
+			
+			)
+		super(TestFormClass, self).__init__(*args, **kwargs)
+
+	
+	def save(self,post,db_instance=None):
+		print "LOGS: Section --> ", post.pop('section')
+		print "LOGS: Tags --> ", post.pop('tags')
+		print "LOGS: Tags --> ", post.pop('title')
+		post.pop('csrfmiddlewaretoken')
+		post.pop('submit')
+		if db_instance != None:
+			instance = db_instance
+		else:
+			instance = BlogContent()
+		instance.title = self.cleaned_data["title"]
+		instance.section = self.cleaned_data["section"]
+
+		for k,v in post.iteritems():
+			if str(k) != 'pid_count' :
+				tmp = {}
+				tmp = tag_lib.insert_tag_id(str(v),self.cleaned_data["pid_count"])
+				post[k] = tmp['content']
+				post['pid_count'] = tmp['pid_count']
+			
+		json_str = json.dumps(post.dict())
+		instance.data = str(json_str)
+		print "LOGS: printing the json_str", json_str
+		return instance
+		
 
 """
 class PageForm(forms.Form):

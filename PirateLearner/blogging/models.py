@@ -1,5 +1,3 @@
-import datetime
-from collections import Counter
 from django.utils import timezone
 import sys
 from django.db import models
@@ -8,17 +6,14 @@ from django.db.models import Q
 from django.contrib import auth
 from mptt.models import MPTTModel, TreeForeignKey
 from django.template.defaultfilters import slugify
-from djangocms_text_ckeditor.fields import HTMLField
-from filer.fields.image import FilerImageField
 from taggit.managers import TaggableManager
 from taggit.models import TaggedItem, Tag
 from cms.models.pluginmodel import CMSPlugin
-from djangocms_text_ckeditor.models import Text
-from blogging.utils import get_imageurl_from_data, strip_image_from_data
-from blogging.tag_lib import strip_tag_from_data
+from blogging.utils import get_imageurl_from_data, trucncatewords, slugify_name
 from django.utils.html import strip_tags
 from django.core.urlresolvers import reverse
 import traceback
+import json
 
 from django.contrib.contenttypes.generic import GenericRelation
 from annotation.models import Annotation
@@ -78,6 +73,10 @@ class BlogContentType(models.Model):
 
     def __unicode__(self):
         return self.content_type
+    
+    def save(self, *args, **kwargs):
+        self.content_type = slugify_name(self.content_type)
+        super(BlogContentType, self).save(*args, **kwargs)
 
 class BlogParent(MPTTModel):
     title = models.CharField(max_length = 50, unique=True)
@@ -108,7 +107,6 @@ class BlogParent(MPTTModel):
     
     def get_image_url(self):
         image = get_imageurl_from_data(self.data)
-        print image 
         return image
     
     def get_absolute_url(self):
@@ -141,26 +139,21 @@ class BlogContent(models.Model):
 
     def get_absolute_url(self):
         kwargs = {'slug': self.url_path,}
-        print "LOGS:: Fetching URI for node"
         return reverse('blogging:teaser-view', kwargs=kwargs)
     
     def get_image_url(self):
-        image =  get_imageurl_from_data(self.data)
-        print "LOGS:: Fetching Image for node"
-        if image:
-            print image
-            return image
-        else:
-            return self.section.get_image_url()
+        json_obj = json.loads(self.data)
+        for value in json_obj.itervalues():
+            image =  get_imageurl_from_data(value)
+            if image:
+                return image
+        return self.section.get_image_url()
 
     def get_summary(self):
-        summary = self.data
-        print "LOGS:: Fetching Node summary"
-        summary = strip_tag_from_data(summary)
-        summary = strip_image_from_data(summary)
-        summary = strip_tags(summary)
-        
-        return summary
+        json_obj = json.loads(self.data)
+        # Instantiate the Meta class
+        description = strip_tags(json_obj.values()[0])
+        return trucncatewords(description,120)
     
     def get_title(self):
         return self.title
@@ -170,7 +163,7 @@ class BlogContent(models.Model):
         parent_list = section.get_ancestors(include_self=True)
         return_path = '/'.join(word.slug for word in parent_list)
         return_path = return_path + str("/") + self.slug + str("/") + str(self.id)
-        print return_path
+#         print return_path
         return return_path
 
     def get_menu_title(self):
@@ -182,18 +175,13 @@ class BlogContent(models.Model):
     def get_tags(self):
         tags = self.tags.all()
         tag_list = []
-        print "LOGS:Get Tags Called for ", self.title
-        print "LOGS: tags are ", tags
         for tag in tags:
-            print "LOGS: hey there!!!"
             try:
                 tmp = {}
                 tmp['name'] = tag.name
                 kwargs = {'tag': tag.name,}
                 tmp['url'] = reverse('blogging:tagged-posts',kwargs=kwargs)
-                print "LOGS: TAG NAME ", tmp['name'],"URL ", tmp['url']
                 tag_list.append(tmp)
-                print "LOGS: Printing tags ", tmp
             except:
                 print "Unexpected error:", sys.exc_info()[0]
                 for frame in traceback.extract_tb(sys.exc_info()[2]):
@@ -211,7 +199,6 @@ class BlogContent(models.Model):
         super(BlogContent, self).save(*args, **kwargs)
         self.url_path = self.find_path(self.section)
         super(BlogContent, self).save(*args, **kwargs)
-        print "after save "  + self.url_path
 
     def __str__(self):
         return self.title
@@ -237,11 +224,8 @@ class LatestEntriesPlugin(CMSPlugin):
         if self.parent_section:
             if self.parent_section.is_leaf_node():
                 posts = BlogContent.published.filter(section=self.parent_section)
-                print 'parent is leaf node'
             else:
-                print 'parent is non leaf node'
                 parent_list = self.parent_section.get_descendants()
-                print 'parent list is ', parent_list
                 posts = BlogContent.published.filter(section__in=parent_list)
         else:
             posts = BlogContent.published.all()
