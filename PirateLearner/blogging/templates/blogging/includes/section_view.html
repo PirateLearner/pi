@@ -21,3 +21,16 @@
       {% endrecursetree %}
    </ul> 
 </div>
+{% if nodes.paginator.count > max_entry %}
+<div class="text-center">
+<ul class="pagination">
+        {% if nodes.has_previous %}
+            <li><a href="?page={{ nodes.previous_page_number }}">&laquo;</a></li>
+        {% endif %}
+  		<li><a href="">{{ nodes.number }} of {{ nodes.paginator.num_pages }} </a></li>
+        {% if nodes.has_next %}
+            <li><a href="?page={{ nodes.next_page_number }}">&raquo;</a></li>
+        {% endif %}
+</ul>
+</div>
+{% endif %}

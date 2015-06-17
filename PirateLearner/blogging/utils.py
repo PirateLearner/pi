@@ -1,38 +1,45 @@
 import os
-from blogging.create_class import CreateClass
+from blogging.create_class import CreateClass, CreateTemplate
 import re
-from django.template.defaultfilters import removetags
-from django.utils.html import strip_tags
-
+from django.utils.functional import allow_lazy
+from django.utils import six
+from django.utils.safestring import mark_safe
+import unicodedata
 
 def create_content_type(name,form_dict,is_leaf):
-	filename = os.path.abspath(os.path.dirname(__file__))+"/custom/"+name.lower()+".py"
+	"""
+	This function will create the form and template for new contentype
+	"""
+	form_filename = os.path.abspath(os.path.dirname(__file__))+"/custom/"+name.lower()+".py"
+	template_filename = os.path.abspath(os.path.dirname(__file__))+"/templates/blogging/includes/"+name.lower()+".html"
 	flag = False
-	errorstring = filename
 	try:
-		fd = open(filename, 'r')
+		fd = open(form_filename, 'r')
+		fd.close()
+		fd1 = open(template_filename, 'r')
+		fd1.close()
 	except IOError:
 		flag = True
-		print "No such file exists"
-		errorstring += "\nNo such file exists"
 	if flag:
 		#We are good to go. Create the Output string that must be put in it
-		print "We're in!"
-		errorstring += "\nWe're in!"
 		create_class_object = CreateClass(name, form_dict,is_leaf)
-		string = create_class_object.form_string()
+		form_string = create_class_object.form_string()
+		template_object = CreateTemplate(name, form_dict,is_leaf)
+		template_string = template_object.form_string() 
+		
 		try:
-			fd = os.fdopen(os.open(filename,os.O_CREAT| os.O_RDWR , 0555),'w')
-			fd.write(string)
+			fd = os.fdopen(os.open(form_filename,os.O_CREAT| os.O_RDWR , 0555),'w')
+			fd.write(form_string)
 			fd.close()
-			print file(filename).read()
-			errorstring +="\n"+file(filename).read()
+			fd = os.fdopen(os.open(template_filename,os.O_CREAT| os.O_RDWR , 0555),'w')
+			fd.write(template_string)
+			fd.close()
+			
+			print file(form_filename).read()
 			return True
 		except IOError:
 			print "Error Opening File for Writing"
-			errorstring += "\nError Opening file for writing"
 			return False
-
 	else:
 		return False
 
@@ -80,4 +87,10 @@ def truncatewords(Value,limit=30):
 
 	# Join the words and return
 	return ' '.join(words) + '...'
-	
+
+def slugify_name(value):
+	value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
+	value = re.sub('[^\w\s-]', '', value).strip().lower()
+	return mark_safe(re.sub('[-\s]+', '_', value))
+
+slugify_name = allow_lazy(slugify_name, six.text_type)

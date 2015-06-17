@@ -21,13 +21,11 @@ if 'cms' in settings.INSTALLED_APPS:
     except ImportError:
         print 'CMS not installed'
     
-from blogging.utils import get_imageurl_from_data, strip_image_from_data, truncatewords
-from blogging.tag_lib import strip_tag_from_data
+from blogging.utils import get_imageurl_from_data, trucncatewords, slugify_name
 from django.utils.html import strip_tags
 from django.core.urlresolvers import reverse
 import traceback
-
-#from django.contrib.contenttypes.generic import GenericRelation
+import json
 
 #from south.v2 import DataMigration
 
@@ -84,6 +82,10 @@ class BlogContentType(models.Model):
 
     def __unicode__(self):
         return self.content_type
+    
+    def save(self, *args, **kwargs):
+        self.content_type = slugify_name(self.content_type)
+        super(BlogContentType, self).save(*args, **kwargs)
 
 class BlogParent(MPTTModel):
     title = models.CharField(max_length = 50, unique=True)
@@ -114,7 +116,6 @@ class BlogParent(MPTTModel):
     
     def get_image_url(self):
         image = get_imageurl_from_data(self.data)
-        print image 
         return image
     
     def get_absolute_url(self):
@@ -143,7 +144,7 @@ class BlogContent(models.Model):
     objects = RelatedManager()    
     published = PublishedManager()
     
-    annotation = GenericRelation(Annotation, content_type_field='content_type', object_id_field='object_id')
+    annotation = GenericRelation(Annotation, content_type_field='content_type', object_id_field='object_pk')
 
     def get_absolute_url(self):
         kwargs = {'slug': self.url_path,}
@@ -151,22 +152,18 @@ class BlogContent(models.Model):
         return reverse('blogging:teaser-view', kwargs=kwargs)
     
     def get_image_url(self):
-        image =  get_imageurl_from_data(self.data)
-        print "LOGS:: Fetching Image for node"
-        if image:
-            print image
-            return image
-        else:
-            return self.section.get_image_url()
+        json_obj = json.loads(self.data)
+        for value in json_obj.itervalues():
+            image =  get_imageurl_from_data(value)
+            if image:
+                return image
+        return self.section.get_image_url()
 
     def get_summary(self):
-        summary = self.data
-        print "LOGS:: Fetching Node summary"
-        summary = strip_tag_from_data(summary)
-        summary = strip_image_from_data(summary)
-        summary = strip_tags(summary)
-        summary = truncatewords(summary, 150)
-        return summary
+        json_obj = json.loads(self.data)
+        # Instantiate the Meta class
+        description = strip_tags(json_obj.values()[0])
+        return trucncatewords(description,120)
     
     def get_title(self):
         return self.title
@@ -188,18 +185,13 @@ class BlogContent(models.Model):
     def get_tags(self):
         tags = self.tags.all()
         tag_list = []
-        print "LOGS:Get Tags Called for ", self.title
-        print "LOGS: tags are ", tags
         for tag in tags:
-            print "LOGS: hey there!!!"
             try:
                 tmp = {}
                 tmp['name'] = tag.name
                 kwargs = {'tag': tag.name,}
                 tmp['url'] = reverse('blogging:tagged-posts',kwargs=kwargs)
-                print "LOGS: TAG NAME ", tmp['name'],"URL ", tmp['url']
                 tag_list.append(tmp)
-                print "LOGS: Printing tags ", tmp
             except:
                 print "Unexpected error:", sys.exc_info()[0]
                 for frame in traceback.extract_tb(sys.exc_info()[2]):
@@ -218,7 +210,6 @@ class BlogContent(models.Model):
         super(BlogContent, self).save(*args, **kwargs)
         self.url_path = self.find_path(self.section)
         super(BlogContent, self).save(*args, **kwargs)
-        print "after save "  + self.url_path
 
     def __str__(self):
         return self.title
@@ -227,67 +218,63 @@ class BlogContent(models.Model):
         ordering = ['-publication_start']
 
 
-if 'cms' in settings.INSTALLED_APPS:
-    class LatestEntriesPlugin(CMSPlugin):
-    
-        latest_entries = models.IntegerField(default=5, help_text=('The number of latests entries to be displayed.'))
-        parent_section = models.ForeignKey(BlogParent,null=True,blank=True)
-        tags = models.ManyToManyField('taggit.Tag', blank=True, help_text=('Show only the blog posts tagged with chosen tags.'))
-        template = models.CharField('Template', max_length=255,
-                                    choices = LATEST_PLUGIN_TEMPLATES, default='blogging/plugin/plugin_teaser.html')
-        def __unicode__(self):
-            return str(self.latest_entries)
-    
-        def copy_relations(self, oldinstance):
-            self.tags = oldinstance.tags.all()
-    
-        def get_posts(self):
-            if self.parent_section:
-                if self.parent_section.is_leaf_node():
-                    posts = BlogContent.published.filter(section=self.parent_section)
-                    print 'parent is leaf node'
-                else:
-                    print 'parent is non leaf node'
-                    parent_list = self.parent_section.get_descendants()
-                    print 'parent list is ', parent_list
-                    posts = BlogContent.published.filter(section__in=parent_list)
+class LatestEntriesPlugin(CMSPlugin):
+
+    latest_entries = models.IntegerField(default=5, help_text=('The number of latests entries to be displayed.'))
+    parent_section = models.ForeignKey(BlogParent,null=True,blank=True)
+    tags = models.ManyToManyField('taggit.Tag', blank=True, help_text=('Show only the blog posts tagged with chosen tags.'))
+    template = models.CharField('Template', max_length=255,
+                                choices = LATEST_PLUGIN_TEMPLATES, default='blogging/plugin/plugin_teaser.html')
+    def __unicode__(self):
+        return str(self.latest_entries)
+
+    def copy_relations(self, oldinstance):
+        self.tags = oldinstance.tags.all()
+
+    def get_posts(self):
+        if self.parent_section:
+            if self.parent_section.is_leaf_node():
+                posts = BlogContent.published.filter(section=self.parent_section)
             else:
-                posts = BlogContent.published.all()
-            
-            tags = list(self.tags.all())
-            if tags:
-                posts = posts.filter(tags__in=tags)
-            return posts[:self.latest_entries]
+                parent_list = self.parent_section.get_descendants()
+                posts = BlogContent.published.filter(section__in=parent_list)
+        else:
+            posts = BlogContent.published.all()
         
-        def get_section(self):
-            return self.parent_section
+        tags = list(self.tags.all())
+        if tags:
+            posts = posts.filter(tags__in=tags)
+        return posts[:self.latest_entries]
     
-        
-        
-    class SectionPlugin(CMSPlugin):
+    def get_section(self):
+        return self.parent_section
+
     
-        section_count = models.IntegerField(default=None, blank=True,null=True, help_text=('The number of sections to be displayed.'))
-        parent_section = models.ForeignKey(BlogParent,null=True,blank=True)
     
-        def __unicode__(self):
-            return str(self.section_count)
-    
-        def get_sections(self):
-            if self.parent_section:
-                sections = self.parent_section.get_children()
-            else:
-                sections = BlogParent.objects.all(~Q(title='Orphan'),level=0)
-            if self.section_count:
-                return sections[:self.section_count]
-            return sections
-    
-    class ContactPlugin(CMSPlugin):
-        to_email = models.EmailField(default= 'captain@piratelearner.com')
-        thanks_text = models.CharField(max_length=100,default = 'Thanks for reaching out to Us. We will get back to you soon.')
-        def __unicode__(self):
-            return 'ContactPlugin'
-        def thanks(self):
-            return self.thanks_text
+class SectionPlugin(CMSPlugin):
+
+    section_count = models.IntegerField(default=None, blank=True,null=True, help_text=('The number of sections to be displayed.'))
+    parent_section = models.ForeignKey(BlogParent,null=True,blank=True)
+
+    def __unicode__(self):
+        return str(self.section_count)
+
+    def get_sections(self):
+        if self.parent_section:
+            sections = self.parent_section.get_children()
+        else:
+            sections = BlogParent.objects.all(~Q(title='Orphan'),level=0)
+        if self.section_count:
+            return sections[:self.section_count]
+        return sections
+
+class ContactPlugin(CMSPlugin):
+    to_email = models.EmailField(default= 'captain@piratelearner.com')
+    thanks_text = models.CharField(max_length=100,default = 'Thanks for reaching out to Us. We will get back to you soon.')
+    def __unicode__(self):
+        return 'ContactPlugin'
+    def thanks(self):
+        return self.thanks_text
     
 """
 class Migration(DataMigration):

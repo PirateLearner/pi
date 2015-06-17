@@ -8,15 +8,16 @@ def convert_tags(blog,tag_name,fd):
     tag = {}
     tag['name'] = tag_name + '_tag'
     content = parse_content(blog,tag)
-    fd.write("\nConverting "+ blog.title + "\n")
     if len(content) > 0:
+        fd.write("\nConverting "+ blog.title + "\n")
         tmp = {}
         tmp[tag_name] = content
         tag['name'] = 'pid_count_tag'
         content = parse_content(blog,tag)           
         if len(content) > 0:
             tmp['pid_count'] = content
-        fd.write(json.dumps(tmp) + "\n")
+        fd.write(json.dumps(tmp) + "\n\n")
+        blog.data = json.dumps(tmp)
         return True
     else:
         return False
@@ -31,20 +32,29 @@ def migrate():
     for blog in blogs:
 
         if(convert_tags(blog, 'Body', fd)):
+            blog.save()
             continue
         elif (convert_tags(blog, 'content', fd)):
+            blog.save()
             continue
         elif(convert_tags(blog, 'Content', fd)):
+            blog.save()
             continue
         elif(convert_tags(blog, 'Summary', fd)):
+            blog.save()
             continue
         elif(convert_tags(blog, 'Preface', fd)):
+            blog.save()
             continue        
         else:
             print "NO TAGs FOUND in " + blog.title
             tmp = {}
             tmp['content'] = blog.data
-            fd.write(json.dumps(tmp) + "\n")
+            tmp['pid_count'] = '0'
+            fd.write("\nConverting "+ blog.title + "\n")
+            fd.write(json.dumps(tmp) + "\n\n")
+            blog.data = json.dumps(tmp)
+            blog.save()
     fd.close()
             
 if __name__ == "__main__":

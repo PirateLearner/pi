@@ -2,6 +2,14 @@ import re
 
 from bs4 import BeautifulSoup
 
+"""
+
+tags to be identified 
+Body, content
+
+
+"""
+
 
 def get_field_name_from_tag(current_tag):
     field_name = current_tag.split("_")[0:-1]
@@ -29,9 +37,9 @@ def parse_content(db_object, tag):
     result = patt.search(db_object.data)
 #     print result
     if result:
-    	return result.group(1)
+        return result.group(1)
     else:
-	return ""
+        return ""
 
 def strip_tag_from_data(data):
     p = re.compile('\\%\\% .*? \\%\\%',flags=re.DOTALL)
@@ -125,49 +133,66 @@ def insert_tag_id(data,id_count):
 
     filter_elements = ['p','span','img']
 
-    print "Entering Soup"
-    soup = BeautifulSoup(data)
+    if isinstance(id_count, unicode):
+        print "s is unicode, %r" % id_count
 
-    print "printing original html "
-    initial_content = ''.join(str(tag) for tag in soup.body.contents)
-    initial_content = initial_content.replace('\xc2\xa0', ' ')
-    print initial_content
+    if id_count:
+        print "LOGS: PID_COUNT IS NONE"
+        id_count = '0'
+#     
+    print type(id_count)
+    id_count = int(id_count)
 
+    if len(data) > 0:
+
+        print "Entering Soup"
+        soup = BeautifulSoup(data,"html5lib")
     
-    for tag in soup.body.children:
+        print "printing original html "
+        initial_content = ''.join(str(tag) for tag in soup.body.contents)
+        initial_content = initial_content.replace('\xc2\xa0', ' ')
+        print initial_content
         
-        if tag.name == 'p' and has_no_id(tag):
-            print "setting tag p"
-            id_count = id_count + 1
-            tag['id'] = id_count 
-
-        elif (tag.name == 'ul' or tag.name == 'ol') and has_no_id(tag):
-            if has_eligible_child(tag) == True:
-                for tag_child in tag.contents:
-                    if tag_child.name == 'li' and has_no_id(tag_child):
-                        print "setting tag ",tag_child.name 
-                        id_count = id_count + 1
-                        tag_child['id'] = id_count 
-            else:
-                print "setting tag ", tag.name
+        # add description itemproperty in the first paragraph
+        soup('p')[0]['itemprop'] = "description"
+        
+        for tag in soup.body.children:
+            
+            if tag.name == 'p' and has_no_id(tag):
+                print "setting tag p"
                 id_count = id_count + 1
-                tag['id'] =  id_count
-        elif tag.name == 'img' and has_no_id(tag):
-            id_count = id_count + 1
-            tag['id'] = id_count
-            
-            
-    for tag_child in soup.body.descendants:
-        
-        if tag_child.name in filter_elements:
-            tag_child['style'] = " "
-
-        
-    print "Now printing altered html "
-    final_content = ''.join(str(tag) for tag in soup.body.contents)
-    final_content = final_content.replace('\xc2\xa0', ' ')
-    print final_content
+                tag['id'] = id_count 
     
+            elif (tag.name == 'ul' or tag.name == 'ol') and has_no_id(tag):
+                if has_eligible_child(tag) == True:
+                    for tag_child in tag.contents:
+                        if tag_child.name == 'li' and has_no_id(tag_child):
+                            print "setting tag ",tag_child.name 
+                            id_count = id_count + 1
+                            tag_child['id'] = id_count 
+                else:
+                    print "setting tag ", tag.name
+                    id_count = id_count + 1
+                    tag['id'] =  id_count
+            elif tag.name == 'img' and has_no_id(tag):
+                id_count = id_count + 1
+                tag['id'] = id_count
+             
+                
+        for tag_child in soup.body.descendants:
+            if tag_child.name == 'img':
+                tag_child['itemprop'] = "image"
+            
+            if tag_child.name in filter_elements:
+                tag_child['style'] = " "
+    
+            
+        print "Now printing altered html "
+        final_content = ''.join(str(tag) for tag in soup.body.contents)
+        final_content = final_content.replace('\xc2\xa0', ' ')
+        print final_content
+    else:
+        final_content = data
     return_dict = {}
     return_dict['content'] = final_content
     return_dict['pid_count'] = id_count 

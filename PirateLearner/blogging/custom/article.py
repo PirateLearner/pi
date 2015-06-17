@@ -1,72 +1,51 @@
-from blogging import tag_lib
-from django.db import models
-from blogging.models import *
-from django import forms
-from blogging.forms import *
-from ckeditor.widgets import CKEditorWidget
-from taggit.forms import * 
-from django.db.models import Q 
-from mptt.forms import TreeNodeChoiceField 
-"""
-This is auto generated script file.
-It defined the wrapper class for specified content type.
-"""
-class Article(models.Model):
-	Body = models.TextField()
-	pid_count = models.IntegerField()
-	title = models.CharField(max_length=100)
-	tag_list = [  { 'name':'Body_tag' , 'type' :'TextField'} , { 'name':'pid_count_tag' , 'type' :'IntegerField'} , { 'name':'title_tag' , 'type' :'CharField'} ,]
 
-	def __str__(self):
-		return "Article"
-
-	def render_to_template(self,db_object):
-		for tag_name in self.tag_list:
-			current_field = tag_lib.get_field_name_from_tag(str(tag_name['name']))
-			result_field = tag_lib.parse_content(db_object,tag_name)
-			if current_field == 'Body' : 
-				self.Body = result_field 
-
-			if current_field == 'pid_count' : 
-				self.pid_count = int(result_field) 
-
-			if current_field == 'title' : 
-				self.title = result_field 
-
-	def render_to_db(self,db_object):
-		temp_data = ""
-		for tag_name in self.tag_list:
-			current_field = tag_lib.get_field_name_from_tag(str(tag_name['name']))
-			tag_start = "%% " + str(tag_name["name"]) + " %% " 
-			tag_end = "%% endtag " + str(tag_name["name"]) + " %%"
-			if current_field == 'Body' : 
-				temp_dict = tag_lib.insert_tag_id(self.Body, self.pid_count)
-				self.Body = str(temp_dict['content'])
-				self.pid_count = int(temp_dict['pid_count'])
-				tagged_field = tag_start + self.Body + tag_end 
-				temp_data += tagged_field 
-
-			if current_field == 'title' : 
-				tagged_field = tag_start + self.title + tag_end 
-				db_object.title = self.title 
-
-		tagged_field = ' %% pid_count_tag %% ' + str(self.pid_count) + '%% endtag pid_count_tag %%'
-		temp_data += tagged_field
-		db_object.data = temp_data
-
-class ArticleForm(forms.ModelForm):
+class ArticleForm(forms.Form):
 	Body =  forms.CharField(widget = CKEditorWidget())
-	section = forms.ModelChoiceField(
-queryset=BlogParent.objects.all().filter(~Q(title="Orphan"),~Q(title="Blog"),children=None,),
-empty_label=None,
-required = True,
-label = "Select Parent")
-	tags = TagField(help_text= "comma seperated fields for tags")
-	class Meta:
-		model = Article
-		exclude=('pid_count',)
-	def save(self):
-		instance = Article()
-		instance.Body = self.cleaned_data["Body"]
-		instance.title = self.cleaned_data["title"]
-		return instance
+	title = forms.CharField(max_length = 100)
+	tags = TagField()
+	section = TreeNodeChoiceField(queryset=BlogParent.objects.all().filter(~Q(title="Orphan"),Q(children=None)),required=True,empty_label=None, label = "Select Section" )
+	pid_count = forms.IntegerField(required=False)
+	def __init__(self,action, *args, **kwargs):
+		self.helper = FormHelper()
+		
+		self.helper.form_id = 'id-ArticleForm'
+#		self.helper.form_class = 'blueForms'
+		self.helper.form_class = 'form-horizontal'
+		self.helper.label_class = 'col-lg-2'
+		self.helper.field_class = 'col-lg-8'
+		self.helper.form_method = 'post'
+# 		self.helper.form_action = reverse('blogging:create-post')
+		self.helper.form_action = action
+		self.helper.layout = Layout(
+				Fieldset(
+                'Create Content of Type Article',
+                'title',
+				'Body',
+				'section',
+				Field('pid_count', type="hidden"),
+                'tags',
+            ),
+			
+            ButtonHolder(
+                Submit('submit', 'Submit', css_class='button white')
+            ),
+			
+			)
+		super(ArticleForm, self).__init__(*args, **kwargs)
+
+	
+	def save(self,post):
+		post.pop('section')
+		post.pop('tags')
+		post.pop('title')
+		post.pop('csrfmiddlewaretoken')
+		post.pop('submit')
+
+		for k,v in post.iteritems():
+			if str(k) != 'pid_count' :
+				tmp = {}
+				tmp = tag_lib.insert_tag_id(str(v),self.cleaned_data["pid_count"])
+				post[k] = tmp['content']
+				post['pid_count'] = tmp['pid_count']
+			
+		return json.dumps(post.dict())

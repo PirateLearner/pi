@@ -14,4 +14,10 @@
 	<natures>
 		<nature>org.python.pydev.pythonNature</nature>
 	</natures>
+	<variableList>
+		<variable>
+			<name>DJANGO_INCLUDE</name>
+			<value>file:/home/abhishek/ENV/lib/python2.7/site-packages</value>
+		</variable>
+	</variableList>
 </projectDescription>

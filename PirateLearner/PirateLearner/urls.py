@@ -4,6 +4,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 from django.conf import settings
 from cms.sitemaps import CMSSitemap
+from blogging.sitemaps import BlogSitemap,BlogParentSitemap
+from bookmarks.sitemaps import BookmarkSitemap
 from django.utils.functional import curry
 from django.views.defaults import *
 
@@ -40,7 +42,8 @@ urlpatterns = i18n_patterns('',
     url(r'^accounts/login/$', 'dashboard.views.custom_login'),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',{'next_page': '/'}),
     url(r'^accounts/', include('allauth.urls')),
-    url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': {'cmspages': CMSSitemap}}),
+    url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': {'cmspages': CMSSitemap,'blog':BlogSitemap,'sections':BlogParentSitemap,
+                                                                                  'bookmarks':BookmarkSitemap}}),
     url(r'^', include('cms.urls')),
 )
 

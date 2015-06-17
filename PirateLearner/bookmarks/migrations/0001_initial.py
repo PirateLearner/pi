@@ -36,27 +36,11 @@ class Migration(SchemaMigration):
             ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
             ('note', self.gf('django.db.models.fields.TextField')(blank=True)),
-            ('image_url', self.gf('django.db.models.fields.URLField')(max_length=200, blank=True)),
+            ('image_url', self.gf('django.db.models.fields.URLField')(max_length=200)),
             ('folder', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['bookmarks.BookmarkFolderInstance'])),
             ('privacy_level', self.gf('django.db.models.fields.CharField')(max_length=4)),
         ))
         db.send_create_signal(u'bookmarks', ['BookmarkInstance'])
-
-        # Adding model 'LatestBookmarksPlugin'
-        db.create_table(u'bookmarks_latestbookmarksplugin', (
-            (u'cmsplugin_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['cms.CMSPlugin'], unique=True, primary_key=True)),
-            ('latest_entries', self.gf('django.db.models.fields.IntegerField')(default=5)),
-        ))
-        db.send_create_signal(u'bookmarks', ['LatestBookmarksPlugin'])
-
-        # Adding M2M table for field tags on 'LatestBookmarksPlugin'
-        m2m_table_name = db.shorten_name(u'bookmarks_latestbookmarksplugin_tags')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('latestbookmarksplugin', models.ForeignKey(orm[u'bookmarks.latestbookmarksplugin'], null=False)),
-            ('tag', models.ForeignKey(orm[u'taggit.tag'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['latestbookmarksplugin_id', 'tag_id'])
 
 
     def backwards(self, orm):
@@ -68,12 +52,6 @@ class Migration(SchemaMigration):
 
         # Deleting model 'BookmarkInstance'
         db.delete_table(u'bookmarks_bookmarkinstance')
-
-        # Deleting model 'LatestBookmarksPlugin'
-        db.delete_table(u'bookmarks_latestbookmarksplugin')
-
-        # Removing M2M table for field tags on 'LatestBookmarksPlugin'
-        db.delete_table(db.shorten_name(u'bookmarks_latestbookmarksplugin_tags'))
 
 
     models = {
@@ -95,7 +73,7 @@ class Migration(SchemaMigration):
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Group']"}),
+            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -103,7 +81,7 @@ class Migration(SchemaMigration):
             'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
+            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
         },
         u'bookmarks.bookmark': {
@@ -127,39 +105,12 @@ class Migration(SchemaMigration):
             'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'folder': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bookmarks.BookmarkFolderInstance']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image_url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
+            'image_url': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
             'note': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'privacy_level': ('django.db.models.fields.CharField', [], {'max_length': '4'}),
             'saved': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'saved_bookmarks'", 'to': u"orm['auth.User']"})
-        },
-        u'bookmarks.latestbookmarksplugin': {
-            'Meta': {'object_name': 'LatestBookmarksPlugin', '_ormbases': ['cms.CMSPlugin']},
-            u'cmsplugin_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['cms.CMSPlugin']", 'unique': 'True', 'primary_key': 'True'}),
-            'latest_entries': ('django.db.models.fields.IntegerField', [], {'default': '5'}),
-            'tags': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['taggit.Tag']", 'symmetrical': 'False', 'blank': 'True'})
-        },
-        'cms.cmsplugin': {
-            'Meta': {'object_name': 'CMSPlugin'},
-            'changed_date': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'creation_date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'language': ('django.db.models.fields.CharField', [], {'max_length': '15', 'db_index': 'True'}),
-            'level': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
-            'lft': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
-            'parent': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cms.CMSPlugin']", 'null': 'True', 'blank': 'True'}),
-            'placeholder': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['cms.Placeholder']", 'null': 'True'}),
-            'plugin_type': ('django.db.models.fields.CharField', [], {'max_length': '50', 'db_index': 'True'}),
-            'position': ('django.db.models.fields.PositiveSmallIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'rght': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
-            'tree_id': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
-        },
-        'cms.placeholder': {
-            'Meta': {'object_name': 'Placeholder'},
-            'default_width': ('django.db.models.fields.PositiveSmallIntegerField', [], {'null': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'slot': ('django.db.models.fields.CharField', [], {'max_length': '50', 'db_index': 'True'})
         },
         u'contenttypes.contenttype': {
             'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
@@ -173,6 +124,13 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'}),
             'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '100'})
+        },
+        u'taggit.taggeditem': {
+            'Meta': {'object_name': 'TaggedItem'},
+            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'taggit_taggeditem_tagged_items'", 'to': u"orm['contenttypes.ContentType']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'object_id': ('django.db.models.fields.IntegerField', [], {'db_index': 'True'}),
+            'tag': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'taggit_taggeditem_items'", 'to': u"orm['taggit.Tag']"})
         }
     }
 

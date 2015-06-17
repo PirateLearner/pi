@@ -5,8 +5,10 @@ from blogging.forms import *
 urlpatterns = patterns(
     '',
     url(r'^$', view.index, name='section-view'),
+    url(r'^migrate_db/$',view.testCase,name='migrate-db'),
     url(r'^contact/$', view.ContactUs, name='contact-us'),
     url(r'^create-post/$', view.new_post, name='create-post'),
+    url(r'^edit-post/(?P<post_id>\d+)/$', view.edit_post, name='edit-post'),
 #    url(r'^create-content/$', view.ContentWizard.as_view([ContentTypeForm, ContentForm])),
     url(r'^content-type/$', view.content_type, name='content-type'),
     url(r'^add-model/(?P<model_name>[\w.+-/]+)/$', view.add_new_model, name='add-model-content-type'),
