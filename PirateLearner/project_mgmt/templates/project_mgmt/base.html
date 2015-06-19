@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load cms_tags staticfiles sekizai_tags menu_tags %}
+
+{% block breadcrumb %}
+        {{ block.super }}
+        {% block mgmt_breadcrumb %}
+        {% endblock mgmt_breadcrumb %}
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/tile.css">
+<div class="app app-blog container content clearfix">
+        {% block content_mgmt %}{% endblock %}
+</div>
+{% endblock %}
+

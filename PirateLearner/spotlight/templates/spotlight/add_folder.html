@@ -1,0 +1,12 @@
+{% extends "spotlight/base.html" %}
+
+{% load cms_tags staticfiles sekizai_tags menu_tags %}
+
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+{% crispy form form.helper %}
+
+	{% endblock %}	

@@ -36,3 +36,8 @@ easy_thumbnails
 django-taggit
 django-allauth
 django-crispy-forms
+
+beautifulsoup4
+djangorestframework
+rest_framework_generic_relations
+

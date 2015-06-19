@@ -8,6 +8,8 @@ from blogging.tag_lib import get_field_name_from_tag
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 
+import sys
+
 register = template.Library()
 
 class ContentRender(InclusionTag):
@@ -31,12 +33,16 @@ class ContentRender(InclusionTag):
         """
         context.push()
         print "render tag is called"
-        template = self.get_template(context, **kwargs)
-        data = self.get_context(context, **kwargs)
-        output = render_to_string(template, data)
-        print output
-        context.pop()
-        return output
+        try:
+            template = self.get_template(context, **kwargs)
+            data = self.get_context(context, **kwargs)
+            output = render_to_string(template, data)
+#             print output
+            context.pop()
+            return output
+        except:
+            print "Unexpected error:", sys.exc_info()[0]
+            return "Http404"
 
         
     def _get_data_context(self,context,instance,attribute):
@@ -49,10 +55,15 @@ class ContentRender(InclusionTag):
             print "tag list ", instance.tag_list
             attribute_list = []
             for tag in instance.tag_list:
+                if tag['name'] == "pid_count_tag":
+                    continue
                 attribute_name = get_field_name_from_tag(tag['name'])
                 print "tag field name ", attribute_name
                 attribute_value = getattr(instance, attribute_name, '')
-                attribute_list.append({'name':attribute_name,'value':attribute_value})
+                if attribute_name == 'title':
+                    extra_context['title'] = attribute_value
+                else:
+                    attribute_list.append({'name':attribute_name,'value':attribute_value})
             print "attribute list ", attribute_list
             extra_context['attribute_list'] = attribute_list
         return extra_context

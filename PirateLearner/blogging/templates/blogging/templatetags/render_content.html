@@ -3,20 +3,19 @@
 {{ attribute }}
 
 {% else %}
+		<h1 class="article-title"> 	{{ title }} </h1>
+		<span class="article-author"> by Admin </span>       	
+		<div class="article-actions">
+       		<span id="trigger-overlay" type="button" class="icon overlay-open pl-expand"></span>
+       	</div>			
 
 	{% for field in attribute_list %}		
 
-	{% if field.name == "title" %}
-	<p class="text-center" >
-		<h1> 	{{ field.value }} </h1>
-	</p>
-	{% else %}
-
-	{% autoescape off %}
-	{{ field.value }}
-	{% endautoescape %}
-	
-		{% endif %}
+		<div class="article-body" id="commentable-container" >
+			{% autoescape off %}
+				{{ field.value }}
+			{% endautoescape %}
+		</div>
 		
 	{% endfor %}
 

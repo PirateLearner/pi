@@ -1,0 +1,41 @@
+{% load url from future %}
+{% load thumbnail %}
+				{% for node in nodes %}
+				<div class="media feature content-stack-article paper">
+                	<a  class="image" href="{{node.get_absolute_url}}" class="pull-left">
+						<img class="img-responsive" src="{{ node.get_image_url }}" class="media-object"></img>                	
+                	</a>
+                	<div class="feature-heading">
+                	{% if not parent %}
+                		<span class="eyebrow"> {{ node.get_parent.title }}</span>
+  					{% endif %}              		
+                		<a class="title" href="{{node.get_absolute_url}}">
+                			 {{ node.title }}
+                		</a>
+                	</div>
+                	<div class="feature-body">
+                		{{ node.get_summary }}
+                	</div>
+                	<div class="feature-tags"><span class="glyphicon glyphicon-tags"></span> <b>Tags:</b> 
+                		<ul class="post-tags">
+                			{% for tag in node.get_tags %}
+                			 <li> <a href=" {{ tag.url }}"> {{ tag.name }}</a></li>
+                			{% endfor %} 
+                		</ul>
+                	</div>
+                </div>                
+                {% endfor %}	
+
+{% if nodes.paginator.count > max_entry %}
+<div class="text-center">
+<ul class="pagination">
+        {% if nodes.has_previous %}
+            <li><a href="?page={{ nodes.previous_page_number }}">&laquo;</a></li>
+        {% endif %}
+  		<li><a href="">{{ nodes.number }} of {{ nodes.paginator.num_pages }}</a></li>
+        {% if nodes.has_next %}
+            <li><a href="?page={{ nodes.next_page_number }}">&raquo;</a></li>
+        {% endif %}
+</ul>
+</div>
+{% endif %}

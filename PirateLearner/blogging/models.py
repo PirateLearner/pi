@@ -1,26 +1,34 @@
-import datetime
-from collections import Counter
 from django.utils import timezone
-
+import sys
 from django.db import models
 from django.db.models import Q
 
 from django.contrib import auth
 from mptt.models import MPTTModel, TreeForeignKey
 from django.template.defaultfilters import slugify
-from djangocms_text_ckeditor.fields import HTMLField
-from filer.fields.image import FilerImageField
 from taggit.managers import TaggableManager
 from taggit.models import TaggedItem, Tag
 from cms.models.pluginmodel import CMSPlugin
-from djangocms_text_ckeditor.models import Text
-from blogging.utils import get_imageurl_from_data, strip_image_from_data
-from blogging.tag_lib import strip_tag_from_data
+from blogging.utils import get_imageurl_from_data, trucncatewords, slugify_name
 from django.utils.html import strip_tags
+from django.core.urlresolvers import reverse
+import traceback
+import json
+
+from django.contrib.contenttypes.generic import GenericRelation
+from annotation.models import Annotation
 
 #from south.v2 import DataMigration
 
 # Create your models here.
+
+LATEST_PLUGIN_TEMPLATES = (
+  ('blogging/plugin/plugin_teaser.html', 'Teaser View'),
+  ('blogging/plugin/plugin_section.html', 'Section View'),
+  ('blogging/plugin/sidebar_list.html', 'Text List'),
+  ('blogging/plugin/teaser_list.html', 'Stacked List'),
+)
+ 
 
 class RelatedManager(models.Manager):
 
@@ -51,20 +59,24 @@ class RelatedManager(models.Manager):
         return sorted(tags, key=lambda x: -x.count)
 
 class PublishedManager(RelatedManager):
-	def get_query_set(self):
-		qs = super(PublishedManager, self).get_query_set()
-		now = timezone.now()
-		qs = qs.filter(publication_start__lte=now)
-		qs = qs.filter(Q(published_flag=True))
-		return qs
+    def get_query_set(self):
+        qs = super(PublishedManager, self).get_query_set()
+        now = timezone.now()
+        qs = qs.filter(publication_start__lte=now)
+        qs = qs.filter(Q(published_flag=True))
+        return qs
 
 
 class BlogContentType(models.Model):
-	content_type = models.CharField(max_length = 100,unique = True)
-	is_leaf = models.BooleanField('Is leaf node?', default = 0)
-    	
-	def __unicode__(self):
-        	return self.content_type
+    content_type = models.CharField(max_length = 100,unique = True)
+    is_leaf = models.BooleanField('Is leaf node?', default = 0)
+
+    def __unicode__(self):
+        return self.content_type
+    
+    def save(self, *args, **kwargs):
+        self.content_type = slugify_name(self.content_type)
+        super(BlogContentType, self).save(*args, **kwargs)
 
 class BlogParent(MPTTModel):
     title = models.CharField(max_length = 50, unique=True)
@@ -100,17 +112,17 @@ class BlogParent(MPTTModel):
     
     def get_absolute_url(self):
         kwargs = {'slug': str(self.form_url())}
-        from django.core.urlresolvers import reverse
         return reverse('blogging:teaser-view', kwargs=kwargs)
-	
-	class MPTTMeta:
+    def get_menu_title(self):
+        return self.title
+    class MPTTMeta:
             order_insertion_by = ['title']
 
 
 class BlogContent(models.Model):
     title = models.CharField(max_length = 100)
     create_date = models.DateTimeField('date created', auto_now_add=True)
-    author_id  = models.ForeignKey(auth.models.User)
+    author_id  = models.ForeignKey(auth.models.User, related_name="blogcontent")
     data = models.TextField(null= False)
     published_flag = models.BooleanField('is published?',default = 0)
     special_flag = models.BooleanField(default = 0)
@@ -123,38 +135,64 @@ class BlogContent(models.Model):
     publication_start = models.DateTimeField(('Published Since'), default=timezone.now, help_text=('Used for automatic delayed publication. For this feature to work published_flag must be on.'))
     objects = RelatedManager()    
     published = PublishedManager()
+    
+    annotation = GenericRelation(Annotation, content_type_field='content_type', object_id_field='object_pk')
 
     def get_absolute_url(self):
-       kwargs = {'slug': self.url_path,}
-       print "LOGS:: Fetching URI for node"
-       from django.core.urlresolvers import reverse
-       return reverse('blogging:teaser-view', kwargs=kwargs)
+        kwargs = {'slug': self.url_path,}
+        return reverse('blogging:teaser-view', kwargs=kwargs)
     
     def get_image_url(self):
-        image =  get_imageurl_from_data(self.data)
-        print "LOGS:: Fetching Image for node"
-        if image:
-            print image
-            return image
-        else:
-            return self.section.get_image_url()
+        json_obj = json.loads(self.data)
+        for value in json_obj.itervalues():
+            image =  get_imageurl_from_data(value)
+            if image:
+                return image
+        return self.section.get_image_url()
 
     def get_summary(self):
-        summary = self.data
-        print "LOGS:: Fetching Node summary"
-        summary = strip_tag_from_data(summary)
-        summary = strip_image_from_data(summary)
-        summary = strip_tags(summary)
-        
-        return summary
+        json_obj = json.loads(self.data)
+        # Instantiate the Meta class
+        description = strip_tags(json_obj.values()[0])
+        return trucncatewords(description,120)
+    
+    def get_title(self):
+        return self.title
+    
     
     def find_path(self,section): 
-	parent_list = section.get_ancestors(include_self=True)
-	return_path = '/'.join(word.slug for word in parent_list)
-	return_path = return_path + str("/") + self.slug + str("/") + str(self.id)
-	print return_path
-	return return_path
+        parent_list = section.get_ancestors(include_self=True)
+        return_path = '/'.join(word.slug for word in parent_list)
+        return_path = return_path + str("/") + self.slug + str("/") + str(self.id)
+        print return_path
+        return return_path
 
+    def get_menu_title(self):
+        return self.title
+
+    def get_parent(self):
+        return self.section
+
+    def get_tags(self):
+        tags = self.tags.all()
+        tag_list = []
+        for tag in tags:
+            try:
+                tmp = {}
+                tmp['name'] = tag.name
+                kwargs = {'tag': tag.name,}
+                tmp['url'] = reverse('blogging:tagged-posts',kwargs=kwargs)
+                tag_list.append(tmp)
+            except:
+                print "Unexpected error:", sys.exc_info()[0]
+                for frame in traceback.extract_tb(sys.exc_info()[2]):
+                    fname,lineno,fn,text = frame
+                    print "Error in %s on line %d" % (fname, lineno)
+        return tag_list
+    
+    def get_author(self):
+        return self.author_id.first_name or self.author_id.username
+    
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -176,7 +214,8 @@ class LatestEntriesPlugin(CMSPlugin):
     latest_entries = models.IntegerField(default=5, help_text=('The number of latests entries to be displayed.'))
     parent_section = models.ForeignKey(BlogParent,null=True,blank=True)
     tags = models.ManyToManyField('taggit.Tag', blank=True, help_text=('Show only the blog posts tagged with chosen tags.'))
-
+    template = models.CharField('Template', max_length=255,
+                                choices = LATEST_PLUGIN_TEMPLATES, default='blogging/plugin/plugin_teaser.html')
     def __unicode__(self):
         return str(self.latest_entries)
 
@@ -196,13 +235,15 @@ class LatestEntriesPlugin(CMSPlugin):
         else:
             posts = BlogContent.published.all()
         
-        print posts
-        for post in posts:
-            post.data = strip_image_from_data(post.data)
         tags = list(self.tags.all())
         if tags:
             posts = posts.filter(tags__in=tags)
         return posts[:self.latest_entries]
+    
+    def get_section(self):
+        return self.parent_section
+
+    
     
 class SectionPlugin(CMSPlugin):
 

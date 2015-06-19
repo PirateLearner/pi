@@ -1,32 +1,42 @@
 {% extends "blogging/base.html" %}
-{% block extra_script %}
-<script src="{{ STATIC_URL }}ckeditor/ckeditor/ckeditor.js"></script>
-{% endblock %}
-
 
 {% load cms_tags %}
 {% load disqus_tags %}
+
+
 {% disqus_dev %}
+{% block meta %}
+{% include "meta.html" with meta=meta only %}
+{% endblock %}
 
 {% if parent %}
 {% block blog_breadcrumb %}
-{% include "blogging/includes/breadcumb.html" with nodes=parent only %}
 {% endblock %}
 {% endif %}
 
 {% block title %}
-PirateLearner | {{ content.title }}
+{{ content.title }}
 {% endblock %}
-
 
 
 {% block content_blog %}
 
 {% load blogging_tags %}
+<div class="header-ribbon" id="overlay-target">
 
+	<!--<div> -->
 {% render_content content %}
+	<!-- </div> -->
 
+</div>
 
 {% disqus_show_comments %}
+{% endblock %}
+
+{% block extra_script %}
+<script src="{{ STATIC_URL }}ckeditor/ckeditor/ckeditor.js"></script>
+
+<link rel="stylesheet" href="{{ STATIC_URL }}css/overlay.css"></link>
+
 {% endblock %}
 

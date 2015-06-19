@@ -1,0 +1,23 @@
+{% load url from future %}
+{% load thumbnail %}
+
+{% for node in instance.get_bookmarks %}
+<div class="media feature content-block-bookmark paper" data-groups='["bookmarks"]'>
+	<div class="unit-tile-image">
+		<a  class="" href="{{node.get_absolute_url}}" rel="nofollow">
+			<img src="{{ node.get_image_url }}" alt="Knowledge transfer"/>
+		</a>
+	</div>
+	<div class="unit-tile-title">
+		<a class="title" href="{{node.get_absolute_url}}">
+		 	{{ node.title }}
+		</a>
+	</div>
+	<div class="unit-tile-tags">
+			{% for tag in node.get_tags %}
+			 <a href="{{ tag.url }}"> {{ tag.name }}</a>
+			{% endfor %}
+	</div>
+	<div class="unit-tile-stats"></div>
+</div>
+			{% endfor %}
