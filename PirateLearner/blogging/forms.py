@@ -13,19 +13,35 @@ from crispy_forms.layout import Submit
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from crispy_forms.layout import Layout, Field, Fieldset, ButtonHolder, Submit
+from django_select2.fields import AutoModelSelect2TagField,AutoModelSelect2MultipleField
+import json
+from blogging import tag_lib
+from blogging.utils import slugify_name
 
 CUSTOM_FIELD_TYPE = (
 	('CharField', 'TextField'),
 	('TextField', 'TextArea'),
-	('ImageField', 'Image'),
-	('FileField', 'File Upload'),
+#	('ImageField', 'Image'),
+#	('FileField', 'File Upload'),
+#	('IntegerField', 'Number'),
 )
 
+CONTACT_TYPE = (
+			('Queries','Make a Query!'),
+			('FeedBack','Give Your Feedback!'),
+			('Feature','Suggest A Feature!'),
+			('Join','Join Us!'),
+			)
 
+class TagField(AutoModelSelect2TagField):
+	queryset = Tag.objects.all()
+	search_fields = ['name__icontains', ]
+	def get_model_field_values(self, value):
+		return {'name': value}
 
 def validate_empty(value):
-    if value :
-        raise ValidationError(u'It seems you are not human!!!')
+	if value :
+		raise ValidationError(u'It seems you are not human!!!')
 
 """
 class LatestEntriesForm(forms.ModelForm):
@@ -112,13 +128,19 @@ class ContentTypeCreationForm(forms.ModelForm):
 		self.helper1.form_tag = False
 #		self.helper1.template = 'blogging/inline_field.html'
 
+
+	
 	class Meta:
 		model = BlogContentType
 
 class FieldTypeForm(forms.Form):
-	field_name = forms.CharField('Field Name')
+	field_name = forms.CharField()
 	field_type = forms.ChoiceField(widget = forms.Select(),choices=CUSTOM_FIELD_TYPE)
 	
+	def clean_field_name(self):
+		print "LOGS: clean_field_name called"
+		data = slugify_name(self.cleaned_data['field_name'])
+		return data
 
 	
 class FormsetHelper(FormHelper):
@@ -181,6 +203,8 @@ class SectionPluginForm(forms.ModelForm):
 		self.fields['parent_section'].choices = choices
 
 class ContactForm(forms.Form):
+	contact_type = forms.ChoiceField(label="Choose Type of Contact",required=True,
+									widget = forms.Select(),choices=CONTACT_TYPE)
 	name = forms.CharField(
         label="What is your name?",
         max_length=80,
@@ -219,6 +243,7 @@ class ContactForm(forms.Form):
 		self.helper.layout = Layout(
 				Fieldset(
                 'Queries, Questions, Suggestions, Feedback or for giving a pat on our back, please feel free to contact Us',
+                'contact_type',
                 'name',
                 'email',
                 'content',
@@ -232,6 +257,8 @@ class ContactForm(forms.Form):
 			
 			)
 #		self.helper.add_input(Submit('submit', 'Submit'))
+
+		
 
 """
 class PageForm(forms.Form):

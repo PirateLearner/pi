@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tags %}
+{% block content %}
+    <div class="navbar navbar-default"></div>
+    <div class="container">
+        <div class="row">
+            {% include 'leftbar.html' %}
+            <div class="col-md-6">
+                {% for thread in threads %}
+                    {% ifequal user thread.receiver %}
+                    {% else %}
+                    {% endifequal %}
+                    <div class="media media-border {% get_class user thread %}" data-url="{% url 'thread_messages' thread.pk %}">
+                      <a class="pull-left" href="#">
+                        <img class="media-object" src="{% static "img/avatar/default.jpg" %}" alt="...">
+                      </a>
+                      <div class="media-body">
+                        <h4 class="media-heading">
+                            <a href="">
+                                {% get_user user thread %}
+                            </a>
+                            <a class="pull-right">
+                                <span class="badge badge-info">
+                                    {% get_message_count user thread %} new messages
+                                </span>
+                            </a>
+                        </h4>
+                        {{ thread.last_message.body }}
+                      </div>
+                    </div>
+                {% endfor %}
+                {% if not threads %}
+                    <div class="alert alert-info">
+                        <p align="center">You have not initiated any conversations yet !!
+                        <br>Click <a href="{% url 'new_message' %}"><strong>here</strong></a> to initiate one </p>
+                    </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+{% block js %}
+    <script>
+        $(document).ready(function(){
+            $('.media').click(function(){
+                var redirectUrl = $(this).data('url');
+                window.location = redirectUrl;
+            });
+        });
+    </script>
+{% endblock %}

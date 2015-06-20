@@ -14,12 +14,14 @@ class BlogPlugin(CMSPluginBase):
 
 class LatestEntriesPlugin(BlogPlugin):
 
-    render_template = 'blogging/plugin/plugin_teaser.html'
+    render_template = models.LATEST_PLUGIN_TEMPLATES[0][0]
     name = _('Latest Blog Entries')
     model = models.LatestEntriesPlugin
     form = LatestEntriesForm
 
     def render(self, context, instance, placeholder):
+        if instance and instance.template:
+            self.render_template = instance.template
         context['instance'] = instance
 #	context['nodes'] = self.model.get_post()
         return context
@@ -36,10 +38,20 @@ class ContactPlugin(BlogPlugin):
     model = models.ContactPlugin
     
     def create_form(self, instance, request):
+        contact_type = request.GET.get('contact_type',None)
+        
+        
+        if contact_type is None:
+            contact_type = 'Queries'
+        
+        print "Contact form contact_type : ", contact_type
+            
         if request.method == "POST":
+            print "Contact form inside post"
             return ContactForm(data=request.POST)
         else:
-            return ContactForm()    
+            print "Contact form inside get"
+            return ContactForm(initial={'contact_type':contact_type})    
     def render(self, context, instance, placeholder):
         request = context['request']
 
@@ -47,10 +59,10 @@ class ContactPlugin(BlogPlugin):
 #        instance.render_template = getattr(form, 'template', self.render_template)
 
         if request.method == "POST" and form.is_valid():
-            subject = 'Contact mail from PirateLearner'
+            subject = 'Contact mail from PirateLearner( ' + form.cleaned_data['contact_type'] + ' )'
             message = 'Name: ' + form.cleaned_data['name'] + '\n' + 'email: ' + form.cleaned_data['email'] + '\n Body: ' + form.cleaned_data['content']
             recipient_list = [instance.to_email]
-            send_mail(subject, message, 'root@localhost', recipient_list, fail_silently=False)
+            mail_admins(subject, message, fail_silently=False)
             context.update({
                 'contact': instance,
             })

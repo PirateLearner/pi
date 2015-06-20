@@ -1,10 +1,11 @@
 import os
 gettext = lambda s: s
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
+ABSOLUTE_PATH = lambda x: os.path.join(os.path.abspath(os.path.dirname(__file__)), x)
 # Django settings for PirateLearner project.
 
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+DEBUG = False
+#TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -15,11 +16,12 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-
+#Domain name
+DOMAIN_URL = '//piratelearner.com/'
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ['piratelocal.com']
+ALLOWED_HOSTS = ['piratelearner.com']
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -62,17 +64,16 @@ USE_TZ = True
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
 #STATIC_URL = '/static/'
-
-STATIC_ROOT = ''
+STATIC_ROOT = '/home/rai812/webapps/piratelearner_static/static'
 STATIC_URL = '/static/static/'
-MEDIA_ROOT = '/home/abhishek/git/PirateLearnerStatic/media'
-MEDIA_URL = '/media/'
+
+MEDIA_ROOT = '/home/rai812/webapps/piratelearner_static/media'
+MEDIA_URL = '/static/media/'
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/home/abhishek/git/PirateLearnerStatic/static',
 )
 
 # List of finder classes that know how to find static files in
@@ -159,7 +160,8 @@ MIDDLEWARE_CLASSES = (
     'cms.middleware.page.CurrentPageMiddleware',
     'cms.middleware.toolbar.ToolbarMiddleware',
     'cms.middleware.language.LanguageCookieMiddleware',
-    'django.middleware.transaction.TransactionMiddleware'
+    'django.middleware.transaction.TransactionMiddleware',
+    'django.contrib.redirects.middleware.RedirectFallbackMiddleware'
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -176,6 +178,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'allauth.account.context_processors.account',
     'allauth.socialaccount.context_processors.socialaccount',
+    'PirateLearner.context_processors.site_processor',
 )
 
 TEMPLATE_DIRS = (
@@ -219,17 +222,27 @@ INSTALLED_APPS = (
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.github',
+#     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.linkedin',
-    'allauth.socialaccount.providers.linkedin_oauth2',
-    'allauth.socialaccount.providers.stackexchange',
+#     'allauth.socialaccount.providers.linkedin',
+#     'allauth.socialaccount.providers.linkedin_oauth2',
+#     'allauth.socialaccount.providers.stackexchange',
     'allauth.socialaccount.providers.twitter',
+    'crispy_forms',
     'blogging',
+    'annotation',
     'ckeditor',
     'disqus',
-    'crispy_forms'
-
+    'dashboard',
+    'bookmarks',
+    'pl_messages',
+    'rest_framework',
+    'meta_tags',
+    'project_mgmt',
+#     'django_mathjax',
+    'spotlight',
+    'django_comments',
+    'django.contrib.redirects',
 )
 
 LANGUAGES = (
@@ -259,7 +272,7 @@ CMS_TEMPLATES = (
     ## Customize this
     ('page.html', 'Page'),
     ('feature.html', 'Page with Feature'),
-    ('content_page.html', 'About Page'),
+    ('about.html', 'About Page'),
     ('content_page.html', 'Contact Us'),
 )
 
@@ -282,15 +295,13 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-
-
 CMS_PERMISSION = True
 
 CMS_PLACEHOLDER_CONF = {}
 
 DATABASES = {
     'default':
-        {'ENGINE': 'django.db.backends.mysql', 'NAME': 'sampledb', 'HOST': '127.0.0.1', 'USER': 'root', 'PASSWORD': 'root', 'PORT': '3306'}
+        {'ENGINE': 'django.db.backends.mysql', 'NAME': 'piratedb', 'HOST': '127.0.0.1', 'USER': 'piratele_jack', 'PASSWORD': '8!@ckpe@r!', 'PORT': '3306'}
 }
 # default is 10 px
 MPTT_ADMIN_LEVEL_INDENT = 20
@@ -308,13 +319,132 @@ THUMBNAIL_ALIASES = {
 }
 CKEDITOR_UPLOAD_PATH = 'images/'
 CKEDITOR_CONFIGS = {
+    'toolbar_Custom':[
+                      ["Format", "Bold", "Italic", "Underline", "Strike", "SpellChecker"],
+                      ['NumberedList', 'BulletedList', "Indent", "Outdent", 'JustifyLeft', 'JustifyCenter',
+                 'JustifyRight', 'JustifyBlock'],
+                      ["Image", "Table", "Link", "Unlink", "Anchor", "SectionLink", "Subscript", "Superscript"], 
+                      ['Undo', 'Redo'], ["Source"],["Maximize"],['About','Code'],
+                     ],
+    
     'default': {
-        'toolbar': 'Full',
-        'justifyClasses': [ 'AlignLeft', 'AlignCenter', 'AlignRight', 'AlignJustify' ],
+        'toolbar': [
+                      ["Format", "Bold", "Italic", "Underline", "Strike", "SpellChecker"],
+                      ['NumberedList', 'BulletedList', "Indent", "Outdent", 'JustifyLeft', 'JustifyCenter',
+                 'JustifyRight', 'JustifyBlock'],
+                      ["Image", "Table", "Link", "Unlink", "Anchor", "SectionLink", "Subscript", "Superscript"], 
+                      ['Undo', 'Redo'], ["Source"],["Maximize"],['About','Code'],
+                     ],
+        'contentsCss': STATIC_URL+'css/bootstrap.css',
+    
+        'codemirror' : {
+                        # Set this to the theme you wish to use (codemirror themes)
+                        'theme': 'default',
+                        # Whether or not you want to show line numbers
+                        'lineNumbers': 'true',
+                        # Whether or not you want to use line wrapping
+                        'lineWrapping': 'true',
+                        # Whether or not you want to highlight matching braces
+                        'matchBrackets': 'true',
+                        # Whether or not you want tags to automatically close themselves
+                        'autoCloseTags': 'true',
+                        # Whether or not you want Brackets to automatically close themselves
+                        'autoCloseBrackets': 'true',
+                        # Whether or not to enable search tools, CTRL+F (Find), CTRL+SHIFT+F (Replace), CTRL+SHIFT+R (Replace All), CTRL+G (Find Next), CTRL+SHIFT+G (Find Previous)
+                        'enableSearchTools': 'true',
+                        # Whether or not you wish to enable code folding (requires 'lineNumbers' to be set to 'true')
+                        'enableCodeFolding': 'true',
+                        # Whether or not to enable code formatting
+                        'enableCodeFormatting': 'true',
+                        # Whether or not to automatically format code should be done when the editor is loaded
+                        'autoFormatOnStart': 'true',
+                        # Whether or not to automatically format code should be done every time the source view is opened
+                        'autoFormatOnModeChange': 'true',
+                        # Whether or not to automatically format code which has just been uncommented
+                        'autoFormatOnUncomment': 'true',
+                        # Define the language specific mode 'htmlmixed' for html including (css, xml, javascript), 'application/x-httpd-php' for php mode including html, or 'text/javascript' for using java script only
+                        'mode': 'htmlmixed',
+                        # Whether or not to show the search Code button on the toolbar
+                        'showSearchButton': 'true',
+                        # Whether or not to show Trailing Spaces
+                        'showTrailingSpace': 'true',
+                        # Whether or not to highlight all matches of current word/selection
+                        'highlightMatches': 'true',
+                        # Whether or not to show the format button on the toolbar
+                        'showFormatButton': 'true',
+                        # Whether or not to show the comment button on the toolbar
+                        'showCommentButton': 'true',
+                        # Whether or not to show the uncomment button on the toolbar
+                        'showUncommentButton': 'true',
+                        #Whether or not to show the showAutoCompleteButton button on the toolbar
+                        'showAutoCompleteButton': 'true',
+                        # Whether or not to highlight the currently active line
+                        'styleActiveLine': 'true'
+                        },
+        
     },
 }
+CKEDITOR_RESTRICT_BY_USER=True
 
 DISQUS_API_KEY = 'QJezRiHWxv2FzzrMuOSvQPn99oil0LLyhZxdCAEd3s5cZTf6GUI5019NKznCEONu'
-DISQUS_WEBSITE_SHORTNAME = 'piratelocal'
+DISQUS_WEBSITE_SHORTNAME = 'piratelearner'
+
+
+DEFAULT_FROM_EMAIL = 'rai812@web379.webfaction.com'
+
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 EMAIL_SUBJECT_PREFIX = '[PirateLearner]'
+EMAIL_HOST = 'smtp.webfaction.com'
+EMAIL_HOST_USER = 'pirate_learner_mailbox'
+EMAIL_HOST_PASSWORD = 'pirate@world'
+SERVER_EMAIL = 'rai812@web379.webfaction.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 25
+
+
+MATHJAX_ENABLED=True
+MATHJAX_LOCAL_PATH = 'js/MathJax/'
+MATHJAX_CONFIG_FILE = "TeX-AMS-MML_HTMLorMML"
+MATHJAX_CONFIG_DATA = {
+    "tex2jax": {
+      "inlineMath":
+        [
+            ['$','$'],
+            ['\\(','\\)']
+        ]
+    }
+  }
+
+REST_FRAMEWORK = {
+    # Use hyperlinked styles by default.
+    # Only used if the `serializer_class` attribute is not set on a view.
+    'DEFAULT_MODEL_SERIALIZER_CLASS':
+        'rest_framework.serializers.HyperlinkedModelSerializer',
+
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
+
+META_SITE_PROTOCOL = 'http'
+# META_SITE_DOMAIN = 'pirateLearner.com' using META_USE_SITE SETTING
+META_SITE_TYPE = 'article' # override when passed in __init__
+META_SITE_NAME = 'Pirate Learner'
+#META_INCLUDE_KEYWORDS = [] # keyword will be included in every article
+#META_DEFAULT_KEYWORDS = [] # default when no keyword is provided in __init__
+#META_IMAGE_URL = '' # Use STATIC_URL 
+META_USE_OG_PROPERTIES = True
+META_USE_TWITTER_PROPERTIES = True
+META_USE_GOOGLEPLUS_PROPERTIES = True
+META_USE_SITES = True
+META_PUBLISHER_FB_ID = 'https://www.facebook.com/PirateLearner' # can use PAGE URL or Publisher id ID
+META_PUBLISHER_GOOGLE_ID = 'https://plus.google.com/116465481265465787624' # Google+ ID 
+META_FB_APP_ID = ''
+
+# ftech the bookmark from web pages depending upon the tags written for social networking sites
+
+BOOKMARK_FETCH_PRIORITY = ['facebook','google','twitter','extra','None']
+BOOKMARK_DEFAULT_IMAGE = DOMAIN_URL+STATIC_URL+'images/default_bookmark.jpg'

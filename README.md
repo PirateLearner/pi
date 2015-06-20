@@ -97,3 +97,33 @@ This last command is to install modules into a path different from default confi
 export TEMP=$HOME/tmp
 cd pi/piratelearner
 pip2.7 install --target=$PWD/lib/python2.7 --install-option="--install-scripts=$PWD/bin" --install-option="--install-lib=$PWD/lib/python2.7" -r requirement.txt
+
+Note: Regarding RestFrameworkGenericRelations
+---------------------------------------------
+
+This module will cause errors while using the REST API for annotations module and cause the code to break. To fix the issue: Please replace the field_to_native method code segment
+in generic_relations/relations.py by:
+
+
+    def field_to_native(self, obj, field_name):
+        """
+        Delegates to the `to_native` method of the serializer registered
+        under obj.__class__
+        """
+        value = super(GenericRelatedField, self).field_to_native(
+            obj, field_name)
+        if value:
+            serializer = self.determine_deserializer_for_data(value)
+
+            # Necessary because of context, field resolving etc.
+            serializer.initialize(self.parent, field_name)
+            return serializer.to_native(value)
+
+Note: Upgrading blogging plugin schema     
+--------------------------------------
+
+ALTER TABLE `blogging_latestentriesplugin` ADD COLUMN `template` varchar(255) NOT NULL DEFAULT 'blogging/plugin/plugin_teaser.html';
+
+
+
+
