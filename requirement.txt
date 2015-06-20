@@ -38,6 +38,10 @@ django-allauth
 django-crispy-forms
 
 beautifulsoup4
-djangorestframework
+djangorestframework==2.3.14
 rest_framework_generic_relations
+lxml
 
+django-ckeditor==4.4.4
+
+agon_ratings

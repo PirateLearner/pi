@@ -1,8 +1,16 @@
 from django.contrib import admin
 from mptt.admin import MPTTModelAdmin
-from blogging.models import BlogContentType, BlogParent, BlogContent
+from blogging.models import BlogParent,BlogContentType,BlogContent
 from blogging.forms import PostForm, ParentForm
-from cms.admin.placeholderadmin import FrontendEditableAdmin, PlaceholderAdmin
+
+from django.conf import settings
+
+if 'cms' in settings.INSTALLED_APPS:
+    try:
+        from cms.admin.placeholderadmin import FrontendEditableAdmin, PlaceholderAdmin
+    except ImportError:
+        print 'CMS not installed'
+    
 import reversion
 
 def mark_published(modeladmin, request, queryset):
@@ -22,23 +30,24 @@ class ParentAdmin(MPTTModelAdmin,reversion.VersionAdmin):
     ordering = ['title']
     prepopulated_fields = {'slug': ('title',), }
 
-class ContentAdmin(FrontendEditableAdmin,PlaceholderAdmin,reversion.VersionAdmin):
-    
-    list_display = ('title', 'create_date', 'published_flag','publication_start')
-    list_filter = ['create_date']
-    search_fields = ['title']
-    ordering = ['title']
-    actions = [mark_published]
-    prepopulated_fields = {'slug': ('title',), }
-    form = PostForm
-    frontend_editable_fields = ('title', 'data')
-    fieldsets = [
-                 ('Info',     {'fields': ['title','slug', 'data','publication_start']} ),
-                 ('Other',     {'fields': ['section', 'author_id', 'published_flag', 'special_flag', 'content_type','tags']} )
-                 ]
-    
+if 'cms' in settings.INSTALLED_APPS:
+    class ContentAdmin(FrontendEditableAdmin,PlaceholderAdmin,reversion.VersionAdmin):
+        list_display = ('title', 'create_date', 'published_flag','publication_start')
+        list_filter = ['create_date']
+        search_fields = ['title']
+        ordering = ['title']
+        actions = [mark_published]
+        prepopulated_fields = {'slug': ('title',), }
+        form = PostForm
+        frontend_editable_fields = ('title', 'data')
+        fieldsets = [
+                     ('Info',     {'fields': ['title','slug', 'data','publication_start']} ),
+                     ('Other',     {'fields': ['section', 'author_id', 'published_flag', 'special_flag', 'content_type','tags']} )
+                     ]
+        
+
 
 admin.site.register(BlogParent, ParentAdmin)
 admin.site.register(BlogContentType)
-admin.site.register(BlogContent,ContentAdmin)
-
+if 'cms' in settings.INSTALLED_APPS:
+    admin.site.register(BlogContent,ContentAdmin)

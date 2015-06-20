@@ -1,4 +1,10 @@
 *.pyc
 *.swp
 *.db
-PirateLearner/PirateLearner/settings.py
+.pydev*
+.project
+.settings
+*.*~
+*/blogging/custom
+*/blogging/custom/*
+*/PirateLearner/settings.py

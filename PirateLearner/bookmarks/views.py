@@ -24,7 +24,7 @@ from django.contrib.auth.decorators import permission_required
 import sys
 from django.core.exceptions import ObjectDoesNotExist
 from meta_tags.views import Meta 
-from blogging.utils import trucncatewords
+from blogging.utils import truncatewords
 from bookmarks.utils import count_words
 
 def bookmarks(request):
@@ -196,7 +196,7 @@ def add_folder(request,model_name):
 
 def bookmark_details(request,slug):
     current_section = slug.split("/")[-1]
-    print current_section
+#     print current_section
     try:
         post_id = int(current_section)
         print "LOGS:: This is Detail page of bookmarks"
@@ -205,7 +205,7 @@ def bookmark_details(request,slug):
             description = strip_tags(bookmark.note)
             if count_words(description)<5:
                 description = bookmark.description
-            meta = Meta(title = bookmark.title, description = trucncatewords(description,120), section= bookmark.folder.title, url = bookmark.get_absolute_url(),
+            meta = Meta(title = bookmark.title, description = truncatewords(description,120), section= bookmark.folder.title, url = bookmark.get_absolute_url(),
                     image = bookmark.get_image_url(), author = bookmark.user, date_time = bookmark.saved ,
                     object_type = 'article', keywords = [ tags.name for tags in bookmark.tags.all()])
             return render_to_response("bookmarks/detail.html", {'bookmark':bookmark,'meta':meta,} ,context_instance=RequestContext(request))

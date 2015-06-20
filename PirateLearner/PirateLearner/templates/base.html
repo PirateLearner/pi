@@ -33,7 +33,6 @@
 	<!--[if (lt IE 9) & (!IEMobile)]>
 	<script src="{{ STATIC_URL }}js/selectivizr-min.js"></script>
 	<![endif]-->
-	
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL }}js/syntaxhighlighter/styles/shCore.css">
 	<link rel="stylesheet" type="text/css" href="{{STATIC_URL }}js/syntaxhighlighter/styles/shThemeDefault.css">
 
@@ -44,9 +43,6 @@
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script src="{{STATIC_URL }}js/docs.min.js"></script>   
      
-    <script type="text/javascript" src="{{ STATIC_URL }}js/annotation/masterinclude.js"></script>
-
-
 	<!-- Icons -->
 	
 	<!-- 16x16 -->
@@ -99,18 +95,9 @@
     {% render_block "css" %}
     <!--<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/tile.css"> -->
   	<!-- JavaScript -->
-<!-- analytics -->
-{% if request.user.is_staff != True %}
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-51345450-1', 'piratelearner.com');
-  ga('send', 'pageview');
-</script>
-{% endif %}
-    
+
+    <!-- GPLus Script -->
+<script src="https://apis.google.com/js/platform.js" async defer></script>
 {% render_block "js" %}
   {% block extra_script %} 
 {% endblock %}
@@ -200,9 +187,6 @@
 {% load socialaccount %}
 
 {% providers_media_js %}
-<!-- GPLus Script -->
-<script src="https://apis.google.com/js/platform.js" async defer></script>
-
 <!-- Twitter Script -->
  
  <script type="text/javascript">
@@ -227,6 +211,18 @@ window.twttr = (function (d, s, id) {
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
 
+
+<!-- analytics -->
+{% if request.user.is_staff != True %}
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-51345450-1', 'piratelearner.com');
+  ga('send', 'pageview');
+</script>
+{% endif %}
 <!-- Syntax Highlight -->
   	<script type="text/javascript">
   		 SyntaxHighlighter.all()

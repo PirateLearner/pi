@@ -138,5 +138,5 @@ class WishlistPlugin(CMSPlugin):
     def get_suggestion_url(self):
         #page = Page.objects.get(title='Contact Us') or None
         from django.core.urlresolvers import reverse
-        return (settings.DOMAIN_URL+'en/contact/?contact_type=Feature')
+        return (settings.DOMAIN_URL+'en/contact-us/?contact_type=Feature')
 

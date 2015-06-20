@@ -7,6 +7,10 @@ from django import template
 from blogging.tag_lib import get_field_name_from_tag
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
+from django.core.mail import  mail_admins
+from blogging.forms import ContactForm
+from django.template import RequestContext
+import sys
 
 import sys
 
@@ -73,4 +77,72 @@ class ContentRender(InclusionTag):
         extra_context = self._get_data_context(context, instance, attribute)
         return extra_context
 
+class ContactTag(InclusionTag):
+    template = 'blogging/includes/contact.html'
+    name = 'render_contact_form'
+#     options = Options(
+#         Argument('template_name'),
+#         Argument('count'),
+#         Argument('base_parent', default=None, required=False),
+#         Argument('tags', default=None, required=False),
+#     )
+
+    def __init__(self, parser, tokens):
+        self.parser = parser
+        super(ContactTag, self).__init__(parser, tokens)
+
+    def get_template(self, context, **kwargs):
+        return self.template
+
+    
+    def create_form(self, request):
+        contact_type = request.GET.get('contact_type',None)
+        
+        
+        if contact_type is None:
+            contact_type = 'Queries'
+        
+        print "Contact form contact_type : ", contact_type
+            
+        if request.method == "POST":
+            print "Contact form inside post"
+            return ContactForm(data=request.POST)
+        else:
+            print "Contact form inside get"
+            return ContactForm(initial={'contact_type':contact_type})    
+    def render_tag(self, context, **kwargs):
+        context.push()
+        print "contact tag is called"
+        try:
+            request = context['request']
+            form = self.create_form(request)
+            instance = {}
+            instance['thanks'] = 'Thanks for your time! We will get back to you soon.'
+            template = self.get_template(context, **kwargs)
+
+            if request.method == "POST" and form.is_valid():
+                subject = 'Contact mail from PirateLearner( ' + form.cleaned_data['contact_type'] + ' )'
+                message = 'Name: ' + form.cleaned_data['name'] + '\n' + 'email: ' + form.cleaned_data['email'] + '\n Body: ' + form.cleaned_data['content']
+                mail_admins(subject, message, fail_silently=False)
+                
+                data = RequestContext(request, {
+                                        'contact': instance,
+                                      })
+            else:
+                data = RequestContext(request, {
+                                        'contact': instance,
+                                        'form': form,
+
+                                      })
+            output = render_to_string(template, data)
+            context.pop()
+            print output
+            return output
+        except:
+            print "Unexpected error:", sys.exc_info()[0]
+            return "Http404"
+
+ 
+
 register.tag(ContentRender)
+register.tag(ContactTag)

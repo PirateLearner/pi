@@ -3,20 +3,42 @@
 {{ attribute }}
 
 {% else %}
+		<span class="hidden rest" data-id="{{ nodes.id }}" data-content-type="54"></span>
 		<h1 class="article-title"> 	{{ title }} </h1>
-		<span class="article-author"> by Admin </span>       	
-		<div class="article-actions">
-       		<span id="trigger-overlay" type="button" class="icon overlay-open pl-expand"></span>
-       	</div>			
+		<span class="article-author"> by Admin </span>
+		<div class="article-actions_outer" data-spy="affix">
+			<div class="article-actions-title-small">
+				<h4 class="article-title"> 	{{ title }} </h4>
+			</div>       	
+			<div class="article-actions">
+				{% if request.user.is_staff == True %}
+				<div class="article-actions__button">
+   					<a id="trigger-edit" href="{{ content.edit }}" type="button" class="icon pl-pencil"></a>
+		       		<span class="icon-helper" id="upvote_count">
+		       			Edit
+		       		</span>
+	       		</div>
+				{% endif %}
+	       		<div class="article-actions__button text-muted vote" id="upvote">
+		       		<span class="glyphicon glyphicon-chevron-up"></span>
+		       		<span class="icon-helper" id="upvote_count">
+		       			0
+		       		</span>
+	       		</div>
+	       		<div class="article-actions__button text-muted vote" id="downvote">
+		       		<span class="glyphicon glyphicon-chevron-down"></span>
+		       		<span class="icon-helper" id="downvote_count">0	       			
+		       		</span>
+	       		</div>	
+	       	</div>			
+       	</div>
 
-	{% for field in attribute_list %}		
-
-		<div class="article-body" id="commentable-container" >
+		<article class="article-body" id="commentable-container" >
+		{% for field in attribute_list %}
 			{% autoescape off %}
 				{{ field.value }}
-			{% endautoescape %}
-		</div>
+			{% endautoescape %}		
+		{% endfor %}
+		</article>
 		
-	{% endfor %}
-
 {% endif %}

@@ -1,0 +1,43 @@
+.article-actions{
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  position: relative;
+  font-size: 1.5rem;
+  height: 3em;
+  padding: 2px 5px;
+  
+  .article-actions__button{
+    position: relative;
+    float: left;
+    padding-left: 3px;
+    padding-right: 3px;
+    
+    > *{
+      text-align: center;
+      display: block;
+      text-decoration: none;
+    }
+    
+    > .glyphicon {
+      font-size: 1.2em;
+    }
+    
+    > .icon-helper{
+      font-size: 0.8em;
+      color: inherit;  
+    }
+    
+    &:hover:not(.text-muted){
+      background-color: rgba(139, 134, 134, 0.33);
+      color: black;
+     
+      *{
+        text-decoration: none;
+      } 
+    }
+    
+    > .voted{
+    	color: #f90;
+    }
+  }
+}

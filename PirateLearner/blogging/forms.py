@@ -1,10 +1,11 @@
 from django import forms
-from djangocms_text_ckeditor.fields import HTMLField
+
+from django.conf import settings
+
 from django.contrib.admin import widgets
 from blogging.models import *
 import django_select2
 import taggit
-from djangocms_text_ckeditor.widgets import TextEditorWidget
 from blogging.widgets import SelectWithPopUp
 from django.db import models
 from ckeditor.widgets import CKEditorWidget
@@ -165,43 +166,44 @@ class ContentForm(forms.ModelForm):
 
 class PostEditForm(forms.ModelForm):
 
-    class Meta:
-        model = BlogContent
-        widgets = {'tags': PostTagWidget,
+	class Meta:
+	    model = BlogContent
+	    widgets = {'tags': PostTagWidget,
 		   'publication_start': widgets.AdminSplitDateTime }
-        exclude = (
-            'page',
-            'create_date',
-            'author_id',
-            'special_flag',
-            'published_flag',
+	    exclude = (
+	        'page',
+	        'create_date',
+	        'author_id',
+	        'special_flag',
+	        'published_flag',
 	    'last_modefied',
 	    'url_path',
 	    'objects',
 	    'slug',
-        )
+	    )
 
-class LatestEntriesForm(forms.ModelForm):
+if 'cms' in settings.INSTALLED_APPS:
+	class LatestEntriesForm(forms.ModelForm):
 
-    class Meta:
-
-        widgets = {
-            'tags': django_select2.Select2MultipleWidget
-        }
-class SectionPluginForm(forms.ModelForm):
-	
-	class Meta:
-		model = SectionPlugin
-	
-	def __init__(self, *args, **kwargs):
-		super(SectionPluginForm, self).__init__(*args, **kwargs)
-		choices = [self.fields['parent_section'].choices.__iter__().next()]
-		for page in self.fields['parent_section'].queryset:
-			choices.append(
-				(page.id, ''.join(['-' * page.level, page.__unicode__()]))
-			)
-		self.fields['parent_section'].choices = choices
-
+	    class Meta:
+	        widgets = {
+	            'tags': django_select2.Select2MultipleWidget
+	        }
+        
+	class SectionPluginForm(forms.ModelForm):
+		
+		class Meta:
+			model = SectionPlugin
+		
+		def __init__(self, *args, **kwargs):
+			super(SectionPluginForm, self).__init__(*args, **kwargs)
+			choices = [self.fields['parent_section'].choices.__iter__().next()]
+			for page in self.fields['parent_section'].queryset:
+				choices.append(
+					(page.id, ''.join(['-' * page.level, page.__unicode__()]))
+				)
+			self.fields['parent_section'].choices = choices
+		
 class ContactForm(forms.Form):
 	contact_type = forms.ChoiceField(label="Choose Type of Contact",required=True,
 									widget = forms.Select(),choices=CONTACT_TYPE)
@@ -258,6 +260,66 @@ class ContactForm(forms.Form):
 			)
 #		self.helper.add_input(Submit('submit', 'Submit'))
 
+class TestFormClass(forms.Form):
+	title = forms.CharField(max_length = 100)
+	description = forms.CharField(widget=forms.Textarea, required=False)
+	note = forms.CharField(widget=forms.Textarea, required=False)
+	tags = TagField()
+	section = forms.ModelChoiceField(queryset= BlogParent.objects.filter(children=None) , empty_label=None)
+	pid_count = forms.IntegerField(required=False)
+	def __init__(self, *args, **kwargs):
+		self.helper = FormHelper()
+		
+		self.helper.form_id = 'id-TestFormClass'
+#		self.helper.form_class = 'blueForms'
+		self.helper.form_class = 'form-horizontal'
+		self.helper.label_class = 'col-lg-2'
+		self.helper.field_class = 'col-lg-8'
+		self.helper.form_method = 'post'
+		self.helper.form_action = reverse('blogging:testing-view')
+		self.helper.layout = Layout(
+				Fieldset(
+                'Testing the JSON FORM',
+                'title',
+                'description',
+                'note',
+                'tags',
+                'section',
+                Field('pid_count', type="hidden"),
+            ),
+			
+            ButtonHolder(
+                Submit('submit', 'Submit', css_class='button white')
+            ),
+			
+			)
+		super(TestFormClass, self).__init__(*args, **kwargs)
+
+	
+	def save(self,post,db_instance=None):
+		print "LOGS: Section --> ", post.pop('section')
+		print "LOGS: Tags --> ", post.pop('tags')
+		print "LOGS: Tags --> ", post.pop('title')
+		post.pop('csrfmiddlewaretoken')
+		post.pop('submit')
+		if db_instance != None:
+			instance = db_instance
+		else:
+			instance = BlogContent()
+		instance.title = self.cleaned_data["title"]
+		instance.section = self.cleaned_data["section"]
+
+		for k,v in post.iteritems():
+			if str(k) != 'pid_count' :
+				tmp = {}
+				tmp = tag_lib.insert_tag_id(str(v),self.cleaned_data["pid_count"])
+				post[k] = tmp['content']
+				post['pid_count'] = tmp['pid_count']
+			
+		json_str = json.dumps(post.dict())
+		instance.data = str(json_str)
+		print "LOGS: printing the json_str", json_str
+		return instance
 		
 
 """

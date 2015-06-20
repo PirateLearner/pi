@@ -9,7 +9,6 @@ from bookmarks.sitemaps import BookmarkSitemap
 from django.utils.functional import curry
 from django.views.defaults import *
 
-# from voting.views import vote_on_object
 from blogging.models import BlogContent
 
 tip_dict = {
@@ -32,6 +31,10 @@ urlpatterns = i18n_patterns('',
     url(r'^dashboard/', include('dashboard.urls',namespace='dashboard')),
     url(r'^bookmarks/', include('bookmarks.urls',namespace='bookmarks')),
     url(r'^spotlight/', include('spotlight.urls',namespace='spotlight')),
+    url(r'^rest/', include("rest.urls", namespace="rest")),
+#    url(r'^voting/', include('voting.urls', namespace='voting')),
+#    url(r'^annotations/', include('annotations.urls', namespace='annotations')),
+    
     url(r'^admin/', include(admin.site.urls)),
     #url(r'^user/', include('user_mgmt.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
@@ -41,9 +44,6 @@ urlpatterns = i18n_patterns('',
     url(r'^accounts/', include('allauth.urls')),
     url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': {'cmspages': CMSSitemap,'blog':BlogSitemap,'sections':BlogParentSitemap,
                                                                                   'bookmarks':BookmarkSitemap}}),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-#     url(r"^ratings/", include("agon_ratings.urls")),
-    url(r'^rest/', include("rest.urls", namespace="rest")),
     url(r'^', include('cms.urls')),
 )
 

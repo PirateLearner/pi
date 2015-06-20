@@ -1,4 +1,5 @@
 from blogging.tag_lib import parse_content
+from blogging.models import BlogContent
 import json
 import os
 

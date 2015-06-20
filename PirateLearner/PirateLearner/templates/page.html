@@ -1042,16 +1042,16 @@
 
   			</div><!-- col-80 ends -->  
   			
-  			<div class="col-20 aside-wrapper">
+  			<div class="col-20 aside-wrapper clearfix">
   				<div class="tile col-sm-12 col-md-12 col-lg-12 paper paper-raise paper-vintage">
   				  {% if user.is_authenticated %}
   				  	<h3 class="tile-body text-center"><a href="{% url 'account_logout' %}">Logout</a></h3>
   				  {% else %}
 				  <h2 class="tile-heading">Login Karo to jaano!</h2>
 				  <div class="tile-body text-center login-icons clearfix">
-						<a class="col-sm-4 col-md-4 col-lg-4" href="javascript:allauth.facebook.login('', 'authenticate', 'login')"><span class="icon pl-facebook2 icon-responsive logo-facebook"></span></a>
-						<a class="col-sm-4 col-md-4 col-lg-4" href="/en/accounts/twitter/login/?process=login"><span class="icon pl-twitter2 icon-responsive logo-twitter"></span></a>
-						<a class="col-sm-4 col-md-4 col-lg-4" href="/en/accounts/google/login/?process=login""><span class="icon pl-googleplus3 icon-responsive logo-google"></span></a>					  
+						<a class="col-sm-4 col-md-4 col-lg-4" href="javascript:allauth.facebook.login('{{ request.path|safe }}', 'authenticate', 'login')"><span class="icon pl-facebook2 icon-responsive logo-facebook"></span></a>
+						<a class="col-sm-4 col-md-4 col-lg-4" href="/en/accounts/twitter/login/?process=login&next={{ request.path|safe }}"><span class="icon pl-twitter2 icon-responsive logo-twitter"></span></a>
+						<a class="col-sm-4 col-md-4 col-lg-4" href="/en/accounts/google/login/?process=login&next={{ request.path|safe }}"><span class="icon pl-googleplus3 icon-responsive logo-google"></span></a>					  
 				  </div>
 				  {% endif %}                 
         		</div>

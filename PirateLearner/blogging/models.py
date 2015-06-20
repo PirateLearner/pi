@@ -8,15 +8,24 @@ from mptt.models import MPTTModel, TreeForeignKey
 from django.template.defaultfilters import slugify
 from taggit.managers import TaggableManager
 from taggit.models import TaggedItem, Tag
-from cms.models.pluginmodel import CMSPlugin
-from blogging.utils import get_imageurl_from_data, trucncatewords, slugify_name
+
+from django.contrib.contenttypes.generic import GenericRelation
+from annotations.models import Annotation
+
+from django.conf import settings
+
+if 'cms' in settings.INSTALLED_APPS:
+    try:
+        from cms.models.pluginmodel import CMSPlugin
+        from djangocms_text_ckeditor.models import Text
+    except ImportError:
+        print 'CMS not installed'
+    
+from blogging.utils import get_imageurl_from_data, truncatewords, slugify_name
 from django.utils.html import strip_tags
 from django.core.urlresolvers import reverse
 import traceback
 import json
-
-from django.contrib.contenttypes.generic import GenericRelation
-from annotation.models import Annotation
 
 #from south.v2 import DataMigration
 
@@ -107,7 +116,6 @@ class BlogParent(MPTTModel):
     
     def get_image_url(self):
         image = get_imageurl_from_data(self.data)
-        print image 
         return image
     
     def get_absolute_url(self):
@@ -140,6 +148,7 @@ class BlogContent(models.Model):
 
     def get_absolute_url(self):
         kwargs = {'slug': self.url_path,}
+        print "LOGS:: Fetching URI for node"
         return reverse('blogging:teaser-view', kwargs=kwargs)
     
     def get_image_url(self):
@@ -154,7 +163,7 @@ class BlogContent(models.Model):
         json_obj = json.loads(self.data)
         # Instantiate the Meta class
         description = strip_tags(json_obj.values()[0])
-        return trucncatewords(description,120)
+        return truncatewords(description,120)
     
     def get_title(self):
         return self.title
@@ -191,8 +200,9 @@ class BlogContent(models.Model):
         return tag_list
     
     def get_author(self):
-        return self.author_id.first_name or self.author_id.username
-    
+        print self.author_id #Anshul: Changed, don't remember why. Maybe in REST
+        return self.author_id
+        #return self.author_id.first_name or self.author_id.username  
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -200,7 +210,6 @@ class BlogContent(models.Model):
         super(BlogContent, self).save(*args, **kwargs)
         self.url_path = self.find_path(self.section)
         super(BlogContent, self).save(*args, **kwargs)
-        print "after save "  + self.url_path
 
     def __str__(self):
         return self.title
@@ -226,11 +235,8 @@ class LatestEntriesPlugin(CMSPlugin):
         if self.parent_section:
             if self.parent_section.is_leaf_node():
                 posts = BlogContent.published.filter(section=self.parent_section)
-                print 'parent is leaf node'
             else:
-                print 'parent is non leaf node'
                 parent_list = self.parent_section.get_descendants()
-                print 'parent list is ', parent_list
                 posts = BlogContent.published.filter(section__in=parent_list)
         else:
             posts = BlogContent.published.all()

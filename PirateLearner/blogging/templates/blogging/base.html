@@ -13,21 +13,14 @@ Explore
 {% block content %}
 <div class="row main-content-wrapper">  	
    	<div class="content-area clearfix">
-        	<div class="col-sm-12 col-md-8 col-lg-9">
  				       {% block content_blog %}
  				       {% endblock %}
-  			</div>
-  			{% include "sidebar.html" %}
-            <div class="overlay" id="overlay-container">
-			
-			
-		    </div>
-		    
 		</div>
   </div>
  <!-- Django loaded Javascripts -->
-<script type="text/javascript" src="{{ STATIC_URL }}js/overlay.js"></script>
+<script src="{{ STATIC_URL }}js/getuser.js"></script> 
+<script src="{{ STATIC_URL }}js/voting/voting_detail.js"></script>
+<script src="{{ STATIC_URL }}js/annotations/script.js"></script>
+<script src="{{ STATIC_URL }}js/blogging/nav_affix.js"></script>       
 {% endblock %}
-
-
 

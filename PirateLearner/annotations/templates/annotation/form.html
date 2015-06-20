@@ -1,0 +1,21 @@
+{% load annotations i18n %}
+<form id="comment-form" data-object-id="{{ form.target_object.pk }}" action="{% annotation_form_target %}" method="post" class="js-comments-form comments-form form-horizontal"
+          data-ajax-action="{% url 'annotation:annotation-post-comment-ajax' %}">{% csrf_token %}
+  {% if next %}<div><input type="hidden" name="next" value="{{ next }}" /></div>{% endif %}
+  {% for field in form %}
+    {% if field.is_hidden %}
+      <div>{{ field }}</div>
+    {% else %}
+      {% if field.errors %}{{ field.errors }}{% endif %}
+      <p
+        {% if field.errors %} class="error"{% endif %}
+        {% ifequal field.name "honeypot" %} style="display:none;"{% endifequal %}>
+        {{ field.label_tag }} {{ field }}
+      </p>
+    {% endif %}
+  {% endfor %}
+  <div class="form-actions">
+    <input type="submit" name="post" class="submit-post btn btn-primary" value="{% trans "Post" %}" />
+    {% ajax_annotation_tags for form.target_object %}
+  </div>
+</form>

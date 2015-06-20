@@ -143,9 +143,9 @@ class LatestBookmarksPlugin(CMSPlugin):
 
     def get_bookmarks(self):
         posts = BookmarkInstance.objects.all().filter(user__is_staff=True,privacy_level='pub').order_by('-saved')
-        print 'Printing get_bookmarks'
-        for post in posts:
-            print post
+#         print 'Printing get_bookmarks'
+#         for post in posts:
+#             print post
         
         tags = list(self.tags.all())
         if tags:
