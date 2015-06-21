@@ -2,25 +2,27 @@ from django.utils.translation import ugettext_lazy as _
 import os
 gettext = lambda s: s
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
+ABSOLUTE_PATH = lambda x: os.path.join(os.path.abspath(os.path.dirname(__file__)), x)
 # Django settings for PirateLearner project.
 
-DEBUG = False
-#TEMPLATE_DEBUG = DEBUG
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
-    ('Abhishek Rai', 'abnith.rai812@gmail.com'),
-    ('Anshul Thakur','anshulthakurjourneyendless@gmail.com'),
-    ('Captain','captain@piratelearner.com')
+     ('Abhishek Rai', 'abnith.rai812@gmail.com'),
+     ('Anshul Thakur','anshulthakurjourneyendless@gmail.com'),
+     ('Captain','captain@piratelearner.com')
 )
 
 MANAGERS = ADMINS
 
-
+#Domain name
+DOMAIN_URL = '//piratemirror.com/'
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ['piratelearner.com']
+ALLOWED_HOSTS = ['piratemirror.com']
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -58,22 +60,21 @@ USE_TZ = True
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = '/home/rai812/webapps/piratelearner_static/static'
+#STATIC_ROOT = ''
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
 #STATIC_URL = '/static/'
-
+STATIC_ROOT = '/home/craft/git/PirateLearnerStatic/static/'
 STATIC_URL = '/static/static/'
-MEDIA_ROOT = '/home/rai812/webapps/piratelearner_static/media'
-MEDIA_URL = '/static/media/'
 
+MEDIA_ROOT = '/home/craft/git/PirateLearnerStatic/media'
+MEDIA_URL = '/media/'
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    #'/home/rai812/webapps/piratelearner_static/static',
 )
 
 # List of finder classes that know how to find static files in
@@ -160,7 +161,8 @@ MIDDLEWARE_CLASSES = (
     'cms.middleware.page.CurrentPageMiddleware',
     'cms.middleware.toolbar.ToolbarMiddleware',
     'cms.middleware.language.LanguageCookieMiddleware',
-    'django.middleware.transaction.TransactionMiddleware'
+    'django.middleware.transaction.TransactionMiddleware',
+    'django.contrib.redirects.middleware.RedirectFallbackMiddleware'
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -177,6 +179,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'allauth.account.context_processors.account',
     'allauth.socialaccount.context_processors.socialaccount',
+    'PirateLearner.context_processors.site_processor',
 )
 
 TEMPLATE_DIRS = (
@@ -220,19 +223,28 @@ INSTALLED_APPS = (
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
-#    'allauth.socialaccount.providers.github',
+#     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.google',
-#    'allauth.socialaccount.providers.linkedin',
-#    'allauth.socialaccount.providers.linkedin_oauth2',
-#    'allauth.socialaccount.providers.stackexchange',
+#     'allauth.socialaccount.providers.linkedin',
+#     'allauth.socialaccount.providers.linkedin_oauth2',
+#     'allauth.socialaccount.providers.stackexchange',
     'allauth.socialaccount.providers.twitter',
+    'crispy_forms',
     'blogging',
+    'annotations',
     'ckeditor',
     'disqus',
-#    'captcha',
-#    'cmsplugin_contact',
-#    'django_mathjax',
-    'crispy_forms',
+    'dashboard',
+    'bookmarks',
+    'pl_messages',
+    'rest_framework',
+    'meta_tags',
+    'project_mgmt',
+#     'django_mathjax',
+    'spotlight',
+    'django.contrib.redirects',
+    'django_comments',
+    'voting',
 )
 
 LANGUAGES = (
@@ -262,8 +274,8 @@ CMS_TEMPLATES = (
     ## Customize this
     ('page.html', 'Page'),
     ('feature.html', 'Page with Feature'),
-    ('content_page.html', 'About Page'),
-    ('contact_page.html', 'Contact Us'),
+    ('about.html', 'About Page'),
+    ('content_page.html', 'Contact Us'),
 )
 
 # allauth related settings
@@ -285,15 +297,13 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-
-
 CMS_PERMISSION = True
 
 CMS_PLACEHOLDER_CONF = {}
 
 DATABASES = {
     'default':
-        {'ENGINE': 'django.db.backends.mysql', 'NAME': 'piratedb', 'HOST': '127.0.0.1', 'USER': 'piratele_jack', 'PASSWORD': '8!@ckpe@r!', 'PORT': '3306'}
+        {'ENGINE': 'django.db.backends.mysql', 'NAME': 'sampledb', 'HOST': '127.0.0.1', 'USER': 'root', 'PASSWORD': 'root', 'PORT': '3306'}
 }
 # default is 10 px
 MPTT_ADMIN_LEVEL_INDENT = 20
@@ -312,43 +322,67 @@ THUMBNAIL_ALIASES = {
 CKEDITOR_UPLOAD_PATH = 'images/'
 CKEDITOR_CONFIGS = {
     'default': {
-        'toolbar': 'cms',
-#        'justifyClasses': [ 'AlignLeft', 'AlignCenter', 'AlignRight', 'AlignJustify' ],
+        'toolbar': 'Full',
+        'justifyClasses': [ 'AlignLeft', 'AlignCenter', 'AlignRight', 'AlignJustify' ],
     },
 }
 
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
 DISQUS_API_KEY = 'QJezRiHWxv2FzzrMuOSvQPn99oil0LLyhZxdCAEd3s5cZTf6GUI5019NKznCEONu'
-DISQUS_WEBSITE_SHORTNAME = 'piratelearner'
-
-
-DEFAULT_FROM_EMAIL = 'rai812@web379.webfaction.com'
-
-#RECAPTCHA_PUBLIC_KEY = '6LdrR_QSAAAAAJLTkc0ZLrfUdhgC49vk0H5lQS2y'
-#RECAPTCHA_PRIVATE_KEY = '6LdrR_QSAAAAAFFEwLGjkoSePf5Vutfe6pmJqxLF'
-#RECAPTCHA_USE_SSL = True
-
-#CMSPLUGIN_CONTACT_FORMS = (
-#    ('cmsplugin_contact.forms.ContactForm', _('default')),
-#)
+DISQUS_WEBSITE_SHORTNAME = 'piratelocal'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 EMAIL_SUBJECT_PREFIX = '[PirateLearner]'
-EMAIL_HOST = 'smtp.webfaction.com'
-EMAIL_HOST_USER = 'pirate_learner_mailbox'
-EMAIL_HOST_PASSWORD = 'pirate@world'
-SERVER_EMAIL = 'rai812@web379.webfaction.com'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 25
-#MATHJAX_ENABLED=True
-#MATHJAX_LOCAL_PATH = 'js/MathJax/'
-#MATHJAX_CONFIG_FILE = "TeX-AMS-MML_HTMLorMML"
 
-#MATHJAX_CONFIG_DATA = {
-#    "tex2jax": {
-#      "inlineMath":
-#        [
-#            ['$','$'],
-#            ['\\(','\\)']
-#        ]
-#    }
-#  }
+
+MATHJAX_ENABLED=True
+MATHJAX_LOCAL_PATH = 'js/MathJax/'
+MATHJAX_CONFIG_FILE = "TeX-AMS-MML_HTMLorMML"
+MATHJAX_CONFIG_DATA = {
+    "tex2jax": {
+      "inlineMath":
+        [
+            ['$','$'],
+            ['\\(','\\)']
+        ]
+    }
+  }
+
+REST_FRAMEWORK = {
+    # Use hyperlinked styles by default.
+    # Only used if the `serializer_class` attribute is not set on a view.
+    'DEFAULT_MODEL_SERIALIZER_CLASS':
+        'rest_framework.serializers.HyperlinkedModelSerializer',
+
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
+
+META_SITE_PROTOCOL = 'http'
+# META_SITE_DOMAIN = 'pirateLearner.com' using META_USE_SITE SETTING
+META_SITE_TYPE = 'article' # override when passed in __init__
+META_SITE_NAME = 'Pirate Learner'
+#META_INCLUDE_KEYWORDS = [] # keyword will be included in every article
+#META_DEFAULT_KEYWORDS = [] # default when no keyword is provided in __init__
+#META_IMAGE_URL = '' # Use STATIC_URL 
+META_USE_OG_PROPERTIES = True
+META_USE_TWITTER_PROPERTIES = True
+META_USE_GOOGLEPLUS_PROPERTIES = True
+META_USE_SITES = True
+META_PUBLISHER_FB_ID = 'https://www.facebook.com/PirateLearner' # can use PAGE URL or Publisher id ID
+META_PUBLISHER_GOOGLE_ID = 'https://plus.google.com/116465481265465787624' # Google+ ID 
+META_FB_APP_ID = ''
+
+#blogging app settings
+BLOGGING_MAX_ENTRY_PER_PAGE = 3
+
+# ftech the bookmark from web pages depending upon the tags written for social networking sites
+BOOKMARK_FETCH_PRIORITY = ['facebook','google','twitter','extra','None']
+BOOKMARK_DEFAULT_IMAGE = DOMAIN_URL+STATIC_URL+'images/death_and_friends.jpg'
+
+VOTING_ZERO_VOTES_ALLOWED = True

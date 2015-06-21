@@ -145,7 +145,7 @@ $(document).ready(function(){
 		//e.preventDefault();
 		vote = 0;
 		method = "POST";
-		postUrl = "http://piratelocal.com/en/rest/votes/";
+		postUrl = window.location.origin+"/en/rest/votes/";
 		
 		if($(this).attr('id') == 'upvote'){
 			vote = 1;
