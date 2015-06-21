@@ -30,8 +30,6 @@ django-recaptcha==1.0
 django-reversion==1.8.5
 django-sekizai==0.7
 django-taggit==0.12
-django-tastypie==0.11.1
-django-voting==0.2
 django.js==0.8.1
 djangocms-admin-style==0.1.2
 djangocms-column==1.3
