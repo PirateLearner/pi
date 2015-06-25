@@ -125,6 +125,8 @@
 			          <ul class="nav navbar-nav navbar-right">
 			   			{% if user.is_authenticated %}
 		              	<li><a href="{% url 'account_logout' %}">Sign Out</a></li>
+		              	{% else %}
+		              	<li><a href="#" class="login-button" data-toggle="modal" data-target="#loginPrompt">Login</a></li>
 		           		{% endif %}
 			     		</ul>
 		     	 	</div>
@@ -183,6 +185,25 @@
              	<span class="icon-logo-pl_logo_font"></span>      
         		</div>
 	    </footer>
+	    
+	    <!-- Modal -->
+		<div class="modal fade" id="loginPrompt" tabindex="-1" role="dialog" aria-labelledby="loginPromptLabel">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+		      </div>
+		      <div class="modal-body">
+		        ...
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		        <button type="button" class="btn btn-primary">Save changes</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
         <!-- </div> -->
 {% load socialaccount %}
 

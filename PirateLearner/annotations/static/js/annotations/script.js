@@ -173,7 +173,8 @@ $(document).ready(function(){
                         '<form class="comments-form" id="annotation_form">'+
                             '<textarea id="comments-form-text" class="comments-form--user-input"'+ 
                                     'placeholder="Make a note" form="annotation_form" cols="40" rows="3" maxlength="500"'+
-                                    'required="True"></textarea>'+
+                                    'required></textarea>'+
+                            '<span id="comments-error" class="comments-error hidden"></span>'+
                             '<button id="comments-form-submit" class="comments-submit" type="button">Submit</button>'+
                         '</form>'+
                     '</div>');
@@ -194,6 +195,7 @@ $(document).ready(function(){
 			
 			//console.log('Attached elsewhere');
 			annotations.formElement.find($('#comments-form-text')).val('');
+			annotations.formElement.find($('#comments-error')).addClass('hidden');
 			
 			if(parseInt($('.comments-form-block').parent('.annotation--container').attr('data-section-id'))!=id){
 				hideForm();
@@ -205,6 +207,12 @@ $(document).ready(function(){
 		 * bind the postAnnotation to the form button.
 		 */
 		annotations.formElement.find("#comments-form-submit").on('click', postAnnotation);
+		annotations.formElement.find($('#comments-error')).addClass('hidden');
+		annotations.formElement.find($('#comments-error')).html('');
+		annotations.formElement.find($("#comments-form-text")).on('focus', function(){
+								$('#comments-error').addClass('hidden');
+								$('#comments-error').html('');
+								});
 //		console.log('Printing');
 //		console.log($('.comments-form-block'));
 	};
@@ -242,7 +250,9 @@ $(document).ready(function(){
 		body = $("#comments-form-text").val();
 		//console.log(body);
 		if(body === ''){
-			console.log('Error. Body has no content.')
+			console.log('Error. Body has no content.');
+			$('#comments-error').html("Cannot make empty notes!");
+			$('#comments-error').removeClass('hidden');
 			return;
 		}
 		
