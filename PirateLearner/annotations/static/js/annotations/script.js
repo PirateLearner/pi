@@ -1,3 +1,4 @@
+var pirateLearnerGlobal = pirateLearnerGlobal || {};
 $(document).ready(function(){
 		
 	var fixtures = {};
@@ -194,7 +195,8 @@ $(document).ready(function(){
 			/* Clear out form contents, if any. */
 			
 			//console.log('Attached elsewhere');
-			annotations.formElement.find($('#comments-form-text')).val('');
+			
+			//console.log(annotations.formElement.find($('#comments-form-text')));
 			annotations.formElement.find($('#comments-error')).addClass('hidden');
 			
 			if(parseInt($('.comments-form-block').parent('.annotation--container').attr('data-section-id'))!=id){
@@ -207,6 +209,7 @@ $(document).ready(function(){
 		 * bind the postAnnotation to the form button.
 		 */
 		annotations.formElement.find("#comments-form-submit").on('click', postAnnotation);
+		annotations.formElement.find($('#comments-form-text')).val('');
 		annotations.formElement.find($('#comments-error')).addClass('hidden');
 		annotations.formElement.find($('#comments-error')).html('');
 		annotations.formElement.find($("#comments-form-text")).on('focus', function(){
@@ -241,6 +244,14 @@ $(document).ready(function(){
 		//console.log('postAnnotation');
 		/* Construct a JSON string of the data in annotation. */
 		//console.log(this);
+		/* Check login */
+		if(pirateLearnerGlobal.user['id'] == 0)
+		{
+			$('#loginPrompt').modal({
+				backdrop: true
+			})
+			return;
+		}
 		
 		/* First find the parent's para-id */
 		id = parseInt($(this).parents(".annotation--container").attr("data-section-id"));
@@ -276,7 +287,6 @@ $(document).ready(function(){
 	            }
 	        }
 	    });
-	    console.log(window.location.origin);
 	    //Save Form Data........
 	    $.ajax({
 	        cache: false,

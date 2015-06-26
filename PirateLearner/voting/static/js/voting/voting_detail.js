@@ -142,6 +142,16 @@ $(document).ready(function(){
 	 */
 	var validateAndSend = function(e){
 		
+		
+		/* Check login */
+		if(pirateLearnerGlobal.user['id'] == 0)
+		{
+			$('#loginPrompt').modal({
+				backdrop: true
+			})
+			return;
+		}
+		
 		//e.preventDefault();
 		vote = 0;
 		method = "POST";
