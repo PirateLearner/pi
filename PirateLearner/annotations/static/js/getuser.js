@@ -1,10 +1,26 @@
 /* Makes a Jquery Ajax call to get the current user attributes */
 
 var pirateLearnerGlobal = pirateLearnerGlobal || {};
-pirateLearnerGlobal.user = null;
+pirateLearnerGlobal.user = pirateLearnerGlobal.user || null;
 	
-	var setupUser = function(user){
-		pirateLearnerGlobal.user = user;
+	var setupUser = function(data){
+		console.log(data);
+		if(!('id' in data)){
+			pirateLearnerGlobal.user = {
+					id: "0",
+					username: "Guest",
+					gravatar: "images/male.png",
+					url: "#",
+				};
+    	}
+    	else{
+    		pirateLearnerGlobal.user = {
+				id: data['id'],
+				username: data['username'],
+				gravatar: data['gravatar'],
+				url: "#",
+			};
+    	}
 		//console.log(pirateLearnerGlobal.user);
 	};
 

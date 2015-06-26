@@ -41,7 +41,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>    
     
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="{{STATIC_URL }}js/docs.min.js"></script>   
+    <script src="{{ STATIC_URL}}js/login_action.js"></script>
      
 	<!-- Icons -->
 	
@@ -126,7 +126,7 @@
 			   			{% if user.is_authenticated %}
 		              	<li><a href="{% url 'account_logout' %}">Sign Out</a></li>
 		              	{% else %}
-		              	<li><a href="#" class="login-button" data-toggle="modal" data-target="#loginPrompt">Login</a></li>
+		              	<li><a href="#" class="login-button">Login</a></li>
 		           		{% endif %}
 			     		</ul>
 		     	 	</div>
@@ -192,14 +192,15 @@
 		    <div class="modal-content">
 		      <div class="modal-header">
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+		        <h4 class="modal-title" id="myModalLabel">Login to {{ site.name }}</h4>
 		      </div>
 		      <div class="modal-body">
-		        ...
+		        <a class="col-sm-4 col-md-4 col-lg-4" href="javascript:allauth.facebook.login('{{ request.path|safe }}', 'authenticate', 'login')"><span class="icon pl-facebook2 icon-responsive logo-facebook"></span></a>
+				<a class="col-sm-4 col-md-4 col-lg-4" href="/en/accounts/twitter/login/?process=login&next={{ request.path|safe }}" ><span class="icon pl-twitter2 icon-responsive logo-twitter"></span></a>
+				<a class="col-sm-4 col-md-4 col-lg-4" href="/en/accounts/google/login/?process=login&next={{ request.path|safe }}"><span class="icon pl-googleplus3 icon-responsive logo-google"></span></a>
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-		        <button type="button" class="btn btn-primary">Save changes</button>
 		      </div>
 		    </div>
 		  </div>
