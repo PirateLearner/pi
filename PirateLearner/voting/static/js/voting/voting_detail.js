@@ -105,7 +105,8 @@ $(document).ready(function(){
 		});
 	};
 	
-	var confirmVote = function(data){
+	var confirmVote = function(data, ErrorText, thrownError){
+				
 		pirateLearnerGlobal.voting.vote_id = (data['id']!=undefined)?data['id']:0;
 		/* It is upvote confirmation */
 		if(parseInt(data['vote'])== 1){
@@ -199,10 +200,9 @@ $(document).ready(function(){
 		        success : confirmVote,
 		        error : function (xhRequest, ErrorText, thrownError) {
 		            //alert("Failed to process annotation correctly, please try again");
-		            console.log('xhRequest:\n');
-		            console.log(xhRequest);
-		            console.log('ErrorText: ' + ErrorText + "\n");
-		            console.log('thrownError: ' + thrownError + "\n");
+		        	/* Show error to user */
+		        	$('#article-actions_error').removeClass('hidden');
+		        	$('#article-actions_text').html(xhRequest.responseJSON['detail']);
 		        }
 		    });
 		e.stopPropagation(); 
@@ -225,4 +225,9 @@ $(document).ready(function(){
 	
 	$('#upvote').removeClass('text-muted').on('click', validateAndSend);
 	$('#downvote').removeClass('text-muted').on('click', validateAndSend);
+	
+	$('#article-actions-close').on('click', function(){
+		/* Hide the error class*/
+		$('#article-actions_error').addClass('hidden');
+	});
 });
