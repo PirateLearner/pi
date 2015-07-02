@@ -711,4 +711,6 @@ $(document).ready(function(){
 	
 	/* Get the current user */
 	getCurrentUser();
+	/* Show current active tab */
+	$($('.article-adjunct-nav--list').children('.active').children('a').attr('href')).show().siblings().hide();
 });
