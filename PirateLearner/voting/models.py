@@ -9,6 +9,8 @@ from django.db.models import Sum, Count
 from django.core.exceptions import ObjectDoesNotExist
 
 from django.conf import settings
+from PirateLearner.models import BaseContentClass
+
 ZERO_VOTES_ALLOWED = getattr(settings, 'VOTING_ZERO_VOTES_ALLOWED', False)
 
 UPVOTE = +1
@@ -178,7 +180,7 @@ class VoteManager(models.Manager):
             
         return -votes['downvotes']
     
-class Vote(models.Model):
+class Vote(BaseContentClass):
     
     #The ID of the object on which vote was cast
     content_type = models.ForeignKey(ContentType, verbose_name="Content Type", related_name="content_type_set_for_voting")

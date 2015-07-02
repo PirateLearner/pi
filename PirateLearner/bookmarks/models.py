@@ -14,6 +14,7 @@ import sys
 from django.template.defaultfilters import slugify
 
 from bookmarks import settings
+from PirateLearner.models import BaseContentClass
 
 PRIVACY = (
     ('pub','public'),
@@ -21,7 +22,7 @@ PRIVACY = (
 )
 
 
-class Bookmark(models.Model):
+class Bookmark(BaseContentClass):
     
     url = models.URLField(unique=True)
         
@@ -35,7 +36,7 @@ class Bookmark(models.Model):
         ordering = ["-added", ]
     
 
-class BookmarkFolderInstance(models.Model):
+class BookmarkFolderInstance(BaseContentClass):
     
     adder = models.ForeignKey(User, related_name="bookmarks_folder", verbose_name=_("user"))
     created = models.DateTimeField(_("created"), default=datetime.datetime.now)
@@ -45,7 +46,7 @@ class BookmarkFolderInstance(models.Model):
     def __unicode__(self):
         return _("%(title)s") % {"title":self.title}
 
-class BookmarkInstance(models.Model):
+class BookmarkInstance(BaseContentClass):
     
     bookmark = models.ForeignKey(Bookmark, related_name="saved_instances", verbose_name=_("bookmark"))
     user = models.ForeignKey(User, related_name="saved_bookmarks", verbose_name=_("user"))
