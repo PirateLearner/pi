@@ -4,9 +4,11 @@ from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 
+from PirateLearner.models import BaseContentClass
+
 # Create your models here.
 
-class Annotation(models.Model):
+class Annotation(BaseContentClass):
     PRIVACY_PUBLIC = 0
     PRIVACY_AUTHOR = 1
     PRIVACY_GROUP = 2
@@ -62,7 +64,7 @@ class AnnotationShareManager(models.Manager):
         return qs
     
 
-class AnnotationShareMap(models.Model):
+class AnnotationShareMap(BaseContentClass):
     '''@class Annotation_share_map
     Maintains a map of which annotations has been shared by the user with which of his friends, if applicable.
     Notification about the sharing should be sent to each person only once, even if the user edits the 

@@ -28,7 +28,7 @@
 <section class="header-ribbon" id="overlay-target" itemscope itemtype="http://schema.org/Article">
 
 	<!--<div> -->
-		<span class="hidden rest" data-id="{{ nodes.id }}" data-content-type="54"></span>
+		<span class="hidden rest" data-id="{{ nodes.id }}" data-content-type="{{ nodes.get_content_type }}"></span>
 		<h1 class="article-title" itemprop="headline"> 	{{ content.title }} </h1>
 		<meta itemprop="datePublished" content=" {{ meta.date_time }} "/>
 		<span class="article-author"> by Admin</span>       	

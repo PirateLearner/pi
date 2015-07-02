@@ -50,6 +50,8 @@ from cms.models.pluginmodel import CMSPlugin
 from cms.models import Page
 from django.core.validators import MinValueValidator, MaxValueValidator
 
+from PirateLearner.models import BaseContentClass
+
 from PirateLearner import settings
 # Create your models here.
 """
