@@ -17,11 +17,11 @@ ADMINS = (
 MANAGERS = ADMINS
 
 #Domain name
-DOMAIN_URL = '//piratemirror.com/'
+DOMAIN_URL = '//piratelocal.com/'
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ['piratemirror.com']
+ALLOWED_HOSTS = ['piratelocal.com']
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -33,7 +33,7 @@ TIME_ZONE = 'Asia/Kolkata'
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en'
 
-SITE_ID = 1
+SITE_ID = 2
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
@@ -64,11 +64,11 @@ USE_TZ = True
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
 #STATIC_URL = '/static/'
-STATIC_ROOT = '/home/craft/tests/PirateLearner/piratelearner_static/static'
+STATIC_ROOT = '/home/craft/git/PirateLearnerStatic/static/'
 STATIC_URL = '/static/static/'
 
-MEDIA_ROOT = '/home/craft/tests/PirateLearner/piratelearner_static/media'
-MEDIA_URL = '/static/media/'
+MEDIA_ROOT = '/home/craft/git/PirateLearnerStatic/media'
+MEDIA_URL = '/media/'
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
@@ -291,12 +291,12 @@ LOGIN_REDIRECT_URL = '/'
 SOCIALACCOUNT_QUERY_EMAIL = True
 SOCIALACCOUNT_PROVIDERS = {
     'facebook': {
-        'SCOPE': ['email', 'publish_stream'],
+        'SCOPE': ['email',],
         'METHOD': 'js_sdk'  # instead of 'oauth2'
     }
 }
 
-
+SOCIALACCOUNT_ADAPTER = 'dashboard.SocialAdapter.SocialAccountAdapter'
 
 CMS_PERMISSION = True
 
@@ -304,7 +304,7 @@ CMS_PLACEHOLDER_CONF = {}
 
 DATABASES = {
     'default':
-        {'ENGINE': 'django.db.backends.mysql', 'NAME': 'piratedb', 'HOST': '127.0.0.1', 'USER': 'root', 'PASSWORD': 'root', 'PORT': '3306'}
+        {'ENGINE': 'django.db.backends.mysql', 'NAME': 'sampledb', 'HOST': '127.0.0.1', 'USER': 'root', 'PASSWORD': 'root', 'PORT': '3306'}
 }
 # default is 10 px
 MPTT_ADMIN_LEVEL_INDENT = 20
@@ -390,8 +390,7 @@ CKEDITOR_CONFIGS = {
 CKEDITOR_RESTRICT_BY_USER=True
 
 DISQUS_API_KEY = 'QJezRiHWxv2FzzrMuOSvQPn99oil0LLyhZxdCAEd3s5cZTf6GUI5019NKznCEONu'
-DISQUS_WEBSITE_SHORTNAME = 'piratelearner'
-
+DISQUS_WEBSITE_SHORTNAME = 'piratelocal'
 
 DEFAULT_FROM_EMAIL = 'rai812@web379.webfaction.com'
 
@@ -452,6 +451,6 @@ BLOGGING_MAX_ENTRY_PER_PAGE = 3
 
 # ftech the bookmark from web pages depending upon the tags written for social networking sites
 BOOKMARK_FETCH_PRIORITY = ['facebook','google','twitter','extra','None']
-BOOKMARK_DEFAULT_IMAGE = DOMAIN_URL+STATIC_URL+'images/default_bookmark.jpg'
+BOOKMARK_DEFAULT_IMAGE = DOMAIN_URL+STATIC_URL+'images/death_and_friends.jpg'
 
 VOTING_ZERO_VOTES_ALLOWED = True
