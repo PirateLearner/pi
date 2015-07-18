@@ -644,8 +644,10 @@ $(document).ready(function(){
 		index = parseInt($(this).attr('id'));
 		
 //		console.log('Paragraph ID: '+index);
-		$(this).wrap('<div data-section-id="'+index+'" class="annotation--container clearfix"></div>');
-		$('<div class="comments clearfix">'+
+		if(index != NaN){
+			$(this).wrap('<div data-section-id="'+index+'" class="annotation--container clearfix"></div>');
+			
+			$('<div class="comments clearfix">'+
                 '<h3 class="comments--toggle rectangular-speech"><p>+</p></h3>'+
                 '<div class="comments-container hidden">'+
                 '<div class="comments-container-bucket" id="user_annotations_'+index+'"></div>'+
@@ -653,6 +655,8 @@ $(document).ready(function(){
                 '<div class="comments-container-bucket hidden" id="other_annotations_'+index+'"></div>'+
                 '</div>'+
                 '</div>').insertAfter($(this));
+		}
+		//else do not wrap
 	};
 	/*
 	 * Find the master container, and remove its children from flow.
