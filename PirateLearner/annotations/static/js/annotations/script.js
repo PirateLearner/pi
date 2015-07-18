@@ -643,8 +643,8 @@ $(document).ready(function(){
 	var wrapContent = function(){
 		index = parseInt($(this).attr('id'));
 		
-//		console.log('Paragraph ID: '+index);
-		if(index != NaN){
+		if(!isNaN(index)){
+			
 			$(this).wrap('<div data-section-id="'+index+'" class="annotation--container clearfix"></div>');
 			
 			$('<div class="comments clearfix">'+
