@@ -48,14 +48,18 @@ def create_content_type(name,form_dict,is_leaf):
 	
 
 def get_imageurl_from_data(data):
-	matches = re.findall(
+	
+	try:
+		matches = re.findall(
 				r'(<img[^>].*?src\s*=\s*"([^"]+)")', data
 			)
-	if matches:
-		return str(matches[0][1])
-	else:
+		if matches:
+			return str(matches[0][1])
+		else:
+			return None
+	except:
+		print "Error in get_imageurl_from_data"
 		return None
-
 
 
 def strip_image_from_data(data):	

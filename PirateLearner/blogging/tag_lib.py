@@ -1,5 +1,5 @@
 import re
-
+import six
 from bs4 import BeautifulSoup
 
 """
@@ -135,13 +135,20 @@ def insert_tag_id(data,id_count):
 
     if isinstance(id_count, unicode):
         print "s is unicode, %r" % id_count
+        id_count = str(id_count)
 
-    if id_count:
-        print "LOGS: PID_COUNT IS NONE"
-        id_count = '0'
-#     
     print type(id_count)
-    id_count = int(id_count)
+
+    if isinstance(id_count, six.string_types):
+        if len(id_count) == 0:
+            print "LOGS: PID_COUNT IS ", id_count
+            id_count = 0
+        else:
+            id_count = int(id_count)
+
+    if isinstance(id_count, int):
+        print "type is int"
+    
 
     if len(data) > 0:
 
@@ -188,7 +195,7 @@ def insert_tag_id(data,id_count):
     
             
         print "Now printing altered html "
-        final_content = ''.join(str(tag) for tag in soup.body.contents)
+        final_content = ''.join(str(tag.encode('utf-8')) for tag in soup.body.contents)
         final_content = final_content.replace('\xc2\xa0', ' ')
         print final_content
     else:

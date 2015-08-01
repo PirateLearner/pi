@@ -18,7 +18,7 @@ class DefaultSectionForm(forms.ModelForm):
     pid_count = forms.IntegerField(required=False)
     parent = TreeNodeChoiceField(queryset=BlogParent.objects.all().filter(~Q(title="Orphan"),~Q(title="Blog")),required=True,empty_label=None, label = "Select Parent" )
 
-    content =  forms.CharField(widget = CKEditorWidget())
+    content =  forms.CharField(widget = CKEditorWidget(config_name='author'))
     def __init__(self,action, *args, **kwargs):
         self.helper = FormHelper()
         self.helper.form_id = "id-DefaultSectionForm"
@@ -37,7 +37,8 @@ class DefaultSectionForm(forms.ModelForm):
             "content",
              ),
             ButtonHolder(
-            Submit("submit", "Submit", css_class="button white")
+                Submit('submit', 'Publish', css_class='button blue'),
+                Submit('submit', 'Save Draft', css_class='button white')
             ),
         )
         super(DefaultSectionForm, self).__init__(*args, **kwargs)

@@ -1,0 +1,37 @@
+
+{% extends "core/base.html" %}
+
+
+{% block extra_script %}
+	<script src="{{ STATIC_URL }}js/canvas.js"></script>
+{% endblock %}
+
+{% block core_nav %}
+	{{block.super}}
+	<ul class="nav navbar-nav navbar-right">
+		<li class="dropdown">
+		  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Insert Plugins <span class="caret"></span></a>
+		  <ul class="dropdown-menu" role="menu">
+		  {% for p in plugins%}
+			<li>
+			<button class="addPlugin" data-value='{"name":"{{ p.title }}","width":"{{ p.width }}", "height": "{{ p.height }}"}'> ClickMe {{ p.title }} </button> 
+		  {% endfor %}		  
+		  </ul>
+		</li>
+	</ul>
+	
+{% endblock %}
+
+{% block core_content %}
+   			
+	<canvas id="canvas1" width="760" height="600">
+	    	This text is displayed if your browser does not support HTML5 Canvas.
+	</canvas>
+	
+	{% load crispy_forms_tags %}
+	{% crispy form form.helper %}
+	
+	<div id='result'>
+	</div>
+
+{% endblock %}

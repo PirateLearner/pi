@@ -155,7 +155,7 @@ def new_post(request):
 
 	if request.method == "POST":
 		post_form = form(reverse('blogging:create-post'),request.POST)
-		
+		action = request.POST.get('submit')
 		if post_form.is_valid():
 			post = request.POST.copy()
 			if content_info_obj.is_leaf:
@@ -168,7 +168,12 @@ def new_post(request):
 			blog.author_id = request.user
 			blog.content_type = content_info_obj
 			blog.slug = slugify(blog.title)
-			blog.data = post_form.save(post)
+			if action == 'Publish':
+				blog.data = post_form.save(post,commit=True)
+			elif action == 'Save Draft':
+				blog.data = post_form.save(post)
+			
+# 			with transaction.atomic(), reversion.create_revision():	
 			blog.save()
 			if content_info_obj.is_leaf:
 				blog.tags.add(*post_form.cleaned_data['tags'])
@@ -202,6 +207,7 @@ def edit_post(request,post_id):
 		print "LOGS: ContentType ", blog.content_type.__str__().lower()
 		if request.method == "POST":
 			post_form = form(reverse('blogging:edit-post',args = (post_id,)),request.POST)
+			action = request.POST.get('submit')
 			
 			if post_form.is_valid():
 				post = request.POST.copy()
@@ -209,7 +215,13 @@ def edit_post(request,post_id):
 				blog.section = post_form.cleaned_data["section"]
 				blog.author_id = request.user
 				blog.slug = slugify(blog.title)
-				blog.data = post_form.save(post)
+				if action == 'Publish':
+					blog.data = post_form.save(post,commit=True)
+				elif action == 'Save Draft':
+					blog.data = post_form.save(post)
+				
+				# create the reversion for version control and revert back the deleted post
+# 				with transaction.atomic(), reversion.create_revision():	
 				blog.save()
 				blog.tags.set(*post_form.cleaned_data['tags'])				
 				return HttpResponseRedirect(blog.get_absolute_url())

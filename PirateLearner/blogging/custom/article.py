@@ -14,7 +14,7 @@ It defined the wrapper class for specified content type.
 """
 
 class ArticleForm(forms.Form):
-	Body =  forms.CharField(widget = CKEditorWidget())
+	Body =  forms.CharField(widget = CKEditorWidget(config_name='author'))
 	title = forms.CharField(max_length = 100)
 	tags = TagField()
 	section = TreeNodeChoiceField(queryset=BlogParent.objects.all().filter(~Q(title="Orphan"),Q(children=None)),required=True,empty_label=None, label = "Select Section" )
@@ -41,25 +41,35 @@ class ArticleForm(forms.Form):
             ),
 			
             ButtonHolder(
-                Submit('submit', 'Submit', css_class='button white')
+                Submit('submit', 'Submit', css_class='button white'),
+                Submit('submit', 'Save Draft', css_class='button white')
             ),
 			
 			)
 		super(ArticleForm, self).__init__(*args, **kwargs)
 
 	
-	def save(self,post):
+	def save(self,post,commit=False):
 		post.pop('section')
 		post.pop('tags')
 		post.pop('title')
 		post.pop('csrfmiddlewaretoken')
 		post.pop('submit')
 
+		if commit == False:
+			for k,v in post.iteritems():
+				if str(k) == 'pid_count' :
+					post['pid_count'] = self.cleaned_data["pid_count"]
+				else:
+					post[k] = str(v.encode('utf-8'))
+			return json.dumps(post.dict())
+		
+		print "LOGS: Going to insert id's"
 		for k,v in post.iteritems():
 			if str(k) != 'pid_count' :
 				tmp = {}
-				tmp = tag_lib.insert_tag_id(str(v),self.cleaned_data["pid_count"])
+				tmp = tag_lib.insert_tag_id(str(v.encode('utf-8')),self.cleaned_data["pid_count"])
 				post[k] = tmp['content']
 				post['pid_count'] = tmp['pid_count']
 			
-		return json.dumps(post.dict())
+		return json.dumps(post.dict())	

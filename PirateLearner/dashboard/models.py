@@ -148,9 +148,16 @@ class UserProfile(BaseContentClass):
         """
         profile = self._get_social_account(provider)
         if profile != None:
-            return profile.extra_data['username']
+            if self.get_provider_name(profile.provider) == 'facebook':
+                return self._get_fb_username(profile)
+            elif self.get_provider_name(profile.provider) == 'google':
+                return self._get_google_username(profile)
+            elif self.get_provider_name(profile.provider) == 'twitter':
+                return self._get_tw_username(profile)
+            else:
+                return self.user.username
         else:
-            return "John Doe"
+            return self.user.username
 
 
     def get_name(self ,provider=None):
@@ -163,11 +170,17 @@ class UserProfile(BaseContentClass):
         """
         profile = self._get_social_account(provider)
         if profile != None:
-            return profile.extra_data['first_name']
+            if self.get_provider_name(profile.provider) == 'facebook':
+                return self._get_fb_fname(profile)
+            elif self.get_provider_name(profile.provider) == 'google':
+                return self._get_google_fname(profile)
+            elif self.get_provider_name(profile.provider) == 'twitter':
+                return self._get_tw_fname(profile)
+            else:
+                return self.user.first_name
         else:
-            return "John"
-
-
+            return self.user.first_name
+    
     def get_last_name(self,provider=None):
         """
         Return the last name from social account Facebook, Google and Twitter in that order, if provider is None.
@@ -175,9 +188,17 @@ class UserProfile(BaseContentClass):
         """
         profile = self._get_social_account(provider)
         if profile != None:
-            return profile.extra_data['last_name']
+            if self.get_provider_name(profile.provider) == 'facebook':
+                return self._get_fb_lname(profile)
+            elif self.get_provider_name(profile.provider) == 'google':
+                return self._get_google_lname(profile)
+            elif self.get_provider_name(profile.provider) == 'twitter':
+                return self._get_tw_lname(profile)
+            else:
+                return self.user.last_name
+
         else:
-            return "Doe"
+            return self.user.last_name
 
     def get_gender(self,provider=None):
         """
@@ -186,9 +207,11 @@ class UserProfile(BaseContentClass):
         """
         profile = self._get_social_account(provider)
         if profile != None:
+            if self.get_provider_name(profile.provider) == 'twitter':
+                return "---"
             return profile.extra_data['gender']
         else:
-            return "Male"
+            return "---"
 
     def get_email(self,provider=None):
         """
@@ -197,9 +220,11 @@ class UserProfile(BaseContentClass):
         """
         profile = self._get_social_account(provider)
         if profile != None:
+            if self.get_provider_name(profile.provider) == 'twitter':
+                return self.user.email
             return profile.extra_data['email']
         else:
-            return "jondo@example.com"
+            return self.user.email
 
 
     def get_social_url(self,provider=None):
@@ -243,5 +268,54 @@ class UserProfile(BaseContentClass):
     
     def get_signin_time(self):
         return self.signin_date
+
+    """
+    Private functions for retrieving the fname, lname, email etc. from GooGle, Facebook and twitter
+    TODO define these functions for twitter also
+    """    
+    def _get_google_fname(self,profile):
+        return str(profile.extra_data['name']).split(' ')[0]
+    
+    def _get_google_lname(self,profile):
+        return profile.extra_data['family_name']
+
+    def _get_google_email(self,profile):
+        return profile.extra_data['email']
+
+    def _get_google_email(self,profile):
+        return profile.extra_data['email']
+
+    def _get_google_username(self,profile):
+        return profile.extra_data['given_name']
+
+    def _get_google_link(self,profile):
+        return profile.extra_data['link']
+
+    def _get_fb_fname(self,profile):
+        return profile.extra_data['first_name']
+    
+    def _get_fb_lname(self,profile):
+        return profile.extra_data['last_name']
+
+    def _get_fb_email(self,profile):
+        return profile.extra_data['email']
+
+    def _get_fb_username(self,profile):
+        return profile.extra_data['name']
+
+    def _get_fb_link(self,profile):
+        return profile.extra_data['link']
+    
+    def _get_tw_fname(self,profile):
+        return str(profile.extra_data['name']).split(' ')[0]
+
+    def _get_tw_lname(self,profile):
+        return str(profile.extra_data['name']).split(' ')[-1]
+
+    def _get_tw_username(self,profile):
+        return profile.extra_data['screen_name']
+
+    def _get_tw_link(self,profile):
+        return profile.extra_data['url']
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])

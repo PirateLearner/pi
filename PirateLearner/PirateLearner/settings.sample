@@ -68,7 +68,7 @@ STATIC_ROOT = '/home/craft/git/PirateLearnerStatic/static/'
 STATIC_URL = '/static/static/'
 
 MEDIA_ROOT = '/home/craft/git/PirateLearnerStatic/media'
-MEDIA_URL = '/media/'
+MEDIA_URL = '/static/media/'
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
@@ -322,21 +322,13 @@ THUMBNAIL_ALIASES = {
 }
 CKEDITOR_UPLOAD_PATH = 'images/'
 CKEDITOR_CONFIGS = {
-    'toolbar_Custom':[
-                      ["Format", "Bold", "Italic", "Underline", "Strike", "SpellChecker"],
-                      ['NumberedList', 'BulletedList', "Indent", "Outdent", 'JustifyLeft', 'JustifyCenter',
-                 'JustifyRight', 'JustifyBlock'],
-                      ["Image", "Table", "Link", "Unlink", "Anchor", "SectionLink", "Subscript", "Superscript"], 
-                      ['Undo', 'Redo'], ["Source"],["Maximize"],['About','Code'],
-                     ],
-    
-    'default': {
+    'default': {                        
         'toolbar': [
-                      ["Format", "Bold", "Italic", "Underline", "Strike", "SpellChecker"],
-                      ['NumberedList', 'BulletedList', "Indent", "Outdent", 'JustifyLeft', 'JustifyCenter',
+                      ["Format", "Bold", "Italic", "Underline", "Strike", "Blockquote","Subscript", "Superscript", "SpellChecker"],
+                      [ "Indent", "Outdent", 'JustifyLeft', 'JustifyCenter',
                  'JustifyRight', 'JustifyBlock'],
-                      ["Image", "Table", "Link", "Unlink", "Anchor", "SectionLink", "Subscript", "Superscript"], 
-                      ['Undo', 'Redo'], ["Source"],["Maximize"],['About','Code'],
+                      ["Image", "Table", "Link", "Unlink", "Anchor", "SectionLink",'NumberedList', 'BulletedList', 'HorizontalRule', 'CreateDiv'], 
+                      ['Undo', 'Redo'], ["Source", 'RemoveFormat','Iframe'],["Maximize"],['ShowBlocks', 'Syntaxhighlight', 'Mathjax'],
                      ],
         'contentsCss': STATIC_URL+'css/bootstrap.css',
     
@@ -350,21 +342,21 @@ CKEDITOR_CONFIGS = {
                         # Whether or not you want to highlight matching braces
                         'matchBrackets': 'true',
                         # Whether or not you want tags to automatically close themselves
-                        'autoCloseTags': 'true',
+                        'autoCloseTags': 'false',
                         # Whether or not you want Brackets to automatically close themselves
-                        'autoCloseBrackets': 'true',
+                        'autoCloseBrackets': 'false',
                         # Whether or not to enable search tools, CTRL+F (Find), CTRL+SHIFT+F (Replace), CTRL+SHIFT+R (Replace All), CTRL+G (Find Next), CTRL+SHIFT+G (Find Previous)
                         'enableSearchTools': 'true',
                         # Whether or not you wish to enable code folding (requires 'lineNumbers' to be set to 'true')
                         'enableCodeFolding': 'true',
                         # Whether or not to enable code formatting
-                        'enableCodeFormatting': 'true',
+                        'enableCodeFormatting': 'false',
                         # Whether or not to automatically format code should be done when the editor is loaded
-                        'autoFormatOnStart': 'true',
+                        'autoFormatOnStart': 'false',
                         # Whether or not to automatically format code should be done every time the source view is opened
-                        'autoFormatOnModeChange': 'true',
+                        'autoFormatOnModeChange': 'false',
                         # Whether or not to automatically format code which has just been uncommented
-                        'autoFormatOnUncomment': 'true',
+                        'autoFormatOnUncomment': 'false',
                         # Define the language specific mode 'htmlmixed' for html including (css, xml, javascript), 'application/x-httpd-php' for php mode including html, or 'text/javascript' for using java script only
                         'mode': 'htmlmixed',
                         # Whether or not to show the search Code button on the toolbar
@@ -384,7 +376,197 @@ CKEDITOR_CONFIGS = {
                         # Whether or not to highlight the currently active line
                         'styleActiveLine': 'true'
                         },
-        
+             
+             'disallowedContent':{      
+                        'p h1 h2 h3 h4 span blockquote':{
+                                    #Disallow setting font-family or font-size
+                                    'styles':['font*'],
+                                },
+                        },   
+
+                
+            'allowedContent':{
+                        '*': {
+                              
+                              'attributes': ['id', 'itemprop', 'title', 'placeholder', 'type', 'data-*'],
+                              'classes':['text-center', 'text-left', 'text-right', 'text-justify', 'center-text', 'text-muted', 
+                                         'align-center', 'pull-left', 'pull-right', 'center-block', 'media', 'image',
+                                         'list-unstyled', 'list-inline',
+                                         'language-*', '*', 
+                                        ],
+                            },
+                        'p': {
+                                'attributes': ['id'],   
+                            },
+                        'h1 h2 h3 h4 em i b strong caption h5 h6 u s br hr': 'true',
+                        'a': {
+                                'attributes': ['!href','target','name', 'id', 'name'],
+                            },      
+                        'img':{
+                               #Do not allow image height and width styles
+                               'attributes': ['!src', 'alt', 'id'],
+                            },                        
+                        'span ul ol li sup sub': 'true',
+                        'div':{
+                               'classes':'*',
+                            },
+                        'iframe':{
+                                'classes':'*',
+                                'attributes':'*',
+                            },
+                        'small abbr address footer section article dl dt dd kbd var samp form label input button textarea fieldset':'true',
+                        'pre':{
+                               'attributes': ['title'],
+                               'classes':['*']
+                            },
+                        'code': 'true',
+                        
+                        'blockquote':'true',
+                        'table':'true',
+                        'tr':'true',
+                        'th':'true',
+                        'td':'true',
+                        },
+            'justifyClasses': ['text-left', 'text-center', 'text-right', 'text-justify'],
+            'extraPlugins': 'button,toolbar,codesnippet,about,stylescombo,richcombo,floatpanel,panel,button,listblock,dialog,dialogui,syntaxhighlight,htmlwriter,removeformat,horizontalrule,widget,lineutils,mathjax,div,fakeobjects,iframe,image2,justify,blockquote,indent,indentlist,indentblock',
+            'ignoreEmptyParagraph': 'true',   
+            'coreStyles_bold': {
+                            'element': 'b',
+                            'overrides': 'strong',
+                        },
+            'coreStyles_italic':{
+                            'element':'i',
+                            'overrides':'em',
+                        },
+            #'fillEmptyBlocks':'false',#Might need a callback fn
+            'image2_alignClasses':['pull-left','center-block','pull-right'],
+            'mathJaxClass':'math-tex',
+            'mathJaxLib':STATIC_URL+'js/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML',
+            'tabSpaces':'4',
+            'indentClasses': ['col-xs-offset-1', 'col-xs-offset-2', 'col-xs-offset-3', 'col-xs-offset-4'],     
+    },
+    'author': {                        
+        'toolbar': [
+                      ["Format", "Bold", "Italic", "Underline", "Strike", "Blockquote","Subscript", "Superscript", "SpellChecker"],
+                      [ "Indent", "Outdent", 'JustifyLeft', 'JustifyCenter',
+                 'JustifyRight', 'JustifyBlock'],
+                      ["Image", "Table", "Link", "Unlink", "Anchor", "SectionLink",'NumberedList', 'BulletedList', 'HorizontalRule', 'CreateDiv'], 
+                      ['Undo', 'Redo'], ["Source", 'RemoveFormat','Iframe'],["Maximize"],['ShowBlocks', 'Syntaxhighlight', 'Mathjax'],
+                     ],
+        'contentsCss': STATIC_URL+'css/bootstrap.css',
+    
+        'codemirror' : {
+                        # Set this to the theme you wish to use (codemirror themes)
+                        'theme': 'default',
+                        # Whether or not you want to show line numbers
+                        'lineNumbers': 'true',
+                        # Whether or not you want to use line wrapping
+                        'lineWrapping': 'true',
+                        # Whether or not you want to highlight matching braces
+                        'matchBrackets': 'true',
+                        # Whether or not you want tags to automatically close themselves
+                        'autoCloseTags': 'false',
+                        # Whether or not you want Brackets to automatically close themselves
+                        'autoCloseBrackets': 'false',
+                        # Whether or not to enable search tools, CTRL+F (Find), CTRL+SHIFT+F (Replace), CTRL+SHIFT+R (Replace All), CTRL+G (Find Next), CTRL+SHIFT+G (Find Previous)
+                        'enableSearchTools': 'true',
+                        # Whether or not you wish to enable code folding (requires 'lineNumbers' to be set to 'true')
+                        'enableCodeFolding': 'true',
+                        # Whether or not to enable code formatting
+                        'enableCodeFormatting': 'false',
+                        # Whether or not to automatically format code should be done when the editor is loaded
+                        'autoFormatOnStart': 'false',
+                        # Whether or not to automatically format code should be done every time the source view is opened
+                        'autoFormatOnModeChange': 'false',
+                        # Whether or not to automatically format code which has just been uncommented
+                        'autoFormatOnUncomment': 'false',
+                        # Define the language specific mode 'htmlmixed' for html including (css, xml, javascript), 'application/x-httpd-php' for php mode including html, or 'text/javascript' for using java script only
+                        'mode': 'htmlmixed',
+                        # Whether or not to show the search Code button on the toolbar
+                        'showSearchButton': 'true',
+                        # Whether or not to show Trailing Spaces
+                        'showTrailingSpace': 'true',
+                        # Whether or not to highlight all matches of current word/selection
+                        'highlightMatches': 'true',
+                        # Whether or not to show the format button on the toolbar
+                        'showFormatButton': 'true',
+                        # Whether or not to show the comment button on the toolbar
+                        'showCommentButton': 'true',
+                        # Whether or not to show the uncomment button on the toolbar
+                        'showUncommentButton': 'true',
+                        #Whether or not to show the showAutoCompleteButton button on the toolbar
+                        'showAutoCompleteButton': 'true',
+                        # Whether or not to highlight the currently active line
+                        'styleActiveLine': 'true'
+                        },
+             
+             'disallowedContent':{      
+                        'p h1 h2 h3 h4 span blockquote':{
+                                    #Disallow setting font-family or font-size
+                                    'styles':['font*'],
+                                },
+                        },   
+
+                
+            'allowedContent':{
+                        '*': {
+                              
+                              'attributes': ['id', 'itemprop', 'title', 'placeholder', 'type', 'data-*'],
+                              'classes':['text-center', 'text-left', 'text-right', 'text-justify', 'center-text', 'text-muted', 
+                                         'align-center', 'pull-left', 'pull-right', 'center-block', 'media', 'image',
+                                         'list-unstyled', 'list-inline',
+                                         'language-*', '*', 
+                                        ],
+                            },
+                        'p': {
+                                'attributes': ['id'],   
+                            },
+                        'h1 h2 h3 h4 em i b strong caption h5 h6 u s br hr': 'true',
+                        'a': {
+                                'attributes': ['!href','target','name', 'id', 'name'],
+                            },      
+                        'img':{
+                               #Do not allow image height and width styles
+                               'attributes': ['!src', 'alt', 'id'],
+                            },                        
+                        'span ul ol li sup sub': 'true',
+                        'div':{
+                               'classes':'*',
+                            },
+                        'iframe':{
+                                'classes':'*',
+                                'attributes':'*',
+                            },
+                        'small abbr address footer section article dl dt dd kbd var samp form label input button textarea fieldset':'true',
+                        'pre':{
+                               'attributes': ['title'],
+                               'classes':['*']
+                            },
+                        'code': 'true',
+                        
+                        'blockquote':'true',
+                        'table':'true',
+                        'tr':'true',
+                        'th':'true',
+                        'td':'true',
+                        },
+            'justifyClasses': ['text-left', 'text-center', 'text-right', 'text-justify'],
+            'extraPlugins': 'button,toolbar,codesnippet,about,stylescombo,richcombo,floatpanel,panel,button,listblock,dialog,dialogui,syntaxhighlight,htmlwriter,removeformat,horizontalrule,widget,lineutils,mathjax,div,fakeobjects,iframe,image2,justify,blockquote,indent,indentlist,indentblock',
+            'ignoreEmptyParagraph': 'true',   
+            'coreStyles_bold': {
+                            'element': 'b',
+                            'overrides': 'strong',
+                        },
+            'coreStyles_italic':{
+                            'element':'i',
+                            'overrides':'em',
+                        },
+            #'fillEmptyBlocks':'false',#Might need a callback fn
+            'image2_alignClasses':['pull-left','center-block','pull-right'],
+            'mathJaxClass':'math-tex',
+            'mathJaxLib':STATIC_URL+'js/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML',
+            'tabSpaces':'4',
+            'indentClasses': ['col-xs-offset-1', 'col-xs-offset-2', 'col-xs-offset-3', 'col-xs-offset-4'],     
     },
 }
 CKEDITOR_RESTRICT_BY_USER=True

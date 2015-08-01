@@ -105,8 +105,7 @@ $(document).ready(function(){
 		});
 	};
 	
-	var confirmVote = function(data, ErrorText, thrownError){
-				
+	var confirmVote = function(data){
 		pirateLearnerGlobal.voting.vote_id = (data['id']!=undefined)?data['id']:0;
 		/* It is upvote confirmation */
 		if(parseInt(data['vote'])== 1){
@@ -142,16 +141,6 @@ $(document).ready(function(){
 	 * Validate and send vote to server
 	 */
 	var validateAndSend = function(e){
-		
-		
-		/* Check login */
-		if(pirateLearnerGlobal.user['id'] == 0)
-		{
-			$('#loginPrompt').modal({
-				backdrop: true
-			})
-			return;
-		}
 		
 		//e.preventDefault();
 		vote = 0;
@@ -200,9 +189,10 @@ $(document).ready(function(){
 		        success : confirmVote,
 		        error : function (xhRequest, ErrorText, thrownError) {
 		            //alert("Failed to process annotation correctly, please try again");
-		        	/* Show error to user */
-		        	$('#article-actions_error').removeClass('hidden');
-		        	$('#article-actions_text').html(xhRequest.responseJSON['detail']);
+		            console.log('xhRequest:\n');
+		            console.log(xhRequest);
+		            console.log('ErrorText: ' + ErrorText + "\n");
+		            console.log('thrownError: ' + thrownError + "\n");
 		        }
 		    });
 		e.stopPropagation(); 
@@ -225,9 +215,4 @@ $(document).ready(function(){
 	
 	$('#upvote').removeClass('text-muted').on('click', validateAndSend);
 	$('#downvote').removeClass('text-muted').on('click', validateAndSend);
-	
-	$('#article-actions-close').on('click', function(){
-		/* Hide the error class*/
-		$('#article-actions_error').addClass('hidden');
-	});
 });

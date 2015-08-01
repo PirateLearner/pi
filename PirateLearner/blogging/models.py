@@ -40,6 +40,7 @@ LATEST_PLUGIN_TEMPLATES = (
   ('blogging/plugin/sidebar_list.html', 'Text List'),
   ('blogging/plugin/teaser_list.html', 'Stacked List'),
 )
+ 
 
 class RelatedManager(models.Manager):
 
@@ -277,7 +278,11 @@ class ContactPlugin(CMSPlugin):
         return 'ContactPlugin'
     def thanks(self):
         return self.thanks_text
-    
+
+# class VersionMeta(models.Model):
+#     revision = models.ForeignKey(Revision)  # There must be a relationship with Revision
+#     published_flag = models.BooleanField('is published?',default = 0)
+
 """
 class Migration(DataMigration):
 	def forwards(self, orm):

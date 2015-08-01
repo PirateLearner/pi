@@ -14,7 +14,7 @@ It defined the wrapper class for specified content type.
 """
 
 class DefaultblogForm(forms.Form):
-    content =  forms.CharField(widget = CKEditorWidget())
+    content =  forms.CharField(widget = CKEditorWidget(config_name='author'))
     title = forms.CharField(max_length = 100)
     tags = TagField()
     section = TreeNodeChoiceField(queryset=BlogParent.objects.all().filter(~Q(title="Orphan"),Q(children=None)),required=True,empty_label=None, label = "Select Section" )
@@ -41,20 +41,24 @@ class DefaultblogForm(forms.Form):
             ),
             
             ButtonHolder(
-                Submit('submit', 'Submit', css_class='button white')
+                Submit('submit', 'Submit', css_class='button blue'),
+                Submit('submit', 'Save Draft', css_class='button white')
             ),
             
             )
         super(DefaultblogForm, self).__init__(*args, **kwargs)
 
     
-    def save(self,post):
+    def save(self,post,commit=False):
         post.pop('section')
         post.pop('tags')
         post.pop('title')
         post.pop('csrfmiddlewaretoken')
         post.pop('submit')
 
+        if commit == False:
+            return json.dumps(post.dict())
+        
         for k,v in post.iteritems():
             if str(k) != 'pid_count' :
                 tmp = {}
