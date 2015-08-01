@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load cms_tags staticfiles sekizai_tags menu_tags %}
+{% block breadcrumb %}
+        {% show_breadcrumb "blogging/includes/breadcrumb.html" %}
+        {% block blog_breadcrumb %}
+        {% endblock blog_breadcrumb %}
+{% endblock %}
+
+{% block content %}
+<div class="container content">
+<p style="padding-top:30px;text-align:center;" class="center-block"> This page is under construction. Queries, Questions, Suggestions, Feedback or for giving a pat on our back, please feel free to drop in a mail at <a href="mailto:captain@piratelearner.com?Subject=About%20PirateLearner" target="_top"><em>captain</em>(at)<em>piratelearner.com</em></a></p>
+<p style="padding-top:10px;text-align:center;" class="center-block">We're always looking for feedback and suggestions. If you are a Facebook Person, you can also write on our wall, or drop in a personal message on our <a href="https://www.facebook.com/PirateLearner"> Facebook Page</a>. or <a href="http://twitter.com/PirateLearner">Twitter</a>, or <a href="https://plus.google.com/116465481265465787624">Google Plus</a> </p>
+</div>
+{% endblock %}

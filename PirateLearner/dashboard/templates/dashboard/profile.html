@@ -1,0 +1,100 @@
+{% extends 'base.html'%}
+{% block content %}
+
+{% load social_profile %}
+
+{% if user %}
+
+<div class="user-dashboard-header">
+        <div class="user-dashboard-pic">
+                <img src="/static/static/images/photo.jpg" alt="User Profile Picture" class="img-responsive img-circle"/>
+        </div>
+        <div class="user-dashboard-internal">
+                <div class="user-dashboard-title vertical-center">{{ profile.get_first_name }} {{ profile.get_last_name }}</div>
+
+                <div class="user-dashboard-social-icons pull-right vertical-center">
+                        <a href="#"><span class="icon pl-facebook"></span><span class="sr-only">Facebook Profile</span></a>
+                        <a href="#"><span class="icon pl-twitter "></span><span class="sr-only">Twitter Profile</span></a>
+                        <a href="#"><span class="icon pl-googleplus"></span><span class="sr-only">Google Plus Profile</span></a>
+                </div>
+        </div>
+</div>
+<div class="user-dashboard-area user-dashboard-local-options clearfix row">
+
+    <div class="user-dashboard-local-card user-dashboard-local-about col-sm-1 col-md-4 col-lg-4">
+            <table class="table">
+                    <caption class="user-dashboard-local-table-title"><h3>About you</h3></caption>
+                    <tr>
+                            <td>
+                                    <label for="user-dob">Birthday</label>
+                            </td>
+                            <td>
+                                    <span id="user-dob">{{ profile.get_birthday }}</span>
+                            </td>
+                    </tr>
+                    <tr>
+                            <td>
+                                    <label for="user-work">Occupation</label>
+                            </td>
+                            <td>
+                                    <span id="user-work">{{ profile.get_occupation }}</span>
+                            </td>
+                    </tr>
+                    <tr>
+                            <td>
+                                    <label for="user-website">Website</label>
+                            </td>
+                            <td>
+                                    <span id="user-website"><a href="#">{{ profile.get_website }}</a></span>
+                            </td>
+                    </tr>
+                    <tr>
+                            <td>
+                                    <label for="user-time">Member Since</label>
+                            </td>
+                            <td>
+                                    <span id="user-time">{{ profile.get_signin_time|timesince }}</span>
+                            </td>
+                    </tr>
+            </table>
+	</div>
+    <div class="user-dashboard-local-card user-dashboard-local-interest col-sm-1 col-md-4 col-lg-4">
+            <table class="table">
+            <caption class="user-dashboard-local-table-title"><h3>Interests</h3></caption>
+            <tr>
+                <td><label for="user-interests">Interests</label> </td>
+                <td><p id="user-interests">
+                
+                {% for interest in profile.get_interest %}
+                        <span class="interest-tag">{{ interest.name }}</span>
+                {% endfor %}
+                        </p></td>
+            </tr>
+            </table>
+    </div>
+
+    <div class="user-dashboard-local-card user-dashboard-local-personal col-sm-1 col-md-4 col-lg-4">
+        <table class="table">
+        <caption class="user-dashboard-local-table-title"><h3>Contact Info</h3></caption>
+        <tr>
+                <td><label for="user-address">Address</label> </td>
+                <td><p id="user-address">
+                        {{ profile.get_address }}
+                        </p></td>
+        </tr>
+        </table>
+    </div>
+</div>
+<div class="user-dashboard-area clearfix row">
+	
+	{% social_profile "Google" %}
+	{% social_profile "Facebook" %}
+	{% social_profile "Twitter" %}
+
+</div>
+
+
+
+{% endif %}
+
+{% endblock %}

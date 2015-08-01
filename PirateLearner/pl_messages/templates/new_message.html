@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="navbar navbar-default"></div>
+    <div class="container">
+        <div class="row">
+            {% include 'leftbar.html' %}
+            <div class="col-md-6">
+                <form class="form form-horizontal" action="{% url 'new_message' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <label>To</label>
+                        </div>
+                        <div class="col-md-6">
+{#                            <select name="to" class="form-control" id="id_to">#}
+{##}
+{#                            </select>#}
+                              {{ form.to }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <label>Message</label>
+                        </div>
+                        <div class="col-md-6">
+                            <textarea class="form-control" name="body" rows="5" id="id_body"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-2">
+                            <button type="submit" class="btn btn-primary">Send Message</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

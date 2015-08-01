@@ -1,0 +1,20 @@
+{% extends "blogging/base.html" %}
+
+
+{% if parent %}
+{% block blog_breadcrumb %}
+
+{% endblock %}
+{% endif %}
+
+{% block title %}
+{{ page.title }}
+{% endblock %}
+
+
+{% block content_blog %}
+
+
+{% include "blogging/includes/teaser_list.html" with nodes=nodes max_entry=max_entry %}
+{% endblock %}
+

@@ -1,0 +1,36 @@
+{% load mptt_tags staticfiles %}
+
+<div class="bucket layoutSingleColumn clearfix">
+	<ul class="bucket-list">
+		{% recursetree nodes %} 
+		<li class="bucket-list-item">
+			<div class="bucket-item-cover">
+				<a  class="collectionItem" href="{{ node.get_absolute_url }}" style="background-image:url({{ node.get_image_url }});">						
+					<div class="bucket-item-banner u-alignBlock u-alignBottom">
+						<div class="bucket-banner-title  collectionItem-title">
+								  {{ node.title }}
+						</div>
+						<div class="bucket-interact-button">
+							<span class="bucket-item-favourite">Favorite it!</span>
+							<span class="bucket-item-users"> 14k</span>
+						</div>
+					</div>
+				</a>
+			</div>
+		</li>	
+      {% endrecursetree %}
+   </ul> 
+</div>
+{% if nodes.paginator.count > max_entry %}
+<div class="text-center">
+<ul class="pagination">
+        {% if nodes.has_previous %}
+            <li><a href="?page={{ nodes.previous_page_number }}">&laquo;</a></li>
+        {% endif %}
+  		<li><a href="">{{ nodes.number }} of {{ nodes.paginator.num_pages }} </a></li>
+        {% if nodes.has_next %}
+            <li><a href="?page={{ nodes.next_page_number }}">&raquo;</a></li>
+        {% endif %}
+</ul>
+</div>
+{% endif %}

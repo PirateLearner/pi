@@ -1,0 +1,5 @@
+site_name: Annotations v0.1(beta) Documentation
+pages:
+- [index.md, Home]
+- [about.md, About]
+theme: readthedocs

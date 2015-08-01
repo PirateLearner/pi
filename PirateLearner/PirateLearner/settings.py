@@ -1,0 +1,641 @@
+import os
+gettext = lambda s: s
+PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
+ABSOLUTE_PATH = lambda x: os.path.join(os.path.abspath(os.path.dirname(__file__)), x)
+# Django settings for PirateLearner project.
+
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+
+ADMINS = (
+    # ('Your Name', 'your_email@example.com'),
+     ('Abhishek Rai', 'abnith.rai812@gmail.com'),
+     ('Anshul Thakur','anshulthakurjourneyendless@gmail.com'),
+     ('Captain','captain@piratelearner.com')
+)
+
+MANAGERS = ADMINS
+
+#Domain name
+DOMAIN_URL = '//piratelocal.com/'
+
+# Hosts/domain names that are valid for this site; required if DEBUG is False
+# See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
+ALLOWED_HOSTS = ['piratelocal.com']
+
+# Local time zone for this installation. Choices can be found here:
+# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
+# although not all choices may be available on all operating systems.
+# In a Windows environment this must be set to your system time zone.
+TIME_ZONE = 'Asia/Kolkata'
+
+# Language code for this installation. All choices can be found here:
+# http://www.i18nguy.com/unicode/language-identifiers.html
+LANGUAGE_CODE = 'en'
+
+SITE_ID = 2
+
+# If you set this to False, Django will make some optimizations so as not
+# to load the internationalization machinery.
+USE_I18N = True
+
+# If you set this to False, Django will not format dates, numbers and
+# calendars according to the current locale.
+USE_L10N = True
+
+# If you set this to False, Django will not use timezone-aware datetimes.
+USE_TZ = True
+
+# Absolute filesystem path to the directory that will hold user-uploaded files.
+# Example: "/var/www/example.com/media/"
+#MEDIA_ROOT = os.path.join(PROJECT_PATH, 'media')
+
+# URL that handles the media served from MEDIA_ROOT. Make sure to use a
+# trailing slash.
+# Examples: "http://example.com/media/", "http://media.example.com/"
+#MEDIA_URL = '/media/'
+
+# Absolute path to the directory static files should be collected to.
+# Don't put anything in this directory yourself; store your static files
+# in apps' "static/" subdirectories and in STATICFILES_DIRS.
+# Example: "/var/www/example.com/static/"
+#STATIC_ROOT = ''
+
+# URL prefix for static files.
+# Example: "http://example.com/static/", "http://static.example.com/"
+#STATIC_URL = '/static/'
+#STATIC_ROOT = '/home/abhishek/pi_cms/PirateLearnerStatic/static/'
+STATIC_ROOT = ''
+STATIC_URL = '/static/static/'
+
+MEDIA_ROOT = '/home/abhishek/pi_cms/PirateLearnerStatic/media/'
+MEDIA_URL = '/media/'
+# Additional locations of static files
+STATICFILES_DIRS = (
+    # Put strings here, like "/home/html/static" or "C:/www/django/static".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+    '/home/abhishek/pi_cms/PirateLearnerStatic/static/',
+)
+
+# List of finder classes that know how to find static files in
+# various locations.
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+)
+
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = 'x1y3%ran2cc(s=(5p=d%noe&6=%sedhbmc28(2w902rtnvy@^s'
+
+# List of callables that know how to import templates from various sources.
+
+
+
+
+ROOT_URLCONF = 'PirateLearner.urls'
+
+# Python dotted path to the WSGI application used by Django's runserver.
+WSGI_APPLICATION = 'PirateLearner.wsgi.application'
+
+
+
+
+
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
+
+# A sample logging configuration. The only tangible logging
+# performed by this configuration is to send an email to
+# the site admins on every HTTP 500 error when DEBUG=False.
+# See http://docs.djangoproject.com/en/dev/topics/logging for
+# more details on how to customize your logging configuration.
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    }
+}
+
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#STATICFILES_DIRS = (
+#    os.path.join(PROJECT_PATH, 'static'),
+#)
+
+SITE_ID = 1
+
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+    'django.template.loaders.eggs.Loader'
+)
+
+MIDDLEWARE_CLASSES = (
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.doc.XViewMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'cms.middleware.user.CurrentUserMiddleware',
+    'cms.middleware.page.CurrentPageMiddleware',
+    'cms.middleware.toolbar.ToolbarMiddleware',
+    'cms.middleware.language.LanguageCookieMiddleware',
+    'django.middleware.transaction.TransactionMiddleware',
+    'django.contrib.redirects.middleware.RedirectFallbackMiddleware'
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.contrib.messages.context_processors.messages',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.request',
+    'django.core.context_processors.media',
+    'django.core.context_processors.csrf',
+    'django.core.context_processors.tz',
+    'cms.context_processors.cms_settings',
+    'sekizai.context_processors.sekizai',
+    'django.core.context_processors.static',
+    'allauth.account.context_processors.account',
+    'allauth.socialaccount.context_processors.socialaccount',
+    'PirateLearner.context_processors.site_processor',
+)
+
+TEMPLATE_DIRS = (
+    os.path.join(PROJECT_PATH, "templates"),
+)
+
+INSTALLED_APPS = (
+    'djangocms_admin_style',
+    'djangocms_text_ckeditor',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.admin',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
+    'django.contrib.staticfiles',
+    'django.contrib.messages',
+    'cms',
+    'mptt',
+    'menus',
+    'south',
+    'sekizai',
+    'djangocms_style',
+    'djangocms_column',
+    'djangocms_file',
+    'djangocms_flash',
+    'djangocms_googlemap',
+    'djangocms_inherit',
+    'djangocms_link',
+    'djangocms_picture',
+    'djangocms_teaser',
+    'djangocms_video',
+    'reversion',
+#    'aldryn_blog',
+#    'aldryn_common',
+    'django_select2',
+    'easy_thumbnails',
+    'filer',
+    'taggit',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+#     'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.google',
+#     'allauth.socialaccount.providers.linkedin',
+#     'allauth.socialaccount.providers.linkedin_oauth2',
+#     'allauth.socialaccount.providers.stackexchange',
+    'allauth.socialaccount.providers.twitter',
+    'crispy_forms',
+    'blogging',
+    'annotations',
+    'ckeditor',
+    'disqus',
+    'dashboard',
+    'bookmarks',
+    'pl_messages',
+    'rest_framework',
+    'meta_tags',
+    'project_mgmt',
+#     'django_mathjax',
+    'spotlight',
+    'django.contrib.redirects',
+    'django_comments',
+    'voting',
+    'dash',
+    'dash.contrib.layouts.android',
+#     'dash.contrib.plugins.dummy',
+    'dash.contrib.plugins.image',
+    'dash.contrib.plugins.memo',
+    'dash.contrib.plugins.rss_feed',
+    'dash.contrib.plugins.url',
+    'dash.contrib.plugins.video',
+    'dash.contrib.plugins.weather',
+)
+
+LANGUAGES = (
+    ## Customize this
+    ('en', gettext('en')),
+)
+
+CMS_LANGUAGES = {
+    ## Customize this
+    'default': {
+        'hide_untranslated': False,
+        'redirect_on_fallback': True,
+        'public': True,
+    },
+    1: [
+        {
+            'redirect_on_fallback': True,
+            'code': 'en',
+            'hide_untranslated': False,
+            'name': gettext('en'),
+            'public': True,
+        },
+    ],
+}
+
+CMS_TEMPLATES = (
+    ## Customize this
+    ('page.html', 'Page'),
+    ('feature.html', 'Page with Feature'),
+    ('about.html', 'About Page'),
+    ('content_page.html', 'Contact Us'),
+)
+
+# allauth related settings
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+
+)
+
+LOGIN_REDIRECT_URL = '/'
+SOCIALACCOUNT_QUERY_EMAIL = True
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'SCOPE': ['email',],
+        'METHOD': 'js_sdk'  # instead of 'oauth2'
+    }
+}
+
+SOCIALACCOUNT_ADAPTER = 'dashboard.SocialAdapter.SocialAccountAdapter'
+
+CMS_PERMISSION = True
+
+CMS_PLACEHOLDER_CONF = {}
+
+DATABASES = {
+    'default':
+        {'ENGINE': 'django.db.backends.mysql', 'NAME': 'pirate_db', 'HOST': '127.0.0.1', 'USER': 'root', 'PASSWORD': 'root', 'PORT': '3306'}
+}
+# default is 10 px
+MPTT_ADMIN_LEVEL_INDENT = 20
+SOUTH_MIGRATION_MODULES = {
+        'easy_thumbnails': 'easy_thumbnails.south_migrations',
+	'taggit': 'taggit.south_migrations',
+    }
+
+
+
+THUMBNAIL_ALIASES = {
+    '': {
+        'teaser': {'size': (50, 50), 'crop': True},
+    },
+}
+CKEDITOR_UPLOAD_PATH = 'images/'
+CKEDITOR_CONFIGS = {
+    'default': {                        
+        'toolbar': [
+                      ["Format", "Bold", "Italic", "Underline", "Strike", "Blockquote","Subscript", "Superscript", "SpellChecker"],
+                      [ "Indent", "Outdent", 'JustifyLeft', 'JustifyCenter',
+                 'JustifyRight', 'JustifyBlock'],
+                      ["Image", "Table", "Link", "Unlink", "Anchor", "SectionLink",'NumberedList', 'BulletedList', 'HorizontalRule', 'CreateDiv'], 
+                      ['Undo', 'Redo'], ["Source", 'RemoveFormat','Iframe'],["Maximize"],['ShowBlocks', 'Syntaxhighlight', 'Mathjax'],
+                     ],
+        'contentsCss': STATIC_URL+'css/bootstrap.css',
+    
+        'codemirror' : {
+                        # Set this to the theme you wish to use (codemirror themes)
+                        'theme': 'default',
+                        # Whether or not you want to show line numbers
+                        'lineNumbers': 'true',
+                        # Whether or not you want to use line wrapping
+                        'lineWrapping': 'true',
+                        # Whether or not you want to highlight matching braces
+                        'matchBrackets': 'true',
+                        # Whether or not you want tags to automatically close themselves
+                        'autoCloseTags': 'false',
+                        # Whether or not you want Brackets to automatically close themselves
+                        'autoCloseBrackets': 'false',
+                        # Whether or not to enable search tools, CTRL+F (Find), CTRL+SHIFT+F (Replace), CTRL+SHIFT+R (Replace All), CTRL+G (Find Next), CTRL+SHIFT+G (Find Previous)
+                        'enableSearchTools': 'true',
+                        # Whether or not you wish to enable code folding (requires 'lineNumbers' to be set to 'true')
+                        'enableCodeFolding': 'true',
+                        # Whether or not to enable code formatting
+                        'enableCodeFormatting': 'false',
+                        # Whether or not to automatically format code should be done when the editor is loaded
+                        'autoFormatOnStart': 'false',
+                        # Whether or not to automatically format code should be done every time the source view is opened
+                        'autoFormatOnModeChange': 'false',
+                        # Whether or not to automatically format code which has just been uncommented
+                        'autoFormatOnUncomment': 'false',
+                        # Define the language specific mode 'htmlmixed' for html including (css, xml, javascript), 'application/x-httpd-php' for php mode including html, or 'text/javascript' for using java script only
+                        'mode': 'htmlmixed',
+                        # Whether or not to show the search Code button on the toolbar
+                        'showSearchButton': 'true',
+                        # Whether or not to show Trailing Spaces
+                        'showTrailingSpace': 'true',
+                        # Whether or not to highlight all matches of current word/selection
+                        'highlightMatches': 'true',
+                        # Whether or not to show the format button on the toolbar
+                        'showFormatButton': 'true',
+                        # Whether or not to show the comment button on the toolbar
+                        'showCommentButton': 'true',
+                        # Whether or not to show the uncomment button on the toolbar
+                        'showUncommentButton': 'true',
+                        #Whether or not to show the showAutoCompleteButton button on the toolbar
+                        'showAutoCompleteButton': 'true',
+                        # Whether or not to highlight the currently active line
+                        'styleActiveLine': 'true'
+                        },
+             
+             'disallowedContent':{      
+                        'p h1 h2 h3 h4 span blockquote':{
+                                    #Disallow setting font-family or font-size
+                                    'styles':['font*'],
+                                },
+                        },   
+
+                
+            'allowedContent':{
+                        '*': {
+                              
+                              'attributes': ['id', 'itemprop', 'title', 'placeholder', 'type', 'data-*'],
+                              'classes':['text-center', 'text-left', 'text-right', 'text-justify', 'center-text', 'text-muted', 
+                                         'align-center', 'pull-left', 'pull-right', 'center-block', 'media', 'image',
+                                         'list-unstyled', 'list-inline',
+                                         'language-*', 
+                                        ],
+                            },
+                        'p': {
+                                'attributes': ['id'],   
+                            },
+                        'h1 h2 h3 h4 em i b strong caption h5 h6 u s br hr': 'true',
+                        'a': {
+                                'attributes': ['!href','target','name', 'id', 'name'],
+                            },      
+                        'img':{
+                               #Do not allow image height and width styles
+                               'attributes': ['!src', 'alt', 'id'],
+                            },                        
+                        'span ul ol li sup sub': 'true',
+                        'div':{
+                               'classes':'*',
+                            },
+                        'iframe':{
+                                'classes':'*',
+                                'attributes':'*',
+                            },
+                        'small abbr address footer section article dl dt dd kbd var samp form label input button textarea fieldset':'true',
+                        'pre':{
+                               'attributes': ['title'],
+                               'classes':['*']
+                            },
+                        'code': 'true',
+                        
+                        'blockquote':'true',
+                        'table':'true',
+                        'tr':'true',
+                        'th':'true',
+                        'td':'true',
+                        },
+            'justifyClasses': ['text-left', 'text-center', 'text-right', 'text-justify'],
+            'extraPlugins': 'button,toolbar,codesnippet,about,stylescombo,richcombo,floatpanel,panel,button,listblock,dialog,dialogui,syntaxhighlight,htmlwriter,removeformat,horizontalrule,widget,lineutils,mathjax,div,fakeobjects,iframe,image2,justify,blockquote,indent,indentlist,indentblock',
+            'ignoreEmptyParagraph': 'true',   
+            'coreStyles_bold': {
+                            'element': 'b',
+                            'overrides': 'strong',
+                        },
+            'coreStyles_italic':{
+                            'element':'i',
+                            'overrides':'em',
+                        },
+            #'fillEmptyBlocks':'false',#Might need a callback fn
+            'image2_alignClasses':['pull-left','center-block','pull-right'],
+            'mathJaxClass':'math-tex',
+            'mathJaxLib':STATIC_URL+'js/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML',
+            'tabSpaces':'4',
+            'indentClasses': ['col-xs-offset-1', 'col-xs-offset-2', 'col-xs-offset-3', 'col-xs-offset-4'],     
+    },
+    'author': {                        
+        'toolbar': [
+                      ["Format", "Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript", "SpellChecker"],
+                      [ "Indent", "Outdent", 'JustifyLeft', 'JustifyCenter',
+                 'JustifyRight', 'JustifyBlock'],
+                      ["Image", "Table", "Link", "Unlink", "Anchor", "SectionLink",'NumberedList', 'BulletedList', 'HorizontalRule', 'CreateDiv'], 
+                      ['Undo', 'Redo'], ["Source", 'RemoveFormat'],["Maximize"],['ShowBlocks', 'Syntaxhighlight', 'Mathjax'],
+                     ],
+        'contentsCss': STATIC_URL+'css/bootstrap.css',
+    
+        'codemirror' : {
+                        # Set this to the theme you wish to use (codemirror themes)
+                        'theme': 'default',
+                        # Whether or not you want to show line numbers
+                        'lineNumbers': 'true',
+                        # Whether or not you want to use line wrapping
+                        'lineWrapping': 'true',
+                        # Whether or not you want to highlight matching braces
+                        'matchBrackets': 'true',
+                        # Whether or not you want tags to automatically close themselves
+                        'autoCloseTags': 'false',
+                        # Whether or not you want Brackets to automatically close themselves
+                        'autoCloseBrackets': 'false',
+                        # Whether or not to enable search tools, CTRL+F (Find), CTRL+SHIFT+F (Replace), CTRL+SHIFT+R (Replace All), CTRL+G (Find Next), CTRL+SHIFT+G (Find Previous)
+                        'enableSearchTools': 'true',
+                        # Whether or not you wish to enable code folding (requires 'lineNumbers' to be set to 'true')
+                        'enableCodeFolding': 'true',
+                        # Whether or not to enable code formatting
+                        'enableCodeFormatting': 'false',
+                        # Whether or not to automatically format code should be done when the editor is loaded
+                        'autoFormatOnStart': 'false',
+                        # Whether or not to automatically format code should be done every time the source view is opened
+                        'autoFormatOnModeChange': 'false',
+                        # Whether or not to automatically format code which has just been uncommented
+                        'autoFormatOnUncomment': 'false',
+                        # Define the language specific mode 'htmlmixed' for html including (css, xml, javascript), 'application/x-httpd-php' for php mode including html, or 'text/javascript' for using java script only
+                        'mode': 'htmlmixed',
+                        # Whether or not to show the search Code button on the toolbar
+                        'showSearchButton': 'true',
+                        # Whether or not to show Trailing Spaces
+                        'showTrailingSpace': 'true',
+                        # Whether or not to highlight all matches of current word/selection
+                        'highlightMatches': 'true',
+                        # Whether or not to show the format button on the toolbar
+                        'showFormatButton': 'true',
+                        # Whether or not to show the comment button on the toolbar
+                        'showCommentButton': 'true',
+                        # Whether or not to show the uncomment button on the toolbar
+                        'showUncommentButton': 'true',
+                        #Whether or not to show the showAutoCompleteButton button on the toolbar
+                        'showAutoCompleteButton': 'true',
+                        # Whether or not to highlight the currently active line
+                        'styleActiveLine': 'true'
+                        },
+             
+             'disallowedContent':{      
+                        'p h1 h2 h3 h4 span blockquote':{
+                                    #Disallow setting font-family or font-size
+                                    'styles':['font*'],
+                                },
+                        },   
+
+                
+            'allowedContent':{
+                        '*': {
+                              
+                              'attributes': ['id', 'itemprop', 'title', 'placeholder', 'type', 'data-*'],
+                              'classes':['text-center', 'text-left', 'text-right', 'text-justify', 'center-text', 'text-muted', 
+                                         'align-center', 'pull-left', 'pull-right', 'center-block', 'media', 'image',
+                                         'list-unstyled', 'list-inline',
+                                         'language-*', 
+                                        ],
+                            },
+                        'p': {
+                                'attributes': ['id'],   
+                            },
+                        'h1 h2 h3 h4 em i b strong caption h5 h6 u s br hr': 'true',
+                        'a': {
+                                'attributes': ['!href','target','name', 'id', 'name'],
+                            },      
+                        'img':{
+                               #Do not allow image height and width styles
+                               'attributes': ['!src', 'alt', 'id'],
+                            },                        
+                        'span ul ol li div sup sub': 'true',
+                        'small abbr address footer section article dl dt dd kbd var samp form label input button textarea fieldset':'true',
+                        'pre':{
+                               'attributes': ['title'],
+                               'classes':['*']
+                            },
+                        'code': 'true',
+                        
+                        'blockquote':'true',
+                        'table':'true',
+                        'tr':'true',
+                        'th':'true',
+                        'td':'true',
+                        },
+            'justifyClasses': ['text-left', 'text-center', 'text-right', 'text-justify'],
+            'extraPlugins': 'button,toolbar,codesnippet,about,stylescombo,richcombo,floatpanel,panel,button,listblock,dialog,dialogui,syntaxhighlight,htmlwriter,removeformat,horizontalrule,widget,lineutils,mathjax,div,fakeobjects,iframe,image2,justify',
+            'ignoreEmptyParagraph': 'true',   
+            'coreStyles_bold': {
+                            'element': 'b',
+                            'overrides': 'strong',
+                        },
+            'coreStyles_italic':{
+                            'element':'i',
+                            'overrides':'em',
+                        },
+            'fillEmptyBlocks':'false',#Might need a callback fn
+            'image2_alignClasses':['pull-left','center-block','pull-right'],
+            'mathJaxClass':'math-tex',
+            'mathJaxLib':STATIC_URL+'js/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML',
+            'tabSpaces':'4',     
+    },
+}
+CKEDITOR_RESTRICT_BY_USER=True
+
+DISQUS_API_KEY = 'QJezRiHWxv2FzzrMuOSvQPn99oil0LLyhZxdCAEd3s5cZTf6GUI5019NKznCEONu'
+DISQUS_WEBSITE_SHORTNAME = 'piratelocal'
+
+DEFAULT_FROM_EMAIL = 'rai812@web379.webfaction.com'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+EMAIL_SUBJECT_PREFIX = '[PirateLearner]'
+EMAIL_HOST = 'smtp.webfaction.com'
+EMAIL_HOST_USER = 'pirate_learner_mailbox'
+EMAIL_HOST_PASSWORD = 'pirate@world'
+SERVER_EMAIL = 'rai812@web379.webfaction.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 25
+
+
+MATHJAX_ENABLED=True
+MATHJAX_LOCAL_PATH = 'js/MathJax/'
+MATHJAX_CONFIG_FILE = "TeX-AMS-MML_HTMLorMML"
+MATHJAX_CONFIG_DATA = {
+    "tex2jax": {
+      "inlineMath":
+        [
+            ['$','$'],
+            ['\\(','\\)']
+        ]
+    }
+  }
+
+REST_FRAMEWORK = {
+    # Use hyperlinked styles by default.
+    # Only used if the `serializer_class` attribute is not set on a view.
+    'DEFAULT_MODEL_SERIALIZER_CLASS':
+        'rest_framework.serializers.HyperlinkedModelSerializer',
+
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
+
+META_SITE_PROTOCOL = 'http'
+# META_SITE_DOMAIN = 'pirateLearner.com' using META_USE_SITE SETTING
+META_SITE_TYPE = 'article' # override when passed in __init__
+META_SITE_NAME = 'Pirate Learner'
+#META_INCLUDE_KEYWORDS = [] # keyword will be included in every article
+#META_DEFAULT_KEYWORDS = [] # default when no keyword is provided in __init__
+#META_IMAGE_URL = '' # Use STATIC_URL 
+META_USE_OG_PROPERTIES = True
+META_USE_TWITTER_PROPERTIES = True
+META_USE_GOOGLEPLUS_PROPERTIES = True
+META_USE_SITES = True
+META_PUBLISHER_FB_ID = 'https://www.facebook.com/PirateLearner' # can use PAGE URL or Publisher id ID
+META_PUBLISHER_GOOGLE_ID = 'https://plus.google.com/116465481265465787624' # Google+ ID 
+META_FB_APP_ID = ''
+
+#blogging app settings
+BLOGGING_MAX_ENTRY_PER_PAGE = 3
+
+# ftech the bookmark from web pages depending upon the tags written for social networking sites
+BOOKMARK_FETCH_PRIORITY = ['facebook','google','twitter','extra','None']
+BOOKMARK_DEFAULT_IMAGE = DOMAIN_URL+STATIC_URL+'images/death_and_friends.jpg'
+
+VOTING_ZERO_VOTES_ALLOWED = True

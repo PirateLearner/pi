@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load cms_tags staticfiles sekizai_tags menu_tags %}
+
+{% block title %}
+Explore
+{% endblock %}
+
+{% block breadcrumb %}
+        {% block blog_breadcrumb %}
+        {% endblock blog_breadcrumb %}
+{% endblock %}
+
+{% block content %}
+<div class="row main-content-wrapper">  	
+   	<div class="content-area clearfix">
+ 				       {% block content_blog %}
+ 				       {% endblock %}
+		</div>
+  </div>
+ <!-- Django loaded Javascripts -->
+<script src="{{ STATIC_URL }}js/getuser.js"></script> 
+<script src="{{ STATIC_URL }}js/voting/voting_detail.js"></script>
+<script src="{{ STATIC_URL }}js/annotations/script.js"></script>
+<script src="{{ STATIC_URL }}js/blogging/nav_affix.js"></script>       
+{% endblock %}
+
+
+

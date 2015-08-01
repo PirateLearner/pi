@@ -1,0 +1,38 @@
+{% extends "spotlight/base.html" %}
+
+{% block extra_script %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/css/forms.css"/>
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/css/base.css"/>
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/css/widgets.css"/>
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}admin/js/core.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}admin/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}admin/js/jquery.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}admin/js/jquery.init.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}admin/js/actions.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}admin/js/calendar.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}admin/js/admin/DateTimeShortcuts.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/bookmark.js"></script>
+
+{{ bookmark_form.media }}
+
+{% endblock %}
+
+
+{% load cms_tags staticfiles sekizai_tags menu_tags %}
+
+
+{% block content %}
+
+{% if messages %}
+<ul class="messages" id="message_head">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %} >{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% load crispy_forms_tags %}
+
+{% crispy bookmark_form bookmark_form.helper %}
+{% endblock %}	

@@ -1,0 +1,21 @@
+
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load account %}
+{% load url from future %}
+
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+
+{% if socialaccount.providers  %}
+
+{% include "socialaccount/snippets/provider_list.html" with process="login" redirect_field_value=redirect_field_value%}
+
+{% include "socialaccount/snippets/login_extra.html" %}
+
+{% endif %}
+
+{% endblock %}
