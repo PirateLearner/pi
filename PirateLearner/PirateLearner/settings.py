@@ -68,7 +68,7 @@ STATIC_ROOT = '/home/craft/git/PirateLearnerStatic/static/'
 STATIC_URL = '/static/static/'
 
 MEDIA_ROOT = '/home/craft/git/PirateLearnerStatic/media'
-MEDIA_URL = '/media/'
+MEDIA_URL = '/static/media/'
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
@@ -243,7 +243,6 @@ INSTALLED_APPS = (
 #     'django_mathjax',
     'spotlight',
     'django.contrib.redirects',
-    'django_comments',
     'voting',
 )
 
