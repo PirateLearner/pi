@@ -1,0 +1,43 @@
+{% load url from future %}
+{% load thumbnail %}
+<<<<<<< HEAD
+{% load voting_tags %}
+=======
+>>>>>>> 6b71baa7203c2358dbe488b0bc0f341851d6b1c3
+
+			<!-- Stacked Featured posts for this section -->
+				{% for node in nodes %}
+				<div class="media feature content-stack-article paper">
+                	<a  class="image" href="{{node.get_absolute_url}}" class="pull-left">
+						<img class="img-responsive" src="{{ node.get_image_url }}" class="media-object"></img>                	
+                	</a>
+                	<div class="feature-heading">
+                	{% if not parent %}
+                		<span class="eyebrow"> <a href="{{ node.get_parent.get_absolute_url }}">{{ node.get_parent.title }}</a></span>
+<<<<<<< HEAD
+  					{% endif %}
+                        {% score_for_object node as score %}
+                        <span class="eyebrow pull-right">Score: {{ score.score }}</span>                		
+=======
+  					{% endif %}              		
+>>>>>>> 6b71baa7203c2358dbe488b0bc0f341851d6b1c3
+                		<a class="title" href="{{node.get_absolute_url}}">
+                			 {{ node.title }}
+                		</a>
+                	</div>
+                	<div class="feature-tags"><span class="glyphicon glyphicon-tags"></span> <b>Tags:</b> 
+                		<ul class="post-tags">
+                			{% for tag in node.get_tags %}
+<<<<<<< HEAD
+                			 <li> <a href="#"> {{ tag.name }}</a></li>
+=======
+                			 <li> <a href="{{ tag.url }}"> {{ tag.name }}</a></li>
+>>>>>>> 6b71baa7203c2358dbe488b0bc0f341851d6b1c3
+                			{% endfor %} 
+                		</ul>
+                	</div>
+                </div>                
+                {% endfor %}						
+						       			
+
+

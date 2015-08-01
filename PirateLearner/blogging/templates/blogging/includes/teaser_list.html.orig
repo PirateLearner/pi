@@ -1,0 +1,56 @@
+{% load url from future %}
+{% load thumbnail %}
+<<<<<<< HEAD
+{% load voting_tags %}
+=======
+>>>>>>> 6b71baa7203c2358dbe488b0bc0f341851d6b1c3
+				{% for node in nodes %}
+				<div class="media feature content-stack-article paper">
+                	<a  class="image" href="{{node.get_absolute_url}}" class="pull-left">
+						<img class="img-responsive" src="{{ node.get_image_url }}" class="media-object"></img>                	
+                	</a>
+                	<div class="feature-heading">
+                	{% if not parent %}
+<<<<<<< HEAD
+                		<span class="eyebrow"><a href="{{ node.get_parent.get_absolute_url }}">{{ node.get_parent.title }}</a></span>    
+  					{% endif %}
+						{% score_for_object node as score %}
+						<span class="eyebrow pull-right">Score: {{ score.score }}</span>              		
+=======
+                		<span class="eyebrow"> {{ node.get_parent.title }}</span>
+  					{% endif %}              		
+>>>>>>> 6b71baa7203c2358dbe488b0bc0f341851d6b1c3
+                		<a class="title" href="{{node.get_absolute_url}}">
+                			 {{ node.title }}
+                		</a>
+                	</div>
+                	<div class="feature-body">
+                		{{ node.get_summary }}
+                	</div>
+                	<div class="feature-tags"><span class="glyphicon glyphicon-tags"></span> <b>Tags:</b> 
+                		<ul class="post-tags">
+                			{% for tag in node.get_tags %}
+<<<<<<< HEAD
+                			 <li> <a href="{{ tag.url }}"> {{ tag.name }}</a></li>
+=======
+                			 <li> <a href=" {{ tag.url }}"> {{ tag.name }}</a></li>
+>>>>>>> 6b71baa7203c2358dbe488b0bc0f341851d6b1c3
+                			{% endfor %} 
+                		</ul>
+                	</div>
+                </div>                
+                {% endfor %}	
+
+{% if nodes.paginator.count > max_entry %}
+<div class="text-center">
+<ul class="pagination">
+        {% if nodes.has_previous %}
+            <li><a href="?page={{ nodes.previous_page_number }}">&laquo;</a></li>
+        {% endif %}
+  		<li><a href="">{{ nodes.number }} of {{ nodes.paginator.num_pages }}</a></li>
+        {% if nodes.has_next %}
+            <li><a href="?page={{ nodes.next_page_number }}">&raquo;</a></li>
+        {% endif %}
+</ul>
+</div>
+{% endif %}
