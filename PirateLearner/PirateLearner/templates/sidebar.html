@@ -53,9 +53,9 @@
                 <p>You need to be logged in to use this feature.</p>
                 <h3> Login now, it is free! :-)</h3>
                 <div class="text-center clearfix">
-                	<a class="col-sm-4 col-md-4 col-lg-4" href="javascript:allauth.facebook.login('', 'authenticate', 'login')"><span class="icon pl-facebook2 icon-responsive logo-facebook"></span></a>
-					<a class="col-sm-4 col-md-4 col-lg-4" href="/en/accounts/twitter/login/?process=login"><span class="icon pl-twitter2 icon-responsive logo-twitter"></span></a>
-					<a class="col-sm-4 col-md-4 col-lg-4" href="/en/accounts/google/login/?process=login""><span class="icon pl-googleplus3 icon-responsive logo-google"></span></a>
+                	<a class="col-sm-4 col-md-4 col-lg-4" href="javascript:allauth.facebook.login('{{ request.path|safe }}', 'authenticate', 'login')"><span class="icon pl-facebook2 icon-responsive logo-facebook"></span></a>
+				<a class="col-sm-4 col-md-4 col-lg-4" href="/en/accounts/twitter/login/?process=login&next={{ request.path|safe }}" ><span class="icon pl-twitter2 icon-responsive logo-twitter"></span></a>
+				<a class="col-sm-4 col-md-4 col-lg-4" href="/en/accounts/google/login/?process=login&next={{ request.path|safe }}"><span class="icon pl-googleplus3 icon-responsive logo-google"></span></a>
                 </div>
             </div>
             <div class="modal-footer">
