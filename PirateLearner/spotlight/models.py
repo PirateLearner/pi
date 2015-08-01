@@ -10,13 +10,14 @@ from cms.models.pluginmodel import CMSPlugin
 import traceback
 import sys
 
+from blogging.models import BaseContentClass
 TYPE = (
     (0,'Promoted'),
     (1,'Sponsored'),
 )
 
 
-class Spotlight(models.Model):
+class Spotlight(BaseContentClass):
     
     type = models.IntegerField(choices=TYPE,default = 0)
     content_type = models.ForeignKey(ContentType)

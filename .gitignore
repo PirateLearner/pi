@@ -52,3 +52,12 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+*.pyc
+*.swp
+*.db
+.pydev*
+.project
+.settings
+*.*~
+blogging/custom
+blogging/custom/*

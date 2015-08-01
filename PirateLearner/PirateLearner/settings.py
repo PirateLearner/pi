@@ -64,18 +64,17 @@ USE_TZ = True
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
 #STATIC_URL = '/static/'
-#STATIC_ROOT = '/home/abhishek/pi_cms/PirateLearnerStatic/static/'
-STATIC_ROOT = ''
+STATIC_ROOT = '/home/craft/git/PirateLearnerStatic/static/'
 STATIC_URL = '/static/static/'
 
-MEDIA_ROOT = '/home/abhishek/pi_cms/PirateLearnerStatic/media/'
-MEDIA_URL = '/media/'
+MEDIA_ROOT = '/home/craft/git/PirateLearnerStatic/media'
+MEDIA_URL = '/static/media/'
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/home/abhishek/pi_cms/PirateLearnerStatic/static/',
+    PROJECT_PATH+'/static/',
 )
 
 # List of finder classes that know how to find static files in
@@ -244,17 +243,7 @@ INSTALLED_APPS = (
 #     'django_mathjax',
     'spotlight',
     'django.contrib.redirects',
-    'django_comments',
     'voting',
-    'dash',
-    'dash.contrib.layouts.android',
-#     'dash.contrib.plugins.dummy',
-    'dash.contrib.plugins.image',
-    'dash.contrib.plugins.memo',
-    'dash.contrib.plugins.rss_feed',
-    'dash.contrib.plugins.url',
-    'dash.contrib.plugins.video',
-    'dash.contrib.plugins.weather',
 )
 
 LANGUAGES = (
@@ -315,7 +304,7 @@ CMS_PLACEHOLDER_CONF = {}
 
 DATABASES = {
     'default':
-        {'ENGINE': 'django.db.backends.mysql', 'NAME': 'pirate_db', 'HOST': '127.0.0.1', 'USER': 'root', 'PASSWORD': 'root', 'PORT': '3306'}
+        {'ENGINE': 'django.db.backends.mysql', 'NAME': 'sampledb', 'HOST': '127.0.0.1', 'USER': 'root', 'PASSWORD': 'root', 'PORT': '3306'}
 }
 # default is 10 px
 MPTT_ADMIN_LEVEL_INDENT = 20
@@ -403,7 +392,7 @@ CKEDITOR_CONFIGS = {
                               'classes':['text-center', 'text-left', 'text-right', 'text-justify', 'center-text', 'text-muted', 
                                          'align-center', 'pull-left', 'pull-right', 'center-block', 'media', 'image',
                                          'list-unstyled', 'list-inline',
-                                         'language-*', 
+                                         'language-*', '*', 
                                         ],
                             },
                         'p': {
@@ -458,11 +447,11 @@ CKEDITOR_CONFIGS = {
     },
     'author': {                        
         'toolbar': [
-                      ["Format", "Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript", "SpellChecker"],
+                      ["Format", "Bold", "Italic", "Underline", "Strike", "Blockquote","Subscript", "Superscript", "SpellChecker"],
                       [ "Indent", "Outdent", 'JustifyLeft', 'JustifyCenter',
                  'JustifyRight', 'JustifyBlock'],
                       ["Image", "Table", "Link", "Unlink", "Anchor", "SectionLink",'NumberedList', 'BulletedList', 'HorizontalRule', 'CreateDiv'], 
-                      ['Undo', 'Redo'], ["Source", 'RemoveFormat'],["Maximize"],['ShowBlocks', 'Syntaxhighlight', 'Mathjax'],
+                      ['Undo', 'Redo'], ["Source", 'RemoveFormat','Iframe'],["Maximize"],['ShowBlocks', 'Syntaxhighlight', 'Mathjax'],
                      ],
         'contentsCss': STATIC_URL+'css/bootstrap.css',
     
@@ -526,7 +515,7 @@ CKEDITOR_CONFIGS = {
                               'classes':['text-center', 'text-left', 'text-right', 'text-justify', 'center-text', 'text-muted', 
                                          'align-center', 'pull-left', 'pull-right', 'center-block', 'media', 'image',
                                          'list-unstyled', 'list-inline',
-                                         'language-*', 
+                                         'language-*', '*', 
                                         ],
                             },
                         'p': {
@@ -540,7 +529,14 @@ CKEDITOR_CONFIGS = {
                                #Do not allow image height and width styles
                                'attributes': ['!src', 'alt', 'id'],
                             },                        
-                        'span ul ol li div sup sub': 'true',
+                        'span ul ol li sup sub': 'true',
+                        'div':{
+                               'classes':'*',
+                            },
+                        'iframe':{
+                                'classes':'*',
+                                'attributes':'*',
+                            },
                         'small abbr address footer section article dl dt dd kbd var samp form label input button textarea fieldset':'true',
                         'pre':{
                                'attributes': ['title'],
@@ -555,7 +551,7 @@ CKEDITOR_CONFIGS = {
                         'td':'true',
                         },
             'justifyClasses': ['text-left', 'text-center', 'text-right', 'text-justify'],
-            'extraPlugins': 'button,toolbar,codesnippet,about,stylescombo,richcombo,floatpanel,panel,button,listblock,dialog,dialogui,syntaxhighlight,htmlwriter,removeformat,horizontalrule,widget,lineutils,mathjax,div,fakeobjects,iframe,image2,justify',
+            'extraPlugins': 'button,toolbar,codesnippet,about,stylescombo,richcombo,floatpanel,panel,button,listblock,dialog,dialogui,syntaxhighlight,htmlwriter,removeformat,horizontalrule,widget,lineutils,mathjax,div,fakeobjects,iframe,image2,justify,blockquote,indent,indentlist,indentblock',
             'ignoreEmptyParagraph': 'true',   
             'coreStyles_bold': {
                             'element': 'b',
@@ -565,11 +561,12 @@ CKEDITOR_CONFIGS = {
                             'element':'i',
                             'overrides':'em',
                         },
-            'fillEmptyBlocks':'false',#Might need a callback fn
+            #'fillEmptyBlocks':'false',#Might need a callback fn
             'image2_alignClasses':['pull-left','center-block','pull-right'],
             'mathJaxClass':'math-tex',
             'mathJaxLib':STATIC_URL+'js/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML',
-            'tabSpaces':'4',     
+            'tabSpaces':'4',
+            'indentClasses': ['col-xs-offset-1', 'col-xs-offset-2', 'col-xs-offset-3', 'col-xs-offset-4'],     
     },
 }
 CKEDITOR_RESTRICT_BY_USER=True

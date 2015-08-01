@@ -4,6 +4,9 @@ from taggit.managers import TaggableManager
 from allauth.socialaccount.models import SocialAccount
 import hashlib
 from django.utils import timezone
+
+from PirateLearner.models import BaseContentClass
+
 # Create your models here.
 
 rlevel = (
@@ -70,7 +73,7 @@ GENDERS = (
            ('F','Female'),
            )
 
-class UserProfile(models.Model):
+class UserProfile(BaseContentClass):
     """
     User profile populated using social account from Facebook, Google and Twitter respectively.
     """

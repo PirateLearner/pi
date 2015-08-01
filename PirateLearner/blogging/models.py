@@ -14,6 +14,7 @@ from annotations.models import Annotation
 
 from django.conf import settings
 
+
 if 'cms' in settings.INSTALLED_APPS:
     try:
         from cms.models.pluginmodel import CMSPlugin
@@ -26,6 +27,8 @@ from django.utils.html import strip_tags
 from django.core.urlresolvers import reverse
 import traceback
 import json
+
+from PirateLearner.models import BaseContentClass
 
 #from south.v2 import DataMigration
 
@@ -76,7 +79,7 @@ class PublishedManager(RelatedManager):
         return qs
 
 
-class BlogContentType(models.Model):
+class BlogContentType(BaseContentClass):
     content_type = models.CharField(max_length = 100,unique = True)
     is_leaf = models.BooleanField('Is leaf node?', default = 0)
 
@@ -127,7 +130,7 @@ class BlogParent(MPTTModel):
             order_insertion_by = ['title']
 
 
-class BlogContent(models.Model):
+class BlogContent(BaseContentClass):
     title = models.CharField(max_length = 100)
     create_date = models.DateTimeField('date created', auto_now_add=True)
     author_id  = models.ForeignKey(auth.models.User, related_name="blogcontent")

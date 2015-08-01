@@ -28,9 +28,6 @@ urlpatterns = i18n_patterns('',
 #    url(r'^polls/', include('polls.urls')),
     url(r'^ckeditor/', include('ckeditor.urls')),
     url(r'^C/', include('blogging.urls',namespace='blogging')),
-        # django-dash URLs:
-    url(r'^dash/', include('dash.urls')),
-
     url(r'^dashboard/', include('dashboard.urls',namespace='dashboard')),
     url(r'^bookmarks/', include('bookmarks.urls',namespace='bookmarks')),
     url(r'^spotlight/', include('spotlight.urls',namespace='spotlight')),

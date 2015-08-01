@@ -28,7 +28,7 @@
 <section class="header-ribbon" id="overlay-target" itemscope itemtype="http://schema.org/Article">
 
 	<!--<div> -->
-		<span class="hidden rest" data-id="{{ nodes.id }}" data-content-type="54"></span>
+		<span class="hidden rest" data-id="{{ nodes.id }}" data-content-type="{{ nodes.get_content_type }}"></span>
 		<h1 class="article-title" itemprop="headline"> 	{{ content.title }} </h1>
 		<meta itemprop="datePublished" content=" {{ meta.date_time }} "/>
 		<span class="article-author"> by Admin</span>       	
@@ -57,6 +57,10 @@
 		       		<span class="glyphicon glyphicon-chevron-down"></span>
 		       		<span class="icon-helper" id="downvote_count">0	       			
 		       		</span>
+	       		</div>
+	       		<div class="articles_action__error voting-error hidden" id="article-actions_error">
+	       			<span class="pull-left glyphicon glyphicon-remove" id="article-actions-close"></span>
+	       			<span id="article-actions_text"></span>
 	       		</div>	
 	       	</div>			
        	</div>			
@@ -65,14 +69,6 @@
 			{% block custom_detail %}
 			{% endblock %}
 		</article>
-		
-		<!-- Showing the Diffs -->
-		<article class="article-body" id="commentable-container1"  itemprop="articleBody">
-	
-		{{ patch }}
-
-		</article>
-		
 		
 	<!-- </div> -->
 </section>

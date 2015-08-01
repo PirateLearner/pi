@@ -1,3 +1,4 @@
+var pirateLearnerGlobal = pirateLearnerGlobal || {};
 $(document).ready(function(){
 		
 	var fixtures = {};
@@ -173,7 +174,8 @@ $(document).ready(function(){
                         '<form class="comments-form" id="annotation_form">'+
                             '<textarea id="comments-form-text" class="comments-form--user-input"'+ 
                                     'placeholder="Make a note" form="annotation_form" cols="40" rows="3" maxlength="500"'+
-                                    'required="True"></textarea>'+
+                                    'required></textarea>'+
+                            '<span id="comments-error" class="comments-error hidden"></span>'+
                             '<button id="comments-form-submit" class="comments-submit" type="button">Submit</button>'+
                         '</form>'+
                     '</div>');
@@ -193,7 +195,9 @@ $(document).ready(function(){
 			/* Clear out form contents, if any. */
 			
 			//console.log('Attached elsewhere');
-			annotations.formElement.find($('#comments-form-text')).val('');
+			
+			//console.log(annotations.formElement.find($('#comments-form-text')));
+			annotations.formElement.find($('#comments-error')).addClass('hidden');
 			
 			if(parseInt($('.comments-form-block').parent('.annotation--container').attr('data-section-id'))!=id){
 				hideForm();
@@ -205,6 +209,13 @@ $(document).ready(function(){
 		 * bind the postAnnotation to the form button.
 		 */
 		annotations.formElement.find("#comments-form-submit").on('click', postAnnotation);
+		annotations.formElement.find($('#comments-form-text')).val('');
+		annotations.formElement.find($('#comments-error')).addClass('hidden');
+		annotations.formElement.find($('#comments-error')).html('');
+		annotations.formElement.find($("#comments-form-text")).on('focus', function(){
+								$('#comments-error').addClass('hidden');
+								$('#comments-error').html('');
+								});
 //		console.log('Printing');
 //		console.log($('.comments-form-block'));
 	};
@@ -233,6 +244,14 @@ $(document).ready(function(){
 		//console.log('postAnnotation');
 		/* Construct a JSON string of the data in annotation. */
 		//console.log(this);
+		/* Check login */
+		if(pirateLearnerGlobal.user['id'] == 0)
+		{
+			$('#loginPrompt').modal({
+				backdrop: true
+			})
+			return;
+		}
 		
 		/* First find the parent's para-id */
 		id = parseInt($(this).parents(".annotation--container").attr("data-section-id"));
@@ -242,7 +261,9 @@ $(document).ready(function(){
 		body = $("#comments-form-text").val();
 		//console.log(body);
 		if(body === ''){
-			console.log('Error. Body has no content.')
+			console.log('Error. Body has no content.');
+			$('#comments-error').html("Cannot make empty notes!");
+			$('#comments-error').removeClass('hidden');
 			return;
 		}
 		
@@ -266,7 +287,6 @@ $(document).ready(function(){
 	            }
 	        }
 	    });
-	    console.log(window.location.origin);
 	    //Save Form Data........
 	    $.ajax({
 	        cache: false,
@@ -623,9 +643,11 @@ $(document).ready(function(){
 	var wrapContent = function(){
 		index = parseInt($(this).attr('id'));
 		
-//		console.log('Paragraph ID: '+index);
-		$(this).wrap('<div data-section-id="'+index+'" class="annotation--container clearfix"></div>');
-		$('<div class="comments clearfix">'+
+		if(!isNaN(index)){
+			
+			$(this).wrap('<div data-section-id="'+index+'" class="annotation--container clearfix"></div>');
+			
+			$('<div class="comments clearfix">'+
                 '<h3 class="comments--toggle rectangular-speech"><p>+</p></h3>'+
                 '<div class="comments-container hidden">'+
                 '<div class="comments-container-bucket" id="user_annotations_'+index+'"></div>'+
@@ -633,6 +655,8 @@ $(document).ready(function(){
                 '<div class="comments-container-bucket hidden" id="other_annotations_'+index+'"></div>'+
                 '</div>'+
                 '</div>').insertAfter($(this));
+		}
+		//else do not wrap
 	};
 	/*
 	 * Find the master container, and remove its children from flow.
@@ -691,4 +715,6 @@ $(document).ready(function(){
 	
 	/* Get the current user */
 	getCurrentUser();
+	/* Show current active tab */
+	$($('.article-adjunct-nav--list').children('.active').children('a').attr('href')).show().siblings().hide();
 });

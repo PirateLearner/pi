@@ -3,8 +3,9 @@ from django.contrib.auth.models import User
 from django.db.models import F
 import datetime
 
+from PirateLearner.models import BaseContentClass
 
-class Messages(models.Model):
+class Messages(BaseContentClass):
     """
         Message Model
         basic element for thread, which is to be exchanged between users
@@ -25,7 +26,7 @@ class Messages(models.Model):
         return super(Messages, self).save(*args, **kwargs)
 
 
-class Thread(models.Model):
+class Thread(BaseContentClass):
     """
         Thread Model
         Thread is collection of messages exchanges between users
@@ -47,7 +48,7 @@ class Thread(models.Model):
         return super(Thread, self).save(*args, **kwargs)
 
 
-class ParticipantThreads(models.Model):
+class ParticipantThreads(BaseContentClass):
     """
         Participant Thread Model
         Has collection of threads for the participant
@@ -60,7 +61,7 @@ class ParticipantThreads(models.Model):
         verbose_name_plural = 'Participant Threads'
 
 
-class ParticipantNotifications(models.Model):
+class ParticipantNotifications(BaseContentClass):
     """
         Participant Notification Model
         Notifications generated when a message is exchanged between users
