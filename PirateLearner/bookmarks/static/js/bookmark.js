@@ -300,7 +300,7 @@ var setup_snippet = function(data){
 		 
 		$.ajax({
 		    // the URL for the request
-		    url: 'http://piratelearner.com/bookmarks/add/',
+		    url: window.location.origin+'/en/bookmarks/add/',
 		 
 		    // the data to send (will be converted to a query string)
 		    data: {
