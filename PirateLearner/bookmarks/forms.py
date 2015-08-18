@@ -11,6 +11,7 @@ from bookmarks.widgets import SelectWithPopUp
 from django.core.urlresolvers import reverse
 from bookmarks import utils
 from bookmarks import settings
+from ckeditor.widgets import CKEditorWidget
 
 class TagField(AutoModelSelect2TagField):
     queryset = Tag.objects.all()
@@ -69,7 +70,7 @@ class BookmarkInstanceForm(forms.ModelForm):
     
     url = forms.URLField(label = "URL", required=True, widget=forms.TextInput(attrs={"size": 100}))
     description = forms.Textarea()
-    note = forms.Textarea()
+    note = forms.CharField(widget = CKEditorWidget(config_name='author'), required=False)
     tags = TagField()
     folder = forms.ModelChoiceField(queryset = BookmarkFolderInstance.objects.all(),
                     empty_label="-----",
@@ -149,7 +150,7 @@ class BookmarkInstanceForm(forms.ModelForm):
 class BookmarkInstanceUpdateForm(forms.Form):
     title = forms.CharField(max_length = 100)
     description = forms.CharField(widget=forms.Textarea, required=False)
-    note = forms.CharField(widget=forms.Textarea, required=False)
+    note = forms.CharField(widget = CKEditorWidget(config_name='author'), required=False)
     tags = TagField()
     folder = forms.ModelChoiceField(queryset = BookmarkFolderInstance.objects.all(),
                     empty_label="-----",
