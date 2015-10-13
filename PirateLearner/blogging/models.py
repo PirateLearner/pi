@@ -162,13 +162,18 @@ class BlogContent(BaseContentClass):
         return reverse('blogging:teaser-view', kwargs=kwargs)
     
     def get_image_url(self):
-        json_obj = json.loads(self.data)
-        for value in json_obj.itervalues():
-            image =  get_imageurl_from_data(value)
+        try:
+            json_obj = json.loads(self.data)
+            for value in json_obj.itervalues():
+                image =  get_imageurl_from_data(value)
+                if image:
+                    return image
+            return self.section.get_image_url()
+        except:
+            image =  get_imageurl_from_data(self.data)
             if image:
                 return image
-        return self.section.get_image_url()
-
+            return self.section.get_image_url()
     def get_summary(self):
         json_obj = json.loads(self.data)
         # Instantiate the Meta class
