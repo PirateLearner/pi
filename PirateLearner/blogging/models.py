@@ -118,8 +118,15 @@ class BlogParent(MPTTModel):
         return return_path
     
     def get_image_url(self):
-        image = get_imageurl_from_data(self.data)
-        return image
+        try:
+            json_obj = json.loads(self.data)
+            for value in json_obj.itervalues():
+                image =  get_imageurl_from_data(value)
+                if image:
+                    return image
+        except:
+            return get_imageurl_from_data(self.data)
+        return ""
     
     def get_absolute_url(self):
         kwargs = {'slug': str(self.form_url())}
