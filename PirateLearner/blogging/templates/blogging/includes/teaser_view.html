@@ -20,7 +20,7 @@
     	<div class="feature-tags"><span class="glyphicon glyphicon-tags"></span> <b>Tags:</b> 
     		<ul class="post-tags">
     			{% for tag in node.get_tags %}
-    			 <li> <a href="#"> {{ tag.name }}</a></li>
+    			 <li> <a href="{{ tag.url }}"> {{ tag.name }}</a></li>
     			{% endfor %} 
     		</ul>
     	</div>
