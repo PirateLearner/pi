@@ -154,7 +154,7 @@ class BlogContent(BaseContentClass):
     objects = RelatedManager()    
     published = PublishedManager()
     
-    annotation = GenericRelation(Annotation, content_type_field='content_type', object_id_field='object_pk')
+    annotation = GenericRelation(Annotation, content_type_field='content_type', object_id_field='object_id')
 
     def get_absolute_url(self):
         kwargs = {'slug': self.url_path,}
