@@ -1,4 +1,82 @@
-    <div class="col-sm-12 col-md-4 col-lg-4">
+{% load socialaccount %}
+
+<div class="col-lg-4 col-sm-6">
+		
+		
+	{% if profile_disable %}
+		<div class="card hovercard" style="height:100%;">
+        	<div class="cardheader ch--{{ provider_name|lower }} ">
+        	</div>
+			<div class="avatar">
+			{% for provider in socialaccount.providers %}		
+				{% if provider.name == provider_name %}
+					<a href="{% provider_login_url provider.id process="connect" next=redirect_field_value %}" title = "Link my {{ provider_name }} profile">
+						<img alt="" src="{{ profile_image }}"> 
+					</a>				
+				{% endif %}
+			{% endfor %}
+			</div>
+            <div class="info">
+			</div>			
+                <div class="bottom user-dashboard-profile-name texture-inverse-{{ provider_name|lower }}">
+					{% if provider_name == "Google"%}
+					 	<span class="icon pl-googleplus icon-responsive absolute-center"></span>
+					{% else %}
+						<span class="icon pl-{{ provider_name|lower }} icon-responsive absolute-center"></span>
+					{% endif %}
+						<span class="sr-only">{{ provider_name }} Profile</span>
+
+                </div>
+            </div>
+	{% else %}
+	
+            <div class="card hovercard">
+                <div class="cardheader">
+                </div>
+                <div class="avatar">
+                    <img alt="" src="{{ profile_image }}">
+                </div>
+                <div class="info">
+                    <div class="title">
+                        <a target="_blank" href="{{ profile_url }}">{{ profile_username }}</a>
+                    </div>
+                    <div class="desc">
+						<table class="user-dashboard-profile-detail table">
+							<tr>
+								<td><label for="{{ provider_name|lower }}-profile-name">Name</label></td>
+								<td><span id="{{ provider_name|lower }}-profile-name">{{ profile_username|default_if_none:"--" }}</span></td>
+							</tr>
+							<tr>
+								<td><label for="{{ provider_name|lower }}-profile-gender">Gender</label></td>
+								<td><span id="{{ provider_name|lower }}-profile-gender">{{ profile_gender|default_if_none:"--" }}</span></td>
+							</tr>
+							<tr>
+								<td><label for="{{ provider_name|lower }}-profile-url">URL</label></td>
+								<td><span id="{{ provider_name|lower }}-profile-url"><a target="_blank" href="{{ profile_url }}"> {{ profile_url|default_if_none:"--" }}</a></span></td>
+							</tr>
+							<tr>
+								<td><label for="{{ provider_name|lower }}-profile-mail">Email</label></td>
+								<td><span id="{{ provider_name|lower }}-profile-email">{{ profile_email|default_if_none:"--" }}</span></td>
+							</tr>
+						</table>        
+                    </div>
+                </div>
+                <div class="bottom user-dashboard-profile-name texture-inverse-{{ provider_name|lower }}">
+					{% if provider_name == "Google"%}
+					 	<span class="icon pl-googleplus icon-responsive absolute-center"></span>
+					{% else %}
+						<span class="icon pl-{{ provider_name|lower }} icon-responsive absolute-center"></span>
+					{% endif %}
+						<span class="sr-only">{{ provider_name }} Profile</span>
+
+                </div>
+            </div>
+       {% endif %}
+        </div>
+ 
+ <!-- 
+ 
+    <div class="col-sm-6 col-md-3 col-lg-3">
         <div class="panel panel-default user-dashboard-profile-card texture-{{ provider_name|lower }}  paper paper-raise">
             <div class="user-dashboard-pic-container vertical-center">
                 <img class="user-dashboard-card-pic img-circle" src="{{ profile_image }}" alt="profile image"/>
@@ -34,7 +112,7 @@
 			
 			
 			{% if profile_disable %}
-			<!-- Conditional overlay block -->
+			<!-- Conditional overlay block -- >
             <div class="user-dashboard-card-overlay">
                     <div class="user-dashboard-pic-container vertical-center">
                             <img class="user-dashboard-card-pic img-circle" src="{{ profile_image }}" alt=""/>
@@ -44,3 +122,4 @@
 			{% endif %}
         </div>
     </div>
+ -->

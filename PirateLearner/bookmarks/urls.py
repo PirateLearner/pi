@@ -11,5 +11,6 @@ urlpatterns = patterns("",
     url(r"^\w*/?(\d+)/update/$", "bookmarks.views.update", name="update_bookmark_instance"),
     url(r'^tag/(?P<tag>[-\w]+)/$', "bookmarks.views.tagged_bookmarks", name='tagged-bookmarks'),
     url(r'^(?P<slug>[\w.+-/]+)/$', "bookmarks.views.bookmark_details", name='detail-view'),
+#     url(r'^api/?$)/$', BookmarkList.as_view(), name='api-list'),
 )
 

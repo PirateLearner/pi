@@ -1,51 +1,69 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load tags %}
+{% load humanize %}
+
 {% block css %}
     <link href="{% static "css/jquery.jscrollpane.css" %}" rel="stylesheet"/>
 {% endblock %}
 {% block content %}
-    <div class="navbar navbar-default"></div>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             {% include 'leftbar.html' %}
-            <div class="col-md-6">
-                <p align="center"><a href=""><small>View More Older Messages</small></a> </p>
-                {% for message in messages %}
-                                <div class="media media-border" data-url="{% url 'thread_messages' thread.pk %}">
-                                  <a class="pull-left" href="#">
-                                    <img class="media-object" src="{% static "img/avatar/default.jpg" %}" alt="...">
-                                  </a>
-                                  <div class="media-body">
-                                    <h4 class="media-heading">
-                                        <a href="">
-                                            {{ message.sender.first_name }} {{ message.sender.last_name }}
-                                        </a>
-                                        <div class="pull-right timesince">{{ message.created|timesince }}</div>
-                                    </h4>
-                                    {{ message.body }}
-                                  </div>
-                                </div>
-                {% endfor %}
-
-                <div class="media media-border" data-url="{% url 'thread_messages' thread.pk %}">
-                      <div class="media-body">
-                        <form  class="form form-horizontal" method="post" action="{% url 'thread_messages' thread_id %}">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    <textarea name="body" class="form-control" rows="3"></textarea>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-2 col-md-offset-10">
-                                    <input type="submit"  class="btn btn-primary" value="Reply">
-                                </div>
-
-                            </div>
-
-                        </form>
+            <div class="col-md-6 pT-50 col-offset-2">
+                  <!-- DIRECT CHAT -->
+                  <div class="box-primary direct-chat direct-chat-primary">
+                    <div class="box-header with-border">
+                      <h3 class="box-title">Messages</h3>
+                      <div class="box-tools pull-right">
+                        <span data-toggle="tooltip" title="{% get_message_count request.user thread %} New Messages" class="badge bg-yellow">{% get_message_count request.user thread %}</span>
                       </div>
-                    </div>
+                    </div><!-- /.box-header -->
+                    <div class="box-body">
+                      <!-- Conversations are loaded here -->
+                      <div class="direct-chat-messages">
+                
+                {% for message in messages %}
+                        <!-- Message. Default to the left -->
+                        {% ifequal message.sender request.user %}
+
+                        <!-- Message to the right -->
+                        <div class="direct-chat-msg right">
+                          <div class="direct-chat-info clearfix">
+                            <span class="direct-chat-name pull-right">{{ message.sender.profile.get_name|title }}</span>
+                          </div><!-- /.direct-chat-info -->
+                          <img class="direct-chat-img" src="{{ message.sender.profile.get_avatar_url }}" alt="message user image"><!-- /.direct-chat-img -->
+                          <div class="direct-chat-text pull-right">
+                            {{ message.body }} <br /> <span class="direct-chat-timestamp"><small>{{ message.created|naturaltime }}</small></span>
+                          </div><!-- /.direct-chat-text -->
+                        </div><!-- /.direct-chat-msg -->
+                        {% else %}
+                        <div class="direct-chat-msg">
+                          <div class="direct-chat-info clearfix">
+                            <span class="direct-chat-name pull-left">{{ message.sender.profile.get_name|title }}</span>
+                          </div><!-- /.direct-chat-info -->
+                          <img class="direct-chat-img" src="{{ message.sender.profile.get_avatar_url }}" alt="message user image"><!-- /.direct-chat-img -->
+                          <div class="direct-chat-text pull-left">
+                            {{ message.body }} <br /> <span class="direct-chat-timestamp"><small>{{ message.created|naturaltime }}</small></span>
+                          </div><!-- /.direct-chat-text -->
+                        </div><!-- /.direct-chat-msg -->
+                        
+                        {% endifequal %}
+                {% endfor %}
+                      </div><!--/.direct-chat-messages-->
+					</div><!-- /.box-body -->                
+                    <div class="box-footer pT-16">
+                      <form  class="form form-horizontal" method="post" action="{% url 'messages:thread_messages' thread.pk %}">
+                      {% csrf_token %}
+                        <div class="input-group">
+                          <input name="body" class="form-control" type="text"></input>
+                          <span class="input-group-btn">
+                            <button type="submit" class="btn btn-warning">Send</button>
+                          </span>
+                        </div>
+                      </form>
+                    </div><!-- /.box-footer-->
+              </div><!--/.direct-chat -->
             </div>
         </div>
     </div>

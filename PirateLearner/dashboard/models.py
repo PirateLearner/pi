@@ -6,6 +6,7 @@ import hashlib
 from django.utils import timezone
 
 from PirateLearner.models import BaseContentClass
+from django.conf import settings
 
 # Create your models here.
 
@@ -139,7 +140,7 @@ class UserProfile(BaseContentClass):
         if profile != None:
             return profile.get_avatar_url()
         else:
-            return "{{ STATIC_URL }}images/default-avatar.png"
+            return settings.STATIC_URL + "images/add_new.png"
     
     def get_username(self,provider=None):
         """

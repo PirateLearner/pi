@@ -1,26 +1,43 @@
 {% load mptt_tags staticfiles %}
 
-<div class="bucket layoutSingleColumn clearfix">
-	<ul class="bucket-list">
-		{% recursetree nodes %} 
-		<li class="bucket-list-item">
-			<div class="bucket-item-cover">
-				<a  class="collectionItem" href="{{ node.get_absolute_url }}" style="background-image:url({{ node.get_image_url }});">						
-					<div class="bucket-item-banner u-alignBlock u-alignBottom">
-						<div class="bucket-banner-title  collectionItem-title">
-								  {{ node.title }}
-						</div>
-						<div class="bucket-interact-button">
-							<span class="bucket-item-favourite">Favorite it!</span>
-							<span class="bucket-item-users"> 14k</span>
-						</div>
+<section id="section-view">
+	<h2 class="heading"> {{ page.title|title }} </h2>
+	
+	<div class="row">
+	
+		{% if nodes|length > 0 %}
+			{% recursetree nodes %}
+			<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 p-10">
+				<article class="col-sm-12 col-md-12 nopadding">
+					<a class="thumbnail" href="{{ node.get_absolute_url }}">
+						<img src="{{ node.get_image_url }}"></img>
+					</a>
+					<div class="feature-text">
+						<h3>
+							<a href="{{ node.get_absolute_url }}"> {{ node.title }}</a>
+						</h3>
+						<p>
+							{% if node.is_leaf_node %}
+								{{ node.get_article_count }} Article{{ node.get_article_count|pluralize }}
+							{% else %}
+								{{ node.get_child_count }} Section{{ node.get_article_count|pluralize }}
+							{% endif %}
+						</p>
 					</div>
-				</a>
+				</article>
+			
 			</div>
-		</li>	
-      {% endrecursetree %}
-   </ul> 
-</div>
+			{% endrecursetree %}
+		
+		{% else %}
+			<div class="col-xs-12">
+				<h1> Page Under Construction!!!</h1>
+			</div>
+		{% endif %}
+	
+	</div>
+</section>
+
 {% if nodes.paginator.count > max_entry %}
 <div class="text-center">
 <ul class="pagination">

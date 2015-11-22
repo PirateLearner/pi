@@ -6,6 +6,9 @@ Contact-Us
 {% endblock %}
 
 {% block content_blog %}
-
-{% include "blogging/includes/contact.html" with form=form only %}
+<div class="row main-content-wrapper">  	
+   	<div class="content-area clearfix">
+	{% include "blogging/includes/contact.html" with form=form only %}
+	</div>
+</div>
 {% endblock %}

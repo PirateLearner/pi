@@ -1,36 +1,129 @@
 {% extends 'base.html'%}
-{% block content %}
-        <div class="row-fluid" style="min-height: 200px;">
-            <div class="col-md-2 col-md-offset2">
-                <ul class="nav nav-list">
-                    <li><a href=" {% url 'account_email'%}">Account Settings</a> </li>
-                    <li><a href="">Messages</a> </li>
-                    <li class="active"><a href="">Profile</a> </li>
-                </ul>
-            </div>
-            <div class="col-md-6">
-{% if user %}
-	<img width="50" height="50" src="{{ profile.get_avatar_url }}" />
-    <h1>Welcome, {{ profile.get_first_name }}</h1>
-    {% for account in user.socialaccount_set.all %}
-        <h2 style="text-transform:capitalize;">{{ account.provider }} account data</h2>
-        <p><img width="50" height="50" src="{{ account.get_avatar_url }}" /></p>
-        <p>UID: <a href="{{account.extra_data.link }}">{{ account.uid }}</a></p>
-        <p>Username: {{ account.extra_data.username }}</p>
-        <p>First Name: {{ account.extra_data.first_name }}</p>
-        <p>Last Name: {{ account.extra_data.last_name }}</p>
-        <p>Profile Link: <a href="{{ account.extra_data.link }}">{{ account.extra_data.link }}</a></p>
-        <p>Gender: {{ account.extra_data.gender }}</p>
-        <p>Birthday: {{ account.extra_data.birthday }}</p>
-    {% endfor %}
-    <p> Additional information </p>
-	<p>Birthday: {{ profile.get_birthday }}</p>
-	<p>Interest: {{ profile.get_interest }}</p>
-	<p>Occupation: {{ profile.get_occupation }}</p>
-	<p>Address: {{ profile.get_address }}</p>
-	
+{% load social_profile %}
+
+{% block extra_script %}
+{% if stats.article_total > 1 %}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+  google.load("visualization", "1", {packages:["corechart"]});
+  google.setOnLoadCallback(drawChart);
+  function drawChart() {
+
+	var stats = document.getElementById('piechart');
+
+	console.log(stats.dataset.contributions);
+	var contribution = parseInt(stats.dataset.contributions);
+	console.log(stats.dataset.published);
+	var published = parseInt(stats.dataset.published);
+	console.log(stats.dataset.pending);
+	var pending = parseInt(stats.dataset.pending);
+	console.log(stats.dataset.draft);	
+	var draft = parseInt(stats.dataset.draft);
+    // Create the data table.
+    var data = google.visualization.arrayToDataTable([
+          ['Status', 'Number'],
+	      ['Published', published],
+	      ['Pending', pending],
+	      ['Draft', draft],
+        ]);
+
+   
+    var options = {
+      title: 'Contribution: '+ contribution
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+    chart.draw(data, options);
+  }
+</script>
 {% endif %}
-            </div>
-        </div>
+
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid" >
+	<div class="row">
+	    {% include 'leftbar.html' with active="dashboard" %}
+		<div class="col-md-8 pT-50">
+		{% if user %}
+			<div class="row">
+					<!--<p>Member Since : {{ profile.get_signin_time|timesince }}</p>-->
+
+		{% if stats.article_total > 1 %}
+				<div class="col-md-12" id="piechart" data-contributions="{{ stats.article_total }}" data-published="{{ stats.article_published }}"
+				data-pending="{{ stats.article_pending }}" data-draft="{{ stats.article_draft }}"  style="height: 500px;">
+
+				</div>
+		{% else %}
+				<div class="col-md-4">
+					<div class="status-card">
+						<div class="title quote-a c-white bG-blue-700">
+							<span class="large-text">{{ stats.stats.article_total }}</span>
+							<span class="medium-text pL-8">bookmarks</span>
+						</div>
+						<div class="text">
+							Total Contribution <a href="{% url "blogging:" %}"></a>
+						</div>
+					</div>
+				</div>															
+				
+		{% endif %}
+
+				<div class="col-md-4">
+					<div class="status-card">
+						<div class="title quote-a c-white bG-orange-700">
+							<span class="large-text">{{ stats.bookmark_count }}</span>
+							<span class="medium-text pL-8">bookmarks</span>
+						</div>
+						<div class="text">
+							Number of Bookmarks
+						</div>
+					</div>
+				</div>															
+
+				<div class="col-md-4">
+					<div class="status-card">
+						<div class="title quote-a c-white bG-purple-500">
+							<span class="large-text">{{ stats.annotations_count }}</span>
+							<span class="medium-text pL-8">annotations</span>
+						</div>
+						<div class="text">
+							Number of Annotaions Made
+						</div>
+					</div>
+				</div>				
+				<div class="col-md-4">				
+					<div class="status-card">
+						<div class="title quote-a c-white bG-deep-orange-500">
+							<span class="large-text">{{ stats.voting_count }}</span>
+							<span class="medium-text pL-8">votes</span>
+						</div>
+						<div class="text">
+							Number of Votes Made
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-4">				
+					<div class="status-card">
+						<div class="title quote-a c-white bG-light-green-700">
+							<span class="large-text">{{ stats.notification_count }}</span>
+							<span class="medium-text pL-8">notification</span>
+						</div>
+						<div class="text">
+							Number of notifications
+						</div>
+					</div>
+				</div>
+
+				
+			</div>							
+		</div>				
+		{% endif %}
+		</div>
+		
+	</div> <!--/row -->
+</div>
 
 {% endblock %}

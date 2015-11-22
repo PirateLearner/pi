@@ -30,7 +30,7 @@ def save_message(request):
         create notifications for receiver
         add thread to each participant's thread set
     """
-    form = MessageForm(request.POST)
+    form = MessageForm(request.user,request.POST)
     if form.is_valid():
         sender = request.user
         receiver = get_object_or_404(User, pk=request.POST['to'])
@@ -81,7 +81,7 @@ def thread_messages(request, thread_id):
         context = {
             'messages': messages,
             'form': form,
-            'thread_id': thread_id
+            'thread': thread
         }
         return render(request, 'thread_messages.html', context)
     else:
@@ -91,7 +91,7 @@ def thread_messages(request, thread_id):
 def new_message(request):
     if request.method == 'POST':
         save_message(request)
-    form = MessageForm()
+    form = MessageForm(request.user)
     context = {
         'form': form
     }

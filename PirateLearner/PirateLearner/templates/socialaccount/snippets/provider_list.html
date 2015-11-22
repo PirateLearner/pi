@@ -1,6 +1,6 @@
 {% load socialaccount %}
 
-<div class="col-sm-12 col-md-6 col-lg-6 login-block">
+<div class="col-sm-12 col-md-4 col-lg-4 login-block">
 	<ul class="list-group login-group">
 		{% for provider in socialaccount.providers %}
 			{% if provider.id == "openid" %}
@@ -10,16 +10,14 @@
 			 					class="socialaccount_provider {{provider.id}} {{brand.id}}" 
 			 					href="{% provider_login_url provider.id openid=brand.openid_url process=process next=redirect_field_value %}"
 							>
-						<span class="icon pl-facebook2 {{brand.name}} icon-responsive " style="background-color:#354F88;"></span> Sign in with {{brand.name}}
+						<span class="fa fa-twitter {{brand.name}} icon-responsive " style="background-color:#354F88;"></span> Sign in with {{brand.name}}
 						</a>	
 					</li>	
 				{% endfor %}
 			{% endif %}
-			<li class="feature-item list-group-item btn btn-lg btn-primary {{provider.name}}" style="background-color:#3B5999;">
-				<a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}" 
-		     		href="{% provider_login_url provider.id process=process next=redirect_field_value %}"
-		 		>
-		 			<span class="icon pl-facebook2 {{provider.name}} icon-responsive " style="background-color:#354F88;"></span> Sign in with {{provider.name}}
+			<li class="list-group-item ">
+				<a title="{{provider.name}}" class="btn btn-lg btn-block btn-{{provider.name|lower }}" href="{% provider_login_url provider.id process=process next=redirect_field_value %}">
+		 			<i class="fa fa-{{ provider.name|lower }}"></i> Sign in with {{provider.name}}
 				</a>	
 			</li>	
 		{% endfor %}

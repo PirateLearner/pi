@@ -5,7 +5,7 @@ from rest_framework import viewsets, routers
 from views import (api_root, BlogContentViewSet, 
                    UserViewSet, AnnotationViewSet, 
                    BlogContentCommentView, CurrentUserView,
-                   VoteList, VoteDetail, VoteViewSet)
+                   VoteList, VoteDetail, VoteViewSet, BookmarkList,BookmarkDetail)
 
 from rest_framework.urlpatterns import format_suffix_patterns
 
@@ -35,6 +35,7 @@ annotation_detail = AnnotationViewSet.as_view({
     'delete': 'destroy'
     })
 
+
 vote_list = VoteList.as_view()
 vote_detail = VoteDetail.as_view()
 
@@ -53,6 +54,10 @@ urlpatterns = patterns('rest.views',
     
     url(r'^votes/$', vote_list, name='vote-list'),
     url(r'^votes/(?P<pk>[0-9]+)/$', vote_detail, name='vote-detail'),
+
+    url(r'^bookmarks/$', BookmarkList.as_view(), name='bookmarks-list'),
+    url(r'^bookmarks/(?P<pk>[0-9]+)/$', BookmarkDetail.as_view(), name='bookmark-detail'),
+
 )
 
 urlpatterns += patterns('',

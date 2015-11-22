@@ -1,7 +1,6 @@
 {% extends "blogging/base.html" %}
 {% block extra_script %}
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/css/forms.css"/>
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/css/base.css"/>
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/css/widgets.css"/>
 
 
@@ -31,16 +30,24 @@ Create Content - Phase-2
 
 
 {% block content_blog %}
-{% if success %}
+<div class="container-fluid" >
+	<div class="row">
+	    {% include 'leftbar.html' with active="create" %}
 
-<h1> Save Success! Thank You For Time. </h1> 
-
-
-{% else %}
-
-{% load crispy_forms_tags %}
-{% crispy form %}
-
-{% endif %}
+	<div class="col-md-8 pT-50">
+		{% if success %}
+		
+		<h1> Save Success! Thank You For Time. </h1> 
+		
+		
+		{% else %}
+		
+		{% load crispy_forms_tags %}
+		{% crispy form %}
+		
+		{% endif %}
+	</div>
+	</div>
+</div>
 {% endblock %}
 

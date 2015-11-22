@@ -50,7 +50,8 @@ def content_type(request):
 	NEXT -- Go to next page for creation of New content based on selected content type.
 	DELETE -- Delete the current selected content type (requires admin authorizations )
 	NEW -- Create New content type.
-	"""
+	"""	
+	
 	if request.method == "POST":
 		form = ContentTypeForm(request.POST)
 		if form.is_valid():
@@ -63,6 +64,9 @@ def content_type(request):
 				return HttpResponseRedirect(
 		            reverse("blogging:create-post"))
 			if action == 'delete':
+				if not request.user.is_staff:
+					# return permission denied
+					return HttpResponse(status=403)				
 				try:
 					filename = os.path.abspath(os.path.dirname(__file__))+"/custom/"+content_info.__str__().lower()+".py"
 					os.remove(filename)
@@ -170,13 +174,26 @@ def new_post(request):
 			blog.slug = slugify(blog.title)
 			if action == 'Publish':
 				blog.data = post_form.save(post,commit=True)
+				# send an email to administrator for reviewing
+				# for now change the special_flag to False TODO integrate it in project management App
+				blog.special_flag = False
 			elif action == 'Save Draft':
+				# for now change the special_flag to True TODO integrate it in project management App
+				blog.special_flag = True
 				blog.data = post_form.save(post)
 			
 # 			with transaction.atomic(), reversion.create_revision():	
 			blog.save()
 			if content_info_obj.is_leaf:
 				blog.tags.add(*post_form.cleaned_data['tags'])
+
+			if action == 'Publish':				
+				subject = 'Review: mail from PirateLearner'
+				message = blog.get_title() + "has been submitted for review by " + request.user.profile.get_name() + "\n"
+				html_message = '<a href="'+ blog.get_absolute_url() + '" target="_blank"> <strong> ' + blog.get_title() + '</strong> ' 
+				+ "has been submitted for review by " + request.user.profile.get_name()  
+				mail_admins(subject, message,fail_silently=True,html_message = html_message)
+
 			del request.session['content_info_id']
 			return HttpResponseRedirect(blog.get_absolute_url())
 # 			return render_to_response(
@@ -217,8 +234,21 @@ def edit_post(request,post_id):
 				blog.slug = slugify(blog.title)
 				if action == 'Publish':
 					blog.data = post_form.save(post,commit=True)
+					# for now change the special_flag to False TODO integrate it in project management App
+					blog.special_flag = False
+
 				elif action == 'Save Draft':
 					blog.data = post_form.save(post)
+					# for now change the special_flag to False TODO integrate it in project management App
+					blog.special_flag = True
+
+				if action == 'Publish':				
+					subject = 'Review: mail from PirateLearner'
+					message = blog.get_title() + "has been submitted for review by " + request.user.profile.get_name() + "\n"
+					html_message = '<a href="'+ blog.get_absolute_url() + '" target="_blank"> <strong> ' + blog.get_title() + '</strong> ' 
+					+ "has been submitted for review by " + request.user.profile.get_name()  
+					mail_admins(subject, message,fail_silently=True,html_message = html_message)
+
 				
 				# create the reversion for version control and revert back the deleted post
 # 				with transaction.atomic(), reversion.create_revision():	
@@ -261,6 +291,11 @@ def add_new_model(request, model_name):
 	print normal_model_name
 	
 	if normal_model_name == 'ContentType' :
+		
+		if not request.user.is_staff:
+			# return permission denied
+			return HttpResponse(status=403)
+		
 		FieldFormSet = formset_factory(FieldTypeForm,extra=1)
 		if request.method == 'POST':
 			form1 = ContentTypeCreationForm(request.POST)
@@ -351,13 +386,16 @@ def teaser(request,slug):
 		template = loader.get_template('blogging/includes/'+ blogs.content_type.__str__().lower() + '.html')
 		try:
 			json_obj = json.loads(blogs.data)
-			json_obj['title'] = blogs.title
-			json_obj['edit'] = reverse('blogging:edit-post',args = (post_id,))
 			# Instantiate the Meta class
 			description = strip_tags(json_obj.values()[0])
 			meta = Meta(title = blogs.title, description = truncatewords(description,120), section= blogs.section.title, url = blogs.get_absolute_url(),
 					image = blogs.get_image_url(), author = blogs.author_id, date_time = blogs.publication_start ,
 					object_type = 'article', keywords = [ tags.name for tags in blogs.tags.all()])
+
+			json_obj['title'] = blogs.title
+			json_obj['edit'] = reverse('blogging:edit-post',args = (post_id,))
+			json_obj['author'] = blogs.author_id
+			json_obj['published'] = blogs.published_flag
 			
 			available_versions = reversion.get_for_object(blogs)
 			patch_html = ""
@@ -379,6 +417,7 @@ def teaser(request,slug):
                                        'page': {'title':'Pirate Learner', 'tagline':'We learn from stolen stuff'},
                                        'patch': patch_html,
                                        'meta' : meta,
+                                       'can_edit':(not blogs.published_flag) and blogs.author_id == request.user , 
                                       })
 		return HttpResponse(template.render(context))
 	except (ValueError):
@@ -391,7 +430,7 @@ def teaser(request,slug):
 				print "Error in %s on line %d" % (fname, lineno)
 			raise Http404
 		
-		max_entry = getattr(settings, 'BLOGGING_MAX_ENTRY_PER_PAGE', 3)
+		max_entry = getattr(settings, 'BLOGGING_MAX_ENTRY_PER_PAGE', 10)
 
 		if section.is_leaf_node():
 			template = loader.get_template('blogging/teaser.html')
@@ -436,7 +475,7 @@ def teaser(request,slug):
 
 def tagged_post(request,tag):
 	try:
-		posts = BlogContent.objects.filter(tags__name = tag)
+		posts = BlogContent.objects.filter(tags__slug = tag)
 		max_entry = getattr(settings, 'BLOGGING_MAX_ENTRY_PER_PAGE', 3)
 		
 		page = request.GET.get('page')

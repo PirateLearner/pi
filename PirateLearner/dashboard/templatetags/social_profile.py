@@ -65,15 +65,18 @@ class SocialProfile(InclusionTag):
                 return extra_context        
             
         try:
-            extra_context['provider_name'] = profile.get_provider_name(provider)
-            extra_context['profile_image'] = profile.get_avatar_url(provider)
-            extra_context['profile_username'] = profile.get_name(provider)
-            extra_context['profile_gender'] = profile.get_gender(provider)
-            extra_context['profile_url'] = profile.get_social_url(provider)
-            extra_context['profile_email'] = profile.get_email(provider)
-            
-            if profile.is_social_account_exist(provider) == False:
+            if profile.is_social_account_exist(provider):
+                extra_context['provider_name'] = profile.get_provider_name(provider)
+                extra_context['profile_image'] = profile.get_avatar_url(provider)
+                extra_context['profile_username'] = profile.get_name(provider)
+                extra_context['profile_gender'] = profile.get_gender(provider)
+                extra_context['profile_url'] = profile.get_social_url(provider)
+                extra_context['profile_email'] = profile.get_email(provider)
+            else:
                 extra_context['profile_disable'] = True
+                extra_context['provider_name'] = provider
+                extra_context['profile_username'] = profile.get_name(provider)
+                extra_context['profile_image'] = profile.get_avatar_url(provider)
         except:
             print "Unexpected error:", sys.exc_info()[0]
             for frame in traceback.extract_tb(sys.exc_info()[2]):

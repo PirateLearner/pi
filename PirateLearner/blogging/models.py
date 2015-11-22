@@ -1,4 +1,5 @@
 from django.utils import timezone
+
 import sys
 from django.db import models
 from django.db.models import Q
@@ -133,6 +134,14 @@ class BlogParent(MPTTModel):
         return reverse('blogging:teaser-view', kwargs=kwargs)
     def get_menu_title(self):
         return self.title
+    
+    def get_child_count(self):
+        return self.children.count()
+    
+    def get_article_count(self):
+        return BlogContent.published.filter(section = self).count()
+    
+    
     class MPTTMeta:
             order_insertion_by = ['title']
 
@@ -179,6 +188,7 @@ class BlogContent(BaseContentClass):
         # Instantiate the Meta class
         description = strip_tags(json_obj.values()[0])
         return truncatewords(description,120)
+
     
     def get_title(self):
         return self.title
@@ -218,7 +228,36 @@ class BlogContent(BaseContentClass):
         print self.author_id #Anshul: Changed, don't remember why. Maybe in REST
         return self.author_id
         #return self.author_id.first_name or self.author_id.username  
-
+    def get_modified_year(self):
+        print "LAst Modified year is ", self.last_modified.year
+        return self.last_modified.year
+    
+    def get_modified_month(self):
+        return self.last_modified.month
+    def get_modified_day(self):
+        return self.last_modified.day
+    
+    def get_modified_time(self):
+        current_year = timezone.now().year
+        current_day = timezone.now().day
+        print "Printing localtime ", timezone.localtime(self.last_modified)
+        desired_time = timezone.localtime(self.last_modified)
+        
+        if(self.last_modified.year < current_year):
+            return self.last_modified.strftime("%d/%m/%Y")
+        elif(current_day == self.last_modified.day):
+            return desired_time.strftime("%I:%M %P")
+            #return self.last_modified
+        else:
+            return self.last_modified.strftime("%B, %d")
+    
+    def get_published_year(self):
+        pass
+    def get_published_month(self):
+        pass
+    def get_published_day(self):
+        pass
+    
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
@@ -290,6 +329,32 @@ class ContactPlugin(CMSPlugin):
         return 'ContactPlugin'
     def thanks(self):
         return self.thanks_text
+
+
+def get_published_count(user = None):
+    if user:
+        return BlogContent.objects.filter(published_flag=True,author_id=user).count()
+    else:
+        return BlogContent.objects.filter(published_flag=True).count()
+
+def get_pending_count(user = None):
+    if user:
+        return BlogContent.objects.filter(published_flag=False,special_flag=False,author_id=user).count()
+    else:
+        return BlogContent.objects.filter(published_flag=False,special_flag=False).count()
+
+def get_draft_count(user = None):
+    if user:
+        return BlogContent.objects.filter(published_flag=False,special_flag=True,author_id=user).count()
+    else:
+        return BlogContent.objects.filter(published_flag=False,special_flag=True).count()
+
+def get_contribution_count(user):
+    if user:
+        return BlogContent.objects.filter(author_id=user).count()
+    else:    
+        return None
+    
 
 # class VersionMeta(models.Model):
 #     revision = models.ForeignKey(Revision)  # There must be a relationship with Revision

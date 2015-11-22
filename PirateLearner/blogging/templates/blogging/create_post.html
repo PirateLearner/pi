@@ -12,10 +12,16 @@
 {% endblock %}
 
 {% block content_blog %}
+<div class="container-fluid" >
+	<div class="row">
+	    {% include 'leftbar.html' with active="create" %}
 
-{% load crispy_forms_tags %}
-{% crispy form form.helper %}
-
+	<div class="col-md-8 pT-50">
+		{% load crispy_forms_tags %}
+		{% crispy form form.helper %}
+	</div>
+	</div>
+</div>
 {% endblock %}
 
 

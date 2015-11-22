@@ -32,7 +32,7 @@ class ArticleForm(forms.Form):
 		self.helper.form_action = action
 		self.helper.layout = Layout(
 				Fieldset(
-                'Create Content of Type Article',
+                'Create Article',
                 'title',
 				'Body',
 				'section',

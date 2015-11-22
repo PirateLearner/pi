@@ -27,6 +27,10 @@ from meta_tags.views import Meta
 from blogging.utils import truncatewords
 from bookmarks.utils import count_words
 
+from bookmarks.serializers import BookmarkInstanceSerializer
+from rest_framework import generics
+
+
 def bookmarks(request):
     bookmarks = BookmarkInstance.objects.exclude(privacy_level = 'priv',user__is_staff=True).order_by("-saved")
     if request.user.is_authenticated():
@@ -42,7 +46,7 @@ def bookmarks(request):
 
 def tagged_bookmarks(request,tag):
     try:
-        bookmarks = BookmarkInstance.objects.filter(tags__name = tag)
+        bookmarks = BookmarkInstance.objects.filter(tags__slug = tag)
         return render_to_response("bookmarks/bookmarks.html", {'bookmarks':bookmarks,} ,context_instance=RequestContext(request))
     except ObjectDoesNotExist:
         raise Http404
@@ -220,7 +224,6 @@ def bookmark_details(request,slug):
         print "Unexpected error invalid URL:", sys.exc_info()[0]
         return Http404
         
-
 
 
 

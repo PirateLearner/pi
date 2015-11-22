@@ -34,7 +34,7 @@ urlpatterns = i18n_patterns('',
     url(r'^rest/', include("rest.urls", namespace="rest")),
 #    url(r'^voting/', include('voting.urls', namespace='voting')),
 #    url(r'^annotations/', include('annotations.urls', namespace='annotations')),
-    
+    url(r'^messages/', include("pl_messages.urls", namespace="messages")),
     url(r'^admin/', include(admin.site.urls)),
     #url(r'^user/', include('user_mgmt.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),

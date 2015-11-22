@@ -17,6 +17,18 @@ from allauth.socialaccount.models import SocialAccount
 
 from django.contrib.auth.signals import user_logged_in
 
+# import from blogging 
+from blogging.models import get_published_count, get_pending_count, get_draft_count, get_contribution_count 
+# import from bookmarks
+from bookmarks.models import get_bookmarks_count
+# import from annotaions
+from annotations.models import get_annotations_count 
+# import from Voting
+from voting.models import Vote
+# import from pl_messages
+from pl_messages.models import get_notification_count, get_user_notifications
+
+
 @receiver(user_logged_in)
 def CreateProfile(sender, request, user,**kwargs):
     """
@@ -34,7 +46,7 @@ def CreateProfile(sender, request, user,**kwargs):
         profile.user = user
         try:
             sociallogin = SocialAccount.objects.get(user=user)
-            print "LOGS: Caught the signal--> Printing extra data of the acccount: \n", sociallogin.extra_data
+            print "LOGS: Caught the signal--> Printing extra data of the account: \n", sociallogin.extra_data
             if('google' == sociallogin.provider ):
                 user.first_name = sociallogin.extra_data['given_name']
                 user.last_name = sociallogin.extra_data['family_name']
@@ -53,10 +65,22 @@ def CreateProfile(sender, request, user,**kwargs):
 @login_required
 def dashboard_home(request):
     template = loader.get_template('dashboard/home.html')
-    #profile = UserProfile.objects.get(user=request.user.id) or None
-    
+    profile = UserProfile.objects.get(user=request.user.id) or None
+    # acquire all the statistics of User
+    # Number of articles contributed, published, pending, drafted. 
+    # Total number of comments, votes and annotations
+    # Number of bookmarks
+    stats = {}
+    stats['article_total'] = get_contribution_count(request.user)
+    stats['article_published'] = get_published_count(request.user)
+    stats['article_draft'] = get_draft_count(request.user)
+    stats['article_pending'] = get_pending_count(request.user)
+    stats['bookmark_count'] = get_bookmarks_count(request.user);
+    stats['annotations_count'] = get_annotations_count(request.user)
+    stats['voting_count'] = Vote.objects.get_for_user_in_bulk(request.user).count()
+    stats['notification_count'] = get_notification_count(request.user)
     context = RequestContext(request, {
-                                        
+                                       "profile":profile,"stats":stats,
                                       })
     return HttpResponse(template.render(context))
 
@@ -137,6 +161,41 @@ def public_profile(request,user_id):
     
     except User.DoesNotExist:
         raise Http404
+    
+@login_required
+def manage_articles(request):
+    template = loader.get_template('dashboard/manage.html')
+    profile = UserProfile.objects.get(user=request.user.id) or None
+    
+    context = RequestContext(request, {
+                                       "profile":profile,
+                                      })
+    return HttpResponse(template.render(context))
+
+@login_required
+def published_articles(request):
+    template = loader.get_template('dashboard/published.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
+
+@login_required
+def pending_articles(request):
+    template = loader.get_template('dashboard/pending.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
+
+@login_required
+def draft_articles(request):
+    template = loader.get_template('dashboard/draft.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
+
+@login_required
+def bookmark_articles(request):
+    template = loader.get_template('dashboard/bookmark.html')
+    context = RequestContext(request, {})
+    return HttpResponse(template.render(context))
+
     
 class CustomLoginClass(LoginView):
     

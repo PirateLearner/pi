@@ -83,3 +83,9 @@ class AnnotationShareMap(BaseContentClass):
     
     class Meta:
         app_label = 'annotations'   
+        
+def get_annotations_count(user=None):
+    if user:
+        return Annotation.objects.filter(author = user).count()
+    else:
+        return Annotation.objects.count()

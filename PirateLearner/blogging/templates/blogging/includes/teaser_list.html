@@ -1,6 +1,69 @@
 {% load url from future %}
 {% load thumbnail %}
 {% load voting_tags %}
+{% load humanize %}
+
+<section>
+	<h2 class="heading"> {{ page.title|title }} </h2>
+	<div class="row">
+		<div class="col-md-8 ">
+		{% if nodes|length > 0 %}
+			{% for node in nodes %}
+				<article class="post vt-post">
+					<div class="row">
+
+						<div class="col-xs-12 col-sm-5 col-md-5 col-lg-4">
+							<div class="post-type post-img">
+								<div style="height:190px;overflow:hidden;position:relative;">
+									<a href="{{node.get_absolute_url}}" style="position:absolute;top:50%;transform:translate(0,-50%);">
+										<img class="img-responsive" alt="airticle image" src="{{ node.get_image_url }}"></img>
+									</a>
+								</div>
+								<div class="author-info author-info-2" style="float:none;">
+									<ul class="list-inline">
+										<li>
+											<div class="info"> <p> Posted on:</p> <strong>{{ node.publication_start|naturalday }}</strong></div>
+										</li>
+										{% score_for_object node as score %}
+										<li>
+											<div class="info"> <p> Score:</p> <strong>{{ score.score }}</strong></div>
+										</li>
+									</ul>
+								</div>
+
+							</div>
+						</div>
+
+						<div class="col-xs-12 col-sm-7 col-md-7 col-lg-8">
+							<div class="caption">
+								<h3 class="md-heading">
+									<a href="{{node.get_absolute_url}}">{{ node.title }}</a>
+								</h3>
+								<p>{{ node.get_summary }}</p>
+								<a class="btn btn-default btn-more" href="{{node.get_absolute_url}}" role="button">Read More</a>
+							</div>
+						</div>						
+					</div>
+				</article>
+			{% endfor %}
+		{% else %}
+			<div class="col-xs-12">
+				{% include 'under_construction.html' %}
+			</div>
+		{% endif %}
+		</div>
+		<!-- Sidebar for extra information -->
+		<div class="col-md-4">
+			{% include 'rightbar.html' %}
+		</div>
+	</div>
+
+</section>
+
+
+
+
+{% comment %}  
 				{% for node in nodes %}
 				<div class="media feature content-stack-article paper">
                 	<a  class="image" href="{{node.get_absolute_url}}" class="pull-left">
@@ -28,6 +91,7 @@
                 	</div>
                 </div>                
                 {% endfor %}	
+{% endcomment %}
 
 {% if nodes.paginator.count > max_entry %}
 <div class="text-center">

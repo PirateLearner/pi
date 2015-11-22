@@ -1,24 +1,67 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load tags %}
+{% load humanize %}
 {% block content %}
-    <div class="navbar navbar-default"></div>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
-            {% include 'leftbar.html' %}
-            <div class="col-md-6">
+            {% include 'leftbar.html' with active="inbox" %}
+            <div class="col-md-8 pT-50">
+            	<section class="panel">
+            		<header class="panel-heading gray-bg">
+            			<h4> Inbox </h4>
+            		</header>
+            		<div class="panel-body minimal">
+            			<!-- Add pagination here -->
+            			<div class="mail-option">
+            				<ul class="list-unstyled inbox-pagination ">	
+                                <li text-center><span>1-50 of 99</span></li>
+                                <li>
+                                    <a class="np-btn" href="#"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                                </li>
+                                <li>
+                                    <a class="np-btn" href="#"><span class="glyphicon glyphicon-chevron-right"></span></a>
+                                </li>
+            				</ul>
+            			</div>
+	            		<div class="table-inbox-wrap table-responsive">
+	            			<table class="table table-inbox table-hover">
+	            				<tbody>
+	            					{% for thread in threads %}
+	            						{% get_user request.user thread as sender %}
+	            						<tr class="{% get_class request.user thread %}">
+	            							<td> 
+	            								<img class="contacts-list-img" src="{{ sender.profile.get_avatar_url }}"  alt="..."> 
+	            							</td>
+	            							<td> 
+	            								<a href="{% url 'messages:thread_messages' thread.pk %}">{{ sender.profile.get_name|title }}</a>
+	            							</td>
+	            							<td>
+	            								<a href="{% url 'messages:thread_messages' thread.pk %}">{{ thread.last_message.body|truncatewords:"10" }}</a>
+	            							</td>
+	            							<td class="text-right">
+	            								<span class="badge ">{% get_message_count user thread %}</span>
+	            								<span> {{ thread.updated|naturaltime }} </span>	
+	            							</td>
+	            						</tr>
+	            					{% endfor %}
+	            				</tbody>
+	            			</table>
+	            		</div>
+            		</div>
+	            	
+            	</section>
+            	{% comment %}  
                 {% for thread in threads %}
-                    {% ifequal user thread.receiver %}
-                    {% else %}
-                    {% endifequal %}
-                    <div class="media media-border {% get_class user thread %}" data-url="{% url 'thread_messages' thread.pk %}">
-                      <a class="pull-left" href="#">
-                        <img class="media-object" src="{% static "img/avatar/default.jpg" %}" alt="...">
+                    {% get_user request.user thread as sender %}
+                    <div class="media media-border thread {% get_class user thread %}" data-url="{% url 'messages:thread_messages' thread.pk %}">
+                      <a class="pull-left" href="{% url 'messages:thread_messages' thread.pk %}">
+                        <img class="media-object" src="{{ sender.profile.get_avatar_url }}"  alt="...">
                       </a>
                       <div class="media-body">
                         <h4 class="media-heading">
-                            <a href="">
-                                {% get_user user thread %}
+                            <a href="{% url 'messages:thread_messages' thread.pk %}">
+                                {{ sender.profile.get_name|title }}
                             </a>
                             <a class="pull-right">
                                 <span class="badge badge-info">
@@ -30,10 +73,11 @@
                       </div>
                     </div>
                 {% endfor %}
+                {% endcomment %}
                 {% if not threads %}
                     <div class="alert alert-info">
                         <p align="center">You have not initiated any conversations yet !!
-                        <br>Click <a href="{% url 'new_message' %}"><strong>here</strong></a> to initiate one </p>
+                        <br>Click <a href="{% url 'messages:new_message' %}"><strong>here</strong></a> to initiate one </p>
                     </div>
                 {% endif %}
 
@@ -43,10 +87,10 @@
     </div>
 
 {% endblock %}
-{% block js %}
+{% block extra_script %}
     <script>
         $(document).ready(function(){
-            $('.media').click(function(){
+            $('.thread').click(function(){
                 var redirectUrl = $(this).data('url');
                 window.location = redirectUrl;
             });

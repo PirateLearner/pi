@@ -12,7 +12,7 @@ class BookmarkInstanceSerializer(serializers.ModelSerializer):
     
 class BookmarkSerializer(serializers.ModelSerializer):
     adder = serializers.Field(source='adder.username')
-    bookmark = serializers.RelatedField(many=True)
+    bookmark = serializers.RelatedField(queryset=BookmarkInstance.objects.all(), many=True)
     class Meta:
         model = Bookmark
         fields = ('id', 'url', 'adder','bookmark')

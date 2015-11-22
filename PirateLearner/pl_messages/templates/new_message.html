@@ -1,11 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="navbar navbar-default"></div>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
-            {% include 'leftbar.html' %}
-            <div class="col-md-6">
-                <form class="form form-horizontal" action="{% url 'new_message' %}" method="post">
+            {% include 'leftbar.html' with active='compose'%}
+            <div class="col-md-8 pT-50">
+                <form class="form form-horizontal" action="{% url 'messages:new_message' %}" method="post">
                     {% csrf_token %}
                     <div class="form-group">
                         <div class="col-md-2">

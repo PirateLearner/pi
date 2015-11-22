@@ -66,13 +66,22 @@ class BookmarkInstance(BaseContentClass):
             # has_favicon=False is temporary as the view for adding bookmarks will change it
             bookmark = Bookmark(url=url, adder=self.user)
             bookmark.save()
-#         try:
-#             folder = BookmarkFolderInstance.objects.get(adder = self.user,title=folder_name )
-#         except BookmarkFolderInstance.DoesNotExist:
-#             folder = BookmarkFolderInstance(adder = self.user,title=folder_name,description= self.description )
-#             folder.save()
+        if self.folder:
+            folder_name = self.folder.title
+        else:
+            print "Logs:folder not provided"
+            folder_name = 'Orphan'
+            try:
+                folder = BookmarkFolderInstance.objects.get(adder = self.user,title=folder_name )
+            except BookmarkFolderInstance.DoesNotExist:
+                print "Logs:Creating Orphan folder for user"
+                folder = BookmarkFolderInstance.create(adder = self.user,title=folder_name,description= self.description )
+                folder.save()
+                self.folder = folder
+        if not self.privacy_level:
+            self.privacy_level = 'priv'
+            print "Logs: Privacy level not provided setting default to private" 
         self.bookmark = bookmark
-#         self.folder = folder
         super(BookmarkInstance, self).save(force_insert, force_update)
     
     def delete(self):
@@ -120,8 +129,8 @@ class BookmarkInstance(BaseContentClass):
         for tag in tags:
             try:
                 tmp = {}
-                tmp['name'] = tag.name
-                kwargs = {'tag': tag.name,}
+                tmp['name'] = tag.slug
+                kwargs = {'tag': tag.slug,}
                 tmp['url'] = reverse('bookmarks:tagged-bookmarks',kwargs=kwargs)
                 tag_list.append(tmp)
             except:
@@ -154,6 +163,15 @@ class LatestBookmarksPlugin(CMSPlugin):
         return posts[:self.latest_entries]
 
 
+def get_bookmarks_count(user=None):
+    try:
+        if user:
+            return BookmarkInstance.objects.filter(user = user).count()
+        else:
+            return BookmarkInstance.objects.count()
+    except:
+        return None
+    
     
 def get_user_bookmark(url,user):
     try:

@@ -17,6 +17,10 @@ from django.contrib.contenttypes.models import ContentType
 
 #Voting App serializers
 from voting.models import Vote, UPVOTE, DOWNVOTE
+
+#bookmark app models
+from bookmarks.models import Bookmark, PRIVACY, BookmarkFolderInstance, BookmarkInstance
+
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -34,10 +38,11 @@ class UserSerializer(serializers.ModelSerializer):
     url = serializers.SerializerMethodField()
     
     voted = serializers.PrimaryKeyRelatedField(many=True, queryset=Vote.objects.all())
-    
+    saved_bookmarks = serializers.PrimaryKeyRelatedField(many=True, queryset=BookmarkInstance.objects.all())
+    bookmarks_folder = serializers.PrimaryKeyRelatedField(many=True, queryset=BookmarkFolderInstance.objects.all())
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'annotations', 'gravatar', 'url', 'voted',)
+        fields = ('id', 'username', 'first_name', 'last_name', 'annotations', 'gravatar', 'url', 'voted','saved_bookmarks','bookmarks_folder',)
         
     def get_gravatar(self, obj):
         return '#'
@@ -257,3 +262,11 @@ class AnnotationSerializer(serializers.ModelSerializer):
                                                     user=user)
             sharing.save()
         return annotation    
+    
+class BookmarkInstanceSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.username')
+    class Meta:
+        model = BookmarkInstance
+        fields = ('id', 'title','user', 'description', 'image_url', 'folder', 'privacy_level')
+    
+    

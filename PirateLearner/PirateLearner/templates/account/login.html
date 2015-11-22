@@ -8,14 +8,19 @@
 
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
+
 {% block content %}
-
-{% if socialaccount.providers  %}
-
-{% include "socialaccount/snippets/provider_list.html" with process="login" redirect_field_value=redirect_field_value%}
-
-{% include "socialaccount/snippets/login_extra.html" %}
-
-{% endif %}
-
+<div class="row main-content-wrapper">  	
+   	<div class="content-area clearfix">
+			{% if socialaccount.providers  %}
+		<section>
+		    <h2 class="heading">{% trans "Log In" %}</h2>
+			
+			{% include "socialaccount/snippets/provider_list.html" with process="login" redirect_field_value=redirect_field_value%}
+			
+			{% include "socialaccount/snippets/login_extra.html" %}
+		</section>			
+			{% endif %}
+		</div>
+  </div>
 {% endblock %}

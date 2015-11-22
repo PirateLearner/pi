@@ -1,4 +1,8 @@
-
+"""
+Template Tags for following functionalities:
+    1. tag for rendering contact form.
+    2. tag for rendering list of articles pending for editors approval.
+"""
 from copy import copy
 from classytags.core import Options
 from classytags.arguments import Argument
@@ -10,11 +14,13 @@ from django.utils.safestring import mark_safe
 from django.core.mail import  mail_admins
 from blogging.forms import ContactForm
 from django.template import RequestContext
-import sys
+from blogging.models import BlogContent
+from taggit.models import Tag
+from django.core.urlresolvers import reverse
 
 import sys
+import traceback
 
-import sys
 
 register = template.Library()
 
@@ -144,7 +150,214 @@ class ContactTag(InclusionTag):
             print "Unexpected error:", sys.exc_info()[0]
             return "Http404"
 
- 
+class DraftTag(InclusionTag):
+    template = 'blogging/templatetags/drafts.html'
+    name = 'render_draft_articles'
+    options = Options(
+        Argument('user', default=None, required=False),
+    )
+
+    def __init__(self, parser, tokens):
+        self.parser = parser
+        super(DraftTag, self).__init__(parser, tokens)
+
+    def get_template(self, context, **kwargs):
+        return self.template
+
+    
+    def render_tag(self, context, **kwargs):
+        context.push()
+        print "draft tag is called"
+        try:
+            request = context['request']
+            template = self.get_template(context, **kwargs)
+            data = self._get_context(context, **kwargs)
+            output = render_to_string(template, data)
+            context.pop()
+            print output
+            return output
+        except:
+            print "Unexpected error:", sys.exc_info()[0]
+            for frame in traceback.extract_tb(sys.exc_info()[2]):
+                fname,lineno,fn,text = frame
+                print "Error in %s on line %d" % (fname, lineno)
+            return "Http404"
+    def _get_context(self,context, user):
+        extra_context = {}
+        extra_context['drafts'] = BlogContent.objects.filter(published_flag=False,special_flag=True)
+        return extra_context  
+
+class PendingTag(InclusionTag):
+    template = 'blogging/templatetags/pending.html'
+    name = 'render_pending_articles'
+    options = Options(
+        Argument('user', default=None, required=False),
+    )
+    def __init__(self, parser, tokens):
+        self.parser = parser
+        super(PendingTag, self).__init__(parser, tokens)
+        
+    def get_template(self, context, **kwargs):
+        return self.template
+    
+    def render_tag(self, context, **kwargs):
+        """
+        Overridden from InclusionTag to push / pop context to avoid leaks
+        """
+        context.push()
+        print "pendig tag is called"
+        try:
+            template = self.get_template(context, **kwargs)
+            data = self.get_context(context, **kwargs)
+            output = render_to_string(template, data)
+#             print output
+            context.pop()
+            return output
+        except:
+            print "Unexpected error:", sys.exc_info()[0]
+            for frame in traceback.extract_tb(sys.exc_info()[2]):
+                fname,lineno,fn,text = frame
+                print "Error in %s on line %d" % (fname, lineno)
+            
+            return "Http404"
+
+        
+    def _get_data_context(self,context,user):
+        extra_context = copy(context)
+        if user:
+            print "User ", user
+            extra_context['pending'] = BlogContent.objects.filter(published_flag=False,special_flag=False,author_id=user)
+            print "Printing pending articles ", extra_context['pending']
+        else:
+            extra_context['pending'] = BlogContent.objects.filter(published_flag=False,special_flag=False)
+        return extra_context
+            
+
+    def get_context(self, context,user):
+        extra_context = self._get_data_context(context,user)
+        return extra_context
+
+
+class ReviewTag(InclusionTag):
+    template = 'blogging/templatetags/review.html'
+    name = 'render_review_articles'
+#     options = Options(
+#         Argument('template_name'),
+#         Argument('count'),
+#         Argument('base_parent', default=None, required=False),
+#         Argument('tags', default=None, required=False),
+#     )
+
+    def __init__(self, parser, tokens):
+        self.parser = parser
+        super(ReviewTag, self).__init__(parser, tokens)
+
+    def get_template(self, context, **kwargs):
+        return self.template
+
+    
+    def render_tag(self, context, **kwargs):
+        context.push()
+        print "draft tag is called"
+        try:
+            request = context['request']
+            template = self.get_template(context, **kwargs)
+            data = self._get_context(context, **kwargs)
+            output = render_to_string(template, data)
+            context.pop()
+            print output
+            return output
+        except:
+            print "Unexpected error:", sys.exc_info()[0]
+            for frame in traceback.extract_tb(sys.exc_info()[2]):
+                fname,lineno,fn,text = frame
+                print "Error in %s on line %d" % (fname, lineno)
+            return "Http404"
+    def _get_context(self,context, **kwargs):
+        extra_context = {}
+        extra_context['review'] = BlogContent.objects.filter(published_flag=False,special_flag=False)
+        return extra_context  
+
+
+class PublishedTag(InclusionTag):
+    template = 'blogging/templatetags/published.html'
+    name = 'render_published_articles'
+    options = Options(
+        Argument('user', default=None, required=False),
+    )
+    def __init__(self, parser, tokens):
+        self.parser = parser
+        super(PublishedTag, self).__init__(parser, tokens)
+        
+    def get_template(self, context, **kwargs):
+        return self.template
+    
+    def render_tag(self, context, **kwargs):
+        """
+        Overridden from InclusionTag to push / pop context to avoid leaks
+        """
+        context.push()
+        print "published tag is called"
+        try:
+            template = self.get_template(context, **kwargs)
+            data = self.get_context(context, **kwargs)
+            output = render_to_string(template, data)
+#             print output
+            context.pop()
+            return output
+        except:
+            print "Unexpected error:", sys.exc_info()[0]
+            for frame in traceback.extract_tb(sys.exc_info()[2]):
+                fname,lineno,fn,text = frame
+                print "Error in %s on line %d" % (fname, lineno)
+            
+            return "Http404"
+
+        
+    def _get_data_context(self,context,user):
+        extra_context = copy(context)
+        if user:
+            print "User ", user
+            extra_context['published'] = BlogContent.objects.filter(published_flag=True,author_id=user)
+            print "Printing published articles ", extra_context['published']
+        else:
+            extra_context['published'] = BlogContent.objects.filter(published_flag=True)
+        return extra_context
+            
+
+    def get_context(self, context,user):
+        extra_context = self._get_data_context(context,user)
+        return extra_context
+
+@register.assignment_tag
+def get_blogging_tags():
+    tags = Tag.objects.all()[:10]
+    tag_list = []
+    for tag in tags:
+        try:
+            tmp = {}
+            tmp['name'] = tag.slug
+            kwargs = {'tag': tag.slug,}
+            if len(tmp['name']) > 0:                    
+                tmp['url'] = reverse('blogging:tagged-posts',kwargs=kwargs)
+                tag_list.append(tmp)
+            else:
+                continue
+        except:
+            print "Unexpected error:", sys.exc_info()[0]
+            for frame in traceback.extract_tb(sys.exc_info()[2]):
+                fname,lineno,fn,text = frame
+                print "Error in %s on line %d" % (fname, lineno)
+    return tag_list
+
+@register.assignment_tag
+def get_recent_articles():
+    return BlogContent.published.all()[:3]
+
 
 register.tag(ContentRender)
 register.tag(ContactTag)
+register.tag(DraftTag)
+register.tag(PublishedTag)
+register.tag(PendingTag)
+register.tag(ReviewTag)

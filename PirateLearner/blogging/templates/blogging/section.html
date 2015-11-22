@@ -11,7 +11,10 @@
 
 
 {% block content_blog %}
-
-{% include "blogging/includes/section_view.html" with nodes=nodes max_entry=max_entry %}
+<div class="row main-content-wrapper">  	
+   	<div class="content-area clearfix">
+	{% include "blogging/includes/section_view.html" with nodes=nodes max_entry=max_entry %}
+	</div>
+</div>
 {% endblock %}
 

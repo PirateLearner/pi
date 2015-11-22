@@ -13,7 +13,7 @@ from rest_framework import generics
 from rest_framework.views import APIView
 
 from rest.serializers import *
-from rest.utils import IsOwnerOrReadOnly, AnnotationIsOwnerOrReadOnly, VoteIsOwnerOrReadOnly
+from rest.utils import IsOwnerOrReadOnly, AnnotationIsOwnerOrReadOnly, VoteIsOwnerOrReadOnly, BookmarkIsOwnerOrReadOnly
 
 
 @api_view(('GET',))
@@ -25,7 +25,8 @@ def api_root(request, format=None):
         'user': reverse('rest:user-list', request=request, format=format),
         'annotations': reverse('rest:annotations-list', request=request, format=format),
         'currentUser': reverse('rest:current-user', request=request, format=format),
-        'vote': reverse('rest:vote-list', request=request, format=format),            
+        'vote': reverse('rest:vote-list', request=request, format=format),
+        'bookmarks': reverse('rest:bookmarks-list', request=request, format=format),            
         })
  
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
@@ -153,3 +154,21 @@ class BlogContentCommentView(APIView):
         #Now, put them into a serializer
         serializer = AnnotationSerializer(annotations, many=True)
         return Response(serializer.data)
+    
+class BookmarkList(generics.ListCreateAPIView):
+    queryset = BookmarkInstance.objects.all()
+    serializer_class = BookmarkInstanceSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, 
+                          BookmarkIsOwnerOrReadOnly,)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class BookmarkDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = BookmarkInstance.objects.all()
+    serializer_class = BookmarkInstanceSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+    

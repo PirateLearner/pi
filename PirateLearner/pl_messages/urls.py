@@ -7,6 +7,6 @@ urlpatterns = patterns('',
     url(r'^compose/$', new_message, name='new_message'),
     url(r'^all/$', home, name='all_threads'),
     url(r'^save/$', save_message, name='save_message'),
-    url(r'^thread/view/([0-9]*)$', thread_messages, name='thread_messages'),
+    url(r'^thread/view/([0-9]+)$', thread_messages, name='thread_messages'),
 
 )
