@@ -1,0 +1,62 @@
+<div class="col-md-2">
+{% if request.user.is_authenticated %}
+	<div class="navbar-header">
+		<button type="button" data-target="#sidenavbarCollapse" data-toggle="collapse" class="navbar-toggle" aria-expanded="false" aria-controls="navbar">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
+	</div> 
+	<div class="media user-media well-small">
+	    <a class="user-link" href="{% url 'dashboard:dashboard-profile' user_id=request.user.id %}">
+	        <img class="media-object img-thumbnail user-img" alt="User Picture" src="{{ request.user.profile.get_avatar_url }}" />
+	    </a>
+	    <br />
+	    <div class="media-body">
+	        <h5 class="media-heading"> {{ request.user.profile.get_name|title }} </h5>
+	        <ul class="list-unstyled user-info">
+	            <li>
+	                 <a class="btn btn-success btn-xs btn-circle" style="width: 10px;height: 12px;"></a> Online
+	            </li>
+	        </ul>
+	    </div>
+	    <br />
+	</div>
+	
+    <ul class="nav nav-pills nav-stacked navbar-collapse collapse" id="sidenavbarCollapse">
+        <li><a href="{% url 'dashboard:dashboard-home' %}" class="{% ifequal active 'dashboard' %} active {% endifequal %}">
+        	<span class="glyphicon glyphicon-dashboard"></span> Dashboard</a>
+        </li>
+        <li><a href="{% url 'dashboard:dashboard-profile' user_id=request.user.id %}" class="{% ifequal active 'profile' %} active {% endifequal %}">
+        	<span class="glyphicon glyphicon-user"></span> Profile</a>
+        </li>
+        <li><a href="{% url 'dashboard:dashboard-bookmarks' %}" class="{% ifequal active 'bookmark' %} active {% endifequal %}">
+        	<span class="glyphicon glyphicon-bookmark"></span> Bookmarks</a>
+        </li>
+		{% if request.user.is_staff %}
+		<li><a href="{% url 'blogging:content-type' %}" class="{% ifequal active 'create' %} active {% endifequal %}">
+			<span class="glyphicon glyphicon-plus-sign"></span> Create Article</a>
+		</li>                  
+        {% endif %}
+        <li><a href="{% url 'dashboard:dashboard-published' %}" class="{% ifequal active 'published' %} active {% endifequal %}">
+        	<span class="glyphicon glyphicon-saved"></span> Publication</a>
+        </li>
+        <li><a href="{% url 'dashboard:dashboard-pending' %}" class="{% ifequal active 'pending' %} active {% endifequal %}">
+        	<span class="glyphicon glyphicon-export"></span> Pending</a>
+        </li>                
+        <li><a href="{% url 'dashboard:dashboard-draft' %}" class="{% ifequal active 'draft' %} active {% endifequal %}">
+        	<span class="glyphicon glyphicon-import"></span> Draft</a>
+        </li>                                                        
+		{% if request.user.is_staff %}
+		<li><a href=" {% url 'dashboard:dashboard-admin-articles'%}" class="{% ifequal active 'manage' %} active {% endifequal %}"> 
+			<span class="glyphicon glyphicon-tasks"></span> Review</a>
+		</li>
+		{% endif %}
+            	
+    	<li class="divider-vertical">Messages</li>
+        <li><a href="{% url 'messages:new_message' %}" class="{% ifequal active 'compose' %} active {% endifequal %}"><span class="glyphicon glyphicon-pencil"></span> Compose</a></li>
+        <li><a href="{% url 'messages:home_message' %}" class="{% ifequal active 'inbox' %} active {% endifequal %}"><span class="glyphicon glyphicon-envelope"></span> Inbox</a></li>
+    </ul>
+{% endif %}
+</div>

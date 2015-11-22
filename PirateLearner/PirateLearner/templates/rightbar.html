@@ -1,0 +1,40 @@
+{% load blogging_tags %}
+{% load humanize %}
+
+<div class="row">
+	<!-- Recent articles -->
+	<div class="col-sm-6 col-md-12 col-lg-12">
+		<div class="panel panel-tags theme-panel">
+			<div class="panel-heading">Recent Articles</div>
+			<div class="panel-body nopadding">
+				{% get_recent_articles as articles %}
+				{% for article in articles %}
+					<div class="media">
+						<div class="media-left"> <a href="{{ article.get_absolute_url }}"> <img src="{{ article.get_image_url }}" alt="image"> </a> </div>
+						<div class="media-body">
+							<h4 class="media-heading"><a href="{{ article.get_absolute_url }}">{{ article.get_title }}</a></h4>
+							<p><a href="#">{{ article.get_parent.get_menu_title }}</a> • {{ article.publication_start|naturaltime }}</p>
+						</div>
+					</div>					
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	<!-- Tags -->
+	<div class="col-sm-6 col-md-12 col-lg-12">
+		<div class="panel panel-tags theme-panel">
+			<div class="panel-heading">Tags</div>
+			<div class="panel-body">
+				<ul class="list-inline tags">
+					{% get_blogging_tags as tags %}				
+					{% for tag in tags %}
+					<li>
+						<a href="{{ tag.url }}">{{ tag.name }}</a>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

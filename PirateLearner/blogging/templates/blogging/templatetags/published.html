@@ -1,0 +1,43 @@
+{% load tz %}
+<div class="panel panel-default">
+	<div class="panel-heading panel-success">Published Articles</div>
+	{% if not published|length > 0 %}
+		<h3> <span class="glyphicon glyphicon-info"></span> No Article Published yet!!!</h3>
+		{% if not request.user.is_staff %}
+			<div class="alert alert-warning alert-dismissible" role="alert">
+			It seems you are not our staff yet. Want to contribute? <a href="en/contact-us/?contact_type=Join"> Contact US </a>
+			</div>
+		{% endif %}
+	{% else %}
+	<div class="table-responsive">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<td>
+						Title
+					</td>
+					<td>
+						Section
+					</td>
+					<td>
+						Date
+					</td>
+				</tr>
+			</thead>
+			<tbody>
+			{% for el in published %}
+				<tr>
+					<td> <a href="{{ el.get_absolute_url }}"> {{ el.get_title }} </a> </td>
+					<td> {{ el.get_parent.get_menu_title }} </td>
+					{% comment %} TODO define a function for last modified date {% endcomment %}
+					<td title="{{ el.publication_start }}">
+						{{ el.publication_start }}							
+		 		    </td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	{% endif %}
+	
+</div>

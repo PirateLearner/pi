@@ -1,0 +1,15 @@
+{% extends 'base.html'%}
+{% load social_profile %}
+{% load blogging_tags %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+		{% include 'leftbar.html' with active="draft" %}
+        <div class="col-md-8 pT-50">
+			{% if request.user.is_authenticated %}
+				{% render_draft_articles request.user%}
+			{% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
