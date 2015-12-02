@@ -189,9 +189,9 @@ def new_post(request):
 
 			if action == 'Publish':				
 				subject = 'Review: mail from PirateLearner'
-				message = blog.get_title() + "has been submitted for review by " + request.user.profile.get_name() + "\n"
-				html_message = '<a href="'+ blog.get_absolute_url() + '" target="_blank"> <strong> ' + blog.get_title() + '</strong> ' 
-				+ "has been submitted for review by " + request.user.profile.get_name()  
+				message = " "+ str(blog.get_menu_title()) + "has been submitted for review by " + str(request.user.profile.get_name()) + "\n"
+				html_message = '<a href="'+ "http:"+ str(settings.DOMAIN_URL) + str(blog.get_absolute_url()) + '" target="_blank"> <strong> ' + str(blog.get_title()) + '</strong> ' + "has been submitted for review by " + str(request.user.profile.get_name())
+				 
 				mail_admins(subject, message,fail_silently=True,html_message = html_message)
 
 			del request.session['content_info_id']
@@ -250,7 +250,7 @@ def edit_post(request,post_id):
 				if action == 'Publish':				
 					subject = 'Review: mail from PirateLearner'
 					message = " "+ str(blog.get_menu_title()) + "has been submitted for review by " + str(request.user.profile.get_name()) + "\n"
-					html_message = '<a href="'+ str(blog.get_absolute_url()) + '" target="_blank"> <strong> ' + str(blog.get_title()) + '</strong> ' + "has been submitted for review by " + str(request.user.profile.get_name())
+					html_message = '<a href="'+ "http:"+ str(settings.DOMAIN_URL) + str(blog.get_absolute_url()) + '" target="_blank"> <strong> ' + str(blog.get_title()) + '</strong> ' + "has been submitted for review by " + str(request.user.profile.get_name())
 					 
 					mail_admins(subject, message,fail_silently=True,html_message = html_message)
 				
