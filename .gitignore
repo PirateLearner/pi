@@ -62,3 +62,4 @@ docs/_build/
 */blogging/custom
 */blogging/custom/*
 */PirateLearner/settings.py
+blogging/custom/article.py blogging/custom/blog.py blogging/custom/defaultblog.py blogging/custom/defaultsection.py blogging/custom/__init__.py blogging/custom/section.py
