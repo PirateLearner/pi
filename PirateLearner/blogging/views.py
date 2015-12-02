@@ -230,7 +230,7 @@ def edit_post(request,post_id):
 				post = request.POST.copy()
 				blog.title = post_form.cleaned_data["title"]
 				blog.section = post_form.cleaned_data["section"]
-				blog.author_id = request.user
+# 				blog.author_id = request.user
 				blog.slug = slugify(blog.title)
 				if action == 'Publish':
 					blog.data = post_form.save(post,commit=True)
@@ -241,19 +241,20 @@ def edit_post(request,post_id):
 					blog.data = post_form.save(post)
 					# for now change the special_flag to False TODO integrate it in project management App
 					blog.special_flag = True
-
-				if action == 'Publish':				
-					subject = 'Review: mail from PirateLearner'
-					message = blog.get_title() + "has been submitted for review by " + request.user.profile.get_name() + "\n"
-					html_message = '<a href="'+ blog.get_absolute_url() + '" target="_blank"> <strong> ' + blog.get_title() + '</strong> ' 
-					+ "has been submitted for review by " + request.user.profile.get_name()  
-					mail_admins(subject, message,fail_silently=True,html_message = html_message)
-
 				
 				# create the reversion for version control and revert back the deleted post
 # 				with transaction.atomic(), reversion.create_revision():	
 				blog.save()
-				blog.tags.set(*post_form.cleaned_data['tags'])				
+				blog.tags.set(*post_form.cleaned_data['tags'])
+
+				if action == 'Publish':				
+					subject = 'Review: mail from PirateLearner'
+					message = " "+ str(blog.get_menu_title()) + "has been submitted for review by " + str(request.user.profile.get_name()) + "\n"
+					html_message = '<a href="'+ str(blog.get_absolute_url()) + '" target="_blank"> <strong> ' + str(blog.get_title()) + '</strong> ' + "has been submitted for review by " + str(request.user.profile.get_name())
+					 
+					mail_admins(subject, message,fail_silently=True,html_message = html_message)
+				
+								
 				return HttpResponseRedirect(blog.get_absolute_url())
 # 				return render_to_response(
 # 										"blogging/create_page.html",
