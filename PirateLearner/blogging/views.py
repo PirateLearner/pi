@@ -76,6 +76,12 @@ def content_type(request):
 				except OSError as e: # this would be "except OSError, e:" before Python 2.6
 					raise # re-raise exception if a different error occured
 	else:
+		
+		if not request.user.is_staff:
+			request.session['content_info_id'] = 5
+			return HttpResponseRedirect(
+		            reverse("blogging:create-post"))
+		
 		if 'content_info_id' in request.session:
 			try:
 				content_info_obj = BlogContentType.objects.get(
