@@ -34,11 +34,9 @@
         <li><a href="{% url 'dashboard:dashboard-bookmarks' %}" class="{% ifequal active 'bookmark' %} active {% endifequal %}">
         	<span class="glyphicon glyphicon-bookmark"></span> Bookmarks</a>
         </li>
-		{% if request.user.is_staff %}
 		<li><a href="{% url 'blogging:content-type' %}" class="{% ifequal active 'create' %} active {% endifequal %}">
 			<span class="glyphicon glyphicon-plus-sign"></span> Create Article</a>
 		</li>                  
-        {% endif %}
         <li><a href="{% url 'dashboard:dashboard-published' %}" class="{% ifequal active 'published' %} active {% endifequal %}">
         	<span class="glyphicon glyphicon-saved"></span> Publication</a>
         </li>
