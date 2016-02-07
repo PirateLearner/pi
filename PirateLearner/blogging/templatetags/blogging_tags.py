@@ -184,7 +184,10 @@ class DraftTag(InclusionTag):
             return "Http404"
     def _get_context(self,context, user):
         extra_context = {}
-        extra_context['drafts'] = BlogContent.objects.filter(published_flag=False,special_flag=True)
+        if user:
+            extra_context['drafts'] = BlogContent.objects.filter(published_flag=False,special_flag=True,author_id=user)
+        else:
+            extra_context['drafts'] = BlogContent.objects.filter(published_flag=False,special_flag=True)
         return extra_context  
 
 class PendingTag(InclusionTag):

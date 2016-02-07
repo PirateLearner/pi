@@ -97,7 +97,7 @@ def get_thread(sender, receiver, last_msg):
        else
        create new thread and add participants and return it
     """
-    thread = Thread.objects.filter(participants=sender).filter(participants=receiver)[0]
+    thread = Thread.objects.filter(participants=sender).filter(participants=receiver).first()
     created = False
     if not thread:
         thread = Thread.objects.create(last_message=last_msg)

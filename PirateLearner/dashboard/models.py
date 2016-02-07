@@ -275,46 +275,46 @@ class UserProfile(BaseContentClass):
     TODO define these functions for twitter also
     """    
     def _get_google_fname(self,profile):
-        return str(profile.extra_data['name']).split(' ')[0]
+        return str(profile.extra_data['name']).split(' ')[0].encode('utf-8')
     
     def _get_google_lname(self,profile):
-        return profile.extra_data['family_name']
+        return profile.extra_data['family_name'].encode('utf-8')
 
     def _get_google_email(self,profile):
-        return profile.extra_data['email']
+        return profile.extra_data['email'].encode('utf-8')
 
     def _get_google_email(self,profile):
-        return profile.extra_data['email']
+        return profile.extra_data['email'].encode('utf-8')
 
     def _get_google_username(self,profile):
-        return profile.extra_data['given_name']
+        return profile.extra_data['given_name'].encode('utf-8')
 
     def _get_google_link(self,profile):
         return profile.extra_data['link']
 
     def _get_fb_fname(self,profile):
-        return profile.extra_data['first_name']
+        return profile.extra_data['first_name'].encode('utf-8')
     
     def _get_fb_lname(self,profile):
-        return profile.extra_data['last_name']
+        return profile.extra_data['last_name'].encode('utf-8')
 
     def _get_fb_email(self,profile):
-        return profile.extra_data['email']
+        return profile.extra_data['email'].encode('utf-8')
 
     def _get_fb_username(self,profile):
-        return profile.extra_data['name']
+        return profile.extra_data['name'].encode('utf-8')
 
     def _get_fb_link(self,profile):
         return profile.extra_data['link']
     
     def _get_tw_fname(self,profile):
-        return str(profile.extra_data['name']).split(' ')[0]
+        return str(profile.extra_data['name']).split(' ')[0].encode('utf-8')
 
     def _get_tw_lname(self,profile):
-        return str(profile.extra_data['name']).split(' ')[-1]
+        return str(profile.extra_data['name']).split(' ')[-1].encode('utf-8')
 
     def _get_tw_username(self,profile):
-        return profile.extra_data['screen_name']
+        return profile.extra_data['screen_name'].encode('utf-8')
 
     def _get_tw_link(self,profile):
         return profile.extra_data['url']
