@@ -63,13 +63,13 @@ def has_enough_length(tag):
     
     if tag.string is None:
         tag_string = ''.join(str(tag_child) for tag_child in tag.contents)
-        print "Printing contents string ", tag_string 
-        flag = len(tag_string) > 100
+        print "Printing contents string ", tag_string.encode('utf-8') 
+        flag = len(tag_string.encode('utf-8')) > 100
         print "returning ", flag
         return flag
     else:
-        print "Printing string ", tag.string
-        flag = len(tag.string) > 100
+        print "Printing string ", tag.string.encode('utf-8')
+        flag = len(tag.string.encode('utf-8')) > 100
         print "returning ", flag
         return flag
 #     
