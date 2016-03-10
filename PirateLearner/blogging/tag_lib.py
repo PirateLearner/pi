@@ -62,9 +62,9 @@ def has_enough_length(tag):
     print "has_enough_length()-->", tag.name
     
     if tag.string is None:
-        tag_string = ''.join(str(tag_child) for tag_child in tag.contents)
-        print "Printing contents string ", tag_string.encode('utf-8') 
-        flag = len(tag_string.encode('utf-8')) > 100
+        tag_string = ''.join(str(tag_child.encode('utf-8')) for tag_child in tag.contents)
+        print "Printing contents string ", tag_string 
+        flag = len(tag_string) > 100
         print "returning ", flag
         return flag
     else:
@@ -184,11 +184,13 @@ def insert_tag_id(data,id_count):
             elif tag.name == 'img' and has_no_id(tag):
                 id_count = id_count + 1
                 tag['id'] = id_count
+                
              
                 
         for tag_child in soup.body.descendants:
             if tag_child.name == 'img':
                 tag_child['itemprop'] = "image"
+                tag_child['class'] = 'img-responsive'
             
             if tag_child.name in filter_elements:
                 tag_child['style'] = " "
