@@ -7,6 +7,7 @@ from django.utils import timezone
 
 from PirateLearner.models import BaseContentClass
 from django.conf import settings
+from django.core.urlresolvers import reverse
 
 # Create your models here.
 
@@ -269,6 +270,9 @@ class UserProfile(BaseContentClass):
     
     def get_signin_time(self):
         return self.signin_date
+    
+    def get_profile_page(self):
+        return reverse('dashboard:dashboard-profile', kwargs={'user_id': self.user.id})
 
     """
     Private functions for retrieving the fname, lname, email etc. from GooGle, Facebook and twitter
