@@ -24,6 +24,8 @@ from bookmarks.models import Bookmark, PRIVACY, BookmarkFolderInstance, Bookmark
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
+from dashboard.models import UserProfile
+
 ZERO_VOTES_ALLOWED = getattr(settings, 'VOTING_ZERO_VOTES_ALLOWED', False)
 
 #Annotation App imports
@@ -45,10 +47,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'first_name', 'last_name', 'annotations', 'gravatar', 'url', 'voted','saved_bookmarks','bookmarks_folder',)
         
     def get_gravatar(self, obj):
-        return '#'
+        print "in get_gravatar"
+        print obj
+        return UserProfile.objects.get(user=obj).get_avatar_url()
     
     def get_url(self, obj):
-        return '#'
+        return UserProfile.objects.get(user=obj).get_profile_page()
 
 
 class AnonymousUserSerializer(serializers.Serializer):
