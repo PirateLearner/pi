@@ -32,7 +32,7 @@
 			<span class="hidden rest" data-id="{{ nodes.id }}" data-content-type="{{ nodes.get_content_type }}"></span>
 			<h1 class="article-title" itemprop="headline"> 	{{ content.title }} </h1>
 			<meta itemprop="datePublished" content=" {{ meta.date_time }} "/>
-			<span class="article-author"> by {{ content.author.profile.get_name|title }}</span>       	
+			<span class="article-author"> by <a href="{{ content.author.profile.get_profile_page }}">{{ content.author.profile.get_name|title }}</a></span>       	
 			<div class="article-actions_outer" data-spy="affix">
 				<div class="article-actions-title-small">
 					<h4 class="article-title"> 	{{ content.title  }} </h4>
