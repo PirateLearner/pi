@@ -410,7 +410,7 @@ def index(request):
 		pages = paginator.page(paginator.num_pages)
 
 	
-	log.info("[ Index page ] is called") 
+	#log.info("[ Index page ] is called") 
 	context = RequestContext(request, {
 										'parent': None,
                                        'nodes': pages,
