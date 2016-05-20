@@ -106,8 +106,8 @@ def get_thread(sender, receiver, last_msg):
         thread = Thread.objects.create(last_message=last_msg)
         thread.participants.add(sender, receiver)
         created = True
-    else:
-        thread = thread.get()
+#     else:
+#         thread = thread.get()
 
     return thread, created
 

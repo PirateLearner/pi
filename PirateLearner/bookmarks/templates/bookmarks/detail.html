@@ -27,6 +27,17 @@
 		       			<a href="{{ bookmark.get_external_url }}" target="_blank" rel="nofollow">Visit Page</a>
 		       		</span>
 	       		</div>
+	       		<!-- div for edit bookmark -->
+       			{% if can_edit %}
+					<div class="article-actions__button pull-right">
+	   					<a id="trigger-edit" href="{% url "bookmarks:update_bookmark_instance" bookmark.pk %}" type="button">
+	   						<span class="glyphicon glyphicon-edit"></span>
+	   						<span class="icon-helper">
+			       			Edit
+			       			</span>
+	   					</a>
+		       		</div>		       			
+       			{% endif %}
 	       		<span id="trigger-overlay" type="button" class="icon icon-helper overlay-open pl-expand"></span>
 	       	</div>				
 			<div class="article-body" id="commentable-container" >

@@ -236,7 +236,15 @@ class UserProfile(BaseContentClass):
         """
         profile = self._get_social_account(provider)
         if profile != None:
-            return profile.extra_data['link']
+            print profile.extra_data
+            if self.get_provider_name(profile.provider) == 'facebook':
+                return self._get_fb_link(profile)
+            elif self.get_provider_name(profile.provider) == 'google':
+                return self._get_google_link(profile)
+            elif self.get_provider_name(profile.provider) == 'twitter':
+                return self._get_tw_link(profile)
+            else:
+                return ""
         else:
             return ""
        
@@ -321,6 +329,6 @@ class UserProfile(BaseContentClass):
         return profile.extra_data['screen_name'].encode('utf-8')
 
     def _get_tw_link(self,profile):
-        return profile.extra_data['url']
+        return  "//twitter.com/" + str(profile.extra_data['screen_name'])
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])

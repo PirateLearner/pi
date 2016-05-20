@@ -59,6 +59,7 @@ class BookmarkInstance(BaseContentClass):
     folder = models.ForeignKey(BookmarkFolderInstance, verbose_name=_("folder"))
     privacy_level = models.CharField(choices=PRIVACY,max_length=4)
     tags = TaggableManager(blank=True)
+    is_promoted = models.BooleanField(default=False);
     def save(self, url,force_insert=False, force_update=False):
         try:
             bookmark = Bookmark.objects.get(url=url)
@@ -80,7 +81,14 @@ class BookmarkInstance(BaseContentClass):
                 self.folder = folder
         if not self.privacy_level:
             self.privacy_level = 'priv'
-            print "Logs: Privacy level not provided setting default to private" 
+            print "Logs: Privacy level not provided setting default to private"
+
+        if not self.is_promoted:
+            if self.user.is_staff and self.privacy_level == 'pub':
+                self.is_promoted = True
+            else:
+                self.is_promoted = False
+             
         self.bookmark = bookmark
         super(BookmarkInstance, self).save(force_insert, force_update)
     
@@ -173,9 +181,13 @@ def get_bookmarks_count(user=None):
         return None
     
     
-def get_user_bookmark(url,user):
+def get_user_bookmark(user,privacy = None):
     try:
-        bookmark_instance = BookmarkInstance.objects.get(bookmark___url = url,user = user)
+        bookmark_instance = None
+        if privacy:
+            bookmark_instance = BookmarkInstance.objects.filter(user_id = user,privacy_level = privacy)
+        else:
+            bookmark_instance = BookmarkInstance.objects.filter(user_id = user)
         if bookmark_instance:
             return bookmark_instance
         else:

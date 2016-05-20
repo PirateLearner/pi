@@ -14,8 +14,11 @@
             		<div class="panel-body minimal">
             			<!-- Add pagination here -->
             			<div class="mail-option">
-            				<ul class="list-unstyled inbox-pagination ">	
-                                <li text-center><span>1-50 of 99</span></li>
+            				<ul class="list-unstyled inbox-pagination ">
+            				{% if threads %}
+            					<li text-center><span>{{ threads | length }} of {{ threads | length }}</span></li>
+            				{% endif %}	
+                                
                                 <li>
                                     <a class="np-btn" href="#"><span class="glyphicon glyphicon-chevron-left"></span></a>
                                 </li>

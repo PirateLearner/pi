@@ -30,23 +30,28 @@ from bookmarks.utils import count_words
 from bookmarks.serializers import BookmarkInstanceSerializer
 from rest_framework import generics
 
+from blogging.utils import group_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.template.defaultfilters import length
+
+
 
 def bookmarks(request):
-    bookmarks = BookmarkInstance.objects.exclude(privacy_level = 'priv',user__is_staff=True).order_by("-saved")
-    if request.user.is_authenticated():
-        user_bookmarks = Bookmark.objects.filter(
-            saved_instances__user=request.user
-        )
-    else:
-        user_bookmarks = []
+    bookmarks = BookmarkInstance.objects.filter(is_promoted=True).exclude(privacy_level='priv').order_by("-saved")
+#     if request.user.is_authenticated():
+#         user_bookmarks = Bookmark.objects.filter(
+#             saved_instances__user=request.user
+#         )
+#     else:
+#         user_bookmarks = []
     return render_to_response("bookmarks/bookmarks.html", {
         "bookmarks": bookmarks,
-        "user_bookmarks": user_bookmarks,
+#         "user_bookmarks": user_bookmarks,
     }, context_instance=RequestContext(request))
 
 def tagged_bookmarks(request,tag):
     try:
-        bookmarks = BookmarkInstance.objects.filter(tags__slug = tag)
+        bookmarks = BookmarkInstance.objects.filter(tags__slug = tag, is_promoted = True).exclude(privacy_level='priv')
         return render_to_response("bookmarks/bookmarks.html", {'bookmarks':bookmarks,} ,context_instance=RequestContext(request))
     except ObjectDoesNotExist:
         raise Http404
@@ -161,6 +166,7 @@ def update(request, bookmark_instance_id):
         for frame in traceback.extract_tb(sys.exc_info()[2]):
             fname,lineno,fn,text = frame
             print "Error in %s on line %d" % (fname, lineno)
+        return Http404
 
 
 
@@ -212,7 +218,11 @@ def bookmark_details(request,slug):
             meta = Meta(title = bookmark.title, description = truncatewords(description,120), section= bookmark.folder.title, url = bookmark.get_absolute_url(),
                     image = bookmark.get_image_url(), author = bookmark.user, date_time = bookmark.saved ,
                     object_type = 'article', keywords = [ tags.name for tags in bookmark.tags.all()])
-            return render_to_response("bookmarks/detail.html", {'bookmark':bookmark,'meta':meta,} ,context_instance=RequestContext(request))
+            if request.user.is_authenticated():
+                can_edit = (request.user.is_staff == True) or request.user == bookmark.user 
+            else:
+                can_edit = False 
+            return render_to_response("bookmarks/detail.html", {'bookmark':bookmark,'meta':meta,'can_edit':can_edit} ,context_instance=RequestContext(request))
 
         except:
             print "Unexpected error:", sys.exc_info()[0]
@@ -224,8 +234,73 @@ def bookmark_details(request,slug):
         print "Unexpected error invalid URL:", sys.exc_info()[0]
         return Http404
         
-
-
+@group_required('Administrator')
+def manage(request):
+    """
+    Manage the bookmarks; only available to administrators
+    """
+    try:
+        if request.method == "POST":
+            
+            print request.POST
+            
+            action = request.POST.get('action')
+            pks = request.POST.getlist("selection")
+            if len(pks):
+#                 print "LOGS: " + pks
+                objs = BookmarkInstance.objects.filter(pk__in=pks)
+                
+                if action == 'Promote':
+                    print "LOGS: Promote the given bookmarks"
+                    for obj in objs:
+                        obj.is_promoted = True
+                        obj.save(obj.bookmark.url)
+                elif action == 'Delete':
+                    for obj in objs:
+                        obj.delete()
+                    messages.error(request, "Bookmarks Deleted" )
+                elif action == "Demote":
+                    print "LOGS: Promote the given bookmarks"
+                    for obj in objs:
+                        obj.is_promoted = False
+                        obj.save(obj.bookmark.url)
+                elif action == "Make public":
+                    print "LOGS: Promote the given bookmarks"
+                    for obj in objs:
+                        obj.privacy_level = "pub"
+                        obj.save(obj.bookmark.url)
+                elif action == "Make private":
+                    print "LOGS: Promote the given bookmarks"
+                    for obj in objs:
+                        obj.privacy_level = "priv"
+                        obj.save(obj.bookmark.url)
+        bookmarks = BookmarkInstance.objects.all()
+        paginator = Paginator(bookmarks, 50,orphans=30)
+        page = request.GET.get('page')
+        try:
+            pages = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            pages = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            pages = paginator.page(paginator.num_pages)
+        actions = [{"name":"Delete", "help":"Delete selected bookmarks"},
+                   {"name":"Promote", "help":"Promote selected bookmarks"},
+                   {"name":"Demote", "help":"Demote selected bookmarks"},
+                   {"name":"Make public", "help":"set visibility as public bookmark"},
+                   {"name":"Make private", "help":"set visibility as private bookmark"},
+                   ]
+        context = {"bookmarks": pages, "actions": actions
+                   }
+        return render_to_response("bookmarks/manage.html", context, context_instance=RequestContext(request))
+    except:
+        print "Unexpected error:", sys.exc_info()[0]
+        for frame in traceback.extract_tb(sys.exc_info()[2]):
+            fname,lineno,fn,text = frame
+            print "Error in %s on line %d" % (fname, lineno)
+        return Http404
+    
 
 
 

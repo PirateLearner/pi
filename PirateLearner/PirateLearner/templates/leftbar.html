@@ -36,7 +36,11 @@
         </li>
 		<li><a href="{% url 'blogging:content-type' %}" class="{% ifequal active 'create' %} active {% endifequal %}">
 			<span class="glyphicon glyphicon-plus-sign"></span> Create Article</a>
-		</li>                  
+		</li>
+		{% comment %}  Create Bookmarks {% endcomment %}
+		<li><a href="{% url 'bookmarks:add_bookmark' %}" class="{% ifequal active 'create_bookmark' %} active {% endifequal %}">
+			<span class="glyphicon glyphicon-plus-sign"></span> Create Bookmarks</a>
+		</li>                  		                  
         <li><a href="{% url 'dashboard:dashboard-published' %}" class="{% ifequal active 'published' %} active {% endifequal %}">
         	<span class="glyphicon glyphicon-saved"></span> Publication</a>
         </li>
@@ -50,6 +54,13 @@
 		<li><a href=" {% url 'dashboard:dashboard-admin-articles'%}" class="{% ifequal active 'manage' %} active {% endifequal %}"> 
 			<span class="glyphicon glyphicon-tasks"></span> Review</a>
 		</li>
+		<li><a href=" {% url 'bookmarks:manage_bookmarks'%}" class="{% ifequal active 'manage_bookmark' %} active {% endifequal %}"> 
+			<span class="glyphicon glyphicon-tasks"></span> Manage Bookmarks</a>
+		</li>
+		<li><a href=" {% url 'blogging:manage_articles'%}" class="{% ifequal active 'manage_articles' %} active {% endifequal %}"> 
+			<span class="glyphicon glyphicon-tasks"></span> Manage Articles</a>
+		</li>
+		
 		{% endif %}
             	
     	<li class="divider-vertical">Messages</li>
