@@ -1,6 +1,6 @@
 {% extends 'base.html'%}
 {% load social_profile %}
-
+{% load blogging_tags %}
 {% block extra_script %}
 {% if stats.article_total > 1 %}
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -67,8 +67,7 @@
 						</div>
 					</div>
 				</div>															
-				
-		{% endif %}
+		{% endif %}		
 
 				<div class="col-md-4">
 					<div class="status-card">

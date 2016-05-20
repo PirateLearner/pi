@@ -5,8 +5,15 @@
 
 {% load url from future %}
 {% load thumbnail %}
+<div class="row main-content-wrapper">  	
+   	<div class="content-area clearfix">
+   		<div class="col-sm-12 col-md-8 col-lg-9">
 
 	<div id="grid" class="row grid">
+		   	<div class="page-title">
+			<h2>Bookmarks</h2>
+		</div>
+	
 		<!-- Stacked Featured posts for this section -->
 		{% for node in bookmarks %}
 		<div class="col-xs-6 col-sm-4 col-md-4" data-groups='["bookmarks"]'>
@@ -41,6 +48,10 @@
         <!-- sizer -->
   		<div class="col-xs-6 col-sm-4 col-md-4 shuffle_sizer"></div>  					
 	</div>
+	</div>
+	   	</div>
+</div>	
+	
 	<script src="{{ STATIC_URL }}js/debounce.js"></script>
     <script src="{{ STATIC_URL }}js/shuffle/jquery.shuffle.js"></script>
 <script type="text/javascript" src="/static/static/js/bookmark_shuffle.js"> </script>

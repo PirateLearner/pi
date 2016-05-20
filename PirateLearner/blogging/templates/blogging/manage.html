@@ -1,0 +1,113 @@
+{% extends "blogging/base.html" %}
+
+{% block extra_script %}
+
+<script type="text/javascript" src="{{ STATIC_URL }}js/bookmark.js"></script>
+
+{% endblock %}
+
+{% load cms_tags staticfiles sekizai_tags menu_tags %}
+
+
+{% block content_blog %}
+
+{% if messages %}
+<ul class="messages" id="message_head">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %} >{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<div class="message hidden" id = "flash_message">
+	<div class = "alert-info hidden" id = "flash_info">
+		<p></p>
+     </div>
+
+	<div class = "alert-danger hidden" id = "flash_danger">
+		<p></p>
+     </div>
+
+	<div class = "alert-warning hidden" id = "flash_warning">
+		<p></p>
+     </div>
+
+	<div class = "alert-success hidden" id = "flash_success">
+		<p></p>
+     </div>
+</div>
+
+<div class="container-fluid" >
+	<div class="row">
+	    {% include 'leftbar.html' with active="manage_articles" %}
+
+	<div class="col-md-8 pT-50">
+	
+	{% comment %}  Add table with the bookmarks {% endcomment %}
+	<form class="form-horizontal" action="{% url "blogging:manage_articles" %}" method="post">
+	{% csrf_token %}
+	   <div class="form-group form-element">
+	   
+		   	<div class="panel panel-default">
+			  <!-- Default panel contents -->
+			  <div class="panel-heading">Manage Articles</div>
+			  <div class="panel-body">
+		    	    <div class="input-group form-horizontal" style="width:100%;">
+		    	    <div class="form-group __row fill">
+
+					<div class="w-80">
+						  <select class="form-control " id="action" name="action">
+						  {% for action in actions %}					  
+						    <option value="{{ action.name }}" >{{ action.name }} -- {{ action.help }}</option>
+						    {% endfor %}
+						  </select>
+					</div>
+					<div>
+					      <input type="submit" name="Submit" class="btn btn-default"></input>
+					</div>
+					</div>
+					    </div><!-- /input-group -->
+					    
+		  	 		</div>
+		
+		  	  	<!-- Table -->
+		  		<table class="table table-striped">
+		    		  <thead>
+					    <tr>
+					      <th>
+					      	<input class="vL-m" type="checkbox" name="checkall" id="Checkall_id" >
+					      </th>
+					      <th>Title</th>
+					      <th>Author</th>
+					      <th>Published</th>
+					    </tr>
+					  </thead>
+					    <tbody>
+					    {% for el in articles %}
+						    <tr>
+						      <td scope="row">
+   			     				<input class="vL-m" type="checkbox" name="selection" id="Checkboxes_id" value="{{ el.id }}">
+						      </td>
+						      <td>
+						      	<a href="{{ el.get_absolute_url }}">{{ el.get_title }}</a>
+						      </td>
+						      <td> <a href="{% url "dashboard:dashboard-profile" el.get_author.id %}"> {{ el.get_author.profile.get_name }} </a>
+						      </td>
+						      <td>{% if el.published_flag %}
+						      	<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
+						      	{% else %}
+						      	<span class="glyphicon glyphicon-remove-circle" style="color:red" aria-hidden="true"></span>
+						      	{% endif %}
+						      </td>
+						    </tr>
+						{% endfor %}
+						</tbody>
+		  		</table>
+			</div>
+	</div>
+	</div>
+</div>
+
+
+
+	{% endblock %}	

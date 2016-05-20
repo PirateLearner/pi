@@ -3,14 +3,19 @@
 {% load tags %}
 {% load humanize %}
 
+{% comment %}  
+
 {% block css %}
     <link href="{% static "css/jquery.jscrollpane.css" %}" rel="stylesheet"/>
 {% endblock %}
+
+{% endcomment %}
+
 {% block content %}
     <div class="container-fluid">
         <div class="row">
             {% include 'leftbar.html' %}
-            <div class="col-md-6 pT-50 col-offset-2">
+            <div class="col-md-8 pT-50 col-offset-2">
                   <!-- DIRECT CHAT -->
                   <div class="box-primary direct-chat direct-chat-primary">
                     <div class="box-header with-border">
@@ -23,7 +28,7 @@
                       <!-- Conversations are loaded here -->
                       <div class="direct-chat-messages">
                 
-                {% for message in messages %}
+                {% for message in chats %}
                         <!-- Message. Default to the left -->
                         {% ifequal message.sender request.user %}
 
@@ -68,6 +73,9 @@
         </div>
     </div>
 {% endblock %}
+
+{% comment %}  
+
 {% block js %}
     <script type="text/javascript" src="{% static "js/jquery.mousewheel.js" %}"></script>
     <script type="text/javascript" src="{% static "js/jquery.jscrollpane.min.js" %}"></script>
@@ -75,3 +83,5 @@
 
     </script>
 {% endblock %}
+
+{% endcomment %}

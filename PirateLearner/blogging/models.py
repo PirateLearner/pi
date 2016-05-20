@@ -14,7 +14,7 @@ from django.contrib.contenttypes.generic import GenericRelation
 from annotations.models import Annotation
 
 from django.conf import settings
-
+from django.db.models import Count, Sum
 
 if 'cms' in settings.INSTALLED_APPS:
     try:
@@ -25,6 +25,8 @@ if 'cms' in settings.INSTALLED_APPS:
     
 from blogging.utils import get_imageurl_from_data, truncatewords, slugify_name
 from django.utils.html import strip_tags
+from django.utils.safestring import mark_safe
+
 from django.core.urlresolvers import reverse
 import traceback
 import json
@@ -142,6 +144,9 @@ class BlogParent(MPTTModel):
         return BlogContent.published.filter(section = self).count()
     
     
+    def get_title(self):
+        return self.title
+    
     class MPTTMeta:
             order_insertion_by = ['title']
 
@@ -187,7 +192,7 @@ class BlogContent(BaseContentClass):
         json_obj = json.loads(self.data)
         # Instantiate the Meta class
         description = strip_tags(json_obj.values()[0])
-        return truncatewords(description,120)
+        return mark_safe(truncatewords(description,120))
 
     
     def get_title(self):
@@ -354,7 +359,12 @@ def get_contribution_count(user):
         return BlogContent.objects.filter(author_id=user).count()
     else:    
         return None
-    
+def get_top_articles(user = None, limit = 5):
+    if user:
+#         return BlogContent.objects.filter(author_id=user).annotate(score=Sum('vote')).order_by('score')
+        return BlogContent.published.filter(author_id=user)
+    else:
+        return Vote.objects.get_top(BlogContent)
 
 # class VersionMeta(models.Model):
 #     revision = models.ForeignKey(Revision)  # There must be a relationship with Revision

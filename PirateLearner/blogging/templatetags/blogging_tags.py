@@ -357,6 +357,14 @@ def get_blogging_tags():
 def get_recent_articles():
     return BlogContent.published.all()[:3]
 
+@register.filter('has_group')
+def has_group(user,groups):
+    if user.is_authenticated():       
+        group_list = [s for s in groups.split(',')]     
+        if user.is_authenticated():
+            if bool(user.groups.filter(name__in=group_list)) | user.is_superuser:
+                return True
+        return False
 
 register.tag(ContentRender)
 register.tag(ContactTag)

@@ -1,0 +1,152 @@
+{% extends 'base.html'%}
+{% load social_profile %}
+{% load humanize %}
+{% load voting_tags %}
+
+{% block extra_script %}
+
+<link href="{{ STATIC_URL }}css/dashboard/style.css" rel="stylesheet" type="text/css">
+ 
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+	<div class="row">
+	    {% include 'leftbar.html' with active="profile" %}
+		<div class="col-md-8 pT-50">
+		{% if user %}
+			<div class="row">
+
+			{% comment %} User profile {% endcomment %}
+				<div class="col-md-12 pT-16">
+					<div class="profile-lg __column">
+						<div class="_line">
+						</div>
+						<div>
+							<img class="avatarC border" width="120" height="120" src="{{ profile.get_avatar_url }}" title="@{{ profile.get_username }}" />
+						</div>
+						<div class="title-text">{{ profile.get_name }}</div>
+						<div class="extras">{{ profile.get_email }}</div>
+						<div class="__row center">
+		    			{% for account in social %}
+			    			<div class="social circle">
+			    				<a class="soc-button" title="View {{ account.provider_name }} profile" href="{{ account.profile_url }}">
+									<span class="soc-icon-{{ account.provider_name|lower }}"></span>			                	                
+								</a>
+							</div>
+		    			{% endfor %}
+						</div>
+					</div>	
+				</div>
+				
+				{% comment %} Published articles and bookmarks {% endcomment %}
+				<div class="col-md-12 pT-50">
+					<div class="__column">
+					
+					<section>
+						<div class="row">
+					
+							<div class="col-md-12 ">
+							<h2 class="subheading"> Contributions </h2>
+							{% if articles|length > 0 %}
+								{% for node in articles %}
+									<article class="post vt-post bS-2">
+										<div class="row">
+					
+											<div class="col-xs-12 col-sm-5 col-md-5 col-lg-4">
+												<div class="post-type post-img">
+													<div style="height:190px;overflow:hidden;position:relative;">
+														<a href="{{node.get_absolute_url}}" style="position:absolute;top:50%;transform:translate(0,-50%);">
+															<img class="img-responsive" alt="airticle image" src="{{ node.get_image_url }}"></img>
+														</a>
+													</div>
+													<div class="author-info author-info-2" style="float:none;">
+														<ul class="list-inline">
+															<li>
+																<div class="info"> <p> Posted on:</p> <strong>{{ node.publication_start|naturalday }}</strong></div>
+															</li>
+															{% score_for_object node as score %}
+															<li>
+																<div class="info"> <p> Score:</p> <strong>{{ score.score }}</strong></div>
+															</li>
+														</ul>
+													</div>
+					
+												</div>
+											</div>
+					
+											<div class="col-xs-12 col-sm-7 col-md-7 col-lg-8">
+												<div class="caption">
+													<h3 class="md-heading">
+														<a href="{{node.get_absolute_url}}">{{ node.title }}</a>
+													</h3>
+													<p>
+													 {{ node.get_summary }} 
+													 </p>
+													<a class="btn btn-default btn-more" href="{{node.get_absolute_url}}" role="button">Read More</a>
+												</div>
+											</div>						
+										</div>
+									</article>
+								{% endfor %}
+							{% else %}
+								<div class="col-xs-12">
+									<h3> <i> working on it </i> </h3>
+								</div>
+							{% endif %}
+			
+							<h2 class="subheading"> Bookmarks </h2>
+							{% if bookmarks %}
+								{% for node in bookmarks %}
+									<article class="post vt-post bS-2">
+										<div class="row">
+					
+											<div class="col-xs-12 col-sm-5 col-md-5 col-lg-4">
+												<div class="post-type post-img">
+													<div style="height:190px;overflow:hidden;position:relative;">
+														<a href="{{node.get_absolute_url}}" style="position:absolute;top:50%;transform:translate(0,-50%);">
+															<img class="img-responsive" alt="airticle image" src="{{ node.get_image_url }}"></img>
+														</a>
+													</div>			
+												</div>
+											</div>
+					
+											<div class="col-xs-12 col-sm-7 col-md-7 col-lg-8">
+												<div class="caption">
+													<h3 class="md-heading">
+														<a href="{{node.get_absolute_url}}">{{ node.get_title }}</a>
+													</h3>
+													<p>
+													 {{ node.get_summary }} 
+													 </p>
+													<a class="btn btn-default btn-more" href="{{node.get_absolute_url}}" role="button">Read More</a>
+												</div>
+											</div>						
+										</div>
+									</article>
+								{% endfor %}
+							{% else %}
+								<div class="col-xs-12">
+									<h4> <i> NO BOOKMARKS </i> </h4>
+								</div>
+							{% endif %}
+							</div>
+
+						</div>
+					
+					</section>
+					
+					</div>
+				</div>
+				{% comment %} Articles and bookmarks section end {% endcomment %}		
+			
+			</div>
+							
+		</div>				
+		{% endif %}
+		</div>
+		
+	</div> <!--/row -->
+</div>
+
+{% endblock %}

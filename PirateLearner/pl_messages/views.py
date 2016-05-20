@@ -79,7 +79,7 @@ def thread_messages(request, thread_id):
                         create_notification(participant=participant, thread=thread)
         form = ReplyForm()
         context = {
-            'messages': messages,
+            'chats': messages,
             'form': form,
             'thread': thread
         }
@@ -91,7 +91,13 @@ def thread_messages(request, thread_id):
 def new_message(request):
     if request.method == 'POST':
         save_message(request)
-    form = MessageForm(request.user)
+    dest = request.GET.get('to',None)
+    
+    if dest:
+        dest = User.objects.get(pk=dest)
+        form = MessageForm(dest)
+    else:
+        form = MessageForm(request.user)
     context = {
         'form': form
     }

@@ -18,15 +18,16 @@ from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.signals import user_logged_in
 
 # import from blogging 
-from blogging.models import get_published_count, get_pending_count, get_draft_count, get_contribution_count 
+from blogging.models import get_published_count, get_pending_count, get_draft_count, get_contribution_count, get_top_articles
 # import from bookmarks
-from bookmarks.models import get_bookmarks_count
+from bookmarks.models import get_bookmarks_count, get_user_bookmark
 # import from annotaions
 from annotations.models import get_annotations_count 
 # import from Voting
 from voting.models import Vote
 # import from pl_messages
 from pl_messages.models import get_notification_count, get_user_notifications
+from cms.test_utils.project.pluginapp.plugins import extra_context
 
 
 @receiver(user_logged_in)
@@ -84,7 +85,6 @@ def dashboard_home(request):
                                       })
     return HttpResponse(template.render(context))
 
-@login_required
 def dashboard_profile(request,user_id):
     print "LOGS: DashBoard Profile called with user id " , user_id
     
@@ -92,8 +92,15 @@ def dashboard_profile(request,user_id):
     
     try:
         user_id = int(user_id)
-        if request.user.id == user_id:
-            return my_profile(request)
+        if request.user.is_authenticated():
+            if request.user.id == user_id:
+                scope = request.GET.get('viewas')
+                if scope == 'public':
+                    return public_profile(request,user_id)
+                else:
+                    return my_profile(request)
+            else:
+                return public_profile(request,user_id)
         else:
             return public_profile(request,user_id)
     except ValueError:
@@ -101,7 +108,7 @@ def dashboard_profile(request,user_id):
         raise Http404
     
 
-
+@login_required
 def my_profile(request):
     template = loader.get_template('dashboard/profile.html')
     profile = UserProfile.objects.get(user=request.user.id)
@@ -115,6 +122,23 @@ def my_profile(request):
             }
     
     form = ProfileEditForm(initial = data)
+    
+    social_info = []
+    providers = ["Facebook", "Google", "Twitter"]
+    for provider in providers:
+        if profile.is_social_account_exist(provider):
+            extra_context = {}
+            extra_context['provider_name'] = profile.get_provider_name(provider)
+            extra_context['profile_image'] = profile.get_avatar_url(provider)
+            extra_context['profile_username'] = profile.get_name(provider)
+            extra_context['profile_gender'] = profile.get_gender(provider)
+            extra_context['profile_url'] = profile.get_social_url(provider)
+            extra_context['profile_email'] = profile.get_email(provider)
+            social_info.append(extra_context)        
+    
+    ## fetch the latest articles by this author
+    articles = get_top_articles(request.user.id)
+    user_bookmarks = get_user_bookmark(request.user.id)
     
     if request.method == 'POST':
         form = ProfileEditForm(request.POST)
@@ -145,6 +169,9 @@ def my_profile(request):
         context = RequestContext(request, {
                                        'profile': profile,
                                        'profile_form': form,
+                                       'social' : social_info,
+                                       'articles':articles,
+                                       'bookmarks': user_bookmarks,
                                       })
     return HttpResponse(template.render(context))
     
@@ -154,8 +181,30 @@ def public_profile(request,user_id):
         user = User.objects.get(pk=user_id)
         profile = UserProfile.objects.get(user=user) or None
         template = loader.get_template('dashboard/public_profile.html')
+        
+        social_info = []
+        providers = ["Facebook", "Google", "Twitter"]
+        for provider in providers:
+            if profile.is_social_account_exist(provider):
+                extra_context = {}
+                extra_context['provider_name'] = profile.get_provider_name(provider)
+                extra_context['profile_image'] = profile.get_avatar_url(provider)
+                extra_context['profile_username'] = profile.get_name(provider)
+                extra_context['profile_gender'] = profile.get_gender(provider)
+                extra_context['profile_url'] = profile.get_social_url(provider)
+                extra_context['profile_email'] = profile.get_email(provider)
+                social_info.append(extra_context)        
+        
+        ## fetch the latest articles by this author
+        articles = get_top_articles(user_id)
+        user_bookmarks = get_user_bookmark(user_id,'pub')
+        
         context = RequestContext(request, {
-                                           'profile':profile
+                                           'profile':profile,
+                                           'social' : social_info,
+                                           'articles':articles,
+                                           'bookmarks': user_bookmarks,
+                                           
                                       })
         return HttpResponse(template.render(context))
     
