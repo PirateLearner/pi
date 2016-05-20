@@ -40,12 +40,12 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 
 # import the logging library
-import logging
-from PirateLearner import log
+# import logging
+# from PirateLearner import log
 
 # Get an instance of a logger
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+# logger = logging.getLogger(__name__)
+# logger.setLevel(logging.DEBUG)
 # Create your views here.
 
 @group_required('Administrator','Author','Editor')
@@ -465,11 +465,12 @@ def teaser(request,slug):
 				new_version = available_versions[1]
 				patch_html = generate_diffs(old_version, new_version, "data",cleanup="semantic")
 		except:
-			log.user(self.request, "~SN~FRFailed~FY to fetch ~FGoriginal text~FY: Unexpected error '{0}'".format(sys.exc_info()[0]),logger)
+# 			log.user(self.request, "~SN~FRFailed~FY to fetch ~FGoriginal text~FY: Unexpected error '{0}'".format(sys.exc_info()[0]),logger)
 			print "Unexpected error:", sys.exc_info()[0]
 			for frame in traceback.extract_tb(sys.exc_info()[2]):
 				fname,lineno,fn,text = frame
-				logging.error("~SN~FRError~FY in %s on line ~FG%d~FY" % (fname, lineno),logger)
+# 				logging.error("~SN~FRError~FY in %s on line ~FG%d~FY" % (fname, lineno),logger)
+				print "Error in %s on line %d" % (fname, lineno)
 			raise Http404
 
 		context = RequestContext(request, {
