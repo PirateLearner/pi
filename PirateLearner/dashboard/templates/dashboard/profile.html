@@ -1,0 +1,111 @@
+{% extends 'base.html'%}
+{% load social_profile %}
+
+{% block extra_script %}
+
+<link href="{{ STATIC_URL }}css/dashboard/style.css" rel="stylesheet" type="text/css">
+ 
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+	<div class="row">
+	    {% include 'leftbar.html' with active="profile" %}
+		<div class="col-md-8 pT-50">
+		{% if user %}
+			<div class="row">
+
+				<div class="col-sm-12 col-md-4 pR-0">				
+					<div class="card user-dashboard-local-about pL-8 pR-8" style="min-height:275px;">
+						<table class="table pL-8 pR-8">
+							<caption class="user-dashboard-local-table-title"><h3>About you</h3></caption>
+							<tr>
+								<td>
+									<label for="user-dob">Birthday</label> 
+								</td>
+								<td>
+									<span id="user-dob">{{ profile.get_birthday|default_if_none:"--" }}</span>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for="user-work">Occupation</label> 
+								</td>
+								<td>
+									<span id="user-work">{{ profile.get_occupation|default_if_none:"--" }}</span>
+								</td>
+							</tr>									
+							<tr>
+								<td>
+									<label for="user-website">Website</label> 
+								</td>
+								<td>
+									<span id="user-website"><a href="{{ profile.get_website|default_if_none:"#" }}">{{ profile.get_website|default_if_none:"--" }}</a></span>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for="user-time">Member Since</label> 
+								</td>
+								<td>
+									<span id="user-time">{{ profile.get_signin_time|timesince }}</span>
+								</td>
+							</tr>											
+						</table>
+					</div>
+				</div>
+
+				<div class="col-sm-12 col-md-4 pL-0 pR-0" >				
+					<div class="card pL-8 pR-8" style="min-height:275px;">
+						<table class="table pL-8 pR-8">
+							<caption class="user-dashboard-local-table-title"><h3>Interests</h3></caption>
+							{% with profile.get_interest as interest %}
+								{% if interest|length > 0 %}
+									{% for el in profile.get_interest %}
+									<tr>
+										<td>
+											<span id="user-interests-{{ el }}">{{ el }}</span>
+										</td>
+									</tr>							
+									{% endfor %}
+								
+								{% else %}
+									<tr>
+										<td>
+											<span> -- </span>
+										</td>
+									</tr>																
+								{% endif %}							
+							{% endwith %}
+						</table>
+					</div>
+				</div>
+
+				<div class="col-sm-12 col-md-4 pL-0" >				
+					<div class="card pL-8 pR-8" style="min-height:275px;">
+						<table class="table pL-8 pR-8">
+							<caption class="user-dashboard-local-table-title"><h3>Address</h3></caption>
+							<tr>
+								<td>
+									<span id="user-address">{{ profile.get_address|default_if_none:"--" }}</span>
+								</td>
+							</tr>									
+						</table>
+					</div>
+				</div>								
+				
+			</div>
+		 	<div class="row">
+			{%  social_profile "Google" %}
+			{%  social_profile "Facebook" %}
+			{%  social_profile "Twitter" %}
+			</div>
+							
+		</div>				
+		{% endif %}
+		</div>
+		
+	</div> <!--/row -->
+</div>
+
+{% endblock %}
