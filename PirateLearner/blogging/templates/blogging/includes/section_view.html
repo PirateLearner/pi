@@ -1,8 +1,6 @@
 {% load mptt_tags staticfiles %}
 
 <section id="section-view">
-	<h2 class="heading"> {{ page.title|title }} </h2>
-	
 	<div class="row">
 	
 		{% if nodes|length > 0 %}
@@ -36,7 +34,6 @@
 		{% endif %}
 	
 	</div>
-</section>
 
 {% if nodes.paginator.count > max_entry %}
 <div class="text-center">
@@ -51,3 +48,6 @@
 </ul>
 </div>
 {% endif %}
+	
+</section>
+

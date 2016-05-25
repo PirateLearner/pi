@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from dashboard.models import UserProfile
 from django.http import HttpResponse, Http404
 from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 from dashboard.forms import ProfileEditForm
 #from allauth.account.models import EmailAccount
 from django.http import HttpResponseRedirect
@@ -60,6 +61,9 @@ def CreateProfile(sender, request, user,**kwargs):
         except:
             print "LOGS: Gender does not exist in social account"
         profile.save()
+        # add user to Author Group
+        g = Group.objects.get(name='Author')
+        g.user_set.add(user) 
               
 
     

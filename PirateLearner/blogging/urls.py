@@ -12,6 +12,7 @@ urlpatterns = patterns(
     url(r'^edit-section/(?P<section_id>\d+)/$', view.edit_section, name='edit-section'),
 #    url(r'^create-content/$', view.ContentWizard.as_view([ContentTypeForm, ContentForm])),
     url(r'^content-type/$', view.content_type, name='content-type'),
+    url(r'^get-index/?$', view.BuildIndex, name='build-index'),
     url(r'^add-model/(?P<model_name>[\w.+-/]+)/$', view.add_new_model, name='add-model-content-type'),
     url(r'^author/$', view.authors_list, name='author-list'),
     url(r'^author/(?P<slug>[\w.@+-]+)/(?P<post_id>\d+)$', view.author_post, name='author-posts'),

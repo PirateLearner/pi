@@ -354,6 +354,10 @@ def get_blogging_tags():
     return tag_list
 
 @register.assignment_tag
+def get_section_children(section):
+    return BlogContent.published.filter(section=section)
+
+@register.assignment_tag
 def get_recent_articles():
     return BlogContent.published.all()[:3]
 
