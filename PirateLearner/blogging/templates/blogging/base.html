@@ -11,12 +11,11 @@ Explore
 {% endblock %}
 
 {% block content %}
- 				       {% block content_blog %}
- 				       {% endblock %}
+     {% block content_blog %}
+     {% endblock %}
  <!-- Django loaded Javascripts -->
-<script src="{{ STATIC_URL }}js/getuser.js"></script> 
-<script src="{{ STATIC_URL }}js/voting/voting_detail.js"></script>
-<script src="{{ STATIC_URL }}js/annotations/script.js"></script>
-<script src="{{ STATIC_URL }}js/blogging/nav_affix.js"></script>    
+<link href="{{ STATIC_URL }}css/dashboard/index_tree.css" rel="stylesheet" type="text/css">
+<script src="{{ STATIC_URL }}/js/index_tree.js"></script> 
+
 {% endblock %}
 

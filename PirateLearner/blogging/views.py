@@ -7,7 +7,7 @@ from django.template import RequestContext, loader
 from django.shortcuts import get_object_or_404, render_to_response, render
 from django.contrib import auth
 from django.http.request import HttpRequest
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, HttpResponseBadRequest
 from blogging.models import *
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -70,7 +70,7 @@ def content_type(request):
 				request.session['content_info_id'] = content_info.id
 				return HttpResponseRedirect(
 		            reverse("blogging:create-post"))
-			if action == 'delete':
+			elif action == 'delete':
 				if not request.user.is_staff:
 					# return permission denied
 					return HttpResponse(status=403)				
@@ -82,6 +82,9 @@ def content_type(request):
 					content_info.delete()
 				except OSError as e: # this would be "except OSError, e:" before Python 2.6
 					raise # re-raise exception if a different error occured
+			else:
+				raise HttpResponseBadRequest
+				
 	else:
 
 		if bool(request.user.groups.filter(name__in=['Author','Editor'])):
@@ -104,50 +107,6 @@ def content_type(request):
 	return render_to_response(
 	    "blogging/content_type.html",
 	    locals(), context_instance=RequestContext(request))	
-
-class ContentTypeFormView(View):
-
-	form_class = ContentTypeForm
-	template_name = 'blogging/content_type.html'
-
-	def get(self, request, *args, **kwargs):
-		if 'content_info_id' in request.session:
-			try:
-				content_info_obj = BlogContentType.objects.get(
-		            id=request.session['content_info_id']
-		        )
-				data = { 'ContentType':content_info_obj	}
-				form = self.form_class(initial=data)
-			except ObjectDoesNotExist:
-				del request.session['content_info_id']
-				form = self.form_class()
-		else:
-			form = self.form_class()
-		return render(request, self.template_name, {'form': form})
-
-	def post(self, request, *args, **kwargs):
-		form = self.form_class(request.POST)
-		if form.is_valid():
-			# <process form cleaned data>
-			action = request.POST.get('submit')
-			content_info = form.cleaned_data['ContentType']
-
-			if action == 'next':
-				print content_info, type(content_info)
-				request.session['content_info_id'] = content_info.id
-				return HttpResponseRedirect(
-		            reverse("blogging:create-post"))
-			if action == 'delete':
-				try:
-					filename = os.path.abspath(os.path.dirname(__file__))+"/custom/"+content_info.__str__().lower()+".py"
-					os.remove(filename)
-					content_info.delete()
-				except OSError as e: # this would be "except OSError, e:" before Python 2.6
-					if e.errno != errno.ENOENT: # errno.ENOENT = no such file or directory
-						raise # re-raise exception if a different error occured
-
-		return render(request, self.template_name, {'form': form})
-
 
 
 @group_required('Administrator','Editor','Author')
@@ -397,7 +356,7 @@ def add_new_model(request, model_name):
 def index(request):
 	template = loader.get_template('blogging/section.html')
 	nodes = BlogParent.objects.all().filter(~Q(title='Orphan'),level=0)
-	max_entry = getattr(settings, 'BLOGGING_MAX_ENTRY_PER_PAGE', 3)
+	max_entry = getattr(settings, 'BLOGGING_MAX_ENTRY_PER_PAGE', 10)
 	paginator = Paginator(nodes, max_entry,orphans=3)
 	page = request.GET.get('page')
 	try:
@@ -474,7 +433,7 @@ def teaser(request,slug):
 			raise Http404
 
 		context = RequestContext(request, {
-										'parent': blogs.section.get_ancestors(include_self=True),		
+										'parent': blogs.section,		
                                        'nodes': blogs,
                                        'content':json_obj,
                                        'page': {'title':'Pirate Learner', 'tagline':'We learn from stolen stuff'},
@@ -511,9 +470,9 @@ def teaser(request,slug):
 				pages = paginator.page(1)
 			except EmptyPage:
 				# If page is out of range (e.g. 9999), deliver last page of results.
-				pages = paginator.page(paginator.num_pages,orphans=3)
+				pages = paginator.page(paginator.num_pages)
 			context = RequestContext(request, {
-										'parent':section.get_ancestors(include_self=True),
+										'parent':section,
                                        'nodes': pages,
                                        'page': {'title':section.title, 'tagline':'We learn from stolen stuff', 'image': section.get_image_url()},
                                        'max_entry': max_entry,
@@ -532,7 +491,7 @@ def teaser(request,slug):
 			# If page is out of range (e.g. 9999), deliver last page of results.
 			pages = paginator.page(paginator.num_pages)
 		context = RequestContext(request, {
-										'parent': section.get_ancestors(include_self=True),
+										'parent': section,
                                        'nodes': pages,
                                        'page': {'title':section.title, 'tagline':'We learn from stolen stuff'},
                                        'max_entry': max_entry,
@@ -580,26 +539,51 @@ def ContactUs(request):
 		form = ContactForm()
 	return render_to_response('blogging/contact.html', {'example_form': form}, context_instance=RequestContext(request))
 
+def BuildIndex(request):
+	if request.is_ajax():
+		template = loader.get_template('blogging/includes/index.html')
+# 		course = BlogParent.objects.get(title='Course')
+		section = None
+		try:
+			parent  = request.GET.get('section',None)
+			print "Parent id from request ", parent
+			if parent:
+				section = BlogParent.objects.get(pk=parent)
+		except:
+			section = None 
+		
+		context = RequestContext(request, {
+# 	                                       'nodes': course.get_descendants(include_self=True),
+											'nodes': BlogParent.objects.filter(~Q(title="Orphan")),
+	                                       'active': section 
+	                                      })
+		return HttpResponse(template.render(context))
+	else:
+		raise Http404
+
 
 def testCase(request):
-# 	template = loader.get_template('blogging/testing.html')
-# 	nodes = BlogContent.objects.all()[:10]
-# 	context = RequestContext(request, {
-#                                        'nodes': nodes,
-#                                       })
-# 	return HttpResponse(template.render(context))
+	template = loader.get_template('index_tree.html')
+	course = BlogParent.objects.get(title='Course')
+	Django = BlogParent.objects.get(title='Computer Science') 
 	
-	
-	
-	try:
-		migrate()
-		return render_to_response('blogging/Test_page.html', {}, context_instance=RequestContext(request))
-	except:
-		print "Unexpected error:", sys.exc_info()[0]
-		for frame in traceback.extract_tb(sys.exc_info()[2]):
-			fname,lineno,fn,text = frame
-			print "Error in %s on line %d" % (fname, lineno)
-		raise Http404
+	context = RequestContext(request, {
+                                       'nodes': course.get_descendants(include_self=True),
+                                       'active': Django 
+                                      })
+	return HttpResponse(template.render(context))
+# 	
+# 	
+# 	
+# 	try:
+# 		migrate()
+# 		return render_to_response('blogging/Test_page.html', {}, context_instance=RequestContext(request))
+# 	except:
+# 		print "Unexpected error:", sys.exc_info()[0]
+# 		for frame in traceback.extract_tb(sys.exc_info()[2]):
+# 			fname,lineno,fn,text = frame
+# 			print "Error in %s on line %d" % (fname, lineno)
+# 		raise Http404
 	
 
 		
