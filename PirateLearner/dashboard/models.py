@@ -211,7 +211,11 @@ class UserProfile(BaseContentClass):
         if profile != None:
             if self.get_provider_name(profile.provider) == 'twitter':
                 return "---"
-            return profile.extra_data['gender']
+            gender =  profile.extra_data.get('gender',None)
+            if gender is None:
+                return self.gender
+            else:
+                return gender
         else:
             return "---"
 

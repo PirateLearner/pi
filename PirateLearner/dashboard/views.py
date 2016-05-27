@@ -57,7 +57,7 @@ def CreateProfile(sender, request, user,**kwargs):
                 user.first_name = sociallogin.extra_data['first_name']
                 user.last_name = sociallogin.extra_data['last_name']
                 user.save()
-            profile.gender = sociallogin.extra_data['gender']
+            profile.gender = sociallogin.extra_data.get('gender',None)
         except:
             print "LOGS: Gender does not exist in social account"
         profile.save()
@@ -197,7 +197,8 @@ def public_profile(request,user_id):
                 extra_context['profile_gender'] = profile.get_gender(provider)
                 extra_context['profile_url'] = profile.get_social_url(provider)
                 extra_context['profile_email'] = profile.get_email(provider)
-                social_info.append(extra_context)        
+                social_info.append(extra_context)
+                break
         
         ## fetch the latest articles by this author
         articles = get_top_articles(user_id)
