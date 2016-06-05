@@ -47,7 +47,7 @@ class EventsNotificationsAppConf(AppConf):
 
     LINK_PROTOCOL = "http"
     BACKENDS = [
-        ("email", "PirateLearner.events.backends.email.EmailBackend"),
+        ("email", "events.backends.email.EmailBackend"),
     ]
 
     def configure_backends(self, value):
