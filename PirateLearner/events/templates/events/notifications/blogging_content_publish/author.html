@@ -1,0 +1,10 @@
+{% extends "events/notifications/base.html" %}
+
+{% block email_body %}
+
+Your article "{{ blog.get_menu_title }}" has been published. See it live <a href="{{ base_url }}/{{ blog.get_absolute_url }}"> here </a> 
+<br />
+<br />
+
+{% endblock %}
+

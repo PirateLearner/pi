@@ -30,6 +30,8 @@ from voting.models import Vote
 from pl_messages.models import get_notification_count, get_user_notifications
 from cms.test_utils.project.pluginapp.plugins import extra_context
 
+from events.signals import generate_event
+
 
 @receiver(user_logged_in)
 def CreateProfile(sender, request, user,**kwargs):
@@ -63,7 +65,10 @@ def CreateProfile(sender, request, user,**kwargs):
         profile.save()
         # add user to Author Group
         g = Group.objects.get(name='Author')
-        g.user_set.add(user) 
+        g.user_set.add(user)
+        generate_event.send(sender = user.__class__, event_label = "user_signed_up", 
+                                user = user, source_content_type = ContentType.objects.get_for_model(user), source_object_id= user.pk)
+
               
 
     

@@ -1,0 +1,54 @@
+{% extends "events/base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Notification Filters" %}{% endblock %}
+
+{% block event_content %}
+    <h2>{% trans "Notification Filters" %}</h2>
+
+	{% comment %}  
+    {% url "account_settings" as email_url %}
+    {% endcomment %}
+    {% if not request.user.email %}
+        {% blocktrans %}
+        <p class="alert alert-warning">
+            <span class="warning">Note</span>:
+            You do not have a verified email address to which notices can be sent. <a href="{{ email_url }}">Add one</a> now.
+        </p>
+        {% endblocktrans %}
+    {% endif %}
+
+    <form method="POST" class="form" action="">
+        {% csrf_token %}
+        <table class="table table-striped notice_filters">
+            <tr>
+                <th>{% trans "Notification Type" %}</th>
+                {% for header in event_filters.column_headers %}
+                    <th>
+                        {{ header.title }}
+                    </th>
+                {% endfor %}
+            </tr>
+            {% for row in event_filters.rows %}
+                <tr class="notice-row">
+                    <td>
+                        <strong>{{ row.event_type.display }}</strong><br/>
+                        <span class="event_type_description">
+                            {{ row.event_type.description }}
+                        </span>
+                    </td>
+                    {% for cell in row.cells %}
+                        <td>
+                            <input type="checkbox" name="{{ cell.0 }}" {% if cell.1 %}checked="yes"{% endif %} />
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary pull-right">{% trans "Change" %}</button>
+        </div>
+    </form>
+{% endblock %}

@@ -25,6 +25,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.template.defaultfilters import slugify
 import reversion
 from reversion.helpers import generate_diffs
+from django.contrib.contenttypes.models import ContentType
 
 from meta_tags.views import Meta 
 from blogging.utils import strip_image_from_data
@@ -39,6 +40,8 @@ from blogging.db_migrate import migrate
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 
+
+from events.signals import generate_event
 # import the logging library
 # import logging
 # from PirateLearner import log
@@ -160,11 +163,13 @@ def new_post(request):
 				blog.tags.add(*post_form.cleaned_data['tags'])
 
 			if action == 'Publish':				
-				subject = 'Review: mail from PirateLearner'
-				message = " "+ str(blog.get_menu_title()) + "has been submitted for review by " + str(request.user.profile.get_name()) + "\n"
-				html_message = '<a href="'+ "http:"+ str(settings.DOMAIN_URL) + str(blog.get_absolute_url()) + '" target="_blank"> <strong> ' + str(blog.get_title()) + '</strong> ' + "has been submitted for review by " + str(request.user.profile.get_name())
-				 
-				mail_admins(subject, message,fail_silently=True,html_message = html_message)
+# 				subject = 'Review: mail from PirateLearner'
+# 				message = " "+ str(blog.get_menu_title()) + "has been submitted for review by " + str(request.user.profile.get_name()) + "\n"
+# 				html_message = '<a href="'+ "http:"+ str(settings.DOMAIN_URL) + str(blog.get_absolute_url()) + '" target="_blank"> <strong> ' + str(blog.get_title()) + '</strong> ' + "has been submitted for review by " + str(request.user.profile.get_name())
+# 				 
+# 				mail_admins(subject, message,fail_silently=True,html_message = html_message)
+				generate_event.send(sender = blog.__class__, event_label = "blogging_content_submit", 
+								user = request.user, source_content_type = ContentType.objects.get_for_model(blog), source_object_id= blog.pk)
 
 			del request.session['content_info_id']
 			return HttpResponseRedirect(blog.get_absolute_url())
@@ -220,18 +225,9 @@ def edit_post(request,post_id):
 				blog.tags.set(*post_form.cleaned_data['tags'])
 
 				if action == 'Publish':				
-					subject = 'Review: mail from PirateLearner'
-					message = " "+ str(blog.get_menu_title()) + "has been submitted for review by " + str(request.user.profile.get_name()) + "\n"
-					html_message = '<a href="'+ "http:"+ str(settings.DOMAIN_URL) + str(blog.get_absolute_url()) + '" target="_blank"> <strong> ' + str(blog.get_title()) + '</strong> ' + "has been submitted for review by " + str(request.user.profile.get_name())
-					 
-					mail_admins(subject, message,fail_silently=True,html_message = html_message)
-				
+					generate_event.send(sender = blog.__class__, event_label = "blogging_content_submit", user = request.user, source_content_type = ContentType.objects.get_for_model(blog), source_object_id= blog.pk)
 								
 				return HttpResponseRedirect(blog.get_absolute_url())
-# 				return render_to_response(
-# 										"blogging/create_page.html",
-# 		    				context, context_instance=RequestContext(request))
-
 		else:
 			wrapper_form_class = find_class('blogging.custom.'+blog.content_type.__str__().lower(),str(blog.content_type).capitalize()+'Form')
 			print "LOGS: Wrapper Form Class ", wrapper_form_class
@@ -563,6 +559,9 @@ def BuildIndex(request):
 
 
 def testCase(request):
+
+	generate_event.send(sender = request.user.__class__, event_label = "user_signed_up", 
+                                	user = request.user, source_content_type = ContentType.objects.get_for_model(request.user), source_object_id= request.user.pk)
 	template = loader.get_template('index_tree.html')
 	course = BlogParent.objects.get(title='Course')
 	Django = BlogParent.objects.get(title='Computer Science') 
@@ -600,11 +599,13 @@ def manage(request):
 #				 print "LOGS: " + pks
 				objs = BlogContent.objects.filter(pk__in=pks)
 				
-				if action == 'Publish':
+				if action == 'Promote':
 					print "LOGS: Promote the given artcles"
 					for obj in objs:
 						obj.published_flag = True
 						obj.save()
+						generate_event.send(sender = obj.__class__, event_label = "blogging_content_publish", 
+										user = request.user, source_content_type = ContentType.objects.get_for_model(obj), source_object_id= obj.pk)
 				elif action == 'Delete':
 					for obj in objs:
 						obj.delete()
