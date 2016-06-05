@@ -78,7 +78,7 @@ class PublishedManager(RelatedManager):
         qs = super(PublishedManager, self).get_query_set()
         now = timezone.now()
         qs = qs.filter(publication_start__lte=now)
-        qs = qs.filter(Q(published_flag=True))
+        qs = qs.filter(Q(published_flag=True)).order_by('-publication_start')
         return qs
 
 

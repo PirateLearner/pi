@@ -1,0 +1,33 @@
+{% extends "events/notifications/base.html" %}
+
+{% block email_body %}
+
+Welcome onboard! <br /> <br />
+
+Here's a quick overview of what you could do at <a href="{{ base_url }}">{{ current_site.name }}</a>: <br /> 
+
+<h3>View your profile</h3>
+The one stop place to tune your user experience on {{ current_site.name }}. You can <a href="{{ base_url }}/{% url "dashboard:dashboard-profile" recipient.id %}">view your profile</a>, 
+<a href="{{ base_url }}/{% url "dashboard:dashboard-profile" recipient.id %}">connect more accounts</a>, 
+<a href="{{ base_url }}/{% url "blogging:content-type" %}">create or curate</a> 
+content from a unified <a href="{{ base_url }}/{% url "dashboard:dashboard-home" %}">dashboard</a>.
+
+<h3>Start learning</h3>
+<p>Choose from a range of topics to start learning. Here's the catalogue <a href="{{ base_url }}/{% url "blogging:section-view" %}"> Explore </a>.</p>
+
+<h3>Create learning</h3>
+<p><a  href="{{ base_url }}/{% url "blogging:content-type" %}">Write your own posts</a> and share them with the community! With one click publishing, 
+you can submit the content to us in case you want to showcase your skill to a wider audience!</p>
+
+<h3>Bookmark things you like</h3>
+<p><a  href="{{ base_url }}/{% url "bookmarks:add_bookmark" %}">Bookmark</a> important pages and organize them in folders. This way, you can access them from any place you want!</p>
+
+<h3>Message other pirates</h3>
+<p><a href="{{ base_url }}/{% url "messages:new_message" %}"> Chat </a>with other pirates on board</p>
+
+So, lets get started!
+
+<br /> <br />
+
+{% endblock %}
+
