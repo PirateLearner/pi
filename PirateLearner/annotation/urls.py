@@ -75,6 +75,7 @@ urlpatterns = patterns('annotation.views',
     #url(r'^', include(router.urls)),
 )
 
+#urlpatterns
 urlpatterns += patterns('',
     url(r'^cr/(\d+)/(.+)/$', 'django.contrib.contenttypes.views.shortcut', name='comments-url-redirect'),
 )
