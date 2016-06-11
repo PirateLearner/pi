@@ -11,6 +11,7 @@ from django.http import HttpResponseRedirect, Http404, HttpResponseBadRequest
 from blogging.models import *
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from blogging.forms import *
 from blogging.create_class import CreateClass
 from django.contrib.formtools.wizard.views import SessionWizardView
@@ -42,6 +43,7 @@ from django.conf import settings
 
 
 from events.signals import generate_event
+from django.utils import timezone
 # import the logging library
 # import logging
 # from PirateLearner import log
@@ -603,9 +605,10 @@ def manage(request):
 					print "LOGS: Promote the given artcles"
 					for obj in objs:
 						obj.published_flag = True
+						obj.publication_start = timezone.now()
 						obj.save()
 						generate_event.send(sender = obj.__class__, event_label = "blogging_content_publish", 
-										user = request.user, source_content_type = ContentType.objects.get_for_model(obj), source_object_id= obj.pk)
+										user = obj.get_author(), source_content_type = ContentType.objects.get_for_model(obj), source_object_id= obj.pk)
 				elif action == 'Delete':
 					for obj in objs:
 						obj.delete()
