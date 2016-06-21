@@ -4,7 +4,18 @@ var pirateLearnerGlobal = pirateLearnerGlobal || {};
 pirateLearnerGlobal.user = null;
 	
 var setupUser = function(user){
-		pirateLearnerGlobal.user = user;
+				if(!('id' in user)){
+					pirateLearnerGlobal.user = {
+							id: "0",
+							username: "Guest",
+							gravatar: "images/male.png",
+							url: "#",
+						};
+				}
+				else{
+					pirateLearnerGlobal.user = user;
+					};
+				}		
 		//console.log(pirateLearnerGlobal.user);
 	};
 
