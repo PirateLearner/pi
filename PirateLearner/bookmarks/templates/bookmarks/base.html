@@ -10,25 +10,8 @@
 {% endblock %}
 
 {% block content %}
-
-<div class="row main-content-wrapper">  	
-   	<div class="content-area clearfix">
-   		{% block bookmark_title %}
-	   	<div class="page-title">
-			<h2>Bookmarks</h2>
-		</div>
-		{% endblock %}
-   		<div class="col-sm-12 col-md-8 col-lg-9">
 			{% block bookmark_content %}
    			{% endblock %}
-  		</div>
-  		{% include "sidebar.html" %}
-            <div class="overlay" id="overlay-container">
-			
-			
-		    </div>
-   	</div>
-</div>	
  <!-- Django loaded Javascripts -->
 <script type="text/javascript" src="{{ STATIC_URL }}js/overlay.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}ckeditor/ckeditor/ckeditor.js"></script>

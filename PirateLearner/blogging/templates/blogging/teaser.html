@@ -1,5 +1,55 @@
 {% extends "blogging/base.html" %}
 
+{% comment %}  
+
+This template will include 4 major html files: section_title.html, indext_tree.html, teaser_list.html, and right_bar.html.
+
+1) One row will be taken by section_title.html. 
+2) On second row 2 columns are given to index_tree.html.
+3) On second row 8 columns are given to teaser_list.html.
+4) Remaining 2 columns are given to right_bar.html.
+
+{% endcomment %}
+
+{% block title %}
+{{ page.title }}
+{% endblock %}
+
+
+{% block content_blog %}
+
+<div class="container-fluid" >
+	<div class="row mR-40">
+	    {% include 'blogging/section_title.html' with page=page %}
+	</div>
+
+	<div class="row">
+		<!-- indext tree -->
+		<div class="content-tree col-md-2 ">
+			{% include 'blogging/index_tree.html' with parent=parent %}
+		</div>
+
+		<!-- Main teaser list -->
+		<div class="col-md-7 col-sm-12">
+			<div class="mR-40">
+				{% include "blogging/includes/teaser_list.html" with nodes=nodes max_entry=max_entry page=page %}
+			</div>
+		</div>
+	
+		<!-- Sidebar for extra information -->
+		<div class="col-lg-3 col-md-3 col-sm-12 ">
+			{% include 'rightbar.html' %}
+		</div>
+	
+	</div>
+	
+</div>
+
+{% endblock %}
+
+
+
+{% comment %}  
 
 {% if parent %}
 {% block blog_breadcrumb %}
@@ -13,10 +63,18 @@
 
 
 {% block content_blog %}
-<div class="row main-content-wrapper">  	
-   	<div class="content-area clearfix">
-	{% include "blogging/includes/teaser_list.html" with nodes=nodes max_entry=max_entry page=page %}
+
+<div class="container-fluid" >
+	<div class="row">
+	    {% include 'blogging/index_tree.html' with parent=parent %}
+
+		<div class="col-md-10 pT-50">
+			{% include "blogging/includes/teaser_list.html" with nodes=nodes max_entry=max_entry page=page %}
+		</div>
+
 	</div>
 </div>
+
 {% endblock %}
 
+{% endcomment %}

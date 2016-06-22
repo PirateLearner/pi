@@ -2,7 +2,6 @@
 
 {% block extra_script %}
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/css/forms.css"/>
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/css/base.css"/>
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/css/widgets.css"/>
 <script type="text/javascript" src="/admin/jsi18n/"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}admin/js/core.js"></script>
@@ -50,8 +49,17 @@
      </div>
 </div>
 
-{% load crispy_forms_tags %}
+<div class="container-fluid" >
+	<div class="row">
+	    {% include 'leftbar.html' with active="create_bookmark" %}
 
-{% crispy bookmark_form bookmark_form.helper %}
+	<div class="col-md-8 pT-50">
+		{% load crispy_forms_tags %}
+		{% crispy bookmark_form bookmark_form.helper %}
+	</div>
+	</div>
+</div>
+
+
 
 	{% endblock %}	

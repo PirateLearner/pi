@@ -1,0 +1,12 @@
+{% extends "events/notifications/base.html" %}
+
+{% block email_body %}
+
+A new pirate {{ user.profile.get_profile_name }} has connected using {{ user.profile.get_provider_name }}. 
+You can view the profile <a href="{{ base_url }}/{% url "dashboard:dashboard-profile" user.id %}">here</a>. 
+
+<br />
+<br />
+
+{% endblock %}
+

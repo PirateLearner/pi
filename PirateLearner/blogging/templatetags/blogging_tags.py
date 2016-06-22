@@ -184,7 +184,10 @@ class DraftTag(InclusionTag):
             return "Http404"
     def _get_context(self,context, user):
         extra_context = {}
-        extra_context['drafts'] = BlogContent.objects.filter(published_flag=False,special_flag=True)
+        if user:
+            extra_context['drafts'] = BlogContent.objects.filter(published_flag=False,special_flag=True,author_id=user)
+        else:
+            extra_context['drafts'] = BlogContent.objects.filter(published_flag=False,special_flag=True)
         return extra_context  
 
 class PendingTag(InclusionTag):
@@ -351,9 +354,21 @@ def get_blogging_tags():
     return tag_list
 
 @register.assignment_tag
+def get_section_children(section):
+    return BlogContent.published.filter(section=section)
+
+@register.assignment_tag
 def get_recent_articles():
     return BlogContent.published.all()[:3]
 
+@register.filter('has_group')
+def has_group(user,groups):
+    if user.is_authenticated():       
+        group_list = [s for s in groups.split(',')]     
+        if user.is_authenticated():
+            if bool(user.groups.filter(name__in=group_list)) | user.is_superuser:
+                return True
+        return False
 
 register.tag(ContentRender)
 register.tag(ContactTag)

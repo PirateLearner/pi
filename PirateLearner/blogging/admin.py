@@ -19,7 +19,7 @@ mark_published.short_description = "Mark selected content as published"
 
 
 
-class ParentAdmin(MPTTModelAdmin,reversion.VersionAdmin):
+class ParentAdmin(MPTTModelAdmin):
     fieldsets = [
                  ('',     {'fields': ['title', 'parent','slug','data','content_type']} ),
                  ]
@@ -31,7 +31,7 @@ class ParentAdmin(MPTTModelAdmin,reversion.VersionAdmin):
     prepopulated_fields = {'slug': ('title',), }
 
 if 'cms' in settings.INSTALLED_APPS:
-    class ContentAdmin(FrontendEditableAdmin,PlaceholderAdmin,reversion.VersionAdmin):
+    class ContentAdmin(FrontendEditableAdmin,PlaceholderAdmin):
         list_display = ('title', 'create_date', 'published_flag','publication_start')
         list_filter = ['create_date']
         search_fields = ['title']

@@ -7,6 +7,7 @@ from django.utils import timezone
 
 from PirateLearner.models import BaseContentClass
 from django.conf import settings
+from django.core.urlresolvers import reverse
 
 # Create your models here.
 
@@ -142,6 +143,13 @@ class UserProfile(BaseContentClass):
         else:
             return settings.STATIC_URL + "images/add_new.png"
     
+    def get_profile_name(self):
+        name  = self.get_first_name(None)
+        if name is None:
+            name = self.get_username(None)
+        
+        return name
+    
     def get_username(self,provider=None):
         """
         Return the username of social account Facebook, Google and Twitter in that order, if provider is None.
@@ -210,7 +218,11 @@ class UserProfile(BaseContentClass):
         if profile != None:
             if self.get_provider_name(profile.provider) == 'twitter':
                 return "---"
-            return profile.extra_data['gender']
+            gender =  profile.extra_data.get('gender',None)
+            if gender is None:
+                return self.gender
+            else:
+                return gender
         else:
             return "---"
 
@@ -235,7 +247,15 @@ class UserProfile(BaseContentClass):
         """
         profile = self._get_social_account(provider)
         if profile != None:
-            return profile.extra_data['link']
+            print profile.extra_data
+            if self.get_provider_name(profile.provider) == 'facebook':
+                return self._get_fb_link(profile)
+            elif self.get_provider_name(profile.provider) == 'google':
+                return self._get_google_link(profile)
+            elif self.get_provider_name(profile.provider) == 'twitter':
+                return self._get_tw_link(profile)
+            else:
+                return ""
         else:
             return ""
        
@@ -269,54 +289,57 @@ class UserProfile(BaseContentClass):
     
     def get_signin_time(self):
         return self.signin_date
+    
+    def get_profile_page(self):
+        return reverse('dashboard:dashboard-profile', kwargs={'user_id': self.user.id})
 
     """
     Private functions for retrieving the fname, lname, email etc. from GooGle, Facebook and twitter
     TODO define these functions for twitter also
     """    
     def _get_google_fname(self,profile):
-        return str(profile.extra_data['name']).split(' ')[0]
+        return str(profile.extra_data['name']).split(' ')[0].encode('utf-8')
     
     def _get_google_lname(self,profile):
-        return profile.extra_data['family_name']
+        return profile.extra_data['family_name'].encode('utf-8')
 
     def _get_google_email(self,profile):
-        return profile.extra_data['email']
+        return profile.extra_data['email'].encode('utf-8')
 
     def _get_google_email(self,profile):
-        return profile.extra_data['email']
+        return profile.extra_data['email'].encode('utf-8')
 
     def _get_google_username(self,profile):
-        return profile.extra_data['given_name']
+        return profile.extra_data['given_name'].encode('utf-8')
 
     def _get_google_link(self,profile):
         return profile.extra_data['link']
 
     def _get_fb_fname(self,profile):
-        return profile.extra_data['first_name']
+        return profile.extra_data['first_name'].encode('utf-8')
     
     def _get_fb_lname(self,profile):
-        return profile.extra_data['last_name']
+        return profile.extra_data['last_name'].encode('utf-8')
 
     def _get_fb_email(self,profile):
-        return profile.extra_data['email']
+        return profile.extra_data['email'].encode('utf-8')
 
     def _get_fb_username(self,profile):
-        return profile.extra_data['name']
+        return profile.extra_data['name'].encode('utf-8')
 
     def _get_fb_link(self,profile):
         return profile.extra_data['link']
     
     def _get_tw_fname(self,profile):
-        return str(profile.extra_data['name']).split(' ')[0]
+        return str(profile.extra_data['name']).split(' ')[0].encode('utf-8')
 
     def _get_tw_lname(self,profile):
-        return str(profile.extra_data['name']).split(' ')[-1]
+        return str(profile.extra_data['name']).split(' ')[-1].encode('utf-8')
 
     def _get_tw_username(self,profile):
-        return profile.extra_data['screen_name']
+        return profile.extra_data['screen_name'].encode('utf-8')
 
     def _get_tw_link(self,profile):
-        return profile.extra_data['url']
+        return  "//twitter.com/" + str(profile.extra_data['screen_name'])
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])

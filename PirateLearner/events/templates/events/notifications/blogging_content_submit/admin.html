@@ -1,0 +1,17 @@
+{% extends "events/notifications/base.html" %}
+
+{% block email_body %}
+{{ notice }}
+<br />
+<br />
+<strong>
+Author: {{ author }}
+</strong>
+<br />
+Title: <a href={{ base_url }}/{{ blog_url }}>{{ title }}</a>
+<br /> <br />
+Summary: {{ summary }}
+<br />
+
+{% endblock %}
+

@@ -23,32 +23,28 @@
 {% endblock %}
 
 {% block content_blog %}
-<div class="row main-content-wrapper">  	
-   	<div class="content-area clearfix">
 
-	<section class="header-ribbon" id="overlay-target" itemscope itemtype="http://schema.org/Article">
-	
-		<!--<div> -->
-			<span class="hidden rest" data-id="{{ nodes.id }}" data-content-type="{{ nodes.get_content_type }}"></span>
-			<h1 class="article-title" itemprop="headline"> 	{{ content.title }} </h1>
-			<meta itemprop="datePublished" content=" {{ meta.date_time }} "/>
-			<span class="article-author"> by {{ content.author.profile.get_name|title }}</span>       	
-			<div class="article-actions_outer" data-spy="affix">
-				<div class="article-actions-title-small">
-					<h4 class="article-title"> 	{{ content.title  }} </h4>
-				</div>       	
-				<div class="article-actions">
-					{% if request.user.is_staff == True %}
-					<div class="article-actions__button pull-right">
-	   					<a id="trigger-edit" href="{{ content.edit }}" type="button">
-	   						<span class="glyphicon glyphicon-edit"></span>
-	   						<span class="icon-helper">
-			       			Edit
-			       			</span>
-	   					</a>
-		       		</div>
-		       		{% else %}
-		       			{% if can_edit %}
+<div class="container-fluid" >
+	<div class="row">
+		<div class="content-tree col-md-2 pT-80 ">
+			{% include 'blogging/index_tree.html' with parent=parent %}
+		</div>
+		
+		<div class="col-md-7 pT-50">
+
+			<section class="header-ribbon" id="overlay-target" itemscope itemtype="http://schema.org/Article">
+			
+				<!--<div> -->
+					<span class="hidden rest" data-id="{{ nodes.id }}" data-content-type="{{ nodes.get_content_type }}"></span>
+					<h1 class="article-title" itemprop="headline"> 	{{ content.title }} </h1>
+					<meta itemprop="datePublished" content=" {{ meta.date_time }} "/>
+					<span class="article-author"> by <a href="{{ content.author.profile.get_profile_page }}">{{ content.author.profile.get_name|title }}</a></span>       	
+					<div class="article-actions_outer" data-spy="affix">
+						<div class="article-actions-title-small">
+							<h4 class="article-title"> 	{{ content.title  }} </h4>
+						</div>       	
+						<div class="article-actions">
+							{% if request.user.is_staff == True %}
 							<div class="article-actions__button pull-right">
 			   					<a id="trigger-edit" href="{{ content.edit }}" type="button">
 			   						<span class="glyphicon glyphicon-edit"></span>
@@ -56,98 +52,117 @@
 					       			Edit
 					       			</span>
 			   					</a>
-				       		</div>		       			
-		       			{% endif %}
-					{% endif %}
+				       		</div>
+				       		{% else %}
+				       			{% if can_edit %}
+									<div class="article-actions__button pull-right">
+					   					<a id="trigger-edit" href="{{ content.edit }}" type="button">
+					   						<span class="glyphicon glyphicon-edit"></span>
+					   						<span class="icon-helper">
+							       			Edit
+							       			</span>
+					   					</a>
+						       		</div>		       			
+				       			{% endif %}
+							{% endif %}
+							{% if content.published %}
+								<div class="article-actions__button pull-right mR-16 pT-6">
+									<a href="https://twitter.com/share" class="twitter-share-button"><i class="fa fa-twitter"></i> Tweet</a>
+								</div>
+								
+								<div class="article-actions__button pull-right mR-16 pT-2">					
+								    <div class="fb-share-button" 
+								        data-href="{{ request.path|safe }}" 
+								        data-layout="button_count">
+								    </div>
+								</div>
+								<div class="article-actions__button pull-right mR-16 pT-6">
+									<div class="g-plus" data-action="share" data-href="{{ request.path|safe }}" data-align="right" data-annotation="bubble" ></div>
+								</div>					
+							{% endif %}
+				       		<div class="article-actions__button text-muted vote" id="upvote">
+					       		<span class="glyphicon glyphicon-chevron-up"></span>
+					       		<span class="icon-helper" id="upvote_count">
+					       			0
+					       		</span>
+				       		</div>
+				       		<div class="article-actions__button text-muted vote" id="downvote">
+					       		<span class="glyphicon glyphicon-chevron-down"></span>
+					       		<span class="icon-helper" id="downvote_count">0	       			
+					       		</span>
+				       		</div>
+				       		<div class="articles_action__error voting-error hidden" id="article-actions_error">
+				       			<span class="pull-left glyphicon glyphicon-remove" id="article-actions-close"></span>
+				       			<span id="article-actions_text"></span>
+				       		</div>
+				       		{% comment %}  
+							{% if content.published %}
+					       		<div class="articles_action__button btn mL-8 " id="article-actions_bookmark">
+					       		{% is_bookmarked request.user request.path|safe as bookmarked %}
+					       		{% if bookmarked %}
+					       			<i class="fa fa-bookmark"  title="Remove Bookmark!" id="article-actions-bookmark"></i>
+					       		{% else %}
+					       			<i class="fa fa-bookmark-o" title="Bookmark It!"  id="article-actions-bookmark"></i>
+					       		{% endif %}
+					       		       			
+					       		</div>
+				       		{% endif %}		
+				       		
+				       		{% endcomment %}       			
+				       	</div>			
+			       	</div>
+			       	{% comment %}  
+					
 					{% if content.published %}
-						<div class="article-actions__button pull-right mR-16 pT-6">
-							<a href="https://twitter.com/share" class="twitter-share-button"><i class="fa fa-twitter"></i> Tweet</a>
+						{% is_bookmarked request.user request.path|safe as bookmarked %}			
+						<div id="bookmark-dialog" data-url="{{ request.path|safe }}" title="{% if bookmarked %}Add Bookmark{% else %}Remove Bookmark{% endif%} " style="display:none;">
+						    <p>Bookmark this article. Please enter some note for your convenience.</p>
+						    <textarea name="note" placeholder="Note" cols="30" rows="10" wrap="soft" class="dialog-textarea"></textarea>
+						    <button id="save-bookmark" class="btn btn-info">Save me!</button>
 						</div>
-						
-						<div class="article-actions__button pull-right mR-16 pT-2">					
-						    <div class="fb-share-button" 
-						        data-href="{{ request.path|safe }}" 
-						        data-layout="button_count">
-						    </div>
-						</div>
-						<div class="article-actions__button pull-right mR-16 pT-6">
-							<div class="g-plus" data-action="share" data-href="{{ request.path|safe }}" data-align="right" data-annotation="bubble" ></div>
-						</div>					
-					{% endif %}
-		       		<div class="article-actions__button text-muted vote" id="upvote">
-			       		<span class="glyphicon glyphicon-chevron-up"></span>
-			       		<span class="icon-helper" id="upvote_count">
-			       			0
-			       		</span>
-		       		</div>
-		       		<div class="article-actions__button text-muted vote" id="downvote">
-			       		<span class="glyphicon glyphicon-chevron-down"></span>
-			       		<span class="icon-helper" id="downvote_count">0	       			
-			       		</span>
-		       		</div>
-		       		<div class="articles_action__error voting-error hidden" id="article-actions_error">
-		       			<span class="pull-left glyphicon glyphicon-remove" id="article-actions-close"></span>
-		       			<span id="article-actions_text"></span>
-		       		</div>
-		       		{% comment %}  
-					{% if content.published %}
-			       		<div class="articles_action__button btn mL-8 " id="article-actions_bookmark">
-			       		{% is_bookmarked request.user request.path|safe as bookmarked %}
-			       		{% if bookmarked %}
-			       			<i class="fa fa-bookmark"  title="Remove Bookmark!" id="article-actions-bookmark"></i>
-			       		{% else %}
-			       			<i class="fa fa-bookmark-o" title="Bookmark It!"  id="article-actions-bookmark"></i>
-			       		{% endif %}
-			       		       			
-			       		</div>
 		       		{% endif %}		
 		       		
 		       		{% endcomment %}       			
-		       	</div>			
-	       	</div>
-	       	{% comment %}  
-			
-			{% if content.published %}
-				{% is_bookmarked request.user request.path|safe as bookmarked %}			
-				<div id="bookmark-dialog" data-url="{{ request.path|safe }}" title="{% if bookmarked %}Add Bookmark{% else %}Remove Bookmark{% endif%} " style="display:none;">
-				    <p>Bookmark this article. Please enter some note for your convenience.</p>
-				    <textarea name="note" placeholder="Note" cols="30" rows="10" wrap="soft" class="dialog-textarea"></textarea>
-				    <button id="save-bookmark" class="btn btn-info">Save me!</button>
-				</div>
-       		{% endif %}		
-       		
-       		{% endcomment %}       			
-			<article class="article-body" id="commentable-container"  itemprop="articleBody">
-				{% block custom_detail %}
-				{% endblock %}
-			</article>
-			
-		<!-- </div> -->
-	</section>
-	<div class="article-adjunct">
-	    <nav class="article-adjunct-nav">
-	        <ul class="article-adjunct-nav--list">
-	            <li class="nav-tab article-adjunct-nav--item active"><a href="#article-adjunct-tab-discuss"><span>Discussions</span></a></li>
-	            <li class="nav-tab article-adjunct-nav--item"><a href="#article-adjunct-tab-notes"><span>Notes</span></a></li>
-	        </ul>
-	    </nav>
-	    <div class="article-adjunct-block">
-	        <div class="article-adjunct-tab" id="article-adjunct-tab-discuss">
-				{% disqus_show_comments %}
-	        </div>
-	        <div class="article-adjunct-tab active comments-container" id="article-adjunct-tab-notes">
-	            
-	        </div>
-	    </div>
-	</div>
-	</div>
-</div>
+					<article class="article-body" id="commentable-container"  itemprop="articleBody">
+						{% block custom_detail %}
+						{% endblock %}
+					</article>
+					
+				<!-- </div> -->
+			</section>
+			<div class="article-adjunct">
+			    <nav class="article-adjunct-nav">
+			        <ul class="article-adjunct-nav--list">
+			            <li class="nav-tab article-adjunct-nav--item active"><a href="#article-adjunct-tab-discuss"><span>Discussions</span></a></li>
+			            <li class="nav-tab article-adjunct-nav--item"><a href="#article-adjunct-tab-notes"><span>Notes</span></a></li>
+			        </ul>
+			    </nav>
+			    <div class="article-adjunct-block">
+			        <div class="article-adjunct-tab" id="article-adjunct-tab-discuss">
+						{% disqus_show_comments %}
+			        </div>
+			        <div class="article-adjunct-tab active comments-container" id="article-adjunct-tab-notes">
+			            
+			        </div>
+			    </div>
+			</div> <!-- div article-adjunct -->
+	
+		</div> <!-- div second column end -->
+	</div> <!-- div row -->
+	<div class="overlay" id="img-modal"></div>
+</div> <!-- div container fluid -->
 {% endblock %}
 
 {% block extra_script %}
+<script src="{{ STATIC_URL }}js/getuser.js"></script> 
+<script src="{{ STATIC_URL }}js/voting/voting_detail.js"></script>
+<script src="{{ STATIC_URL }}js/annotations/script.js"></script>
+<script src="{{ STATIC_URL }}js/blogging/nav_affix.js"></script>    
+
 <script src="{{ STATIC_URL }}ckeditor/ckeditor/ckeditor.js"></script>
 <script src="{{ STATIC_URL }}js/getuser.js"></script>
 <script src="{{ STATIC_URL }}js/bookmark/bookmark_details.js"></script>
+<script src="{{ STATIC_URL }}js/blogging/image_expand.js"></script>
 <link rel="stylesheet" href="{{ STATIC_URL }}css/overlay.css"></link>
 	<!-- Twitter share script -->
 	<script>
