@@ -1,3 +1,5 @@
+
+
 .card {
     padding-top: 20px;
     margin: 10px 0 20px 0;
@@ -739,7 +741,7 @@ ul.inbox-pagination li {
  *
  */
  
- section h2.heading {
+ h2.heading {
     font-size: 30px;
     color: #3B4952;
     font-family: "Roboto",sans-serif;
@@ -918,7 +920,7 @@ h2.subheading {
 }
 .tags li a {
     background: #EBF1F4 none repeat scroll 0% 0%;
-    font-size: 16px;
+    font-size: 14px;
     display: block;
     font-weight: 500;
     border-radius: 3px;
@@ -1155,7 +1157,9 @@ h2.subheading {
 
 .pL-16 { padding-left: 16px;}
 .pR-16 { padding-right: 16px;}
+.pT-45 { padding-top: 45px;}
 .pT-50 { padding-top: 50px;}
+.pT-80 { padding-top: 100px;}
 .pT-16 { padding-top: 16px;}
 
 .p-10 {
@@ -1189,6 +1193,7 @@ h2.subheading {
 
 .mL-16 { margin-left: 16px;}
 .mR-16 { margin-right: 16px;}
+.mR-40 { margin-right: 40px;}
 .mT-16 { margin-top: 16px;}
 .mT-16 { margin-top: 16px;}
 .mT-150 { margin-top: 150px;}
