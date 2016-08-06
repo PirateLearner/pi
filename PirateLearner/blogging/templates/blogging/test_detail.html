@@ -1,22 +1,24 @@
 {% extends "blogging/base.html" %}
 
-{% load cms_tags %}
 {% load disqus_tags %}
 {% load bookmark_tags %}
+{% load humanize %}
+
 {% disqus_dev %}
 {% block meta %}
 {% include "meta.html" with meta=meta only %}
 {% endblock %}
 
-{% if parent %}
-{% block blog_breadcrumb %}
-{% endblock %}
-{% endif %}
 
 {% block title %}
 {{ content.title }}
 {% endblock %}
 
+{% block extra_style %}
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/annotations/annotations.css">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}js/syntaxhighlighter/styles/shCore.css">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}js/syntaxhighlighter/styles/shThemeDefault.css">
+{% endblock %}
 
 {% block edit_content %}
 
@@ -24,13 +26,98 @@
 
 {% block content_blog %}
 
+        <div class="mB-120 blog-post-page">
+{% comment %}   {% include 'blogging/section_title.html' with page=page %} {% endcomment %}
+          <article class=" section section--main" role="article">
+            <div class="mdl-grid fixed-width ">
+              <div class=" section__block mdl-cell mdl-cell--7-col mdl-cell--12-col-tablet ">
+                <!-- main blog content start -->
+                <span class="hidden rest" data-id="{{ nodes.id }}" data-content-type="{{ nodes.get_content_type }}"></span>
+                <h3 class="blog-post__title">{{ content.title }}</h3>
+                <div class="blog-post__meta">
+                  <span>
+                    <span class="blog-post__author"><a href="{{ content.author.profile.get_profile_page }}">{{ content.author.profile.get_profile_name|title }}</a></span>
+                    <meta itemprop="datePublished" content=" {{ meta.date_time }} "/>
+                    <time datetime="2016-06-30" class="blog-post__time"> {{ meta.date_time|naturaltime }} </time>
+                  </span>
+                  <div class="blog-post__share hide-for-print">
+                    <a href="https://plus.google.com/share?url={{ request.path|safe }}" title="Google+" target="_blank" class="share__link analytics-event" >
+                      <i class="fa fa-google"></i>
+                    </a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.path|safe }}" title="Facebook" target="_blank" class="share__link analytics-event" data-analytics-event-category="blog" data-analytics-event-action="share" data-analytics-event-label="facebook">
+                      <i class="fa fa-facebook"></i>
+                    </a>
+                    <a href="https://twitter.com/home?status=checkout this awesome article " title="Twitter" target="_blank" class="share__link analytics-event" data-analytics-event-category="blog" data-analytics-event-action="share" data-analytics-event-label="twitter">
+                      <i class="fa fa-twitter"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.path|safe }}&title={{ nodes.get_title }}&summary={{ nodes.get_summary }}&source=" title="LinkedIn" target="_blank" class="share__link">
+                      <i class="fa fa-linkedin"></i>
+                    </a>
+                    
+                    <a href="mailto:?subject=Check out this blog from PirateLerner &amp;body=" title="Email" target="_blank" class="share__link">
+                      <i class="fa fa-envelope"></i>
+                    </a>
+                    {% comment %}  
+                    <a title="Print" target="_blank" class="share__link" href="javascript:window.print();">
+                      <i class="fa fa-print"></i>
+                    </a>
+                    {% endcomment %}
+                  </div>
+                </div>
+                <div class="blog-post__meta">
+                    <div class="article-actions__button text-muted vote" id="upvote">
+                        <span class="material-icons">thumb_up</span>
+                        <span class="icon-helper" id="upvote_count">
+                            0
+                        </span>
+                    </div>
+                    <div class="article-actions__button text-muted vote" id="downvote">
+                        <span class="material-icons">thumb_down</span>
+                        <span class="icon-helper" id="downvote_count">0                 
+                        </span>
+                    </div>
+                    <div class="articles_action__error voting-error hidden" id="article-actions_error">
+                        <span class="pull-left material-icons" id="article-actions-close">close</span>
+                        <span id="article-actions_text"></span>
+                    </div>
+                </div>
+                <div class="blog-post__subjects hide-for-print">
+                </div>
+                <div class="blog-post__body markdown" id="commentable-container"  itemprop="articleBody">
+				{% block custom_detail %}
+				
+				{% endblock %}
+				
+                </div>
+                <!-- main blog content end -->
+                <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+                  <div class="mdl-tabs__tab-bar">
+                      <a href="#discuss-panel" class="mdl-tabs__tab is-active">Discussions</a>
+                      <a href="#article-adjunct-tab-notes" class="mdl-tabs__tab">Notes</a>
+                  </div>
+                
+                  <div class="mdl-tabs__panel is-active" id="discuss-panel">
+                  {% disqus_show_comments %}
+                  </div>
+                  <div class="mdl-tabs__panel article-adjunct-tab active comments-container" id="article-adjunct-tab-notes">
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </article>
+        </div> <!-- Blog post end -->
+
+
+{% comment %}  
 <div class="container-fluid" >
 	<div class="row">
 		<div class="content-tree col-md-2 pT-80 ">
 			{% include 'blogging/index_tree.html' with parent=parent %}
 		</div>
 		
-		<div class="col-md-7 pT-50">
+		<div class="col-sm-12 col-md-10 col-lg-7 pT-50">
 
 			<section class="header-ribbon" id="overlay-target" itemscope itemtype="http://schema.org/Article">
 			
@@ -95,34 +182,9 @@
 				       			<span class="pull-left glyphicon glyphicon-remove" id="article-actions-close"></span>
 				       			<span id="article-actions_text"></span>
 				       		</div>
-				       		{% comment %}  
-							{% if content.published %}
-					       		<div class="articles_action__button btn mL-8 " id="article-actions_bookmark">
-					       		{% is_bookmarked request.user request.path|safe as bookmarked %}
-					       		{% if bookmarked %}
-					       			<i class="fa fa-bookmark"  title="Remove Bookmark!" id="article-actions-bookmark"></i>
-					       		{% else %}
-					       			<i class="fa fa-bookmark-o" title="Bookmark It!"  id="article-actions-bookmark"></i>
-					       		{% endif %}
-					       		       			
-					       		</div>
-				       		{% endif %}		
-				       		
-				       		{% endcomment %}       			
 				       	</div>			
 			       	</div>
-			       	{% comment %}  
-					
-					{% if content.published %}
-						{% is_bookmarked request.user request.path|safe as bookmarked %}			
-						<div id="bookmark-dialog" data-url="{{ request.path|safe }}" title="{% if bookmarked %}Add Bookmark{% else %}Remove Bookmark{% endif%} " style="display:none;">
-						    <p>Bookmark this article. Please enter some note for your convenience.</p>
-						    <textarea name="note" placeholder="Note" cols="30" rows="10" wrap="soft" class="dialog-textarea"></textarea>
-						    <button id="save-bookmark" class="btn btn-info">Save me!</button>
-						</div>
-		       		{% endif %}		
-		       		
-		       		{% endcomment %}       			
+      			
 					<article class="article-body" id="commentable-container"  itemprop="articleBody">
 						{% block custom_detail %}
 						{% endblock %}
@@ -151,6 +213,7 @@
 	</div> <!-- div row -->
 	<div class="overlay" id="img-modal"></div>
 </div> <!-- div container fluid -->
+{% endcomment %}
 {% endblock %}
 
 {% block extra_script %}
@@ -171,6 +234,11 @@
 		if(!d.getElementById(id)){js=d.createElement(s);
 		js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
 	</script>
+
+<!-- Syntax Highlight -->
+    <script type="text/javascript">
+         SyntaxHighlighter.all()
+    </script>
 
 {% endblock %}
 

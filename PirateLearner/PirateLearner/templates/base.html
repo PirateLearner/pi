@@ -1,4 +1,4 @@
-{% load cms_tags staticfiles sekizai_tags menu_tags %}
+{% load staticfiles %}
 <!DOCTYPE html>
 
 <!-- HTML5 Boilerplate -->
@@ -7,324 +7,256 @@
 <!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
 	
+<html class="no-js" lang="en">
   <head>
-	<meta charset="utf-8">
-
-    <title>{% block title %}Home {% endblock title %}| {{ site.name }}</title>
-  
-    
-    {% block meta %}
-    
-	<meta name="description" content="">
-	<meta name="author" content="Anshul" >
-	
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>{% block title %}Home {% endblock title %}| {{ site.name }}</title>
+      {% block meta %}
+		<meta name="description" content="PirateLearner As A One-Stop Learning Resource For All People Interested In Learning.">
+		<meta name="author" content="Anshul" >
 	{% endblock %}
-	
 	<!-- http://t.co/dKP3o1e -->
 	<meta name="HandheldFriendly" content="True">
 	<meta name="MobileOptimized" content="320">
-	
-	<!-- For all browsers -->
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css">
-	<!-- Bootstrap core CSS -->
-	<link rel="stylesheet" type="text/css" href="{{STATIC_URL }}css/piratelearner.css">
-	<link rel="stylesheet" type="text/css" href="{{STATIC_URL }}css/font.css">
-	<!-- Font Awesome -->
-	<link rel="stylesheet" type="text/css" href="{{STATIC_URL }}css/font-awesome-4.4.0/css/font-awesome.min.css">
-	<link href="{{ STATIC_URL }}css/dashboard/style.css" rel="stylesheet" type="text/css">
-	<!--[if (lt IE 9) & (!IEMobile)]>
-	<script src="{{ STATIC_URL }}js/selectivizr-min.js"></script>
-	<![endif]-->
-	<link rel="stylesheet" type="text/css" href="{{STATIC_URL }}js/syntaxhighlighter/styles/shCore.css">
-	<link rel="stylesheet" type="text/css" href="{{STATIC_URL }}js/syntaxhighlighter/styles/shThemeDefault.css">
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+      <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+      <link rel="stylesheet" href="{{ STATIC_URL }}css/material.min.css">
+      <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css">
+      <link rel="stylesheet" href="{{ STATIC_URL }}font-awesome-4.6.3/css/font-awesome.min.css">
+      {% block extra_style %}
+      {% comment %}  Page specific styles goes here {% endcomment %}
+      <!-- slick plugin for carousel -->
+      <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}slick/slick.css"/>
+      <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}slick/slick-theme.css"/>      
+      {% endblock %}
 
-	<!-- JavaScript -->
-	<script src="{{ STATIC_URL }}js/modernizr.custom.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>    
-    
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="{{ STATIC_URL}}js/login_action.js"></script>
-     
-	<!-- Icons -->
-	
-	<!-- 16x16 -->
-	<link rel="shortcut icon" href="{{ STATIC_URL }}images/favicon.ico">
-	<!-- 32x32 -->
-	<!--<link rel="shortcut icon" href="/favicon.png"> -->
-	<!-- 57x57 (precomposed) for iPhone 3GS, pre-2011 iPod Touch and older Android devices -->
-	<!-- <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-precomposed.png"> -->
-	<!-- 72x72 (precomposed) for 1st generation iPad, iPad 2 and iPad mini -->
-	<!-- <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72x72-precomposed.png"> -->
-	<!-- 114x114 (precomposed) for iPhone 4, 4S, 5 and post-2011 iPod Touch -->
-	<!-- <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114x114-precomposed.png"> -->
-	<!-- 144x144 (precomposed) for iPad 3rd and 4th generation -->
-	<!-- <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144x144-precomposed.png"> -->
-	
-	<!--iOS -->
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!-- <meta name="apple-mobile-web-app-title" content="320 and Up"> -->
-	<!-- <meta name="viewport" content="initial-scale=1.0"> (Use if apple-mobile-web-app-capable below is set to yes) -->
-	<!-- <meta name="apple-mobile-web-app-capable" content="yes"> -->
-	<!-- <meta name="apple-mobile-web-app-status-bar-style" content="black"> -->
-	
-	<!-- Startup images -->
-	
-	<!-- iPhone 3GS, pre-2011 iPod Touch -->
-	<!-- <link rel="apple-touch-startup-image" href="img/startup/startup-320x460.png" media="screen and (max-device-width:320px)"> -->
-	<!-- iPhone 4, 4S and 2011 iPod Touch-->
-	<!-- <link rel="apple-touch-startup-image" href="img/startup/startup-640x920.png" media="(max-device-width:480px) and (-webkit-min-device-pixel-ratio:2)"> -->
-	<!-- iPhone 5 and 2012 iPod Touch -->
-	<!-- <link rel="apple-touch-startup-image" href="img/startup/startup-640x1096.png" media="(max-device-width:548px) and (-webkit-min-device-pixel-ratio:2)"> -->
-	<!-- iPad landscape -->
-	<!-- <link rel="apple-touch-startup-image" sizes="1024x748" href="img/startup/startup-1024x748.png" media="screen and (min-device-width:481px) and (max-device-width:1024px) and (orientation:landscape)"> -->
-	<!-- iPad Portrait -->
-	<!-- <link rel="apple-touch-startup-image" sizes="768x1004" href="img/startup/startup-768x1004.png" media="screen and (min-device-width:481px) and (max-device-width:1024px) and (orientation:portrait)"> -->
-	
 	<!-- Windows 8 / RT -->
 	<meta name="msapplication-TileImage" content="img/apple-touch-icon-144x144-precomposed.png">
 	<meta name="msapplication-TileColor" content="#000">
 	<meta http-equiv="cleartype" content="on">
-	    <script src="{{ STATIC_URL }}/js/login_ajax.js"></script>
-	    <script src="{{ STATIC_URL }}/js/getuser.js"></script>
-	    <script type="text/x-mathjax-config">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="{{ STATIC_URL }}js/material.js"></script>
+    <script type="text/x-mathjax-config">
 		MathJax.Hub.Config({
 		  TeX: { equationNumbers: { autoNumber: "AMS" } }
 		});
-	    </script>
-   <script src="{{ STATIC_URL }}/js/MathJax/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+	  </script>
+   	<script src="{{ STATIC_URL }}/js/MathJax/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
    <!-- Syntax highlighter -->
-<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shCore.js"></script>
-<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushSass.js"></script>
-<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushPython.js"></script>
-<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushCpp.js"></script>
-<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushJScript.js"></script>
-<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushXml.js"></script>
-<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushBash.js"></script>
-<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushPerl.js"></script>
-    {% render_block "css" %}
-    <!--<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/tile.css"> -->
-  	<!-- JavaScript -->
-
+	<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shCore.js"></script>
+	<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushSass.js"></script>
+	<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushPython.js"></script>
+	<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushCpp.js"></script>
+	<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushJScript.js"></script>
+	<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushXml.js"></script>
+	<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushBash.js"></script>
+	<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushPerl.js"></script>
     <!-- GPLus Script -->
-<script src="https://apis.google.com/js/platform.js" async defer></script>
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
 
 <!-- analytics -->
 {% if request.user.is_staff != True %}
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-51345450-1', 'piratelearner.com');
-  ga('send', 'pageview');
-</script>
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	  ga('create', 'UA-51345450-1', 'piratelearner.com');
+	  ga('send', 'pageview');
+	</script>
 {% endif %}
-
-
-{% render_block "js" %}
-  {% block extra_script %} 
-{% endblock %}
-  </head>
-  <body class="clearfix" id="mainWrapper" style="margin-top=66px;">
-    {% cms_toolbar %}
-    <!-- Custom styles for this template -->
-	<nav class="navbar navbar-default navbar-static-top" role="navigation">	
-		<div class="container">
-    		<div class="navbar-header">
-        		<button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle" aria-expanded="false" aria-controls="navbar">
-            		<span class="sr-only">Toggle navigation</span>
-            		<span class="icon-bar"></span>
-            		<span class="icon-bar"></span>
-            		<span class="icon-bar"></span>
-        		</button>
-        		<a href="http://{{ site.domain }}" class="navbar-brand icon-logo" id="site-name">
-        			<span  class="icon-logo">Pirate Learner</span>
-        		</a>
-    		</div>
-    <!-- Collection of nav links, forms, and other content for toggling -->
-		   <div class="navbar-collapse collapse" id="navbarCollapse">
-		     	<div class="nav" id="top-bar">
-		     	  <div class="offset-nav clearfix">
-			          <ul class="nav navbar-nav navbar-right">
-			   			{% if user.is_authenticated %}
-			   			<li> <a href="{% url 'dashboard:dashboard-home' %}"><span class="glyphicon glyphicon-dashboard"></span> <small>Dashboard</small></a> </li>
-
-                    <li class="chat-panel dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <span class="label label-info">{{ notification_count }}</span>   <span class="glyphicon glyphicon-envelope"></span>&nbsp; <span class="glyphicon glyphicon-chevron-down"></span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-alerts">
+</head>
+  <body>
+  {% block body %}
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="mdl-layout__header site-header box-shadow-medium">
+	  	<div class="mdl-layout__drawer-button">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" enable-background="new 0 0 50 50" width="24" height="24" style="fill: rgb(51, 51, 51);vertical-align: initial;">
+			    <path style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans" d="M 0 9 L 0 11 L 50 11 L 50 9 L 0 9 z M 0 24 L 0 26 L 50 26 L 50 24 L 0 24 z M 0 39 L 0 41 L 50 41 L 50 39 L 0 39 z" color="#000" overflow="visible" enable-background="accumulate" font-family="Bitstream Vera Sans"/>
+			</svg>	  		
+		</div>      
+        <div class="mdl-layout__header-row">
+          <!-- Title -->
+          <h2 class="site-header__title">
+            PirateLearner
+          </h2>
+          <!-- Add spacer, to align navigation to the right -->
+          <div class="mdl-layout-spacer"></div>
+          <!-- Navigation. We hide it in small screens. -->
+          <nav class="mdl-navigation mdl-layout--large-screen-only">
+          {% url 'home' as url %}
+            <a class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link" href="{{ url }}">Home</a>
+            {% url 'about' as url %}
+            <a class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link" href="{{ url }}">About</a>
+            {% url "contact" as url%}
+            <a class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link" href="{{ url }}">Contact</a>
+            <a class="{% if 'C/blog' in request.path %} is-active {% endif %} mdl-navigation__link" href="{% url "blogging:teaser-view" "blog" %}">Blog</a>
+            <a class="{% if 'C/course' in request.path %} is-active {% endif %} mdl-navigation__link" href="{% url "blogging:teaser-view" "course" %}">Explore</a>
+            {% if request.user.is_authenticated %}
+            <div class="mdl-navigation__link" >
+				<button id="demo-menu-lower-left" class="mdl-button mdl-js-button mdl-button--icon">
+				    <i class="material-icons icon ">add_alert</i>
+				</button>
+				<ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="demo-menu-lower-left">
                         {% if notifications|length > 0 %}            
-	                        {% for el in notifications %}
-	                        	<li>
-	                                <a href="{{ el.thread.get_absolute_url }}">
-	                                    <div>
-	                                        <span class="glyphicon glyphicon-envelope" ></span> {{ el.thread.last_message.body }}
-	                                    	<span class="pull-right text-muted small"> {{ el.updated|timesince }}</span>
-	                                    </div>
-	                                </a>
-	                            </li>
-	                            {% if not forloop.last %}
-	                            <li class="divider"></li>
-	                            {% endif %}                    	
-	                        {% endfor %}                        
+                            {% for el in notifications %}
+				                <li class="mdl-menu__item">
+				                <a href="{{ el.thread.get_absolute_url }}">
+                                    <div>
+                                        <i class="material-icons icon" >email</i> {{ el.thread.last_message.body }}
+                                        <span class="pull-right text-muted small"> {{ el.updated|timesince }}</span>
+                                    </div>
+                                 </a>
+				                </li>
+                            {% endfor %}
                         {% else %}
-                        <li class="pL-8">
-                        	<span class="glyphicon glyphicon-info-sign"></span> No Notifications!!!
-                        </li>
+                        <li class="mdl-menu__item">No Notification</li>
                         {% endif %}
-                        </ul>
-                    </li>
-                    <!-- END ALERTS SECTION -->
-                    <!--ADMIN SETTINGS SECTIONS -->
+				</ul>
+            </div>
+                <button id="img-menu-lower-left" class=" mdl-navigation__link action-button mdl-button mdl-js-button mdl-button--icon">
+                    <div>
+                        <img class="circle" width="36" height="36" src="{{ request.user.profile.get_avatar_url }}"> </img>
+                    </div>
+                </button>
+                
+                <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="img-menu-lower-left">
+                    <li class="mdl-menu__item"><a href="{% url 'dashboard:dashboard-profile' request.user.id %}">Profile</a></li>
+                    <li class="mdl-menu__item"><a href="{% url 'account_logout' %}?next={{ request.path|safe }}">Logout</a></li>
+                </ul>
 
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <span class="glyphicon glyphicon-user "></span>&nbsp; <span class="glyphicon glyphicon-chevron-down"></span>
-                        </a>
-
-                        <ul class="dropdown-menu dropdown-user">
-                            <li><a href="{% url 'dashboard:dashboard-profile' request.user.id %}"><span class="glyphicon glyphicon-user "></span> Profile </a>
-                            </li>
-                            <li class="divider"></li>
-                            <li><a href="{% url 'account_logout' %}?next={{ request.path|safe }}"><span class="glyphicon glyphicon-log-out"></span> Logout </a>
-                            </li>
-                        </ul>
-
-                    </li>
-                    <!--END ADMIN SETTINGS -->
-		              	{% else %}
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <span class="glyphicon glyphicon-user "></span>&nbsp; <span class="glyphicon glyphicon-chevron-down"></span>
-                        </a>
-
-                        <ul class="dropdown-menu dropdown-user">
-                            <li><a href="{% url 'account_login' %}?next={{ request.path|safe }}"><span class="glyphicon glyphicon-log-in"></span> Login </a>
-                            </li>
-                        </ul>
-					</li>		              	
-		           		{% endif %}
-			     		</ul>
-		     	 	</div>
+            {% else %}
+            <a class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link" href="{% url 'account_login' %}?next={{ request.path|safe }}">Login</a>
+            {% endif %}
+          </nav>
+        </div>
+      </header>
+	  	<div id="id-drawer" class="mdl-layout__drawer mdl-color--white mdl-color-text--grey-700">
+			<div class="mdl-layout__drawer-button"
+				onclick="document.getElementById('id-drawer').classList.remove('is-visible');document.getElementsByClassName('mdl-layout__obfuscator')[0].classList.remove('is-visible');return false;">
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 50 50" style="fill: rgb(51, 51, 51);">
+				    <path style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans" d="M 7.71875 6.28125 L 6.28125 7.71875 L 23.5625 25 L 6.28125 42.28125 L 7.71875 43.71875 L 25 26.4375 L 42.28125 43.71875 L 43.71875 42.28125 L 26.4375 25 L 43.71875 7.71875 L 42.28125 6.28125 L 25 23.5625 L 7.71875 6.28125 z" color="#000" overflow="visible" enable-background="accumulate" font-family="Bitstream Vera Sans"/>
+				</svg>	
+			</div>
+		  	  <div class="mdl-layout-title logo site-name">
+		      	<a href="/">pirate learner</a>
 		      </div>
-		   	<div class="navbar-default navbar-lower">
-		   			<div class="site-logo"><a href="http://{{ site.domain }}"><img src="{{ STATIC_URL }}images/LOGO_V5.svg"/></a></div>
-		   			<div class="offset-nav clearfix">
-		        		<ul class="nav navbar-nav navbar-left">
-		          			{% show_menu 0 1 100 100 "menu.html" %}
-		          			<li>
-		          				<a href={% url "blogging:section-view" %}><span>Explore</span></a>
-		          			</li>
-		        		</ul>
-		        	</div>
-		      </div>
-		   </div><!--/.navbar-collapse -->
+		    <nav class="mdl-navigation dashboard-navigation mdl-color-text--grey-800">
+		        {% url 'home' as url %}
+		        <a class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link hide-large" href="{{ url }}">Home</a>
+		        {% url 'about' as url %}
+		    	<a class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link hide-large" href="{{ url }}">About</a>
+		    	{% url "contact" as url%}
+		    	<a class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link hide-large" href="{{ url }}">Contact</a>
+		    	{% url "blogging:teaser-view" "blog" as url %}
+		    	<a class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link hide-large" href="{{ url }}">Blog</a>
+		    	{% url "blogging:teaser-view" "course" as url %}
+		    	<a class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link hide-large" href="{{ url }}">Explore</a>
+				<div class="separator hide-large"></div>			
+			{% if request.user.is_authenticated %}
+			    {% url 'dashboard:dashboard-home' as url %}
+				<a href="{{ url }}" class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link">
+					Dashboard</a>
+				{% url 'dashboard:dashboard-profile' user_id=request.user.id as url %}
+				<a href="{{ url }}" 
+				class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link">Profile</a>
+		        {% url 'blogging:content-type' as url %}
+				<a href="{{ url }}" class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link">
+					Create Article</a>
+				
+				{% comment %}  Create Bookmarks {% endcomment %}
+				{% url 'bookmarks:add_bookmark' as url%}
+				<a href="{{ url }}" class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link">
+					Create Bookmarks</a>
+                {% url 'bookmarks:manage_bookmarks' as url%}
+				<a href="{{ url }} " class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link"> 
+						Bookmarks</a>
+				{% url 'blogging:manage_articles' as url%}
+				<a href="{{ url }} " class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link"> 
+						Articles</a>
+		    	{% if request.user.is_staff %}
+                    {% url 'dashboard:tag-list' as url%}
+                    <a href="{{ url }} " class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link">Tags</a> 
+							    	
+		    		<a class="mdl-navigation__link" href="{% url 'admin:index' %}">Admin</a>
+		    	{% endif %}
+		    	<div class="separator"></div>
+		    	{% url 'messages:new_message' as url%}
+				<a href="{{ url }}" class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link">
+				Compose</a>
+				{% url 'messages:home_message' as url%}
+				<a href="{{ url }}" class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link">
+				<span class="mdl-badge" data-badge="{{ notification_count }}">Inbox</span> </a>						
+		    	
+		    {% endif %}
+		    </nav>
+			<footer class="mdl-mini-footer">
+				<div class="mdl-mini-footer__left-section">
+					<ul class="mdl-mini-footer__link-list">
+				    	<li><a href="#">About</a></li>
+				    	<li><a href="#">Privacy & Terms</a></li>
+				    	<li><a href="#">Help</a></li>
+				    	<li><a id="feedbackBtn-site" data-url="#" href="#">Feedback</a></li>
+				    </ul>
+				</div>
+			</footer>	        
 		</div>
-		</nav> 
-		 
-		{% block breadcrumb %}
-		{% endblock %} 
-		  
-
-		{% block content %}      
+      <main class="mdl-layout__content main-content-wrapper">
+		<!-- Main content goes here -->
+		{% block content %}
 		
-		{% endblock %}  
+		{% endblock %}
+        <!-- social icons and footer -->
+        <div class="section--grey">
+          <div class="page-content">
+            <div class="social-icons">
+              <span class="social-icons__label">
+                Follow:
+              </span>
+              <ul>
+                 <li><a href="https://plus.google.com/116465481265465787624" class="google-plus-icon text-hidden" data-g-label="google-plus" target="_blank">Google Plus</a></li>
+                 <li><a href="https://www.twitter.com/PirateLearner" class="twitter-icon text-hidden" data-g-label="twitter" target="_blank">Twitter</a></li>
+                 <li><a href="https://www.facebook.com/PirateLearner" class="facebook-icon text-hidden" data-g-label="twitter" target="_blank">Facebook</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <footer>
+          <div class="page-content">
+              <div class="footer__top">
+                <h4> Pirate Learner </h4>
+                <ul>
+                  <li><a href="{% url "about" %}">About</a></li>
+                  <li><a href="{% url "contact" %}">Contact</a></li>
+                  <li><a href="{% url "blogging:teaser-view" "blog" %}">Blog</a></li>
+                </ul>
+              </div>
+              <div class="footer__bottom">
+                <ul class="text-center">
+                  <li>&copy; Copyright {% now "Y" %} Pirate Learner</li>
+                  <li>All content hosted on Pirate Learner is licensed under a
+                    <a href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>
+                  </li>
+                </ul>
 
-	    <footer class="footer">
-         	<div class="container">
-		       	<div class="col-sm-6 col-md-4 col-lg-4">
-                <div class="panel panel-default">
-						<h3 class="panel-heading">Social Network</h3>
-						<div class="panel-body text-center">
-							<a class="col-sm-3 col-md-3 col-lg-3" href="https://www.facebook.com/PirateLearner"><span class="icon pl-facebook2 icon-responsive logo-facebook"></span></a>
-							<a class="col-sm-3 col-md-3 col-lg-3" href="http://twitter.com/PirateLearner"><span class="icon pl-twitter2 icon-responsive logo-twitter"></a>
-							<a class="col-sm-3 col-md-3 col-lg-3" href="https://plus.google.com/116465481265465787624" rel="publisher"><span class="icon pl-googleplus3 icon-responsive logo-google"></a>
-							<a class="col-sm-3 col-md-3 col-lg-3" href="https://github.com/PirateLearner/"><span class="icon pl-github icon-responsive logo-github"></a>
-						</div>                
-                </div>
-            	</div>
-            	<div class="col-sm-6 col-md-8 col-lg-8">
-                	<div class="panel panel-default">
-							<h3 class="panel-heading">Links</h3>
-							<div class="row panel-body">
-							<div class="col-sm-12 col-md-6 col-lg-6">
-								<p><a href="/about/">About Us</a></p>
-							</div>
-							<div class="col-sm-12 col-md-6 col-lg-6">
-								<p><a href="/blog/">Blog</a></p>
-							</div> 
-							</div>               
-                	</div>
-            	</div>
-            	<div class="clearfix visible-md visible-lg"></div>
-			   </div>
-				<div class="fix-footer">
-             	<p class="text-muted">&copy; Copyright 2014 {{ site.name }}</p>  
-		<p class="text-muted">All content hosted on {{ site.name }} is licensed under a <a href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_GB" target="_blank">Creative Commons Attribution-ShareAlike 3.0 Unported License.</a></p>
-             	<span class="icon-logo-pl_logo_font"></span>      
-        		</div>
-	    </footer>
-	    
-	    <!-- Modal -->
-		<div class="modal fade" id="loginPrompt" tabindex="-1" role="dialog" aria-labelledby="loginPromptLabel">
-		  <div class="modal-dialog" role="document">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		        <h4 class="modal-title" id="myModalLabel">Login to {{ site.name }}</h4>
-		      </div>
-		      <div class="modal-body">
-		      	<div class="row text-center">
-		      				{% include "socialaccount/snippets/provider_list.html" with process="login" redirect_field_value=request.path|safe%}
-		      	<!-- 
-			        <a class="col-sm-4 col-md-4 col-lg-4" href="javascript:allauth.facebook.login('{{ request.path|safe }}', 'authenticate', 'login')"><span class="icon pl-facebook2 icon-responsive logo-facebook"></span></a>
-					<a class="col-sm-4 col-md-4 col-lg-4" href="/en/accounts/twitter/login/?process=login&next={{ request.path|safe }}" ><span class="icon pl-twitter2 icon-responsive logo-twitter"></span></a>
-					<a class="col-sm-4 col-md-4 col-lg-4" href="/en/accounts/google/login/?process=login&next={{ request.path|safe }}"><span class="icon pl-googleplus3 icon-responsive logo-google"></span></a>
-				 -->		      	
-		      	</div>
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-		      </div>
-		    </div>
-		  </div>
-		</div>
-        <!-- </div> -->
-{% load socialaccount %}
+              </div>
+          </div>
+        </footer>
+      </main>
+    </div>
 
-{% providers_media_js %}
-<!-- Twitter Script -->
- 
- <script type="text/javascript">
-window.twttr = (function (d, s, id) {
-  var t, js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src= "https://platform.twitter.com/widgets.js";
-  fjs.parentNode.insertBefore(js, fjs);
-  return window.twttr || (t = { _e: [], ready: function (f) { t._e.push(f) } });
-}(document, "script", "twitter-wjs"));
-</script>
+{% endblock %}
+    <!-- add js script here -->
 
+{% block extra_script %}
+	<script type="text/javascript" src="{{ STATIC_URL }}slick/slick.min.js"></script>
+	<script src="{{ STATIC_URL }}js/main-config.js"></script> 
+{% endblock %}
 
-<div id="fb-root"></div>
-<!-- FB Like Script -->
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=781484728528833&version=v2.0";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-
-<!-- Syntax Highlight -->
-  	<script type="text/javascript">
-  		 SyntaxHighlighter.all()
-  	</script>
   </body>
-
 </html>
+
 

@@ -20,6 +20,7 @@ from django.core.urlresolvers import reverse
 
 import sys
 import traceback
+from django.http.response import HttpResponseForbidden
 
 
 register = template.Library()
@@ -332,6 +333,7 @@ class PublishedTag(InclusionTag):
         extra_context = self._get_data_context(context,user)
         return extra_context
 
+
 @register.assignment_tag
 def get_blogging_tags():
     tags = Tag.objects.all()[:10]
@@ -357,6 +359,18 @@ def get_blogging_tags():
 def get_section_children(section):
     return BlogContent.published.filter(section=section)
 
+@register.simple_tag
+def get_section_articles_count(section):
+    if section:
+        if section.is_leaf_node():
+            posts = BlogContent.published.filter(section=section).count()
+        else:
+            parent_list = section.get_descendants()
+            posts = BlogContent.published.filter(section__in=parent_list).count()
+    else:
+        posts = BlogContent.published.all().count()
+    return posts
+
 @register.assignment_tag
 def get_recent_articles():
     return BlogContent.published.all()[:3]
@@ -369,6 +383,13 @@ def has_group(user,groups):
             if bool(user.groups.filter(name__in=group_list)) | user.is_superuser:
                 return True
         return False
+
+@register.filter
+def selected_fields(form, field):
+    print [form[field].value()]
+    return [(value,label,) for value, label in form.fields[field].choices if value in form[field].value()]
+
+
 
 register.tag(ContentRender)
 register.tag(ContactTag)

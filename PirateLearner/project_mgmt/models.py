@@ -46,8 +46,10 @@ completion report from the task involved.
 """
 
 from django.db import models
-from cms.models.pluginmodel import CMSPlugin
-from cms.models import Page
+from django.conf import settings as global_settings
+if 'cms' in global_settings.INSTALLED_APPS:
+    from cms.models.pluginmodel import CMSPlugin
+    from cms.models import Page
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 from PirateLearner.models import BaseContentClass
@@ -128,17 +130,17 @@ class Task(models.Model):
     estimated_hours = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     applied_hours = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
 """
+if 'cms' in global_settings.INSTALLED_APPS:     
+    class WishlistPlugin(CMSPlugin):
+        completed_number = models.IntegerField(default= '2')
+        started_number = models.IntegerField(default= '1')
+        pending_number = models.IntegerField(default= '2')
      
-class WishlistPlugin(CMSPlugin):
-    completed_number = models.IntegerField(default= '2')
-    started_number = models.IntegerField(default= '1')
-    pending_number = models.IntegerField(default= '2')
- 
-    def __unicode__(self):
-        return 'WishlistPlugin'
-    
-    def get_suggestion_url(self):
-        #page = Page.objects.get(title='Contact Us') or None
-        from django.core.urlresolvers import reverse
-        return (settings.DOMAIN_URL+'en/contact-us/?contact_type=Feature')
+        def __unicode__(self):
+            return 'WishlistPlugin'
+        
+        def get_suggestion_url(self):
+            #page = Page.objects.get(title='Contact Us') or None
+            from django.core.urlresolvers import reverse
+            return (settings.DOMAIN_URL+'en/contact-us/?contact_type=Feature')
 

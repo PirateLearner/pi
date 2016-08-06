@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 
@@ -22,9 +22,9 @@ class Annotation(BaseContentClass):
     #Relations with other objects
     content_type = models.ForeignKey(ContentType, 
                                      verbose_name=_("Content Type"), 
-                                     related_name="content_type_set_for_annotations")
+                                     related_name="content_type_set_for_annotations",on_delete = models.CASCADE)
     object_id = models.TextField(_("object ID"))
-    content_object = generic.GenericForeignKey(ct_field="content_type", fk_field="object_id")
+    content_object = GenericForeignKey(ct_field="content_type", fk_field="object_id")
     
     #User relevant stuff
     body = models.TextField()
@@ -35,7 +35,7 @@ class Annotation(BaseContentClass):
     case of making annotations. It is also to prevent hit and run comments by people
     under anonymity.
     '''
-    author = models.ForeignKey(User, related_name="annotations", null=False, blank=False, verbose_name=_("Annotation author"))
+    author = models.ForeignKey(User, related_name="annotations", null=False, blank=False, verbose_name=_("Annotation author"), on_delete = models.CASCADE)
     #Privacy settings
     privacy= models.PositiveSmallIntegerField(choices=PRIVACY_OPTIONS, default=PRIVACY_PRIVATE)
     #Privacy reset for Spam protection, if annotations has been shared (and marked as offensive)
@@ -70,8 +70,8 @@ class AnnotationShareMap(BaseContentClass):
     Notification about the sharing should be sent to each person only once, even if the user edits the 
     comment later
     '''
-    user = models.ForeignKey(User, related_name="annotation_shared_with")
-    annotation = models.ForeignKey(Annotation)
+    user = models.ForeignKey(User, related_name="annotation_shared_with",on_delete = models.CASCADE)
+    annotation = models.ForeignKey(Annotation,on_delete = models.CASCADE)
     notified_flag = models.BooleanField(default = False)
     objects = AnnotationShareManager()
     

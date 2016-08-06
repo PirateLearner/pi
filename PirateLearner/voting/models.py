@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.contenttypes.generic import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
@@ -183,12 +183,12 @@ class VoteManager(models.Manager):
 class Vote(BaseContentClass):
     
     #The ID of the object on which vote was cast
-    content_type = models.ForeignKey(ContentType, verbose_name="Content Type", related_name="content_type_set_for_voting")
+    content_type = models.ForeignKey(ContentType, verbose_name="Content Type", related_name="content_type_set_for_voting",on_delete = models.CASCADE)
     object_id = models.TextField(_('object ID'))
     content_object = GenericForeignKey(ct_field="content_type", fk_field="object_id")
     
     #Vote made by User
-    voter = models.ForeignKey(User, related_name="voted")
+    voter = models.ForeignKey(User, related_name="voted",on_delete = models.CASCADE)
 
     #Vote value
     vote = models.SmallIntegerField(choices=SCORES)

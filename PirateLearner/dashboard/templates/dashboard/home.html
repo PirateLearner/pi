@@ -1,6 +1,7 @@
 {% extends 'base.html'%}
 {% load social_profile %}
 {% load blogging_tags %}
+
 {% block extra_script %}
 {% if stats.article_total > 1 %}
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -42,6 +43,89 @@
 {% endblock %}
 
 {% block content %}
+<div class="mB-120 ">
+      <div class="section section--hero">
+        <div class="section__block fixed-width">
+          <div class="section--hero__text">
+            <h2 class="hero__title">Dashboard.</h2>
+            <p class="hero__subtitle">
+              Vew and analyse the current status of you Articles and bookmarks.
+            </p>
+          </div>
+        </div>
+      </div>
+    <div class="section fixed-width mdl-grid">
+        <div class="mdl-cell mdl-cell--12-col mdl-grid">
+        {% if stats.article_total > 1 %}
+                <div class="mdl-cell mdl-cell--12-col" id="piechart" data-contributions="{{ stats.article_total }}" data-published="{{ stats.article_published }}"
+                data-pending="{{ stats.article_pending }}" data-draft="{{ stats.article_draft }}"  style="height: 500px;">
+
+                </div>
+        {% else %}
+                <div class="mdl-cell mdl-cell--4-col">
+                    <div class="status-card">
+                        <div class="title quote-a c-white bG-orange-700">
+                            <span class="large-text"> 0 </span>
+                            <span class="medium-text pL-8">articles</span>
+                        </div>
+                        <div class="text">
+                            Create Articles <a href="{% url "blogging:create-post" %}">here</a>
+                        </div>
+                    </div>
+                </div>
+        {% endif %}     
+                <div class="mdl-cell mdl-cell--4-col">
+                    <div class="status-card">
+                        <div class="title quote-a c-white bG-orange-700">
+                            <span class="large-text">{{ stats.bookmark_count }}</span>
+                            <span class="medium-text pL-8">bookmarks</span>
+                        </div>
+                        <div class="text">
+                            Number of Bookmarks
+                        </div>
+                    </div>
+                </div>                                                          
+
+                <div class="mdl-cell mdl-cell--4-col">
+                    <div class="status-card">
+                        <div class="title quote-a c-white bG-purple-500">
+                            <span class="large-text">{{ stats.annotations_count }}</span>
+                            <span class="medium-text pL-8">annotations</span>
+                        </div>
+                        <div class="text">
+                            Number of Annotaions Made
+                        </div>
+                    </div>
+                </div>              
+                <div class="mdl-cell mdl-cell--4-col">              
+                    <div class="status-card">
+                        <div class="title quote-a c-white bG-deep-orange-500">
+                            <span class="large-text">{{ stats.voting_count }}</span>
+                            <span class="medium-text pL-8">votes</span>
+                        </div>
+                        <div class="text">
+                            Number of Votes Made
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mdl-cell mdl-cell--4-col">              
+                    <div class="status-card">
+                        <div class="title quote-a c-white bG-light-green-700">
+                            <span class="large-text">{{ stats.notification_count }}</span>
+                            <span class="medium-text pL-8">notification</span>
+                        </div>
+                        <div class="text">
+                            Number of notifications
+                        </div>
+                    </div>
+                </div>
+        
+        </div>
+    </div>
+</div>
+
+{% comment %} 
 <div class="container-fluid" >
 	<div class="row">
 	    {% include 'leftbar.html' with active="dashboard" %}
@@ -124,5 +208,5 @@
 		
 	</div> <!--/row -->
 </div>
-
+{% endcomment %}
 {% endblock %}

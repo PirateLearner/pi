@@ -15,9 +15,10 @@ def home(request):
     """
     threads = get_user_threads(user=request.user)
     context = {
-        'threads': threads
+        'threads': threads,
+        
     }
-    return render(request, 'home.html', context)
+    return render(request, 'inbox.html', context)
 
 
 def save_message(request):

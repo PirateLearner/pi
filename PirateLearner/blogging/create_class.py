@@ -5,9 +5,9 @@ class CreateClass():
     """
     
     def __init__(self, name, member_dict,is_leaf):
-        self.import_string = 'from blogging import tag_lib\nfrom django.db import models\nfrom blogging.models import *\nfrom django import forms\n' + \
+        self.import_string = 'from blogging import tag_lib\nfrom blogging.models import *\nfrom django import forms\n' + \
         'from blogging.forms import *\nfrom ckeditor.widgets import CKEditorWidget\nimport json\n' + \
-        'from django.db.models import Q \nfrom mptt.forms import TreeNodeChoiceField\nfrom crispy_forms.layout import Layout, Field, Fieldset, ButtonHolder, Submit\n' 
+        'from django.db.models import Q \nfrom mptt.forms import TreeNodeChoiceField\n' 
         self.file_start = '"""\nThis is auto generated script file.\nIt defined the wrapper class for specified content type.\n"""\n'
         self.class_name = 'class ' + str(name).capitalize() +'Form(forms.Form):\n'
 
@@ -24,11 +24,16 @@ class CreateClass():
         
         # string for init function
         self.class_initfunction_string = '\tdef __init__(self,action, *args, **kwargs):\n'
-        self.class_initfunction_string += '\t\tself.helper = FormHelper()\n\t\tself.helper.form_id = "id-'+ str(name).capitalize() +'"\n\t\tself.helper.form_class = "form-horizontal"\n'
-        self.class_initfunction_string += '\t\tself.helper.label_class = "col-lg-2"\n\t\tself.helper.field_class = "col-lg-8"\n\t\tself.helper.form_method = "post"\n'
-        self.class_initfunction_string += '\t\tself.helper.form_action = action\n'
-        self.class_initfunction_string += '\t\tself.helper.layout = Layout(\n\t\t\tFieldset(\n\t\t\t"Create The Content of Type ' + str(name).capitalize() + ' ",\n'
-        self.class_initfunction_string += '\t\t\t"title",\n'
+        self.class_initfunction_string += '\t\tinstance = kwargs.pop("instance", None)\n\t\tif instance:\n'
+        self.class_initfunction_string += '\t\t\tjson_data = json.loads(instance.data)\n'
+        self.class_initfunction_string += '\t\t\tkwargs.update(initial={\n'
+        self.class_initfunction_string += '\t\t\t\t"title": instance.title,\n'
+        self.class_initfunction_string += '\t\t\t\t"pid_count": json_data["pid_count"],\n'
+        if is_leaf == True:
+            self.class_initfunction_string += '\t\t\t\t"section": instance.section,\n'
+            self.class_initfunction_string += '\t\t\t\t"tags": instance.tags.all(),\n'
+        else:
+            self.class_initfunction_string += '\t\t\t\t"parent": instance.parent,\n'
 
 
         #string for save function
@@ -64,20 +69,12 @@ class CreateClass():
                 class_member = '\t' + member_name + ' = forms.CharField(max_length=100, required=False)\n'
             self.class_member_string_list.append(class_member)
 
-            self.class_initfunction_string += '\t\t\t"' + member_name + '",\n'
+            self.class_initfunction_string += '\t\t\t\t"' + member_name + '":json_data["'+ member_name + '"],\n'
 
-        # add the tags in member list
+        self.class_initfunction_string += '\t\t\t\t})\n'
         if is_leaf == True:
-            self.class_initfunction_string += '\t\t\t"section",\n'
-        else:
-            self.class_initfunction_string += '\t\t\t"parent",\n'
-        self.class_initfunction_string += '\t\t\tField("pid_count", type="hidden"),\n'
-        if is_leaf == True:
-            self.class_member_string_list.append('\ttags = TagField()\n')
-            self.class_initfunction_string += '\n\t\t\t"tags",\n'
+            self.class_member_string_list.append('\ttags = Select2ChoiceField(queryset=Tag.objects.filter())\n')
 
-        # add button etc.
-        self.class_initfunction_string += '\t\t\t ),\n\t\t\tButtonHolder(\n\t\t\tSubmit("submit", "Publish", css_class="button blue"),\n\t\t\t\tSubmit("submit", "Save Draft", css_class="button white")\t\t\t),\n\t\t)\n'
         self.class_initfunction_string += '\t\tsuper(' + str(name).capitalize() +'Form' + ', self).__init__(*args, **kwargs)\n\n\n\n'
 
 

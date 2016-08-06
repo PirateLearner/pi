@@ -69,7 +69,7 @@ $(document).ready(function(){
 	            }
 	        }
 	    });
-		
+		console.log("Getting votes on "+ pirateLearnerGlobal.voting.id )
 		$.ajax({
 		    // the URL for the request
 		    url: '/rest/blogcontent/'+pirateLearnerGlobal.voting.id+'/',

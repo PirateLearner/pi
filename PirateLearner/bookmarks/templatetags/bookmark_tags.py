@@ -86,4 +86,7 @@ def is_bookmarked(user,url):
     else:
         return False
     
+@register.assignment_tag
+def get_promoted_bookmarks(num_entries):
+    return BookmarkInstance.objects.all().filter(privacy_level='pub',is_promoted=True).order_by('-saved')[:num_entries]
 register.tag(BookmarkRender)

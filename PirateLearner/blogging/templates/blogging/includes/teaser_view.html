@@ -1,3 +1,28 @@
+{% comment %}  Pass articles and separator if required {% endcomment %}
+{% load staticfiles %}
+<div class="maia-cols cards-container">
+      {% for el in articles %}
+        <div class="maia-col-4 card mdl-card mdl-shadow--2dp">
+          <div class="image mdl-card__title" style="background-image:url('{{ el.get_image_url }}"></div>
+          <div class="content mdl-card__supporting-text mdl-color-text--grey-800">
+            <h3 class="mdl-card__title-text subhead mdl-typography--font-regular">
+              {{ el.title }}
+            </h3>
+            <p>
+              {{ el.get_summary }}
+            </p>
+          </div>
+          <div class="mdl-card__actions">
+            <a class="mdl-button mdl-js-button mdl-js-ripple-effect" href="#">Read more<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
+          </div>
+        </div>
+       {% endfor %}
+    {% if separator %}
+         <div class="section--separator"></div>
+    {% endif %}
+</div>
+
+{% comment %}
 {% load url from future %}
 {% load thumbnail %}
 {% load voting_tags %}
@@ -26,4 +51,4 @@
     	</div>
     </div>   
     {% endfor %}					
-					       			
+{% endcomment %}       			

@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load staticfiles blogging_tags features_tags bookmark_tags%}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+<div class="mB-120" >
+  <div class="carousel">
+    <div class="slides slide-one ">
+      <div class="wrapper main-aux mdl-grid">
+          <div class="content mdl-cell mdl-cell--5-col mdl-cell--12-col-tablet mdl-cell--12-col-phone mdl-color-text--white">
+            <h2 class="heading mdl-typography--font-light">
+              Best learning resources in one place!
+            </h2>
+            <p>
+              We bring you the most helpful tutorials curated from across the internet to make coursework easier and fun.
+            </p>
+          </div>
+        </div>
+        <figure class="image" style="height:60vh;"></figure>
+    </div>
+    <div class="slides slide-two ">
+      <div class="wrapper main-aux mdl-grid">
+          <div class="content mdl-cell mdl-cell--5-col mdl-cell--12-col-tablet mdl-cell--12-col-phone mdl-color-text--white">
+            <h2 class="heading mdl-typography--font-light">
+               Get started. Start now Know more Lets do it Like to experiment and learn?
+            </h2>
+            <p>
+              Have a flair for simplifying the complex? Contribute to our open source endeavours, <a href="#">Join us!</a>
+            </p>
+          </div>
+        </div>
+        <figure class="image" style="height:60vh;"></figure>
+    </div>
+    <div class="slides slide-three ">
+      <div class="wrapper main-aux mdl-grid">
+          <div class="content mdl-cell mdl-cell--5-col mdl-cell--12-col-tablet mdl-cell--12-col-phone mdl-color-text--white">
+            <h2 class="heading mdl-typography--font-light">
+                Share the good word
+            </h2>
+            <p>
+              join us on social networks and help to spread the words!
+            </p>
+          </div>
+        </div>
+        <figure class="image" style="height:60vh;"></figure>
+    </div>
+    <div class="slides slide-four ">
+      <div class="wrapper main-aux mdl-grid">
+          <div class="content mdl-cell mdl-cell--5-col mdl-cell--12-col-tablet mdl-cell--12-col-phone mdl-color-text--white">
+            <h2 class="heading mdl-typography--font-light">
+                 Know a better way to explain a concept? Share it with others!
+            </h2>
+            <p>
+               Share what you know, learn from what others know.
+            </p>
+          </div>
+        </div>
+        <figure class="image" style="height:60vh;"></figure>
+    </div>
+  </div> <!-- carousel end -->
+  <div class="main-aux">
+    <!-- latest entries section -->
+    <div class="section pT40">
+      <h2 class="mdl-typography--font-light heading">
+      Recently, we learned about
+      </h2>
+      <p class="subhead mdl-color-text--grey-500">
+      These are the latest gems in our treasury.
+      </p>
+      {% get_recent_articles as articles %}
+      {% include "blogging/includes/teaser_view.html" with articles=articles separator=True %}
+    </div> <!-- latest entries Section end -->
+
+    <!-- Featured post section -->
+    <div class="section">
+      <h2 class="mdl-typography--font-light heading">
+      Best delicacies
+      </h2>
+      {% get_feature_articles 1 as featured %}
+      {% include "spotlight/spotlight_plugin.html" with articles=featured separator=True %}
+    </div> <!-- Feature post section end -->
+
+    <!-- Bookmarks section -->
+    <div class="section">
+      <div class="mdl-grid fixed-width">
+        <div class="section__block mdl-cell mdl-cell--3-col mdl-cell--12-col-tablet">
+          <h3 class="mdl-typography--font-light heading">Fresh food from the internet sea.</h3>
+          <p>
+            A fine collection of web pages that might come handy in day to day life.
+          </p>
+          <div class="hide-small">
+            <a href="#" class="feature-button mdl-button mdl-js-button mdl-button--raised">
+                        Explore
+            </a>
+          </div>
+        </div>
+        <div class="section__block mdl-cell mdl-cell--9-col mdl-cell--12-col-tablet content__container ">
+            {% get_promoted_bookmarks 4 as bookmarks %}
+            {% for el in bookmarks %}
+	          <div class="content__item content__item--bookmark mdl-shadow-2dp">
+	            <div class="bookmark__image" style="background-image: url('{{ el.get_image_url }}')">
+	            </div>
+	            <div class="bookmark__body">
+	              <h4 class="bookmark__title">
+	                <a href="{{ el.get_absolute_url }}"> {{ el.get_title }}</a>
+	              </h4>
+	            </div>
+	          </div>
+            {% endfor %}
+
+          <div class="section__block mdl-cell mdl-cell--12-col-tablet hide-large">
+                  <div>
+                    <a href="#" class="feature-button mdl-button mdl-js-button mdl-button--raised">
+                      Explore
+                    </a>
+                  </div>
+          </div>
+        </div>
+      </div> <!-- Bookmarks section end -->
+
+    </div>
+  </div> <!-- main aux end -->
+</div> <!-- mB-120 end -->
+{% endblock %}

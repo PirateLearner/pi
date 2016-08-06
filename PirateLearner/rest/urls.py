@@ -1,6 +1,7 @@
 from django.conf.urls import *
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, routers
+from django.contrib.contenttypes.views import shortcut 
 
 from views import (api_root, BlogContentViewSet, 
                    UserViewSet, AnnotationViewSet, 
@@ -39,7 +40,7 @@ annotation_detail = AnnotationViewSet.as_view({
 vote_list = VoteList.as_view()
 vote_detail = VoteDetail.as_view()
 
-urlpatterns = patterns('rest.views',
+urlpatterns = [
     url(r'^$', api_root),
     url(r'^blogcontent/$', blogcontent_list, name='blogcontent-list'),
     url(r'^blogcontent/(?P<pk>[0-9]+)/$', blogcontent_detail, name='blogcontent-detail'),
@@ -58,10 +59,10 @@ urlpatterns = patterns('rest.views',
     url(r'^bookmarks/$', BookmarkList.as_view(), name='bookmarks-list'),
     url(r'^bookmarks/(?P<pk>[0-9]+)/$', BookmarkDetail.as_view(), name='bookmark-detail'),
 
-)
+]
 
-urlpatterns += patterns('',
-    url(r'^cr/(\d+)/(.+)/$', 'django.contrib.contenttypes.views.shortcut', name='comments-url-redirect'),
-)
+urlpatterns += [
+    url(r'^cr/(\d+)/(.+)/$', shortcut, name='comments-url-redirect'),
+]
 
 urlpatters = format_suffix_patterns(urlpatterns)

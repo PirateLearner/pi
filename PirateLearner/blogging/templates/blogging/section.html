@@ -19,6 +19,43 @@ This template will include 4 major html files: section_title.html, indext_tree.h
 
 {% block content_blog %}
 
+        <div class="mB-120 sections-page">
+          {% include 'blogging/section_title.html' with page=page %}
+          <div class="section fixed-width mdl-grid">
+            <div class="mdl-cell mdl-cell--3-col section__block section__block--indexes">
+				{% include 'blogging/index_tree.html' with parent=parent %}
+            </div>
+            <div class="mdl-cell mdl-cell--9-col section__block section__block--list">
+              <div class="content__container">
+				{% include "blogging/includes/section_view.html" with nodes=nodes max_entry=max_entry %}
+              </div>
+              {% include "common/pagination.html" with nodes=nodes %}
+            </div>
+          </div>
+        </div> <!-- mdl-grid main content ended -->
+
+
+        <div class="section section--support section--grey">
+          <div class="main-aux">
+            <div class="mdl-grid">
+              <div class="mdl-cell mdl-cell--6-col help-item">
+                <h3> Questons?</h3>
+                <p>
+                  Check out the <a href="#">About Us</a>
+                </p>
+              </div>
+              <div class="mdl-cell mdl-cell--6-col help-item">
+                <h3>Intereseted?</h3>
+                <p>
+                  Reach out to us at <a href="#">Contact</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+{% comment %}  
+
 <div class="container-fluid" >
 	<div class="row mR-40">
 	    {% include 'blogging/section_title.html' with page=page %}
@@ -46,41 +83,7 @@ This template will include 4 major html files: section_title.html, indext_tree.h
 	
 </div>
 
-{% endblock %}
-
-
-{% comment %}  
-
-
-{% if parent %}
-{% block blog_breadcrumb %}
-{% endblock %}
-{% endif %}
-
-{% block title %}
-{{ page.title }}
-{% endblock %}
-
-
-{% block content_blog %}
-
-<div class="container-fluid" >
-	<div class="row">
-	    {% include 'blogging/index_tree.html' with parent=parent %}
-
-		<div class="col-md-10 pT-50">
-			{% include "blogging/includes/section_view.html" with nodes=nodes max_entry=max_entry %}
-		</div>
-
-	</div>
-</div>
-{% comment %}  
-
-<div class="row main-content-wrapper">  	
-   	<div class="content-area clearfix">
-	{% include "blogging/includes/section_view.html" with nodes=nodes max_entry=max_entry %}
-	</div>
-</div>
-
-{% endblock %}
 {% endcomment %}
+
+
+{% endblock %}

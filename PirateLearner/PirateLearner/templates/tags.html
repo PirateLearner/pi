@@ -1,0 +1,95 @@
+{% comment %}
+    Info:       Field creator.
+    Requires:   Can be included in the Form of an item having 'tags' as a Field 
+    Note:       xxx
+{% endcomment %}
+
+{% load blogging_tags %}
+
+<link href="{{ STATIC_URL }}css/select2.min.css" rel="stylesheet" />
+<script src="{{ STATIC_URL }}js/select2.min.js"></script>
+
+<div id="div_id_creator" class="form__field form__field--name">
+    <label for="id_creator" class="form__outer-label">
+        Tags:
+    </label>
+    <div class="material-select mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    
+    <select id="id_tags" class="js-example-responsive js-data-example-ajax" multiple="multiple" name="tags" required>
+    {% comment %}  TODO add code for edit form{% endcomment %}
+            {% if form.fields.tags.choices %}
+                {% for x,y in form.fields.tags.choices %}
+                    <option value="{{ x }}"{% if x in form.tags.value %} selected=selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+            {% endif %}
+    </select>
+    <span class="mdl-textfield__error" {% if form.tags.errors %}style="visibility:visible;"{% endif %}>{{ form.tags.errors }}</span>
+    </div>
+</div>  
+
+<script>
+$(document).ready(function(){
+    
+    function formatTag (tag) {
+    console.log("formatTag called"+ tag);
+      if (!tag.id) { 
+      return tag.text; 
+      }
+      var str = 
+        '<div>'
+        + '<span>' + tag.name +  '</span>'     
+        + '</div>'
+      var $tag_name = $(str);
+      return $tag_name;
+    };
+    function formatTagSelection (tag) {
+    console.log(tag);
+      if (!tag.id) { 
+      return tag.text; 
+      }
+      if(!tag.text)
+      {
+	      var $tag_name = $(
+	        '<span>' + tag.name + ' </span>'         
+	      );
+	      return $tag_name;
+      }
+      else
+      {
+          var $tag_name = $(
+            '<span>' + tag.text + ' </span>'         
+          );
+          return $tag_name;
+      }
+    };
+        
+    $("#id_tags").select2({
+      ajax: {
+        url: "/search/tags/",
+        dataType: 'json',
+        delay: 500,
+        data: function (params) {
+          return {
+            q: params.term, // search term
+          };
+        },
+        processResults: function (data, params) {
+          // parse the results into the format expected by Select2
+          // since we are using custom formatting functions we do not need to
+          // alter the remote JSON data
+          return {
+            results: data,
+          };
+        },
+        cache: true
+      },
+      theme: "classic",
+      escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+      minimumInputLength: 3,
+      templateResult: formatTag,
+      templateSelection: formatTagSelection,
+      placeholder: "Select the tags",
+      allowClear: true
+    });
+});
+</script>

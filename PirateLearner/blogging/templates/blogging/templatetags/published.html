@@ -1,4 +1,25 @@
 {% load tz %}
+
+<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+  <thead>
+    <tr>
+      <th class="mdl-data-table__cell--non-numeric">Title</th>
+      <th class="mdl-data-table__cell--non-numeric">Section</th>
+      <th >Date</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for el in published %}
+    <tr>
+      <td class="mdl-data-table__cell--non-numeric"><a href="{{ el.get_absolute_url }}"> {{ el.get_title }} </a></td>
+      <td> {{ el.get_parent.get_menu_title }} </td>
+      <td title="{{ el.publication_start }}"> <time>{{ el.publication_start }}</time> </td>
+    </tr>
+   {% endfor %}
+  </tbody>
+</table>
+
+{% comment %}  
 <div class="panel panel-default">
 	<div class="panel-heading panel-success">Published Articles</div>
 	{% if not published|length > 0 %}
@@ -29,7 +50,7 @@
 				<tr>
 					<td> <a href="{{ el.get_absolute_url }}"> {{ el.get_title }} </a> </td>
 					<td> {{ el.get_parent.get_menu_title }} </td>
-					{% comment %} TODO define a function for last modified date {% endcomment %}
+					
 					<td title="{{ el.publication_start }}">
 						{{ el.publication_start }}							
 		 		    </td>
@@ -41,3 +62,5 @@
 	{% endif %}
 	
 </div>
+
+{% endcomment %}

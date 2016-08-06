@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load blogging_tags %}
+{% load mptt_tags %}
+
+{% block extra_script %}
+<link href="{{ STATIC_URL }}css/dashboard/index_tree.css" rel="stylesheet" type="text/css">
+<script src="{{ STATIC_URL }}/js/index_tree.js"></script> 
+{% endblock %}
+
+{% block content %}
+
+<div class="container" style="margin-top:30px;">
+    <div class="row">
+        <div class="col-md-4">
+            <p class="well" style="height:135px;"><strong>Initialization optional parameters</strong>
+
+                <br /> <code>$('#indextree').treed({openedClass : 'glyphicon-folder-open', closedClass : 'glyphicon-folder-close'});</code>
+
+            </p>
+			<ul id="indextree" class = "well">
+			    {% recursetree nodes %}
+			        <li>
+			            <a href="{{ node.get_absolute_url }}"  {% ifequal node active %} id = "active-index"{% endifequal %}>{{ node.get_menu_title }} </a>
+			            {% if not node.is_leaf_node %}
+			                <ul>
+			                    {{ children }}
+			                </ul>
+			                
+			                {% comment %}  
+			            {% else %}
+			            	<ul>
+			            	{% get_section_children node as articles %}
+			            	
+			            	{% for article in articles %}
+			            		<li>
+			            			<a href="{{ article.get_absolute_url }}"> {{ article.get_menu_title }} </a>
+			            		</li>
+			            	{% endfor %}
+			            	</ul>
+			            	{% endcomment %}
+			            {% endif %}
+			        </li>
+			    {% endrecursetree %}
+			</ul>
+		</div>
+    </div>
+</div>
+
+{% endblock %}

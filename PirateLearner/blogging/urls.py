@@ -2,8 +2,7 @@ from django.conf.urls import patterns, url
 import blogging.views as view
 from blogging.forms import *
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^$', view.index, name='section-view'),
     url(r'^testing/$',view.testCase,name='migrate-db'),
     url(r'^contact/$', view.ContactUs, name='contact-us'),
@@ -29,4 +28,4 @@ urlpatterns = patterns(
 #    url(r'^tag/$', TagsListView.as_view(), name='tag-list'),
 
 #    url(r'^tag/(?P<tag>[-\w]+)/feed/$', TagFeed(), name='tagged-posts-feed'),
-)
+]

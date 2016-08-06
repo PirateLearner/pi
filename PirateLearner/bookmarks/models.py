@@ -8,12 +8,15 @@ from django.db.models import Q
 
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from cms.models.pluginmodel import CMSPlugin
+from bookmarks import settings
+from django.conf import settings as global_settings
+
+if 'cms' in global_settings.INSTALLED_APPS:
+    from cms.models.pluginmodel import CMSPlugin
 import traceback
 import sys
 from django.template.defaultfilters import slugify
 
-from bookmarks import settings
 from PirateLearner.models import BaseContentClass
 
 PRIVACY = (
@@ -26,7 +29,7 @@ class Bookmark(BaseContentClass):
     
     url = models.URLField(unique=True)
         
-    adder = models.ForeignKey(User, related_name="added_bookmarks", verbose_name=_("adder"))
+    adder = models.ForeignKey(User, related_name="added_bookmarks", verbose_name=_("adder"),on_delete = models.CASCADE)
     added = models.DateTimeField(_("added"), default=datetime.datetime.now)
     
     def __unicode__(self):
@@ -38,7 +41,7 @@ class Bookmark(BaseContentClass):
 
 class BookmarkFolderInstance(BaseContentClass):
     
-    adder = models.ForeignKey(User, related_name="bookmarks_folder", verbose_name=_("user"))
+    adder = models.ForeignKey(User, related_name="bookmarks_folder", verbose_name=_("user"),on_delete = models.CASCADE)
     created = models.DateTimeField(_("created"), default=datetime.datetime.now)
     
     title = models.CharField(_("title"), max_length=100)
@@ -48,15 +51,15 @@ class BookmarkFolderInstance(BaseContentClass):
 
 class BookmarkInstance(BaseContentClass):
     
-    bookmark = models.ForeignKey(Bookmark, related_name="saved_instances", verbose_name=_("bookmark"))
-    user = models.ForeignKey(User, related_name="saved_bookmarks", verbose_name=_("user"))
+    bookmark = models.ForeignKey(Bookmark, related_name="saved_instances", verbose_name=_("bookmark"),on_delete = models.CASCADE)
+    user = models.ForeignKey(User, related_name="saved_bookmarks", verbose_name=_("user"),on_delete = models.CASCADE)
     saved = models.DateTimeField(_("saved"), default=datetime.datetime.now)
     
     title = models.CharField(_("title"), max_length=100)
     description = models.TextField(_("description"), blank=True)
     note = models.TextField(_("note"), blank=True)
     image_url = models.URLField(blank=True, null=True)
-    folder = models.ForeignKey(BookmarkFolderInstance, verbose_name=_("folder"))
+    folder = models.ForeignKey(BookmarkFolderInstance, verbose_name=_("folder"),on_delete = models.CASCADE)
     privacy_level = models.CharField(choices=PRIVACY,max_length=4)
     tags = TaggableManager(blank=True)
     is_promoted = models.BooleanField(default=False);
@@ -148,27 +151,28 @@ class BookmarkInstance(BaseContentClass):
                     print "Error in %s on line %d" % (fname, lineno)
         return tag_list
 
-class LatestBookmarksPlugin(CMSPlugin):
-
-    latest_entries = models.IntegerField(default=5, help_text=('The number of latests entries to be displayed.'))
-    tags = models.ManyToManyField('taggit.Tag', blank=True, help_text=('Show only the bookmarks tagged with chosen tags.'))
-
-    def __unicode__(self):
-        return str(self.latest_entries)
-
-    def copy_relations(self, oldinstance):
-        self.tags = oldinstance.tags.all()
-
-    def get_bookmarks(self):
-        posts = BookmarkInstance.objects.all().filter(user__is_staff=True,privacy_level='pub').order_by('-saved')
-#         print 'Printing get_bookmarks'
-#         for post in posts:
-#             print post
-        
-        tags = list(self.tags.all())
-        if tags:
-            posts = posts.filter(tags__in=tags)
-        return posts[:self.latest_entries]
+if 'cms' in global_settings.INSTALLED_APPS:
+    class LatestBookmarksPlugin(CMSPlugin):
+    
+        latest_entries = models.IntegerField(default=5, help_text=('The number of latests entries to be displayed.'))
+        tags = models.ManyToManyField('taggit.Tag', blank=True, help_text=('Show only the bookmarks tagged with chosen tags.'))
+    
+        def __unicode__(self):
+            return str(self.latest_entries)
+    
+        def copy_relations(self, oldinstance):
+            self.tags = oldinstance.tags.all()
+    
+        def get_bookmarks(self):
+            posts = BookmarkInstance.objects.all().filter(user__is_staff=True,privacy_level='pub').order_by('-saved')
+    #         print 'Printing get_bookmarks'
+    #         for post in posts:
+    #             print post
+            
+            tags = list(self.tags.all())
+            if tags:
+                posts = posts.filter(tags__in=tags)
+            return posts[:self.latest_entries]
 
 
 def get_bookmarks_count(user=None):

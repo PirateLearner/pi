@@ -7,14 +7,14 @@ from django.template import RequestContext, loader
 from django.shortcuts import get_object_or_404, render_to_response, render
 from django.contrib import auth
 from django.http.request import HttpRequest
-from django.http import HttpResponseRedirect, Http404, HttpResponseBadRequest
+from django.http import HttpResponseRedirect, Http404 , HttpResponseBadRequest, JsonResponse
 from blogging.models import *
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from blogging.forms import *
 from blogging.create_class import CreateClass
-from django.contrib.formtools.wizard.views import SessionWizardView
+from formtools.wizard.views import SessionWizardView
 from django.forms.formsets import formset_factory
 from django.utils.html import escape
 from blogging.utils import *
@@ -25,7 +25,7 @@ from django.core.mail import send_mail, mail_admins
 from django.core.exceptions import ObjectDoesNotExist
 from django.template.defaultfilters import slugify
 import reversion
-from reversion.helpers import generate_diffs
+# from reversion.helpers import generate_diffs
 from django.contrib.contenttypes.models import ContentType
 
 from meta_tags.views import Meta 
@@ -40,19 +40,12 @@ from django.views.generic.edit import FormView
 from blogging.db_migrate import migrate
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
-
+from taggit.models import Tag
 
 from events.signals import generate_event
 from django.utils import timezone
-# import the logging library
-# import logging
-# from PirateLearner import log
 
-# Get an instance of a logger
-# logger = logging.getLogger(__name__)
-# logger.setLevel(logging.DEBUG)
-# Create your views here.
-
+@login_required
 @group_required('Administrator','Author','Editor')
 def content_type(request):
 	"""
@@ -88,7 +81,7 @@ def content_type(request):
 				except OSError as e: # this would be "except OSError, e:" before Python 2.6
 					raise # re-raise exception if a different error occured
 			else:
-				raise HttpResponseBadRequest
+				return HttpResponseBadRequest()
 				
 	else:
 
@@ -113,7 +106,7 @@ def content_type(request):
 	    "blogging/content_type.html",
 	    locals(), context_instance=RequestContext(request))	
 
-
+@login_required
 @group_required('Administrator','Editor','Author')
 def new_post(request):
 	"""
@@ -159,10 +152,13 @@ def new_post(request):
 				blog.special_flag = True
 				blog.data = post_form.save(post)
 			
-# 			with transaction.atomic(), reversion.create_revision():	
-			blog.save()
-			if content_info_obj.is_leaf:
-				blog.tags.add(*post_form.cleaned_data['tags'])
+			with reversion.create_revision():	
+				blog.save()
+				if content_info_obj.is_leaf:
+					print "LOGS: tags are ", post_form.cleaned_data['tags']
+					blog.tags.add(*post_form.cleaned_data['tags'])
+				reversion.set_user(request.user)
+				reversion.set_comment("Created first draft")
 
 			if action == 'Publish':				
 # 				subject = 'Review: mail from PirateLearner'
@@ -187,6 +183,7 @@ def new_post(request):
 	    "blogging/create_page.html",
 	    context, context_instance=RequestContext(request))
 
+@login_required
 @group_required('Administrator','Editor','Author')
 def edit_post(request,post_id):
 	"""
@@ -202,7 +199,7 @@ def edit_post(request,post_id):
 		form = find_class('blogging.custom.'+blog.content_type.__str__().lower(),str(blog.content_type).capitalize()+'Form' )
 		print "LOGS: ContentType ", blog.content_type.__str__().lower()
 		if request.method == "POST":
-			post_form = form(reverse('blogging:edit-post',args = (post_id,)),request.POST)
+			post_form = form(reverse('blogging:edit-post',args = (post_id,)),request.POST,instance=blog)
 			action = request.POST.get('submit')
 			
 			if post_form.is_valid():
@@ -222,10 +219,13 @@ def edit_post(request,post_id):
 					blog.special_flag = True
 				
 				# create the reversion for version control and revert back the deleted post
-# 				with transaction.atomic(), reversion.create_revision():	
-				blog.save()
-				blog.tags.set(*post_form.cleaned_data['tags'])
-
+				with reversion.create_revision():	
+					blog.save()
+					print "LOGS: tags are ", post_form.cleaned_data['tags']
+					blog.tags.set(*post_form.cleaned_data['tags'])
+					reversion.set_user(request.user)
+					reversion.set_comment("Saving the Blog Content changes...")
+					
 				if action == 'Publish':				
 					generate_event.send(sender = blog.__class__, event_label = "blogging_content_submit", user = request.user, source_content_type = ContentType.objects.get_for_model(blog), source_object_id= blog.pk)
 								
@@ -234,12 +234,12 @@ def edit_post(request,post_id):
 			wrapper_form_class = find_class('blogging.custom.'+blog.content_type.__str__().lower(),str(blog.content_type).capitalize()+'Form')
 			print "LOGS: Wrapper Form Class ", wrapper_form_class
 			print "LOGS: Content Class ", blog
-			json_obj = json.loads(blog.data)
-			print json_obj
-			json_obj['title'] = blog.title
-			json_obj['section'] = blog.section
-			json_obj['tags'] = blog.tags.all()
-			post_form = wrapper_form_class(reverse('blogging:edit-post',args = (post_id,)),initial=json_obj)
+# 			json_obj = json.loads(blog.data)
+# 			print json_obj
+# 			json_obj['title'] = blog.title
+# 			json_obj['section'] = blog.section
+# 			json_obj['tags'] = blog.tags.all()
+			post_form = wrapper_form_class(reverse('blogging:edit-post',args = (post_id,)),instance=blog)
 
 		context = {'form':post_form}
 		return render_to_response(
@@ -252,7 +252,7 @@ def edit_post(request,post_id):
 			print "Error in %s on line %d" % (fname, lineno)
 		raise Http404
 
-
+@login_required
 @group_required('Administrator')
 def edit_section(request,section_id):
 	"""
@@ -278,8 +278,10 @@ def edit_section(request,section_id):
 				elif action == 'Save Draft':
 					section.data = post_form.save(post)
 				# create the reversion for version control and revert back the deleted post
-# 				with transaction.atomic(), reversion.create_revision():	
-				section.save()
+				with reversion.create_revision():	
+					section.save()
+					reversion.set_user(request.user)
+					reversion.set_comment("Saving the Blog Content changes...")
 								
 				return HttpResponseRedirect(section.get_absolute_url())
 
@@ -299,7 +301,7 @@ def edit_section(request,section_id):
 			print "Error in %s on line %d" % (fname, lineno)
 		raise Http404
 	
-
+@login_required
 @group_required('Administrator')
 def add_new_model(request, model_name):
 	if (model_name.lower() == model_name):
@@ -322,6 +324,7 @@ def add_new_model(request, model_name):
 				try:
 					form_dict = {}
 					for form in form2:
+						print form.cleaned_data
 						form_dict[form.cleaned_data['field_name']] = form.cleaned_data['field_type']
 					print "LOGS: Printing fomr dictionary: ", form_dict 
 						
@@ -368,13 +371,13 @@ def index(request):
 
 	
 	#log.info("[ Index page ] is called") 
-	context = RequestContext(request, {
-										'parent': None,
-                                       'nodes': pages,
-                                       'page': {'title':'Explore', 'tagline':'We learn from stolen stuff'},
-                                       'max_entry': max_entry,
-                                      })
-	return HttpResponse(template.render(context))
+	context ={
+				'parent': None,
+               'nodes': pages,
+               'page': {'title':'Explore', 'tagline':'We learn from stolen stuff'},
+               'max_entry': max_entry,
+            }
+	return HttpResponse(template.render(context,request))
 
 
 
@@ -415,12 +418,12 @@ def teaser(request,slug):
 			json_obj['author'] = blogs.author_id
 			json_obj['published'] = blogs.published_flag
 			
-			available_versions = reversion.get_for_object(blogs)
+# 			available_versions = reversion.get_for_object(blogs)
 			patch_html = ""
-			if len(available_versions) > 1 :
-				old_version = available_versions[0]
-				new_version = available_versions[1]
-				patch_html = generate_diffs(old_version, new_version, "data",cleanup="semantic")
+# 			if len(available_versions) > 1 :
+# 				old_version = available_versions[0]
+# 				new_version = available_versions[1]
+# 				patch_html = generate_diffs(old_version, new_version, "data",cleanup="semantic")
 		except:
 # 			log.user(self.request, "~SN~FRFailed~FY to fetch ~FGoriginal text~FY: Unexpected error '{0}'".format(sys.exc_info()[0]),logger)
 			print "Unexpected error:", sys.exc_info()[0]
@@ -430,16 +433,16 @@ def teaser(request,slug):
 				print "Error in %s on line %d" % (fname, lineno)
 			raise Http404
 
-		context = RequestContext(request, {
-										'parent': blogs.section,		
-                                       'nodes': blogs,
-                                       'content':json_obj,
-                                       'page': {'title':'Pirate Learner', 'tagline':'We learn from stolen stuff'},
-                                       'patch': patch_html,
-                                       'meta' : meta,
-                                       'can_edit':(not blogs.published_flag) and blogs.author_id == request.user , 
-                                      })
-		return HttpResponse(template.render(context))
+		context = {
+					'parent': blogs.section,		
+					'nodes': blogs,
+                   	'content':json_obj,
+                    'page': {'title':'Pirate Learner', 'tagline':'We learn from stolen stuff'},
+                    'patch': patch_html,
+                    'meta' : meta,
+                    'can_edit':(not blogs.published_flag) and blogs.author_id == request.user , 
+                   }
+		return HttpResponse(template.render(context,request))
 	except (ValueError):
 		try:
 			section = BlogParent.objects.get(slug = str(current_section))
@@ -469,13 +472,13 @@ def teaser(request,slug):
 			except EmptyPage:
 				# If page is out of range (e.g. 9999), deliver last page of results.
 				pages = paginator.page(paginator.num_pages)
-			context = RequestContext(request, {
-										'parent':section,
-                                       'nodes': pages,
-                                       'page': {'title':section.title, 'tagline':'We learn from stolen stuff', 'image': section.get_image_url()},
-                                       'max_entry': max_entry,
-                                      })
-			return HttpResponse(template.render(context))
+			context = {
+						'parent':section,
+                       	'nodes': pages,
+                        'page': {'title':section.title, 'tagline':'We learn from stolen stuff', 'image': section.get_image_url()},
+                        'max_entry': max_entry,
+                      }
+			return HttpResponse(template.render(context,request))
 		template = loader.get_template('blogging/section.html')
 		print "LOGS:: This is NON Leaf Node ", section.get_children()
 		paginator = Paginator(section.get_children(), max_entry)
@@ -488,13 +491,13 @@ def teaser(request,slug):
 		except EmptyPage:
 			# If page is out of range (e.g. 9999), deliver last page of results.
 			pages = paginator.page(paginator.num_pages)
-		context = RequestContext(request, {
-										'parent': section,
-                                       'nodes': pages,
-                                       'page': {'title':section.title, 'tagline':'We learn from stolen stuff'},
-                                       'max_entry': max_entry,
-                                      })
-		return HttpResponse(template.render(context))
+		context = {
+					'parent': section,
+                   	'nodes': pages,
+                    'page': {'title':section.title, 'tagline':'We learn from stolen stuff'},
+                    'max_entry': max_entry,
+                  }
+		return HttpResponse(template.render(context,request))
 
 def tagged_post(request,tag):
 	try:
@@ -513,29 +516,44 @@ def tagged_post(request,tag):
 			pages = paginator.page(paginator.num_pages)
 
 		template = loader.get_template('blogging/teaser.html')
-		context = RequestContext(request, {
+		context = {
                                        'nodes': pages,
                                        'page': {'title':tag, 'tagline':'We learn from stolen stuff'},
                                        'max_entry': max_entry,
-                                      })
-		return HttpResponse(template.render(context))
+                                      }
+		return HttpResponse(template.render(context,request))
 	except ObjectDoesNotExist:
 		raise Http404
 
 def ContactUs(request):
+	contact_type = request.GET.get('contact_type',None)
+	name = ''
+	email = ''
+	if request.user.is_authenticated():
+		User = request.user
+		name = User.profile.get_profile_name()
+		email = User.profile.get_email()
+	
+	if contact_type is None:
+		contact_type = 'Queries'
+
 	if request.method == 'POST':
-		form = ContactForm(request.POST)
+		form = ContactForm(data=request.POST)
 		if form.is_valid():
-			subject = 'Contact mail from PirateLearner'
+			subject = 'Contact mail from PirateLearner( ' + form.cleaned_data['contact_type'] + ' )'
 			message = 'Name: ' + form.cleaned_data['name'] + '\n' + 'email: ' + form.cleaned_data['email'] + '\n Body: ' + form.cleaned_data['content']
-			mail_admins(subject, message, fail_silently=False)
-			template = loader.get_template('blogging/contact_success.html')
-			context = RequestContext(request)
-			return HttpResponse(template.render(context))
-			print 'error during sending mail to Captain'
+			mail_admins(subject, message, fail_silently=True)
+			template = loader.get_template('blogging/contact_page.html')
+			form = ContactForm()
+			context = {'success':True, 'form':form}
+			return HttpResponse(template.render(context,request))
+		else:
+			print "LOGS:: error in Contact form"
 	else:
-		form = ContactForm()
-	return render_to_response('blogging/contact.html', {'example_form': form}, context_instance=RequestContext(request))
+		form = ContactForm(initial={'contact_type':contact_type,'name': name, 'email': email})
+	template = loader.get_template('blogging/contact_page.html')
+	context = {'form': form}
+	return HttpResponse(template.render(context,request))
 
 def BuildIndex(request):
 	if request.is_ajax():
@@ -587,35 +605,127 @@ def testCase(request):
 # 		raise Http404
 	
 
-		
+@login_required
 @group_required('Administrator')
 def manage(request):
 	"""
 	Manage the articles; only available to administrators
 	"""
-	try:
-		if request.method == "POST":
-			action = request.POST.get('action')
-			pks = request.POST.getlist("selection")
-			if len(pks):
-#				 print "LOGS: " + pks
-				objs = BlogContent.objects.filter(pk__in=pks)
-				
+
+	# Check the parameters passed in the URL and process accordingly
+	action = request.GET.get('action', None)
+	article_ids = request.GET.get('ids', None)	
+	
+	if request.is_ajax() and request.method == "POST":
+		if action is None or article_ids is None:
+			# Return failure
+			print "Error: manage: No parameter(s) passed."
+			res = {}
+			res['result'] = 'failure'
+			res['return_text'] = 'No parameter(s) passed'
+			return JsonResponse(res)
+		article_ids = [x.strip() for x in article_ids.split(',')]
+		# remove comma from the 
+		if not article_ids[-1]:
+			article_ids = article_ids[:-1]
+		action = action.strip()
+		print "manage: action=", action, "articles=", article_ids
+		count = 0
+		try:
+			if len(article_ids):
+						
+				res = {}
+				objs = BlogContent.objects.filter(pk__in=article_ids)
 				if action == 'Promote':
 					print "LOGS: Promote the given artcles"
+					obj_errors = []
+					obj_published = []
 					for obj in objs:
+						if obj.special_flag:
+							obj_errors.append('Article "{obj}" is in Draft. Could not publish'.format(obj=obj))
+							continue
 						obj.published_flag = True
 						obj.publication_start = timezone.now()
 						obj.save()
+						obj_published.append(obj.id)
 						generate_event.send(sender = obj.__class__, event_label = "blogging_content_publish", 
 										user = obj.get_author(), source_content_type = ContentType.objects.get_for_model(obj), source_object_id= obj.pk)
+						count += 1
+					res['return_text'] = '{count} articles published sucessfully!!'.format(count=count)
+					res['result'] = 'success'
+					res['published_id'] = obj_published
+					res['action'] = "Publish"
+					if len(obj_errors) > 0:
+						res['return_text'] += '\n'
+						res['return_text'] += '\n'.join(obj_errors)
+						res['result'] = 'failure'
+				elif action == 'Demote':
+					print "LOGS: Demote the given artcles"
+					obj_errors = []
+					obj_published = []
+					for obj in objs:
+						obj.published_flag = False
+						obj.publication_start = None
+						obj.save()
+						obj_published.append(obj.id)
+# 						generate_event.send(sender = obj.__class__, event_label = "blogging_content_publish", 
+# 										user = obj.get_author(), source_content_type = ContentType.objects.get_for_model(obj), source_object_id= obj.pk)
+						count += 1
+					res['return_text'] = '{count} articles unpublished sucessfully!!'.format(count=count)
+					res['result'] = 'success'
+					res['published_id'] = obj_published
+					res['action'] = "Unpublish"
+					if len(obj_errors) > 0:
+						res['return_text'] += '\n'
+						res['return_text'] += '\n'.join(obj_errors)
+						res['result'] = 'failure'
+
 				elif action == 'Delete':
 					for obj in objs:
 						obj.delete()
-					messages.error(request, "Articles Deleted" )
-		articles = BlogContent.objects.all()
+						count += 1
+					res['return_text'] = '{count} articles deleted sucessfully!!'.format(count=count)
+					res['result'] = 'success'
+					res['action'] = "Delete"
+				
+				print "manage_articles: Total", count
+				
+				return JsonResponse(res)
+		except:
+			print "Unexpected error:", sys.exc_info()[0]
+			for frame in traceback.extract_tb(sys.exc_info()[2]):
+				fname,lineno,fn,text = frame
+				print "Error in %s on line %d" % (fname, lineno)
+			res = {}
+			res['result'] = 'error'
+			return JsonResponse(res) 
+									
+	page = request.GET.get('page',None)
+	tab = request.GET.get('tab','all')
+
+	try:
+		if request.user.is_staff:
+			base_queryset = BlogContent.objects.all()
+		else:
+			base_queryset = BlogContent.objects.all(author_id=request.user)
+		
+		if tab == "all":
+			articles = base_queryset
+			result_title = 'all articles'
+		elif tab == "published":
+			articles = base_queryset.filter(published_flag=True)
+			result_title = 'published articles'
+		elif tab == "pending":
+			articles = base_queryset.filter(published_flag=False,special_flag=False)
+			result_title = 'pending articles'
+		elif tab == "draft":
+			articles = base_queryset.filter(published_flag=False,special_flag=True)
+			result_title = 'draft articles'
+		else:
+			articles = base_queryset
+			result_title = 'all articles'
+		
 		paginator = Paginator(articles, 50,orphans=30)
-		page = request.GET.get('page')
 		try:
 			pages = paginator.page(page)
 		except PageNotAnInteger:
@@ -624,16 +734,42 @@ def manage(request):
 		except EmptyPage:
 			# If page is out of range (e.g. 9999), deliver last page of results.
 			pages = paginator.page(paginator.num_pages)
-		actions = [{"name":"Delete", "help":"Delete selected artcles"},
-				   {"name":"Promote", "help":"Promote selected artcles"},
-				   ]
-		context = {"articles": pages, "actions": actions
+
+		# @todo: define actions based on the current tab
+		actions = [{"name":"Promote", "help":"Promote selected articles"},
+				{"name":"Demote", "help":"Demote selected articles"},
+				{"name":"Delete", "help":"Delete selected articles"},
+				]
+		tab_css_class = ['is-active']
+		query_tabs = [ 
+					{ 	'name': 'All', 
+						'url': reverse("blogging:manage_articles")+'?tab=all', 
+						'css': ' '.join(tab_css_class) if tab == 'all' else '',
+						'help_text': 'List of all articles.'
+					},
+					{ 	'name': 'Published', 
+						'url': reverse("blogging:manage_articles")+'?tab=published', 
+						'css': ' '.join(tab_css_class) if tab == 'published' else '',
+						'help_text': 'List of all published articles.'
+					},
+					{ 	'name': 'Pending', 
+						'url': reverse("blogging:manage_articles")+'?tab=pending', 
+						'css':  ' '.join(tab_css_class) if tab == 'pending' else '',
+						'help_text': 'List of pending articles.'
+					},
+					{ 	'name': 'Draft', 
+						'url': reverse("blogging:manage_articles")+'?tab=draft', 
+						'css': ' '.join(tab_css_class) if tab == 'draft' else '',
+						'help_text': 'List of articles in draft.'
+					}
+					]
+		template = loader.get_template('blogging/manage.html')
+		context = {"articles": pages, "actions": actions,'query_tabs':query_tabs,'result_title':result_title
 				   }
-		return render_to_response("blogging/manage.html", context, context_instance=RequestContext(request))
+		return HttpResponse(template.render(context,request))
 	except:
 		print "Unexpected error:", sys.exc_info()[0]
 		for frame in traceback.extract_tb(sys.exc_info()[2]):
 			fname,lineno,fn,text = frame
 			print "Error in %s on line %d" % (fname, lineno)
-		return Http404
-	
+		raise Http404

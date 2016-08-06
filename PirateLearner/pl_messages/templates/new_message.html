@@ -1,5 +1,50 @@
 {% extends 'base.html' %}
+
+{% block title %}
+Compose
+{% endblock %}
+
+
+
 {% block content %}
+
+<div class="mB-120 ">
+      <div class="section section--hero">
+        <div class="section__block fixed-width">
+          <div class="section--hero__text">
+            <h2 class="hero__title">Compose.</h2>
+            <p class="hero__subtitle">
+              Select the user and send the priate messages.
+            </p>
+          </div>
+        </div>
+      </div>
+
+	<div class="section fixed-width mdl-grid">
+		<div class="mdl-cell mdl-cell--8-col section__block section__block--form">
+		<form action="{% url 'messages:new_message' %}" method="POST" class="formbox">
+			{% csrf_token %}
+	  		<div class="form__field form__field--name">
+				<label for="to" class="form__outer-label">To:</label>
+				<div class="material-select mdl-textfield mdl-js-textfield mdl-textfield--floating-label">{{ form.to }}</div>
+		     </div>		
+            <div class="form__field form__field--message">
+              <div class="mdl-textfield mdl-js-textfield is-upgraded">
+                <textarea class="mdl-textfield__input" rows="3" id="body" name="body"></textarea>
+                <label class="mdl-textfield__label" for="body">Your message</label>
+              </div>
+            </div>
+		
+			<div class="form__field form__field--submit pT40">
+				<input class="feature-button feature-button--submit mdl-button mdl-js-button mdl-button--raised" name="submit" value="Send" type="submit">
+			</div>
+		</form>
+		</div>
+	</div>
+</div>
+
+
+{% comment %}
     <div class="container-fluid">
         <div class="row">
             {% include 'leftbar.html' with active='compose'%}
@@ -34,4 +79,5 @@
             </div>
         </div>
     </div>
+     {% endcomment %}
 {% endblock %}

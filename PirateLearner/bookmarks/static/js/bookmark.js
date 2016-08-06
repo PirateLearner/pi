@@ -343,5 +343,11 @@ var setup_snippet = function(data){
 				 getBookmarkFromUrl();
 	 });
 	 });
+
+	 $.fn.ready(function(){	
+	$("#Checkall_id").change(function () {
+    		$("input:checkbox").prop('checked', $(this).prop("checked"));
+	  });
+	 });
 	 
 })(window.jQuery);

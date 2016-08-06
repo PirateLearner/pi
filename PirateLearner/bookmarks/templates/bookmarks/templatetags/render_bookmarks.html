@@ -1,4 +1,22 @@
 {% load tz %}
+
+<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+  <thead>
+    <tr>
+      <th class="mdl-data-table__cell--non-numeric">Title</th>
+      <th class="mdl-data-table__cell--non-numeric">Privacy</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for el in bookmarks %}
+    <tr>
+      <td class="mdl-data-table__cell--non-numeric"><a href="{{ el.get_absolute_url }}"> {{ el.get_title }} </a></td>
+      <td>{% if el.privacy_level == 'pub' %}<i class="material-icons mdl-color-text--blue-400" title="public">people</i>{% else %}<i class="material-icons" title="private">person</i>{% endif %}</td>
+    </tr>
+   {% endfor %}
+  </tbody>
+</table>
+{% comment %}  
 <div class="panel panel-default">
 	<div class="panel-heading panel-warning">Bookmarks</div>
 	{% if not bookmarks|length > 0 %}
@@ -32,3 +50,4 @@
 		</div>
 	{% endif %}
 </div>
+{% endcomment %}

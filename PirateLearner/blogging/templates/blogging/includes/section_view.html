@@ -1,5 +1,29 @@
-{% load mptt_tags staticfiles %}
+{% load mptt_tags staticfiles blogging_tags %}
 
+{% if nodes|length > 0 %}
+	{% recursetree nodes %}
+    <div class="content__item content__item--subject mdl-shadow--2dp">
+      <div class="subject__header" style="background-image: url('{{ node.get_image_url }}')"></div>
+      <a href="{{ node.get_absolute_url }}">
+        <div class="subject__body">
+          <h3 class="subject__name">{{ node.title }}</h3>
+          <div class="subject__extract">Designing and auditing fair pay practices are steps organizations everywhere can take to create more equitable workplaces.</div>
+        </div>
+        <div class="subject__footer">
+          <div class="subject__related-content">
+          {% get_section_articles_count node as count%}
+            <span class="related-content__item"> {{ count }} article{{ count|pluralize }}</span>
+          </div>
+        </div>
+      </a>
+    </div>
+	{% endrecursetree %}
+{% else %}
+	<h1> Page Under Construction!!!</h1>
+{% endif %}
+
+
+{% comment %}  
 <section id="section-view">
 	<div class="row">
 	
@@ -50,4 +74,4 @@
 {% endif %}
 	
 </section>
-
+{% endcomment %}

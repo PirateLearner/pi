@@ -1,0 +1,59 @@
+{% extends 'base.html'%}
+
+{% load i18n admin_urls static %}
+
+
+
+
+{% block extra_style %}
+    {{ media }}
+    <script type="text/javascript" src="{% static 'admin/js/cancel.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="section fixed-width mdl-grid">
+        <div class="mdl-cell mdl-cell--8-col section__block">
+        {% comment %}  Insert Text here{% endcomment %}
+{% if perms_lacking %}
+    <p>{% blocktrans with escaped_object=object %}Deleting the {{ object_name }} '{{ escaped_object }}' would result in deleting related objects, but your account doesn't have permission to delete the following types of objects:{% endblocktrans %}</p>
+    <ul>
+    {% for obj in perms_lacking %}
+        <li>{{ obj }}</li>
+    {% endfor %}
+    </ul>
+{% elif protected %}
+    <p>{% blocktrans with escaped_object=object %}Deleting the {{ object_name }} '{{ escaped_object }}' would require deleting the following protected related objects:{% endblocktrans %}</p>
+    <ul>
+    {% for obj in protected %}
+        <li>{{ obj }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>{% blocktrans with escaped_object=object %}Are you sure you want to delete the {{ view.get_object_name }} "{{ escaped_object }}"? All of the following related items will be affected:{% endblocktrans %}</p>
+    <h4>{% trans "Affected Objects" %}</h4>
+    {% if view.get_related_objects %}
+    <ul>{{ view.get_related_objects|unordered_list }}</ul>
+    {% else %}
+        <h5> No related objects! </h5>
+    {% endif %}
+    
+        <form action="" method="POST" class="formbox">
+            {% csrf_token %}
+        <input type="hidden" name="post" value="yes" />
+        {% if is_popup %}<input type="hidden" name="{{ is_popup_var }}" value="1" />{% endif %}
+        {% if to_field %}<input type="hidden" name="{{ to_field_var }}" value="{{ to_field }}" />{% endif %}
+
+        <div class="form__field form__field--submit pT40">
+            <input class="feature-button feature-button--delete mdl-button mdl-js-button mdl-button--raised" name="delete" type="submit" value="{% trans "Yes, I'm sure" %}" />
+            <div class="separator"></div>
+            <a href="##" onClick="javascript: history.go(-1); return false;" class="feature-button feature-button--submit mdl-button mdl-js-button mdl-button--raised ">{% trans "No, take me back" %}</a>
+        </div>
+
+        </form>
+{% endif %}
+
+        </div>
+    </div>
+{% endblock %}

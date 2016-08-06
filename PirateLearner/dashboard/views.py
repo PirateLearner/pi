@@ -11,10 +11,16 @@ from dashboard.forms import ProfileEditForm
 #from allauth.account.models import EmailAccount
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from taggit.models import Tag
+from taggit.models import Tag, TagBase
 from allauth.account.views import LoginView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import ListView
+from django.core.urlresolvers import reverse_lazy
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.socialaccount.models import SocialAccount
+
+from django.contrib.admin.utils import NestedObjects
+from django.db import DEFAULT_DB_ALIAS
 
 from django.contrib.auth.signals import user_logged_in
 
@@ -90,7 +96,7 @@ def dashboard_home(request):
     stats['voting_count'] = Vote.objects.get_for_user_in_bulk(request.user).count()
     stats['notification_count'] = get_notification_count(request.user)
     context = RequestContext(request, {
-                                       "profile":profile,"stats":stats,
+                                       "profile":profile,"stats":stats,'active':'dashboard'
                                       })
     return HttpResponse(template.render(context))
 
@@ -148,7 +154,16 @@ def my_profile(request):
     ## fetch the latest articles by this author
     articles = get_top_articles(request.user.id)
     user_bookmarks = get_user_bookmark(request.user.id)
-    
+    if len(articles) > 10:
+        articles = articles[:10]
+    if len(user_bookmarks) > 10:
+        user_bookmarks = user_bookmarks[:10]
+        
+    # Get groups name
+    groups = list(request.user.groups.values_list('name',flat=True))
+    if request.user.is_staff:
+        groups.append(u'staff')
+        
     if request.method == 'POST':
         form = ProfileEditForm(request.POST)
         
@@ -173,6 +188,10 @@ def my_profile(request):
             context = RequestContext(request, {
                                        'profile': profile,
                                        'profile_form': form,
+                                      'social' : social_info,
+                                       'articles':articles,
+                                       'bookmarks': user_bookmarks,
+                                        'groups': groups,
                                       })
     else:
         context = RequestContext(request, {
@@ -181,6 +200,7 @@ def my_profile(request):
                                        'social' : social_info,
                                        'articles':articles,
                                        'bookmarks': user_bookmarks,
+                                       'groups': groups,
                                       })
     return HttpResponse(template.render(context))
     
@@ -190,6 +210,10 @@ def public_profile(request,user_id):
         user = User.objects.get(pk=user_id)
         profile = UserProfile.objects.get(user=user) or None
         template = loader.get_template('dashboard/public_profile.html')
+        # Get groups name
+        groups = list(user.groups.values_list('name',flat=True))
+        if user.is_staff:
+            groups.append(u'staff')
         
         social_info = []
         providers = ["Facebook", "Google", "Twitter"]
@@ -214,7 +238,7 @@ def public_profile(request,user_id):
                                            'social' : social_info,
                                            'articles':articles,
                                            'bookmarks': user_bookmarks,
-                                           
+                                           'groups': groups,
                                       })
         return HttpResponse(template.render(context))
     
@@ -255,7 +279,27 @@ def bookmark_articles(request):
     context = RequestContext(request, {})
     return HttpResponse(template.render(context))
 
+class TagCreate(CreateView):
+    model = Tag
+    fields = ['name','slug']
+
+class TagUpdate(UpdateView):
+    model = Tag
+    fields = ['name','slug']
+
+class TagDelete(DeleteView):
+    model = Tag
+    success_url = reverse_lazy('dashboard:tag-list')
     
+    def get_related_objects(self):
+        collector = NestedObjects(using=DEFAULT_DB_ALIAS)
+        collector.collect([self.get_object()])
+        print collector.nested()
+        return collector.nested()
+
+class TagList(ListView):
+    model = Tag
+
 class CustomLoginClass(LoginView):
     
     def get_template_names(self):

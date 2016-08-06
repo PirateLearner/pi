@@ -1,10 +1,9 @@
 {% extends "bookmarks/base.html" %}
 
-{% load cms_tags %}
 {% load disqus_tags %}
-
-
+{% load humanize %}
 {% disqus_dev %}
+
 {% block meta %}
 {% include "meta.html" with meta=meta only %}
 {% endblock %}
@@ -14,10 +13,73 @@
 {{ bookmark.get_title }} | {{ request.get_host }}
 {% endblock %}
 
-{% block bookmark_title %}
-{% endblock %}
 
 {% block bookmark_content %}
+       <div class="mB-120 blog-post-page">
+{% comment %}   {% include 'blogging/section_title.html' with page=page %} {% endcomment %}
+          <article class=" section section--main" role="article">
+            <div class="mdl-grid fixed-width ">
+              <div class=" section__block mdl-cell mdl-cell--7-col mdl-cell--12-col-tablet ">
+                <!-- main blog content start -->
+                <h3 class="blog-post__title">{{ bookmark.get_title }}</h3>
+                <div class="blog-post__meta">
+                  <span>
+                    <span class="blog-post__author"><a href="{{ bookmark.user.profile.get_profile_page }}">{{ bookmark.user.profile.get_profile_name|title }}</a></span>
+                    <meta itemprop="datePublished" content=" {{ meta.date_time }} "/>
+                    <time datetime="2016-06-30" class="blog-post__time"> {{ meta.date_time|naturaltime }} </time>
+                  </span>
+                  <div class="blog-post__share hide-for-print">
+                    <a href="#" title="Google+" target="_blank" class="share__link analytics-event" data-analytics-event-category="blog" data-analytics-event-action="share" data-analytics-event-label="google+">
+                      <i class="fa fa-google"></i>
+                    </a>
+                    <a href="#" title="Facebook" target="_blank" class="share__link analytics-event" data-analytics-event-category="blog" data-analytics-event-action="share" data-analytics-event-label="facebook">
+                      <i class="fa fa-facebook"></i>
+                    </a>
+                    <a href="#" title="Twitter" target="_blank" class="share__link analytics-event" data-analytics-event-category="blog" data-analytics-event-action="share" data-analytics-event-label="twitter">
+                      <i class="fa fa-twitter"></i>
+                    </a>
+                    <a href="#" title="LinkedIn" target="_blank" class="share__link">
+                      <i class="fa fa-linkedin"></i>
+                    </a>
+                    <a href="mailto:?subject=Check out this blog from PirateLerner &amp;body=" title="Email" target="_blank" class="share__link">
+                      <i class="fa fa-envelope"></i>
+                    </a>
+                    <a title="Print" target="_blank" class="share__link" href="javascript:window.print();">
+                      <i class="fa fa-print"></i>
+                    </a>
+                  </div>
+                </div>
+                <div class="blog-post__subjects hide-for-print">
+                </div>
+                <div class="blog-post__body markdown">
+                <div class="img_container">
+                    <img class="img-responsive article-image" src="{{ bookmark.get_image_url }}"/>
+                </div>
+                {% autoescape off %}
+                    {{ bookmark.get_note }}
+                {% endautoescape %}
+                </div>
+                <!-- main blog content end -->
+            <div class="bookmark-footer">
+                <div class="bookmark-button">
+                    <a class="feature-button feature-button--submit mdl-button mdl-js-button mdl-button--raised" href="{{ bookmark.get_external_url }}" 
+                target="_blank" rel="nofollow">Visit Page</a>
+                </div>
+            </div>
+                
+                
+                {% ifequal bookmark.privacy_level 'pub' %}            
+                    {% load disqus_tags %}
+                    {% disqus_show_comments %}
+                {% endifequal %}
+                
+              </div>
+            </div>
+          </article>
+        </div> <!-- Blog post end -->
+
+
+{% comment %}
 		<div class="header-ribbon" id="overlay-target">
 			<h1> 	{{ bookmark.get_title }} </h1>    	
 			<div class="article-actions">
@@ -52,18 +114,7 @@
 				</div>
 			</div>
 		</div>
+{% endcomment %}		
 		
-{% ifequal bookmark.privacy_level 'pub' %}			
-	{% load disqus_tags %}
-	{% disqus_show_comments %}
-{% endifequal %}
-		
-{% endblock %}
-
-{% block extra_script %}
-<script src="{{ STATIC_URL }}ckeditor/ckeditor/ckeditor.js"></script>
-
-<link rel="stylesheet" href="{{ STATIC_URL }}css/overlay.css"></link>
-
 {% endblock %}
 
