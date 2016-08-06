@@ -104,6 +104,45 @@ MIDDLEWARE_CLASSES = (
     'reversion.middleware.RevisionMiddleware',
 )
 
+INSTALLED_APPS = (
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.admin',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
+    'django.contrib.staticfiles',
+    'django.contrib.messages',
+    'django.contrib.humanize',
+    'mptt',
+    'reversion',
+    'taggit',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+#     'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.google',
+#     'allauth.socialaccount.providers.linkedin',
+#     'allauth.socialaccount.providers.linkedin_oauth2',
+#     'allauth.socialaccount.providers.stackexchange',
+    'allauth.socialaccount.providers.twitter',
+    'blogging',
+    'annotations',
+    'ckeditor',
+    'disqus',
+    'dashboard',
+    'bookmarks',
+    'pl_messages',
+    'rest_framework',
+    'meta_tags',
+    'project_mgmt',
+    'spotlight',
+    'django.contrib.redirects',
+    'voting',
+    'events',
+)
+
 
 LANGUAGES = (
     ## Customize this

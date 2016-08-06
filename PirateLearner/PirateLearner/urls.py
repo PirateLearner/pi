@@ -55,6 +55,7 @@ urlpatterns = i18n_patterns('',
     url(r'^search/tags/?$', tags, name="tags-ajax"),
     url(r'^contact/?$', ContactUs,name="contact"),
     url(r'^about/?$', TemplateView.as_view(template_name='about.html'),name="about"),
+    url(r'^faq/?$', TemplateView.as_view(template_name='faq.html'),name="faq"),
     url(r'^$', TemplateView.as_view(template_name='home.html'),name="home"),
 )
 
