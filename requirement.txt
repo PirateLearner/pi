@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Django
 MySQL-python
 Pillow
