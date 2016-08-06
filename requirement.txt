@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-Django
+Django==1.9.6
 MySQL-python
 Pillow
 PyYAML
@@ -18,7 +17,7 @@ django-filter
 django-mathjax
 django-mptt
 django-polymorphic
-#django-reversion
+django-reversion
 django-sekizai
 django-taggit
 django.js
