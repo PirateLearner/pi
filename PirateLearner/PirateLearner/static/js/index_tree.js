@@ -2,8 +2,8 @@
 
 	console.log("Success from server");
 	$("#indextree").html(data);
-	$('#indextree').treed({openedClass:'glyphicon-folder-open', closedClass:'glyphicon-folder-close'});
-	$('#active-index').expand_active({openedClass:'glyphicon-folder-open', closedClass:'glyphicon-folder-close'});
+	$('#indextree').treed({openedClass:'fa-folder-open', closedClass:'fa-folder'});
+	$('#active-index').expand_active({openedClass:'fa-folder-open', closedClass:'fa-folder'});
 }
 
 	 /**
@@ -57,8 +57,8 @@
 $.fn.extend({
     treed: function (o) {
       
-      var openedClass = 'glyphicon-minus-sign';
-      var closedClass = 'glyphicon-plus-sign';
+      var openedClass = 'fa-minus';
+      var closedClass = 'fa-plus';
       
       if (typeof o != 'undefined'){
         if (typeof o.openedClass != 'undefined'){
@@ -75,7 +75,7 @@ $.fn.extend({
         tree.addClass("tree");
         tree.find('li').has("ul").each(function () {
             var branch = $(this); //li with children ul
-            branch.prepend("<i class='indicator glyphicon " + closedClass + "'></i>");
+            branch.prepend("<i class='indicator fa " + closedClass + "'></i>");
             branch.addClass('branch');
             branch.on('click', function (e) {
                 if (this == e.target) {
@@ -114,8 +114,8 @@ $.fn.extend({
 $.fn.extend({
 expand_active: function (o) {
 
-      var openedClass = 'glyphicon-minus-sign';
-      var closedClass = 'glyphicon-plus-sign';
+      var openedClass = 'fa-minus';
+      var closedClass = 'fa-plus';
       
       if (typeof o != 'undefined'){
         if (typeof o.openedClass != 'undefined'){
