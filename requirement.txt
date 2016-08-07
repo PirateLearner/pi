@@ -36,4 +36,5 @@ requests
 requests-oauthlib
 six
 wsgiref
+django-appconf
 django_formtools

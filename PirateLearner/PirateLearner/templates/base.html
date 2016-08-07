@@ -124,8 +124,8 @@
                 </button>
                 
                 <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="img-menu-lower-left">
-                    <li class="mdl-menu__item"><a href="{% url 'dashboard:dashboard-profile' request.user.id %}">Profile</a></li>
-                    <li class="mdl-menu__item"><a href="{% url 'account_logout' %}?next={{ request.path|safe }}">Logout</a></li>
+                    <a href="{% url 'dashboard:dashboard-profile' request.user.id %}"><li class="mdl-menu__item">Profile</li></a>
+                    <a href="{% url 'account_logout' %}?next={{ request.path|safe }}"><li class="mdl-menu__item">Logout</li></a>
                 </ul>
 
             {% else %}

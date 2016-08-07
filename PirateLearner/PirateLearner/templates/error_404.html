@@ -1,4 +1,4 @@
-{% load cms_tags staticfiles sekizai_tags menu_tags %}
+{% load staticfiles %}
 <!DOCTYPE html>
 
 <!-- HTML5 Boilerplate -->
@@ -36,7 +36,6 @@
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script src="{{STATIC_URL }}/js/docs.min.js"></script>   
      
-{% render_block "js" %}
 {% block extra_script %} 
 {% endblock %}
 	<!-- Icons -->
@@ -80,12 +79,10 @@
 	<meta http-equiv="cleartype" content="on">
 	    
    <script src="{{ STATIC_URL }}/js/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    {% render_block "css" %}
     <!--<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/tile.css"> -->
 
   </head>
   <body class="clearfix" id="mainWrapper" style="margin-top=66px;">
-    {% cms_toolbar %}
     <!-- Custom styles for this template -->
 	<nav class="navbar navbar-default navbar-static-top" role="navigation">	
 		<div class="container">
@@ -109,11 +106,6 @@
 	              	<li><a href="{% url 'account_login' %}">Sign In</a></li>
 	           		{% endif %}
 		     		</ul>
-		      </div>
-		   	<div class="navbar-default navbar-lower">
-		        	<ul class="nav navbar-nav navbar-left">
-		          		{% show_menu 0 1 100 100 "menu.html" %}
-		        	</ul>
 		      </div>
 		   </div><!--/.navbar-collapse -->
 		</div>
