@@ -1,0 +1,19 @@
+{% comment %} pass with nodes in context which is a pagination object  {% endcomment %}
+<div class="pagination__container">
+
+{% if nodes.has_previous %}
+    <a class="pagination__link pagination__link--arrow" href="?page={{ nodes.previous_page_number }}">
+      <i class="material-icons">arrow_backword</i>
+    </a>
+    <a href="?page={{ nodes.previous_page_number }}" class="pagination__link">{{ nodes.previous_page_number }}</a>
+{% endif %}
+
+    <span class="pagination__link pagination__link--active">{{ nodes.number }}</span>
+
+{% if nodes.has_next %}
+   <a class="pagination__link pagination__link--arrow" href="?page=2&amp;">
+     <i class="material-icons">arrow_forward</i>
+   </a>
+{% endif %}    
+
+</div>

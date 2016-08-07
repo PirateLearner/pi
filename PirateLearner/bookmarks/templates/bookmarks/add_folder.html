@@ -1,12 +1,11 @@
 {% extends "bookmarks/base.html" %}
 
-{% load cms_tags staticfiles sekizai_tags menu_tags %}
+{% load staticfiles %}
 
 
 {% block content %}
 
-{% load crispy_forms_tags %}
-
+{% comment %} 
 {% crispy form form.helper %}
-
+{% endcomment %}
 	{% endblock %}	

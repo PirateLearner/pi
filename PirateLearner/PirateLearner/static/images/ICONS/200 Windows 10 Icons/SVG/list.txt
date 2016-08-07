@@ -1,0 +1,200 @@
+About.svg
+Add File.svg
+Add List.svg
+Address Book.svg
+Advertising.svg
+Answers.svg
+Approval.svg
+Approve.svg
+Archive.svg
+Attention.svg
+Audio File.svg
+Bad Decision.svg
+Bearish.svg
+Binoculars.svg
+Bookmark.svg
+Briefcase.svg
+Bullish.svg
+Business Contact.svg
+Business.svg
+Butting In.svg
+Calculator.svg
+Callback.svg
+Cancel 2.svg
+Cancel File.svg
+Cancel.svg
+Candle Sticks.svg
+Check File.svg
+Checked 2.svg
+Checked.svg
+Checkmark.svg
+Collaboration.svg
+Collect.svg
+Comments.svg
+Conference Call.svg
+Contacts.svg
+Copyleft.svg
+Copyright.svg
+Create Archive.svg
+CSS Filetype.svg
+Currency Exchange.svg
+Cursor.svg
+Customer Support.svg
+Debt.svg
+Decision.svg
+Delete Archive.svg
+Delete File.svg
+Department.svg
+Diploma 1.svg
+Diploma 2.svg
+Disapprove.svg
+Disclaimer.svg
+Dislike.svg
+DOC.svg
+Document.svg
+Donate.svg
+Down Arrow.svg
+Down Left Arrow.svg
+Down Left Round.svg
+Down Right Arrow.svg
+Down Right Round.svg
+Down Round.svg
+Download 2.svg
+Download.svg
+Edit File.svg
+Empty Trash.svg
+Entering Heaven Alive.svg
+EPS.svg
+EPUB.svg
+Expired.svg
+External.svg
+Faq.svg
+Favourite File.svg
+FB2.svg
+Feedback.svg
+File.svg
+Fine Print.svg
+Folder.svg
+Frame.svg
+Full Trash.svg
+GIF.svg
+Good Decision.svg
+Graduation Cap.svg
+Hand Cursor.svg
+High Priority.svg
+Home.svg
+Hot Article.svg
+HTML.svg
+Icons8 Cup.svg
+Idea.svg
+Image File.svg
+In Transit.svg
+Info.svg
+Inspection.svg
+Internal.svg
+Invite.svg
+Key.svg
+Leave.svg
+Left Arrow.svg
+Left Round.svg
+Library.svg
+Light At The End Of Tunnel.svg
+Lock 2.svg
+Lock.svg
+Low Priority.svg
+Maintenance.svg
+Make Decision.svg
+Manager.svg
+Mark As Favourite.svg
+Medium Priority.svg
+Merge Horizontal.svg
+Merge Vertical.svg
+Minus.svg
+Money Transfer.svg
+Multiple Inputs.svg
+Music.svg
+Neutral Decision.svg
+Neutral Trading.svg
+News.svg
+No Idea.svg
+Ok.svg
+Online Support.svg
+Open Archive.svg
+Opened Folder.svg
+Org Unit.svg
+Organization.svg
+Overtime.svg
+Package.svg
+Paid.svg
+Parallel Tasks.svg
+Picture.svg
+Planner.svg
+Plus.svg
+Podium With Audience.svg
+Podium With Speaker.svg
+Podium Without Speaker.svg
+Privacy.svg
+Process.svg
+PSD.svg
+Puzzle.svg
+Questions.svg
+Rating.svg
+Ratings.svg
+Reading Ebook.svg
+Reading.svg
+Redo.svg
+Refresh.svg
+Registered Trademark.svg
+Resize Diagonal.svg
+Resize Four Directions.svg
+Resize Horizontal.svg
+Resize Vertical.svg
+Reuse.svg
+Right Arrow.svg
+Right Round.svg
+Ruler.svg
+Sales Performance.svg
+Save Archive.svg
+Search.svg
+Self Service Kiosk.svg
+Serial Tasks.svg
+Service Mark.svg
+Services.svg
+Settings.svg
+Share.svg
+Shipped.svg
+Shop.svg
+Signature.svg
+Sound Recording Copyright.svg
+Split Horizontal.svg
+Split Vertical.svg
+Statistics.svg
+Support.svg
+Survey.svg
+Synchronize.svg
+Todo List.svg
+Trademark.svg
+Tree Structure.svg
+Undo.svg
+Unlock 2.svg
+Unlock.svg
+Up Arrow.svg
+Up Left Arrow.svg
+Up Left Round.svg
+Up Right Arrow.svg
+Up Right Round.svg
+Up Round.svg
+Upload 2.svg
+Upload.svg
+Video File.svg
+Video Projector.svg
+View File.svg
+Vip.svg
+Voice Presentation.svg
+WAV.svg
+Word.svg
+Work.svg
+XAML.svg
+XLS.svg
+XML.svg
+ZIP.svg

@@ -10,7 +10,7 @@ from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.sites.models import  get_current_site
+from django.contrib.sites.shortcuts import get_current_site
 from spotlight.forms import SpotlightForm
 from blogging.models import BlogContent
 from bookmarks.models import BookmarkInstance

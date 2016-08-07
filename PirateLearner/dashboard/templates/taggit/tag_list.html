@@ -1,0 +1,86 @@
+{% extends 'base.html'%}
+
+{% load staticfiles%}
+{% block content %}
+
+<div class="mB-120">
+      <div class="section section--hero">
+        <div class="section__block fixed-width">
+          <div class="section--hero__text">
+            <h2 class="hero__title">Tags.</h2>
+            <p class="hero__subtitle">
+              View, Add, Update, and Delete system wide tags here.
+            </p>
+          </div>
+        </div>
+      </div>
+    
+    
+    <section id="id-section-main" class="pA8">
+        <div class="dashboard__post mdl-grid">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">                            
+            {% if object_list %} {% comment %} Display the list {% endcomment %}
+                    {% comment %} Pagination {% endcomment %}               
+                <div class="mdl-card__supporting-text stats-text">                  
+                    <span>{{ object_list.paginator.count }} results for </span>
+                    <strong>Tags</strong>
+                </div>
+                {% if object_list.paginator.num_pages > 1 %}
+                    <div class="mdl-card__supporting-text pTB0 mdl-color-text--grey-600">                   
+                        {% include "common/pagination.html" with nodes=object_list getvars=getvars only %}
+                    </div>
+                {% endif %}
+                
+                {% comment %} Tag list table {% endcomment %}
+                <div class="table--large mdl-color-text--grey-800 mB-16">
+                    <table class="mdl-data-table mdl-js-data-table wSn">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th class="non-numeric">Name</th>
+                                <th class="non-numeric">slug</th>
+                            </tr>
+                        </thead>                        
+                        <tbody id="id-tbody">
+                            {% for obj in object_list %}
+                            <tr data-id={{ obj.id }}>
+                                <td>{{ forloop.counter }}</td>
+                                <td class="non-numeric fS16">
+                                    <a href="{% url "dashboard:tag-update" pk=obj.id %}" title="Update tag">{{ obj.name }}</a>
+                                </td>
+                                <td class="non-numeric fS16">
+                                    <a href="{% url "dashboard:tag-update" pk=obj.id %}" title="Update tag">{{ obj.slug }}</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% comment %} Pagination {% endcomment %}
+                {% if object_list.paginator.num_pages > 1 %}
+                <div class="mdl-card__supporting-text pTB0 mdl-color-text--grey-600">                   
+                    {% include "common/pagination.html" with nodes=object_list getvars=getvars only %}
+                </div>
+                {% endif %}
+            {% else %}  {% comment %} Display the notification {% endcomment %}
+                <div class="">
+                    <div class="search-stats">        
+                        Sorry, no results for
+                    </div>
+                    <div class="search-title">
+                        <h3>Tags</h3>
+                    </div>
+                    <div class="search-stats oops-message">             
+                    </div>
+                </div>
+            {% endif %}                 
+            </div>                  
+        </div>  
+    </section>
+    {% url "dashboard:tag-add" as url %}
+    {% include "common/button-floating-add.html" with url=url %}
+
+
+</div>
+
+{% endblock %}

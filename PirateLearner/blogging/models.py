@@ -10,7 +10,7 @@ from django.template.defaultfilters import slugify
 from taggit.managers import TaggableManager
 from taggit.models import TaggedItem, Tag
 
-from django.contrib.contenttypes.generic import GenericRelation
+from django.contrib.contenttypes.fields import GenericRelation
 from annotations.models import Annotation
 
 from django.conf import settings
@@ -28,6 +28,9 @@ from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 
 from django.core.urlresolvers import reverse
+
+import reversion
+
 import traceback
 import json
 
@@ -95,9 +98,9 @@ class BlogContentType(BaseContentClass):
 
 class BlogParent(MPTTModel):
     title = models.CharField(max_length = 50, unique=True)
-    parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True,on_delete = models.SET_NULL)
     data = models.TextField(null= False)
-    content_type = models.ForeignKey(BlogContentType,null=True,default=None)
+    content_type = models.ForeignKey(BlogContentType,null=True,default=None,on_delete = models.SET_NULL)
     slug = models.SlugField()
     def __unicode__(self):
         return self.title
@@ -154,14 +157,14 @@ class BlogParent(MPTTModel):
 class BlogContent(BaseContentClass):
     title = models.CharField(max_length = 100)
     create_date = models.DateTimeField('date created', auto_now_add=True)
-    author_id  = models.ForeignKey(auth.models.User, related_name="blogcontent")
+    author_id  = models.ForeignKey(auth.models.User, related_name="blogcontent",on_delete = models.CASCADE)
     data = models.TextField(null= False)
     published_flag = models.BooleanField('is published?',default = 0)
     special_flag = models.BooleanField(default = 0)
     last_modified = models.DateTimeField('date modified',auto_now=True)
     url_path = models.CharField(max_length= 255)
-    section = models.ForeignKey(BlogParent, limit_choices_to={'children': None})
-    content_type = models.ForeignKey(BlogContentType,null=True)
+    section = models.ForeignKey(BlogParent, limit_choices_to={'children': None},on_delete = models.CASCADE)
+    content_type = models.ForeignKey(BlogContentType,null=True,on_delete = models.SET_NULL)
     slug = models.SlugField(max_length= 100)
     tags = TaggableManager(blank=True)
     publication_start = models.DateTimeField(('Published Since'), default=timezone.now, help_text=('Used for automatic delayed publication. For this feature to work published_flag must be on.'))
@@ -276,64 +279,64 @@ class BlogContent(BaseContentClass):
     class Meta:
         ordering = ['-publication_start']
 
-
-class LatestEntriesPlugin(CMSPlugin):
-
-    latest_entries = models.IntegerField(default=5, help_text=('The number of latests entries to be displayed.'))
-    parent_section = models.ForeignKey(BlogParent,null=True,blank=True)
-    tags = models.ManyToManyField('taggit.Tag', blank=True, help_text=('Show only the blog posts tagged with chosen tags.'))
-    template = models.CharField('Template', max_length=255,
-                                choices = LATEST_PLUGIN_TEMPLATES, default='blogging/plugin/plugin_teaser.html')
-    def __unicode__(self):
-        return str(self.latest_entries)
-
-    def copy_relations(self, oldinstance):
-        self.tags = oldinstance.tags.all()
-
-    def get_posts(self):
-        if self.parent_section:
-            if self.parent_section.is_leaf_node():
-                posts = BlogContent.published.filter(section=self.parent_section)
+if 'cms' in settings.INSTALLED_APPS:
+    class LatestEntriesPlugin(CMSPlugin):
+    
+        latest_entries = models.IntegerField(default=5, help_text=('The number of latests entries to be displayed.'))
+        parent_section = models.ForeignKey(BlogParent,null=True,blank=True)
+        tags = models.ManyToManyField('taggit.Tag', blank=True, help_text=('Show only the blog posts tagged with chosen tags.'))
+        template = models.CharField('Template', max_length=255,
+                                    choices = LATEST_PLUGIN_TEMPLATES, default='blogging/plugin/plugin_teaser.html')
+        def __unicode__(self):
+            return str(self.latest_entries)
+    
+        def copy_relations(self, oldinstance):
+            self.tags = oldinstance.tags.all()
+    
+        def get_posts(self):
+            if self.parent_section:
+                if self.parent_section.is_leaf_node():
+                    posts = BlogContent.published.filter(section=self.parent_section)
+                else:
+                    parent_list = self.parent_section.get_descendants()
+                    posts = BlogContent.published.filter(section__in=parent_list)
             else:
-                parent_list = self.parent_section.get_descendants()
-                posts = BlogContent.published.filter(section__in=parent_list)
-        else:
-            posts = BlogContent.published.all()
+                posts = BlogContent.published.all()
+            
+            tags = list(self.tags.all())
+            if tags:
+                posts = posts.filter(tags__in=tags)
+            return posts[:self.latest_entries]
         
-        tags = list(self.tags.all())
-        if tags:
-            posts = posts.filter(tags__in=tags)
-        return posts[:self.latest_entries]
+        def get_section(self):
+            return self.parent_section
     
-    def get_section(self):
-        return self.parent_section
-
+        
+        
+    class SectionPlugin(CMSPlugin):
     
+        section_count = models.IntegerField(default=None, blank=True,null=True, help_text=('The number of sections to be displayed.'))
+        parent_section = models.ForeignKey(BlogParent,null=True,blank=True)
     
-class SectionPlugin(CMSPlugin):
-
-    section_count = models.IntegerField(default=None, blank=True,null=True, help_text=('The number of sections to be displayed.'))
-    parent_section = models.ForeignKey(BlogParent,null=True,blank=True)
-
-    def __unicode__(self):
-        return str(self.section_count)
-
-    def get_sections(self):
-        if self.parent_section:
-            sections = self.parent_section.get_children()
-        else:
-            sections = BlogParent.objects.all(~Q(title='Orphan'),level=0)
-        if self.section_count:
-            return sections[:self.section_count]
-        return sections
-
-class ContactPlugin(CMSPlugin):
-    to_email = models.EmailField(default= 'captain@piratelearner.com')
-    thanks_text = models.CharField(max_length=100,default = 'Thanks for reaching out to Us. We will get back to you soon.')
-    def __unicode__(self):
-        return 'ContactPlugin'
-    def thanks(self):
-        return self.thanks_text
+        def __unicode__(self):
+            return str(self.section_count)
+    
+        def get_sections(self):
+            if self.parent_section:
+                sections = self.parent_section.get_children()
+            else:
+                sections = BlogParent.objects.all(~Q(title='Orphan'),level=0)
+            if self.section_count:
+                return sections[:self.section_count]
+            return sections
+    
+    class ContactPlugin(CMSPlugin):
+        to_email = models.EmailField(default= 'captain@piratelearner.com')
+        thanks_text = models.CharField(max_length=100,default = 'Thanks for reaching out to Us. We will get back to you soon.')
+        def __unicode__(self):
+            return 'ContactPlugin'
+        def thanks(self):
+            return self.thanks_text
 
 
 def get_published_count(user = None):
@@ -376,3 +379,8 @@ class Migration(DataMigration):
         	"Write your forwards methods here."
         	BlogParent.objects.rebuild()
 """
+
+if not reversion.is_registered(BlogContent):
+    reversion.register(BlogContent,fields=["title","data"])
+if not reversion.is_registered(BlogParent):
+    reversion.register(BlogParent,fields=["title","data"])

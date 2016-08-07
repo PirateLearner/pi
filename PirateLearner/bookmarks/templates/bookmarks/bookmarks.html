@@ -1,58 +1,72 @@
 {% extends "bookmarks/base.html" %}
-{% load cms_tags staticfiles sekizai_tags menu_tags %}
+{% load staticfiles %}
 
 {% block bookmark_content %}
 
-{% load url from future %}
-{% load thumbnail %}
-<div class="row main-content-wrapper">  	
-   	<div class="content-area clearfix">
-   		<div class="col-sm-12 col-md-8 col-lg-9">
-
-	<div id="grid" class="row grid">
-		   	<div class="page-title">
-			<h2>Bookmarks</h2>
-		</div>
-	
-		<!-- Stacked Featured posts for this section -->
-		{% for node in bookmarks %}
-		<div class="col-xs-6 col-sm-4 col-md-4" data-groups='["bookmarks"]'>
-			<div class="media feature content-block-bookmark paper">
-				<div class="unit-tile-image">
-					<a  class="" href="{{node.get_absolute_url}}" rel="nofollow">
-						<img src="{{ node.get_image_url }}" alt="Knowledge transfer"/>
-					</a>
-				</div>
-        		<div class="unit-tile-title">
-					<a class="title" href="{{node.get_absolute_url}}" rel="nofollow">
-					 	{{ node.title }}
-					</a>
-				</div>
-				<div class="unit-tile-blurb-box">
-					<div class="unit-tile-blurb-text">{{ node.get_description }}</div>
-				</div>
-            	<div class="unit-tile-tags">
-					{% for tag in node.get_tags %}
-					 	<a href="{{ tag.url }}"> {{ tag.name }}</a> &nbsp;
-						{% endfor %}
-				</div>
-				
-				<div class="unit-tile-stats"></div>
-				<div class="unit-tile-call">
-					<a href="{{node.get_absolute_url}}"><span>Read summary</span></a>
-					<a href="{{node.get_external_url}}" rel="nofollow"><span>Go to website</span></a>
-				</div>
-            </div>	                
+<div class="mB-120 ">
+      <div class="section section--hero">
+        <div class="section__block fixed-width">
+          <div class="section--hero__text">
+            <h2 class="hero__title">Bookmarks.</h2>
+            <p class="hero__subtitle">
+              List of URL's specifically colled for you!!!.
+            </p>
+          </div>
         </div>
-        {% endfor %}
-        <!-- sizer -->
-  		<div class="col-xs-6 col-sm-4 col-md-4 shuffle_sizer"></div>  					
-	</div>
-	</div>
-	   	</div>
-</div>	
-	
-	<script src="{{ STATIC_URL }}js/debounce.js"></script>
-    <script src="{{ STATIC_URL }}js/shuffle/jquery.shuffle.js"></script>
-<script type="text/javascript" src="/static/static/js/bookmark_shuffle.js"> </script>
+      </div>
+      <div class="section fixed-width mdl-grid">
+		{% if bookmarks %} {% comment %} Display the list {% endcomment %}      
+		    {% include "common/pagination.html" with nodes=bookmarks %}
+		            
+		    {% for item in bookmarks %}
+		    <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--4-col-phone">
+                <div class="content-wrapper">
+                    <a class="card" href="{{item.get_absolute_url}}">
+                        <div class="mdl-card author-card--sm bS-1 wFull">
+                            <div class="pA16 column center">
+	                            {% with img_url=item.get_image_url %}
+	                            {% if img_url %}
+	                                <div class="avatar md border" style="background: url('{{ img_url }}') center / cover;">
+	                                </div>
+	                            {% else %}
+	                            <div class="avatar md border">
+	                                <svg height="90" width="90" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+	                                    <path d="M24 8c-4.42 0-8 3.58-8 8 0 4.41 3.58 8 8 8s8-3.59 8-8c0-4.42-3.58-8-8-8zm0 20c-5.33 0-16 2.67-16 8v4h32v-4c0-5.33-10.67-8-16-8z"/><path d="M0 0h48v48h-48z" fill="none"/>
+	                                </svg>
+	                            </div>
+	                            {% endif %}
+	                            {% endwith %}
+                                <div class="title-text text-center">
+                                    {{ item.title }}
+                                </div>
+				                <div class="extras">
+				                {% for tag in item.get_tags %}
+				                    <span class="text">#{{ tag.name }}</span>
+				                {% endfor %}
+				                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+		    </div>
+		    {% endfor%}
+		    {% include "common/pagination.html" with nodes=bookmarks %}
+		{% else %}  {% comment %} Display the notification {% endcomment %}
+    		<div class="mdl-cell mdl-cell--12-col">
+		        <div class="p-card">
+		            <div class="search-stats">        
+		                Sorry, no results for
+		            </div>
+		            <div class="search-title">
+		                <h3>{{result_title}}</h3>
+		            </div>
+		            <div class="search-stats oops-message">
+		            </div>
+		        </div>
+		    </div>
+		{% endif %}
+      </div>
+      
+</div>
+
 {% endblock %}	

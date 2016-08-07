@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tags %}
+{% load humanize %}
+
+{% block title %}
+Inbox
+{% endblock %}
+
+{% block content %}
+
+
+<div class="mB-120">
+      <div class="section section--hero">
+        <div class="section__block fixed-width">
+          <div class="section--hero__text">
+            <h2 class="hero__title">Inbox.</h2>
+            <p class="hero__subtitle">
+              View all of your private messages here.
+            </p>
+          </div>
+        </div>
+      </div>
+
+{% comment %}  
+<!-- show tabs -->
+<div class="pB8">
+	<div class="_layout">
+		<div class="md-tabs">
+			<div class="md-tabs__tab-bar">
+				<div class="md-tabs__tab is-static">
+					<span class="tab-label">Inbox</span>
+				</div>			
+			{% for tab in query_tabs %}
+				<a href="{{ tab.url }}" class="md-tabs__tab {{ tab.css }}" title="{{ tab.help_text }}">
+					<span class="tab-label bL">{{ tab.name }}</span>
+				</a>
+			{% endfor %}
+			</div>
+		</div>				
+	</div>	
+</div>
+{% endcomment %}
+<section id="id-section-main" class="pA8">
+	<div class="dashboard__post mdl-grid">
+		<div class="mdl-card mdl-cell mdl-cell--12-col">							
+		{% if threads %} {% comment %} Display the list {% endcomment %}
+				{% comment %} Pagination {% endcomment %}				
+			<div class="mdl-card__supporting-text stats-text">		            
+				<span>{{ threads.paginator.count }} results for </span>
+				<strong>private messages</strong>
+			</div>
+			{% if threads.paginator.num_pages > 1 %}
+				<div class="mdl-card__supporting-text pTB0 mdl-color-text--grey-600">		            
+					{% include "common/pagination.html" with nodes=threads getvars=getvars only %}
+				</div>
+			{% endif %}
+			
+			{% comment %} Article list table {% endcomment %}
+			<div class="table--large mdl-color-text--grey-800 mB-16">
+				<table class="mdl-data-table mdl-js-data-table wSn">
+					<tbody id="id-tbody">
+						{% for thread in threads %}
+	            		{% get_user request.user thread as sender %}
+						<tr data-id={{ thread.id }}>
+							<td>{{ forloop.counter }}</td>
+							<td class="non-numeric fS16">
+								<img class="img-circle" src="{{ sender.profile.get_avatar_url }}"  alt="..." style="width:30px;height:30px;">
+							</td>
+							<td class="non-numeric fS16">
+								<a href="{% url 'messages:thread_messages' thread.pk %}">{{ sender.profile.get_profile_name|title }}</a>
+							</td>
+							<td class="non-numeric">
+								<a href="{% url 'messages:thread_messages' thread.pk %}">{{ thread.last_message.body|truncatewords:"10" }}</a>
+							</td>
+							<td title="{{ thread.updated|naturaltime }}">
+							{% get_message_count user thread as counts%}
+							{% if counts != 0 %}
+							<i class="material-icons mdl-badge mdl-badge--overlap" data-badge="{{ counts }}">chat</i>
+							{% endif %}
+							<span>{{ thread.updated|naturaltime }}</span></td>
+
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			{% comment %} Pagination {% endcomment %}
+			{% if threads.paginator.num_pages > 1 %}
+			<div class="mdl-card__supporting-text pTB0 mdl-color-text--grey-600">		            
+				{% include "common/pagination.html" with nodes=threads getvars=getvars only %}
+			</div>
+			{% endif %}
+		{% else %}  {% comment %} Display the notification {% endcomment %}
+			<div class="">
+				<div class="search-stats">        
+					Sorry, no results for
+				</div>
+				<div class="search-title">
+					<h3>private messages</h3>
+				</div>
+				<div class="search-stats oops-message">	            
+				</div>
+			</div>
+		{% endif %}					
+		</div>					
+	</div>	
+</section>
+
+
+</div>
+
+{% endblock %}

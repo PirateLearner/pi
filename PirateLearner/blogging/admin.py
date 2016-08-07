@@ -1,7 +1,7 @@
 from django.contrib import admin
 from mptt.admin import MPTTModelAdmin
 from blogging.models import BlogParent,BlogContentType,BlogContent
-from blogging.forms import PostForm, ParentForm
+#from blogging.forms import PostForm, ParentForm
 
 from django.conf import settings
 
@@ -26,7 +26,7 @@ class ParentAdmin(MPTTModelAdmin):
     list_display = ('title', 'parent', 'level')
     list_filter = ['parent']
     search_fields = ['title']
-    form = ParentForm
+#     form = ParentForm
     ordering = ['title']
     prepopulated_fields = {'slug': ('title',), }
 

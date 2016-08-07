@@ -1,15 +1,21 @@
-from django.conf.urls import *
+from django.conf.urls import url, include
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 from django.conf import settings
-from cms.sitemaps import CMSSitemap
 from blogging.sitemaps import BlogSitemap,BlogParentSitemap
 from bookmarks.sitemaps import BookmarkSitemap
 from django.utils.functional import curry
 from django.views.defaults import *
+from django.conf.urls.static import static
+from django.contrib.auth.views import logout
+from django.contrib.sitemaps.views import sitemap
+from django.views.generic import TemplateView
 
 from blogging.models import BlogContent
+from dashboard.views import custom_login
+from blogging.views import ContactUs
+from utils import tags
 
 tip_dict = {
     'model': BlogContent,
@@ -22,11 +28,13 @@ handler500 = curry(server_error, template_name='error_404.html')
 handler404 = curry(page_not_found, template_name='error_404.html')
 handler403 = curry(permission_denied, template_name='error_404.html')
 
+sitemaps =  {'blog':BlogSitemap,'sections':BlogParentSitemap,'bookmarks':BookmarkSitemap}
+
 admin.autodiscover()
 
 urlpatterns = i18n_patterns('',
 #    url(r'^polls/', include('polls.urls')),
-    url(r'^ckeditor/', include('ckeditor.urls')),
+    url(r'^ckeditor/', include('ckeditor_uploader.urls')),
     url(r'^C/', include('blogging.urls',namespace='blogging')),
     url(r'^dashboard/', include('dashboard.urls',namespace='dashboard')),
     url(r'^bookmarks/', include('bookmarks.urls',namespace='bookmarks')),
@@ -40,17 +48,22 @@ urlpatterns = i18n_patterns('',
     #url(r'^user/', include('user_mgmt.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^select2/', include('django_select2.urls')),
-    url(r'^accounts/login/$', 'dashboard.views.custom_login'),
-    url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',{'next_page': '/'}),
+    url(r'^accounts/login/$', custom_login),
+    url(r'^accounts/logout/$', logout,{'next_page': '/'}),
     url(r'^accounts/', include('allauth.urls')),
-    url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': {'cmspages': CMSSitemap,'blog':BlogSitemap,'sections':BlogParentSitemap,
-                                                                                  'bookmarks':BookmarkSitemap}}),
-    url(r'^', include('cms.urls')),
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps':sitemaps}),
+    url(r'^search/tags/?$', tags, name="tags-ajax"),
+    url(r'^contact/?$', ContactUs,name="contact"),
+    url(r'^about/?$', TemplateView.as_view(template_name='about.html'),name="about"),
+    url(r'^faq/?$', TemplateView.as_view(template_name='faq.html'),name="faq"),
+    url(r'^$', TemplateView.as_view(template_name='home.html'),name="home"),
 )
 
 # This is only needed when using runserver.
 if settings.DEBUG:
-    urlpatterns = patterns('',
-    url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
-) + staticfiles_urlpatterns() + urlpatterns
+#     urlpatterns = patterns('',
+#     url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
+#         {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
+# ) + staticfiles_urlpatterns() + urlpatterns
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

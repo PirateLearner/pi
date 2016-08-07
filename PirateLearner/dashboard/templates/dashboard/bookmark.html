@@ -3,6 +3,26 @@
 {% load bookmark_tags %}
 
 {% block content %}
+
+<div class="mB-120 ">
+      <div class="section section--hero">
+        <div class="section__block fixed-width">
+          <div class="section--hero__text">
+            <h2 class="hero__title">Bookmarks.</h2>
+            <p class="hero__subtitle">
+              Your bookmarks and their visibility is shown here.
+            </p>
+          </div>
+        </div>
+      </div>
+	<div class="section fixed-width mdl-grid">
+		<div class="mdl-cell mdl-cell--8-col section__block">
+			{% render_bookmark_pages request.user %}
+		</div>
+	</div>           
+</div>
+
+{% comment %} 
 <div class="container-fluid">
     <div class="row">
 		{% include 'leftbar.html' with active="bookmark" %}
@@ -13,4 +33,5 @@
         </div>
     </div>
 </div>
+{% endcomment %}
 {% endblock %}

@@ -1,3 +1,53 @@
 {% extends "base.html" %}
 
+{% block body %}
+<div class="mdl-color--grey-100 mdl-color-text--grey-700">
 
+<section class="centered">
+	<div class="head__banner small">
+		<div class="mdl-layout-title logo site-name">
+	    	<a href="/">pirate learner</a>
+		</div>
+	</div>				
+</section>
+<div id="priSect" class="pT8 pB16">
+	<div class="_layout layout-L mdl-grid">			
+		<section class="__c mdl-cell mdl-cell--12-col pA0">
+			<div class="banner">
+			{% block main %}{% endblock %}		
+			</div>
+			
+			<footer class="mdl-mini-footer">
+				<div class="mdl-mini-footer__left-section">
+					<ul class="mdl-mini-footer__link-list">
+				    	<li><a href="#">About</a></li>
+				    	<li><a href="#">Privacy & Terms</a></li>
+				    	<li><a href="#">Help</a></li>
+				    </ul>
+				</div>				
+			</footer>
+
+		</section>			
+	</div>		
+</div>
+</div>
+        <div class="section section--support section--grey">
+          <div class="main-aux">
+            <div class="mdl-grid">
+              <div class="mdl-cell mdl-cell--6-col help-item">
+                <h3> Questons?</h3>
+                <p>
+                  Check out the <a href="{% url "about" %}">About Us</a>
+                </p>
+              </div>
+              <div class="mdl-cell mdl-cell--6-col help-item">
+                <h3>Intereseted?</h3>
+                <p>
+                  Reach out to us at <a href="{% url "contact" %}">Contact</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+{% endblock %}

@@ -79,7 +79,7 @@ class UserProfile(BaseContentClass):
     """
     User profile populated using social account from Facebook, Google and Twitter respectively.
     """
-    user = models.OneToOneField(User, related_name='profile')
+    user = models.OneToOneField(User, related_name='profile',on_delete = models.CASCADE)
     address = models.TextField(null=True)
     occupation = models.IntegerField(choices=OCCUPATION,default = 0)
     website = models.CharField(max_length = 100,blank=True,null=True)

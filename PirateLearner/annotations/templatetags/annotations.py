@@ -8,9 +8,9 @@ import annotations
 
 from django.conf import settings
 from django.template import Node
-from django.core import context_processors
+from django.template import context_processors
 from django.template.loader import get_template
-from annotations.models import get_annotation_for_model
+# from annotations.models import get_annotation_for_model
 
 register = template.Library()
 
@@ -44,7 +44,7 @@ def annotation_count(content_object):
 
     You can use this instead of the ``{% get_annotation_count for [object] as [varname]  %}`` tag.
     """
-    return get_annotation_for_model(content_object).count()
+#     return get_annotation_for_model(content_object).count()
 
 
 class AnnotationList(Node):

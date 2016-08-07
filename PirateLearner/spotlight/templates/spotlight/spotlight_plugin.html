@@ -1,36 +1,24 @@
-{% load url from future %}
-{% load thumbnail %}
-
-{% for node in instance.get_spotlights %}
+{% load staticfiles %}
 
 
-	<div class="media feature content-block-featured paper unit-tile-2">
-		<div class="ribbon-custom-wrap">
-			<div class="ribbon-custom">
-				<div class="ribbon-custom-fabric">
-					<div class="ribbon-custom-content--vertical">Featured</div>
-				</div>
-			</div>    
-		</div>
-		
-	    <div class="unit-tile-image">
-	   		<a href="{{ node.content_object.get_absolute_url }}" class="unit-tile-image__link">
-	   			<img src="{{ node.content_object.get_image_url }}" alt="SpotLight"/>
-	   		</a>
-   		</div>                   
-		<div class="unit-tile-title">
-			<a href="{{ node.content_object.get_absolute_url }}" class="unit-tile-title__link">{{ node.content_object.get_title }}</a>
-		</div>                                                                   
-		<div class="unit-tile-blurb-box">                                     
-			<div class="unit-tile-blurb-text"> 
-				{{ node.content_object.get_summary }}
-			</div>                                              
-		</div>                                                                
-		<div class="unit-tile-tags">
-			{% for tag in node.content_object.get_tags %}
-			 	<a href="{{ tag.url }}"> {{ tag.name }}</a>
-			{% endfor %}
-		</div>                                     
-		<div class="unit-tile-author"></div>                                                                                                     
-	</div>
-{% endfor %} 
+<div class="mdl-grid fixed-width">
+{% for el in articles %}
+      <div class=" section__block mdl-cell mdl-cell--6-col mdl-cell--12-col-tablet img_container">
+        <img src="{{ el.content_object.get_image_url }}" alt="" />
+      </div>
+      <div class=" section__block mdl-cell mdl-cell--6-col mdl-cell--12-col-tablet ">
+        <h3 class="heading mdl-typography--font-light"> {{ el.content_object.get_title }} </h3>
+        <p>
+          {{ el.content_object.get_summary }}
+        </p>
+        <div class="">
+          <a href="{{ el.content_object.get_absolute_url }}" class="feature-button mdl-button mdl-js-button mdl-button--raised">
+            Read more
+          </a>
+        </div>
+      </div>
+{% endfor %}
+{% if separator %}
+    <div class="section--separator"></div>
+{% endif %}
+</div>

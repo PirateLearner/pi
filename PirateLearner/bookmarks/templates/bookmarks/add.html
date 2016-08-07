@@ -1,65 +1,86 @@
 {% extends "bookmarks/base.html" %}
 
 {% block extra_script %}
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/css/forms.css"/>
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/css/widgets.css"/>
-<script type="text/javascript" src="/admin/jsi18n/"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/core.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/admin/RelatedObjectLookups.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/jquery.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/jquery.init.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/actions.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/calendar.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/admin/DateTimeShortcuts.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}js/bookmark.js"></script>
 
 {{ bookmark_form.media }}
+<script type="text/javascript" src="{{ STATIC_URL }}js/bookmark.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}ckeditor/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}ckeditor/ckeditor-init.js"></script>
 
 {% endblock %}
 
 
-{% load cms_tags staticfiles sekizai_tags menu_tags %}
+{% load staticfiles %}
 
 
 {% block bookmark_content %}
 
-{% if messages %}
-<ul class="messages" id="message_head">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %} >{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
+<div class="mB-120 ">
+      <div class="section section--hero">
+        <div class="section__block fixed-width">
+          <div class="section--hero__text">
+            <h2 class="hero__title">Bookmark.</h2>
+            <p class="hero__subtitle">
+              Create the bookmark of sites that interests you by entring the URL!!!.
+            </p>
+          </div>
+        </div>
+      </div>
+      
+    <div class="section fixed-width mdl-grid">
+        <div class="mdl-cell mdl-cell--8-col section__block section__block--form">
+        <form action="/en/bookmarks/add/" id="id-BookmarkInstanceForm" method="POST" class="formbox">
+            {% csrf_token %}
+                <div class="form__field form__field--name" id="div_id_url">
+                  <label for="id_url" class="form__outer-label">URL :</label>
+                  <div class="mdl-textfield mdl-js-textfield is-upgraded">
+                    <input class="mdl-textfield__input" id="id_url" name="url" type="url" value="{% if form.url.value %}{{ form.url.value }}{% endif %}" required>
+                    <span class="formbox__errors {% if form.url.errors %} is-visible {% endif %}">{{ form.url.errors }}</span>
+                  </div>
+                </div>
 
-<div class="message hidden" id = "flash_message">
-	<div class = "alert-info hidden" id = "flash_info">
-		<p></p>
-     </div>
+                <div class="form__field form__field--name" id="div_id_folder" >
+                    <label for="folder" class="form__outer-label">Folder:</label>
+                    <div class="material-select mdl-textfield mdl-js-textfield mdl-textfield--floating-label">{{ form.folder }}</div>
+                    <span class="formbox__errors {% if form.folder.errors %} is-visible {% endif %}">{{ form.folder.errors }}</span>
+                 </div>
+                 
+                <div class="form__field form__field--name" id="div_id_title">
+                  <label for="id_title" class="form__outer-label">Title :</label>
+                  <div class="mdl-textfield mdl-js-textfield is-upgraded">
+                    <input class="mdl-textfield__input" id="id_title" name="title" type="text" value="{% if form.title.value %}{{ form.title.value }}{% endif %}" required>
+                    <span class="formbox__errors {% if form.title.errors %} is-visible {% endif %}">{{ form.title.errors }}</span>
+                  </div>
+                </div>
+                <div class="form__field form__field--message" id="div_id_description">
+                  <div class="mdl-textfield mdl-js-textfield ">
+                    <textarea class="mdl-textfield__input" rows="3" id="id_description" name="description"></textarea>
+                    <label class="mdl-textfield__label" for="id_description">Description of Bookmark</label>
+                    <span class="formbox__errors {% if form.description.errors %} is-visible {% endif %}">{{ form.description.errors }}</span>
+                  </div>
+                </div>                      
 
-	<div class = "alert-danger hidden" id = "flash_danger">
-		<p></p>
-     </div>
+                <div class="form__field form__field--message" id="div_id_note">
+                <label class="form__outer-label" for="id_note"> Note: </label>
+                  <div class="mdl-textfield mdl-js-textfield ">
+                    {{ form.note }}
+                    <span class="formbox__errors {% if form.note.errors %} is-visible {% endif %}">{{ form.note.errors }}</span>
+                  </div>
+                </div>                      
 
-	<div class = "alert-warning hidden" id = "flash_warning">
-		<p></p>
-     </div>
-
-	<div class = "alert-success hidden" id = "flash_success">
-		<p></p>
-     </div>
+                <input id="id_image_url" name="image_url" required="False" type="hidden" />
+                <div class="form__field form__field--name" id="div_id_privacy_level">
+                    <label for="id_privacy_level" class="form__outer-label">Privacy:</label>
+                    <div class="material-select mdl-textfield mdl-js-textfield mdl-textfield--floating-label">{{ form.privacy_level }}</div>
+                    <span class="formbox__errors {% if form.privacy_level.errors %} is-visible {% endif %}">{{ form.privacy_level.errors }}</span>
+                 </div>
+                {% include "tags.html" with form=form %}
+            <div class="form__field form__field--submit pT40">
+                <input class="feature-button feature-button--submit mdl-button mdl-js-button mdl-button--raised" name="submit" value="Submit" type="submit">
+            </div>
+        </form>
+        </div>
+    </div>
 </div>
-
-<div class="container-fluid" >
-	<div class="row">
-	    {% include 'leftbar.html' with active="create_bookmark" %}
-
-	<div class="col-md-8 pT-50">
-		{% load crispy_forms_tags %}
-		{% crispy bookmark_form bookmark_form.helper %}
-	</div>
-	</div>
-</div>
-
-
 
 	{% endblock %}	

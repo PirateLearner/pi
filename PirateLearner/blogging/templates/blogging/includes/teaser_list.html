@@ -1,9 +1,49 @@
-{% load url from future %}
-{% load thumbnail %}
 {% load voting_tags %}
 {% load humanize %}
 
+{% if nodes|length > 0 %}
+	{% for node in nodes %}
+    <div class="content__item content__item--teaser mdl-shadow--2dp">
+      <div class="teaser__image border-1px" style="background-image: url('{{ node.get_image_url }}')">
+      </div>
+      <div class="teaser__body">
+        <h3 class="teaser__title">
+          <a href="{{node.get_absolute_url}}">{{ node.title }}</a>
+        </h3>
+        <div class="teaser__extract">
+          {{ node.get_summary }}
+        </div>
+        <div class="teaser__action">
+        
+    			{% for tag in node.get_tags %}
+		          <button onclick="window.location.href='{{ tag.url }}'" class="mdl-button mdl-button--icon tags-button">
+		    		<i>{{ tag.name }}</i>
+				  </button>
+    			{% endfor %} 
+        
+		  {% score_for_object node as score %}
+		  <div class="material-icons mdl-badge " data-badge="{{ score.score }}" title="votes">thumb_up</div>
+        </div>
+      </div>
+    </div>
+	{% endfor %}
+{% else %}
+   <div class="">
+    <div class="search-stats">        
+        Sorry, no results for
+    </div>
+    <div class="search-title">
+        <h3>{{ page.title }}</h3>
+    </div>
+    <div class="search-stats oops-message">             
+    </div>
+</div>
 
+{% endif %}
+
+
+
+{% comment %}  
 <section  id="section-view">
 		{% if nodes|length > 0 %}
 			{% for node in nodes %}
@@ -62,3 +102,4 @@
 {% endif %}
 
 </section>
+{% endcomment %}

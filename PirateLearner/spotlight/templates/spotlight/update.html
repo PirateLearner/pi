@@ -19,7 +19,7 @@
 {% endblock %}
 
 
-{% load cms_tags staticfiles sekizai_tags menu_tags %}
+{% load staticfiles %}
 
 
 {% block content %}
@@ -32,7 +32,7 @@
 </ul>
 {% endif %}
 
-{% load crispy_forms_tags %}
-
+{% comment %} 
 {% crispy bookmark_form bookmark_form.helper %}
+{% endcomment %}
 {% endblock %}	

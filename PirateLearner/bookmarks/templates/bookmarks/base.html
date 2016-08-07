@@ -1,19 +1,12 @@
 {% extends "base.html" %}
-{% load cms_tags staticfiles sekizai_tags menu_tags %}
+{% load staticfiles%}
 {% load wishlist %}
 
 {% block title %}Bookmarks{% endblock title %}
 
-{% block breadcrumb %}
-        {% block blog_breadcrumb %}
-        {% endblock blog_breadcrumb %}
-{% endblock %}
 
 {% block content %}
 			{% block bookmark_content %}
    			{% endblock %}
- <!-- Django loaded Javascripts -->
-<script type="text/javascript" src="{{ STATIC_URL }}js/overlay.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}ckeditor/ckeditor/ckeditor.js"></script>
 {% endblock %}
 	

@@ -1,4 +1,8 @@
 '''
 pi-Blogging App version 0.1 (beta)
 '''
-import handlers
+try:
+    import handlers
+except:
+    pass
+

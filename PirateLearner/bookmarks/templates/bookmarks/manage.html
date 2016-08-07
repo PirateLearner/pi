@@ -1,116 +1,154 @@
+
 {% extends "bookmarks/base.html" %}
+{% load staticfiles%}
+
 
 {% block extra_script %}
-
-<script type="text/javascript" src="{{ STATIC_URL }}js/bookmark.js"></script>
-
+<script type="text/javascript" src="{{ STATIC_URL }}js/bookmarks/manage.js"></script>
 {% endblock %}
-
-{% load cms_tags staticfiles sekizai_tags menu_tags %}
 
 
 {% block bookmark_content %}
 
-{% if messages %}
-<ul class="messages" id="message_head">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %} >{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
-
-<div class="message hidden" id = "flash_message">
-	<div class = "alert-info hidden" id = "flash_info">
-		<p></p>
-     </div>
-
-	<div class = "alert-danger hidden" id = "flash_danger">
-		<p></p>
-     </div>
-
-	<div class = "alert-warning hidden" id = "flash_warning">
-		<p></p>
-     </div>
-
-	<div class = "alert-success hidden" id = "flash_success">
-		<p></p>
-     </div>
-</div>
-
-<div class="container-fluid" >
-	<div class="row">
-	    {% include 'leftbar.html' with active="manage_bookmark" %}
-
-	<div class="col-md-8 pT-50">
+<div class="mB-120">
+      <div class="section section--hero">
+        <div class="section__block fixed-width">
+          <div class="section--hero__text">
+            <h2 class="hero__title">Bookmarks.</h2>
+            <p class="hero__subtitle">
+              View your bookmarks privacy and scope here.
+            </p>
+          </div>
+        </div>
+      </div>
 	
-	{% comment %}  Add table with the bookmarks {% endcomment %}
-	<form class="form-horizontal" action="{% url "bookmarks:manage_bookmarks" %}" method="post">
-	{% csrf_token %}
-	   <div class="form-group form-element">
-	   
-		   	<div class="panel panel-default">
-			  <!-- Default panel contents -->
-			  <div class="panel-heading">Manage Bookmarks</div>
-			  <div class="panel-body">
-		    	    <div class="input-group form-horizontal" style="width:100%;">
-		    	    <div class="form-group __row fill">
-
-					<div class="w-80">
-						  <select class="form-control " id="action" name="action">
-						  {% for action in actions %}					  
-						    <option value="{{ action.name }}" >{{ action.name }} -- {{ action.help }}</option>
-						    {% endfor %}
-						  </select>
+	<!-- show tabs -->
+	<div class="pB8">
+		<div class="_layout">
+			<div class="md-tabs">
+				<div class="md-tabs__tab-bar">
+					<div class="md-tabs__tab is-static">
+						<span class="tab-label">Bookmarks</span>
+					</div>			
+				{% for tab in query_tabs %}
+					<a href="{{ tab.url }}" class="md-tabs__tab {{ tab.css }}" title="{{ tab.help_text }}">
+						<span class="tab-label bL">{{ tab.name }}</span>
+					</a>
+				{% endfor %}
+				</div>
+			</div>				
+		</div>	
+	</div>
+	
+	<section id="id-section-main" class="pA8">
+		<div class="dashboard__post mdl-grid">
+			<div class="mdl-card mdl-cell mdl-cell--12-col">							
+			{% if bookmarks %} {% comment %} Display the list {% endcomment %}
+					{% comment %} Pagination {% endcomment %}				
+				<div class="mdl-card__supporting-text stats-text">		            
+					<span>{{ bookmarks.paginator.count }} results for </span>
+					<strong>{{result_title}}</strong>
+				</div>
+				{% if bookmarks.paginator.num_pages > 1 %}
+					<div class="mdl-card__supporting-text pTB0 mdl-color-text--grey-600">		            
+						{% include "common/pagination.html" with nodes=bookmarks getvars=getvars only %}
 					</div>
-					<div>
-					      <input type="submit" name="Submit" class="btn btn-default"></input>
-					</div>
-					</div>
-					    </div><!-- /input-group -->
-		  	 		</div>
-		
-		  	  	<!-- Table -->
-		  		<table class="table table-striped">
-		    		  <thead>
-					    <tr>
-					      <th>
-					      	<input class="vL-m" type="checkbox" name="checkall" id="Checkall_id" >
-					      </th>
-					      <th>Title</th>
-					      <th>Privacy</th>
-					      <th>Promoted</th>
-					    </tr>
-					  </thead>
-					    <tbody>
-					    {% for el in bookmarks %}
-						    <tr>
-						      <td scope="row">
-   			     				<input class="vL-m" type="checkbox" name="selection" id="Checkboxes_id" value="{{ el.id }}">
-						      </td>
-						      <td>
-						      	<a href="{{ el.get_absolute_url }}">{{ el.get_title }}</a>
-						      </td>
-						      <td>{% if el.privacy_level == 'pub' %}
-						      	<span class="glyphicon glyphicon-folder-open" style="color:green" aria-hidden="true"></span>
-						      	{% else %}
-						      	<span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
-						      	{% endif %}
-						      </td>
-						      <td>{% if el.is_promoted %}
-						      	<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
-						      	{% else %}
-						      	<span class="glyphicon glyphicon-remove-circle" style="color:red" aria-hidden="true"></span>
-						      	{% endif %}
-						      </td>
+				{% endif %}
+	            {% if request.user.is_staff %}
+	            <div class="wFull mH-auto mT-16">
+	                <form id="id-action" class="formbox">
+	                    <div class="form__field form__field--name">
+	                        <div class="material-select mdl-textfield mdl-js-textfield mdl-textfield--floating-label ">
+	                            <select name="action" id="id_action" required>
+	                               {% for el in actions %}
+	                               <option value="{{ el.name }}">{{ el.name }} -- {{ el.help }}</option>
+	                               {% endfor %}
+	                            </select>
+	                        </div>
+	                        <div class="feature-button feature-button--submit mdl-button mdl-js-button mdl-button--raised" id="id-action-btn"  
+	                        data-url='{% url "bookmarks:manage_bookmarks" %}'>Save</div> 
+	                     </div>
+	                </form>
+	                <div id="id-div-status" class="row hidden">
+	                    <div class="mR-10">
+	                        <i id="id-status-icon" class="material-icons icon" role="presentation"></i>
+	                    </div>
+	                    <div id="id-status-text" class="">
+	                        
+	                    </div>
+	                </div>              
+	                <div id="id-div-loading" class="progress-bar mdl-progress mdl-js-progress mdl-progress__indeterminate hidden"></div>
+	            </div>          
+	            {% endif %}
+				{% comment %} Article list table {% endcomment %}
+				<div class="table--large mdl-color-text--grey-800 mB-16">
+					<table class="mdl-data-table mdl-js-data-table {% if request.user.is_staff %}mdl-data-table--selectable{% endif %}  wSn">
+						<thead>
+							<tr>
+						    	<th>#</th>
+						    	<th class="non-numeric">Title</th>
+						    	<th class="non-numeric">Added By</th>
+						    	<th class="non-numeric">Privacy</th>
+						    	<th class="non-numeric">Promoted</th>
 						    </tr>
-						{% endfor %}
+						</thead>						
+						<tbody id="id-tbody">
+							{% for bookmark in bookmarks %}
+							<tr data-id={{ bookmark.id }}>
+								<td>{{ forloop.counter }}</td>
+								<td class="non-numeric fS16">
+									<a href="{{ bookmark.get_absolute_url }}" title="View bookmark">{{ bookmark.get_title }}</a>
+								</td>
+								<td class="non-numeric fS16">
+									<a href="{% url "dashboard:dashboard-profile" bookmark.user.id %}" title="See user profile">
+									{{ bookmark.user.profile.get_profile_name }}</a>
+								</td>
+								<td class="non-numeric" data-priv-id={{ bookmark.id }}>
+								{% if bookmark.privacy_level == "pub" %}
+									<i class="material-icons mdl-color-text--blue-600" title="public">people</i>
+								{% else %}
+									<i class="material-icons" title="private">person</i>
+								{% endif %}
+								
+								</td>
+								<td class="non-numeric" data-prom-id={{ bookmark.id }}>
+									{% if bookmark.is_promoted %}
+	      					      	<i class="material-icons mdl-color-text--green-600" title="promoted">check</i>
+	      					      	{% else %}
+	      					      	<i class="material-icons mdl-color-text--red-300" title="Not promoted" >close</i>
+	      					      	{% endif %}
+								</td>
+							</tr>
+							{% endfor %}
 						</tbody>
-		  		</table>
-			</div>
-	</div>
-	</div>
+					</table>
+				</div>
+				{% comment %} Pagination {% endcomment %}
+				{% if bookmark.paginator.num_pages > 1 %}
+				<div class="mdl-card__supporting-text pTB0 mdl-color-text--grey-600">		            
+					{% include "common/pagination.html" with nodes=bookmarks getvars=getvars only %}
+				</div>
+				{% endif %}
+			{% else %}  {% comment %} Display the notification {% endcomment %}
+				<div class="">
+					<div class="search-stats">        
+						Sorry, no results for
+					</div>
+					<div class="search-title">
+						<h3>{{result_title}}</h3>
+					</div>
+					<div class="search-stats oops-message">	            
+					</div>
+				</div>
+			{% endif %}					
+			</div>					
+		</div>	
+	</section>
+
+    {% url "bookmarks:add_bookmark" as url %}
+    {% include "common/button-floating-add.html" with url=url %}
+
+
 </div>
 
-
-
-	{% endblock %}	
+{% endblock %}

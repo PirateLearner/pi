@@ -1,0 +1,53 @@
+{% extends 'base.html'%}
+{% block content %}
+
+<div class="mB-120 ">
+      <div class="section section--hero">
+        <div class="section__block fixed-width">
+          <div class="section--hero__text">
+            <h2 class="hero__title">Create Tags.</h2>
+            <p class="hero__subtitle">
+              Create Tags that may be associated with the Articles and bookmarks.
+            </p>
+          </div>
+        </div>
+      </div>
+    <div class="section fixed-width mdl-grid">
+        <div class="mdl-cell mdl-cell--8-col section__block">
+        <form action="" method="POST" class="formbox">
+            {% csrf_token %}
+            {% if form.name %}
+                <div class="form__field form__field--name">
+                  <label for="name" class="form__outer-label">Name :</label>
+                  <div class="mdl-textfield mdl-js-textfield is-upgraded">
+                    <input class="mdl-textfield__input" id="name" name="name" type="text" value="{% if form.name.value %}{{ form.name.value }}{% endif %}" required>
+                    <label class="mdl-textfield__label" for="name">Name</label>
+                    <span class="mdl-textfield__error">{{ form.name.errors }}</span>
+                  </div>
+                </div>
+            {% endif %}
+            {% if form.slug %}
+                <div class="form__field form__field--name">
+                  <label for="slug" class="form__outer-label">Slug :</label>
+                  <div class="mdl-textfield mdl-js-textfield is-upgraded">
+                    <input class="mdl-textfield__input" id="slug" name="slug" type="text" value="{% if form.slug.value %}{{ form.slug.value }}{% endif %}">
+                    <label class="mdl-textfield__label" for="slug">Slug</label>
+                    <span class="mdl-textfield__error">{{ form.slug.errors }}</span>
+                  </div>
+                </div>
+            {% endif %}
+            
+            <div class="form__field form__field--submit pT40">
+            {% if form.instance.id %}
+                <a class="feature-button feature-button--delete mdl-button mdl-js-button mdl-button--raised" name="delete" value="delete" href={% url "dashboard:tag-delete" pk=form.instance.id %}>Delete</a>
+            {% endif %}
+                <div class="separator"></div>
+                <input class="feature-button feature-button--submit mdl-button mdl-js-button mdl-button--raised" name="submit" value="Save" type="submit">
+            </div>
+            
+        </form>
+        </div>
+    </div>           
+</div>
+
+{% endblock %}

@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block extra_script %}
+    <script src="{{ STATIC_URL }}js/accordion.js"></script>
+{% endblock %}
+
+{% block content %}  
+         <div class="page-content mdl-grid main-content-wrapper">
+              <div class="mdl-cell mdl-cell--12-col mdl-grid">
+                <div class="section section-intro mdl-cell mdl-cell--12-col">
+                  <h1 class="section__title"> Frequently Asked Questions </h1>
+                </div>
+                <div class="section mdl-cell mdl-cell--12-col">
+                  <figure>
+                    <img alt="" src="{{ STATIC_URL }}images/vision.png" style="max-width: 120px">
+                  </figure>
+                  <h3 class="faq-section__title"> Vision Statement </h3>
+                  <p class="faq-section__body"> To create a one stop place to learn, from theory to practice in a pragmatic way,
+                     driven by the community for the community itself.
+                  </p>
+                </div>
+                <div class="section mdl-cell mdl-cell--12-col">
+                  <figure>
+                    <img alt="" src="{{ STATIC_URL }}images/people-icon.png" style="max-width: 120px">
+                  </figure>
+                  <h3 class="faq-section__title"> Who we are? </h3>
+                  <p class="faq-section__body"> We are engineers, now in industry and realizing that everything is connected.
+                    If we cannot see the obvious, it is our ignorance, not that the truth was non-existent before.
+                    But the way education is being imparted, at least in many corners of where we come from, the masters are as ignorant
+                    as their pupils and do not provide enough intellectual stimulation, which makes learning at this stage not just onerous
+                    and burdensome, but also creates a pressure of learning it on our own. Unaided discovery, though the most profound and
+                    fulfilling of all experiences, is painfully slow and we’d like to help you find the right content, and the peers with whose help,
+                    you will arrive at it faster. Just like our coding principles, we believe in ‘DRY’ – Don’t Repeat Yourself.
+                  </p>
+                </div>
+                <div class="section mdl-cell mdl-cell--12-col">
+                  <figure>
+                    <img alt="" src="{{ STATIC_URL }}images/LOGO_V5.svg" style="max-width: 120px">
+                  </figure>
+                  <h3 class="faq-section__title"> Why the name ‘Pirate Learner’? </h3>
+                  <p class="faq-section__body"> Because today we’re living in the world where education has become institutionalized, and everyone,
+                    sooner or later makes it a profit making machinery, with profit driving the central philosophy. We brand ourselves as pirates,
+                    who are learner at hearts and would go to any extent to clinch that panacea of educating anyone who wants to be educated with
+                    the least of trouble in terms of resources – tangible as well as intangible. Profits? Yes, we’d love to, but one ideal is
+                    ingrained in our heads – it will never be at the cost of inconvenience of the people we wish to serve, you.
+                    This place will always be open, and clutter free. If it gets cluttered, let us know, we’ll clean it up again.
+                  </p>
+                </div>
+                <div class="section mdl-cell mdl-cell--12-col" >
+                  <figure>
+                    <img alt="" src="{{ STATIC_URL }}images/todo.png" style="max-width: 120px">
+                  </figure>
+                  <h3 class="faq-section__title"> What we’re trying to do? </h3>
+
+                  <div class="faq-section__body faq-section__list">
+                     <h5> Create a portal </h5>
+                     <span class="faq-section__list_arrow">
+                       <i class="material-icons faq-section__list_icon ">keyboard_arrow_down</i>
+                     </span>
+                  </div>
+                  <div class="faq-section__body faq-section__list_des is-collapsed">
+                    <p>A community, as the center stone of our entire project, is what we intend to create.
+                    An organic community where each one benefits from the experiences of the other. You might ask that we have Google for that,
+                    but internet is so full of information, right and wrong, that it is hard to tell and even harder to find everything that clicks.
+                    The moderators, and the ranking system will ensure that only the most useful content is presented to you first. If you find another way,
+                     write it for the others. Our editors will constantly be updating the main content from the tid-bits of wisdom from each pearl and stringing
+                     a beautiful necklace. Structuring is a problem in information, and it is hard to tell what to start from and where. We’ve, for our reference,
+                     taken our course curriculum and a uniform book structure, and would proceed in that way. By doing this, we’ve effectively overcome the initial
+                     hurdle of finding the right sequence. But what extra we’ve done is to establish links, to explain why it is that particular order, other than
+                     of providing ease of direction. Each post would be self-contained but short, so that it can be completed in a relatively short time, and much ease.
+                     Further, we’ll be taking help from our textbooks, the good books out of the swarm that we’ve sifted in our days and continue to do so even after
+                     in industry – because there are only a few good books out there. And we’ll quote them heavily and discuss what it implies, so we’ll be a companion
+                     of sorts to those books.  We understand that reading can be a burdensome task, and we are sometimes too diffuse in establishing an analogy.
+                     We hope to bridge this gap by providing interactive videos, images and simulations.
+                    </p>
+                  </div>
+
+                  <div class="faq-section__body faq-section__list">
+                     <h5>  Open Source </h5>
+                     <span class="faq-section__list_arrow">
+                       <i class="material-icons faq-section__list_icon">keyboard_arrow_down</i>
+                     </span>
+                  </div>
+                  <div class="faq-section__body faq-section__list_des is-collapsed">
+                    <p>There are mainly two kinds of creating value. One, create it and give it to the community without charge,
+                      the other is to create value, package it well so the inner workings are hidden, and charge the people for the service. While the latter works,
+                      but its value might be short-lived; the scope of things is controlled by the vision of a select few which is good, and bad. The open source way
+                      gives back to the community, in hope that if it is useful, people will take it, and make it more useful. Thus the open-source way is much like our
+                      human communities where each one takes care of each one by doing what one is capable of. However, we cannot allow a fully open community either,
+                      since, out of much reflection and analysis of world histories, we’ve found that too much distribution is most certainly harmful. It is like the closed
+                      feedback loop in a system which must keep the system in check lest it may become unstable. So, how do we ensure that the feedback loop does not become
+                      faulty itself? By refreshing it often. From time to time, this feedback loop must be checked for wear and tear and our assumptions must be challenged.
+                      Thus, a smaller pool of moderators draws its resources from the large pool of community and keeps doing it from time to time, by random selection or
+                      unanimity based on the sole metric of “using one’s own head”. It will be a Darwinian approach, survival of the fittest, in straight terms. But we hope
+                      that it is the community that survives.
+                    </p>
+                  </div>
+                  <div class="faq-section__body faq-section__list">
+                     <h5> On advertisements </h5>
+                     <span class="faq-section__list_arrow">
+                       <i class="material-icons faq-section__list_icon ">keyboard_arrow_down</i>
+                     </span>
+                  </div>
+                  <div class="faq-section__body faq-section__list_des is-collapsed">
+                    <p>We believe that there are empty walls, and because of them there are advertisements.
+                      Walls musn’t be created for the sole purpose of putting up advertisements. So, for a major part of this project,
+                      it will remain add free, clutter free. Where will advertisements come in? We believe we are making an educational project,
+                      but social networking is a form of recreation too. So, expect a few billboards on the social sides of this project.
+                      There will be no advertisements on pages of educational significance, and everything that can clutter up or distract will
+                      also be absent from those pages. We’ll help you to put your undivided attention on the content when you make up your mind to read it.
+                    </p>
+                  </div>
+
+                  <div class="faq-section__body faq-section__list">
+                     <h5> On culture </h5>
+                     <span class="faq-section__list_arrow">
+                       <i class="material-icons faq-section__list_icon ">keyboard_arrow_down</i>
+                     </span>
+                  </div>
+                  <div class="faq-section__body faq-section__list_des is-collapsed">
+                    <p>Even though it will be a community, treating each individual as an individual,
+                      is our idea. A sense of space, and full control over it, a private area to keep your notes,
+                      a balcony to get an overview of the public area, and an open space to share and grow.
+                    </p>
+                  </div>
+                  <div class="faq-section__body faq-section__list">
+                     <h5> On core competency </h5>
+                     <span class="faq-section__list_arrow">
+                       <i class="material-icons faq-section__list_icon ">keyboard_arrow_down</i>
+                     </span>
+                  </div>
+                  <div class="faq-section__body faq-section__list_des is-collapsed">
+                    <p>We expect ourselves to be community driven, and community maintained. This means that we’ll be open to
+                      all sorts of social experiments, should someone want to conduct one. It will be an organized buffet of
+                      ideas and information, and participation from all and sundry is solicited. Our core competency shall be, to be as accessible to the community as fresh water.
+                    </p>
+                  </div>
+                  <div class="faq-section__body faq-section__list">
+                     <h5> On finances and resources </h5>
+                     <span class="faq-section__list_arrow">
+                       <i class="material-icons faq-section__list_icon ">keyboard_arrow_down</i>
+                     </span>
+                  </div>
+                  <div class="faq-section__body faq-section__list_des is-collapsed">
+                    <p>Right now, we’re few, and we’re employed. So, we give less time but manage it in one way or the other.
+                      But we expect to grow, and with that, we expect to help others grow too. So, in terms of resources,
+                      we’ll always be looking for talent – coders, designer, hobbyists, and writers. About money? We haven’t figured that out yet,
+                      but we wish to do it in a non-invasive manner. ‘No gimmicks, no cheating’ is our Zen. Pirates are not cheaters, they’re quite honest to their trade and so are we.
+                    </p>
+                  </div>
+                </div>
+                <div class="section mdl-cell mdl-cell--12-col">
+                  <figure>
+                    <img alt="" src="{{ STATIC_URL }}images/imrs.php.jpeg" style="max-width: 120px">
+                  </figure>
+                  <h3 class="faq-section__title"> What’s in for you? </h3>
+                  <p class="faq-section__body"> We intend to promote lifelong learning and mentorship. We believe that the true hallmark of an expert is that
+                    he not only understands it fully, but can explain it in so simple terms that even the uninitiated layperson gets the hang of it and arouses
+                    inquisition for them to venture into the field. If that kind of pursuit of excellence doesn’t stir you, I am afraid there isn’t much we can do.
+                    Other than that, since we’re open and open-source, and always want to be, we’re open to new and innovative augments into the community – Coding,
+                    design, experiments, projects, collaboration and what not. We promise, that if you show diligence and promise, we will go the extra mile to make
+                    you feel good and appreciated, not just in the virtual, but in the real life too.
+                  </p>
+                  <p class="faq-section__body">
+                    So, if you feel like contributing, feel free to drop in an email. If you'd like to see our source code and create something better,
+                    here is the link to our github repositiories.
+                  </p>
+                </div>
+                <div class="section mdl-cell mdl-cell--12-col">
+                  <figure>
+                    <img alt="" src="{{ STATIC_URL }}images/Survey.png" style="max-width: 120px">
+                  </figure>
+                  <h3 class="faq-section__title"> What we really want? </h3>
+                  <p class="faq-section__body"> To work from anywhere and anytime. Lots of vacations knowing that there is someone trustworthy who’ll carry
+                    the torch forward with or without us, particularly without us. To have lots of fun, and to allow everyone who connects with us have lots of fun.
+                  </p>
+                </div>
+              </div> <!-- end mdl-cell-12 -->
+        </div> <!-- mdl-grid -->
+{% endblock %}

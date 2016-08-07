@@ -73,10 +73,10 @@ class EventFilter(models.Model):
     Indicates, for a given user, whether to deny action of a given type to a given action.
     """
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("user"))
-    event_type = models.ForeignKey(EventType, verbose_name=_("notice type"))
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("user"),on_delete = models.CASCADE)
+    event_type = models.ForeignKey(EventType, verbose_name=_("notice type"),on_delete = models.CASCADE)
     action = models.CharField(_("action"), max_length=10, choices=EVENT_MEDIA)
-    scoping_content_type = models.ForeignKey(ContentType, null=True, blank=True)
+    scoping_content_type = models.ForeignKey(ContentType, null=True, blank=True,on_delete = models.SET_NULL)
     scoping_object_id = models.PositiveIntegerField(null=True, blank=True)
     scoping = GenericForeignKey("scoping_content_type", "scoping_object_id")
 

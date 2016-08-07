@@ -1,0 +1,16 @@
+{% comment %}  
+    Floating Add item button(circle), displayed at the right bottom should be given the address 
+{% endcomment %}
+{% if request.user.is_authenticated %}
+<div class="floating-btn btm">
+    <div class="jB">
+        <button class="y bg-add button-fab oN" onclick="location.href='{{ url }}?cancel={{request.path}}'">
+            {% include "common/svg/plus.html" %}
+            <span class="visuallyhidden">Add</span>
+        </button>
+        <label class="bTag">
+            <div class="tv">Add</div>
+        </label>
+    </div>
+</div>
+{% endif %}

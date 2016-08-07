@@ -1,1 +1,4 @@
-import handlers
+try:
+    import handlers
+except:
+    pass
