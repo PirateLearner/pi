@@ -34,7 +34,6 @@ from annotations.models import get_annotations_count
 from voting.models import Vote
 # import from pl_messages
 from pl_messages.models import get_notification_count, get_user_notifications
-from cms.test_utils.project.pluginapp.plugins import extra_context
 
 from events.signals import generate_event
 
