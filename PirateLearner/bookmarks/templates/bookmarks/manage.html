@@ -1,9 +1,12 @@
 
 {% extends "bookmarks/base.html" %}
-
-
-
 {% load staticfiles%}
+
+
+{% block extra_script %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/bookmarks/manage.js"></script>
+{% endblock %}
+
 
 {% block bookmark_content %}
 
@@ -51,56 +54,32 @@
 						{% include "common/pagination.html" with nodes=bookmarks getvars=getvars only %}
 					</div>
 				{% endif %}
-				
-				{% comment %}  
-				{% if request.user.is_staff %}
-				<div class="mdl-card wFull mH-auto mT-16">
-					<div id="id-div-action" class="mdl-card__supporting-text">
-						<form id="id-action" class="a-mdl-form">
-							<div class="row aI-c fW-w jC-fs">
-								<div class="mW-512 mR-16">							
-									{% include "crawlers/creator-select2.html" %}							
-								</div>
-								<div class="tAr mT--16">
-									<div class="mdl-button mdl-button--colored" 
-										data-url="{% url 'blogging:manage_articles' %}" id="id-add-article-btn">
-										Submit
-									</div> 
-								</div>
-							</div>
-						</form>					
-					</div>
-				</div>			
-				{% endif %}
-				 {% endcomment %}
-					{% comment %} Add to repository panel
-					<div id="id-div-status" class="div-status row hidden">
-						<div>
-							<i id="id-status-icon" class="material-icons icon" role="presentation"></i>
-						</div>
-						<div id="id-status-text" class="">
-							Status
-						</div>
-					</div>					
-					<div id="id-div-loading" class="hidden">
-						<div id="p2" class="wFull mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>									
-					</div>
-					<div class="tAr">
-						<button id="id-add-btn" class="mdl-button mdl-button--colored hidden">
-					    	Add to repository
-						</button>					
-					</div>
-					<div class="mdl-card__menu">					
-						<button id="id-cancel-btn" class="mdl-button mdl-button--icon">
-				          <!--<i class="material-icons">close</i>-->
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" enable-background="new 0 0 24 24" width="22" height="22" style="fill: #616161;">
-							    <path d="M 5.625 4.21875 L 4.21875 5.625 L 10.59375 12 L 4.21875 18.375 L 5.625 19.78125 L 12 13.40625 L 18.375 19.78125 L 19.78125 18.375 L 13.40625 12 L 19.78125 5.625 L 18.375 4.21875 L 12 10.59375 L 5.625 4.21875 z"/>
-							</svg>				          
-						</button>
-					</div>					
-				</div>
-				{% endcomment %}
-				
+	            {% if request.user.is_staff %}
+	            <div class="wFull mH-auto mT-16">
+	                <form id="id-action" class="formbox">
+	                    <div class="form__field form__field--name">
+	                        <div class="material-select mdl-textfield mdl-js-textfield mdl-textfield--floating-label ">
+	                            <select name="action" id="id_action" required>
+	                               {% for el in actions %}
+	                               <option value="{{ el.name }}">{{ el.name }} -- {{ el.help }}</option>
+	                               {% endfor %}
+	                            </select>
+	                        </div>
+	                        <div class="feature-button feature-button--submit mdl-button mdl-js-button mdl-button--raised" id="id-action-btn"  
+	                        data-url='{% url "bookmarks:manage_bookmarks" %}'>Save</div> 
+	                     </div>
+	                </form>
+	                <div id="id-div-status" class="row hidden">
+	                    <div class="mR-10">
+	                        <i id="id-status-icon" class="material-icons icon" role="presentation"></i>
+	                    </div>
+	                    <div id="id-status-text" class="">
+	                        
+	                    </div>
+	                </div>              
+	                <div id="id-div-loading" class="progress-bar mdl-progress mdl-js-progress mdl-progress__indeterminate hidden"></div>
+	            </div>          
+	            {% endif %}
 				{% comment %} Article list table {% endcomment %}
 				<div class="table--large mdl-color-text--grey-800 mB-16">
 					<table class="mdl-data-table mdl-js-data-table {% if request.user.is_staff %}mdl-data-table--selectable{% endif %}  wSn">
@@ -124,7 +103,7 @@
 									<a href="{% url "dashboard:dashboard-profile" bookmark.user.id %}" title="See user profile">
 									{{ bookmark.user.profile.get_profile_name }}</a>
 								</td>
-								<td class="non-numeric">
+								<td class="non-numeric" data-priv-id={{ bookmark.id }}>
 								{% if bookmark.privacy_level == "pub" %}
 									<i class="material-icons mdl-color-text--blue-600" title="public">people</i>
 								{% else %}
@@ -132,7 +111,7 @@
 								{% endif %}
 								
 								</td>
-								<td class="non-numeric">
+								<td class="non-numeric" data-prom-id={{ bookmark.id }}>
 									{% if bookmark.is_promoted %}
 	      					      	<i class="material-icons mdl-color-text--green-600" title="promoted">check</i>
 	      					      	{% else %}
