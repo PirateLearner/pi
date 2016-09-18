@@ -5,7 +5,7 @@
 {% load account socialaccount %}
 
 
-{% block head_title %}Login to {{ site.name }}{% endblock %}
+{% block title %}Login to {{ site.name }}{% endblock %}
 
 {% block main %}
 
@@ -15,10 +15,8 @@
 		<h1 class="text-center">Log in with</h1>
 		{% include "socialaccount/snippets/provider_list.html" with process="login" %}
 		{% include "socialaccount/snippets/login_extra.html" %}				
-		<div class="row center pT8">
-			<span class="separator wFull"></span>
-			<span>or</span>
-			<span class="separator wFull"></span>
+		<div class="fs14 text-center pT16">
+			<span>or with an account</span>
 		</div>						
 	{% else %}
 		<h1 class="text-center">Log in</h1>

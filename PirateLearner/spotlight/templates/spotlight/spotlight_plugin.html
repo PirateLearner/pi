@@ -3,11 +3,11 @@
 
 <div class="mdl-grid fixed-width">
 {% for el in articles %}
-      <div class=" section__block mdl-cell mdl-cell--6-col mdl-cell--12-col-tablet img_container">
+      <div class=" section__block mdl-cell mdl-cell--6-col mdl-cell--12-col-tablet img_container js-click" data-url="{{ el.content_object.get_absolute_url }}">
         <img src="{{ el.content_object.get_image_url }}" alt="" />
       </div>
       <div class=" section__block mdl-cell mdl-cell--6-col mdl-cell--12-col-tablet ">
-        <h3 class="heading mdl-typography--font-light"> {{ el.content_object.get_title }} </h3>
+        <h3 class="heading mdl-typography--font-light js-click" data-url="{{ el.content_object.get_absolute_url }}"> {{ el.content_object.get_title }} </h3>
         <p>
           {{ el.content_object.get_summary }}
         </p>

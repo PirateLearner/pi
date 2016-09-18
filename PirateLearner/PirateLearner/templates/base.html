@@ -11,7 +11,7 @@
   <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>{% block title %}Home {% endblock title %}| {{ site.name }}</title>
+      <title >{% block title %}Home {% endblock title %}| {{ site.name }}</title>
       {% block meta %}
 		<meta name="description" content="PirateLearner As A One-Stop Learning Resource For All People Interested In Learning.">
 		<meta name="author" content="Anshul" >
@@ -73,11 +73,13 @@
   {% block body %}
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <header class="mdl-layout__header site-header box-shadow-medium">
+      {% if request.user.is_authenticated %}
 	  	<div class="mdl-layout__drawer-button">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" enable-background="new 0 0 50 50" width="24" height="24" style="fill: rgb(51, 51, 51);vertical-align: initial;">
 			    <path style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans" d="M 0 9 L 0 11 L 50 11 L 50 9 L 0 9 z M 0 24 L 0 26 L 50 26 L 50 24 L 0 24 z M 0 39 L 0 41 L 50 41 L 50 39 L 0 39 z" color="#000" overflow="visible" enable-background="accumulate" font-family="Bitstream Vera Sans"/>
 			</svg>	  		
-		</div>      
+		</div>
+	  {% endif %}      
         <div class="mdl-layout__header-row">
           <!-- Title -->
           <h2 class="site-header__title">
@@ -134,6 +136,9 @@
           </nav>
         </div>
       </header>
+      {% if request.user.is_authenticated %}
+      
+      
 	  	<div id="id-drawer" class="mdl-layout__drawer mdl-color--white mdl-color-text--grey-700">
 			<div class="mdl-layout__drawer-button"
 				onclick="document.getElementById('id-drawer').classList.remove('is-visible');document.getElementsByClassName('mdl-layout__obfuscator')[0].classList.remove('is-visible');return false;">
@@ -197,13 +202,14 @@
 				<div class="mdl-mini-footer__left-section">
 					<ul class="mdl-mini-footer__link-list">
 				    	<li><a href="{% url "about" %}">About</a></li>
-				    	<li><a href="#">Privacy & Terms</a></li>
-				    	<li><a href="#">Help</a></li>
+				    	<li><a href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Privacy & Terms</a></li>
+				    	<li><a href="{% url "faq" %}">FAQ</a></li>
 				    	<li><a id="feedbackBtn-site" data-url="#" href="#">Feedback</a></li>
 				    </ul>
 				</div>
 			</footer>	        
 		</div>
+	{% endif %}
       <main class="mdl-layout__content main-content-wrapper">
 		<!-- Main content goes here -->
 		{% block content %}

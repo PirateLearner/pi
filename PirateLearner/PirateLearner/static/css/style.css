@@ -2,9 +2,24 @@
 body {
     background-color: #fff;
     color: #757575;
-    font-family: 'Roboto', 'Helvetica', 'Arial' ,sans-serif;
-    font-weight: 300;
+    font-family: "Helvetica","Arial",sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
     text-rendering: optimizeLegibility;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Light'), local('OpenSans-Light'), url(//fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTegdm0LZdjqr5-oayXSOefg.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(//fonts.gstatic.com/s/opensans/v13/cJZKeOuBrn4kERxqtaUH3VtXRa8TVwTICgirnJhmVJw.woff2) format('woff2');
 }
 
 h1, h3, h4, h5, h6 {
@@ -1772,6 +1787,21 @@ display:block;margin:0 auto
   max-width: 354px;
 }
 
+.notice-card {
+	display: flex;
+	flex-direction: column;
+	min-height: 200px;
+    padding: 40px;
+	margin: 1px auto;	
+	border-radius: 2px;
+	background: #FFF none repeat scroll 0% 0%;
+	box-sizing: border-box;
+}
+
+.notice-card {
+	max-width: 512px;
+}
+
 .login-card.transp {
 	background-color: rgba(255, 255, 255, 0.8);
 }
@@ -2010,6 +2040,9 @@ a.action-button:hover {
 	background-color: #F5F5F5;
 }
 
+.col-err, .err {
+	color: #DB4437 !important;
+}
 
 /* Angled edge */
 .quote, .quote-a, .quote-b {
@@ -2452,10 +2485,20 @@ display:none!important;
 	box-shadow:0 1px 6px rgba(0,0,0,0.35);
 }
 
-.border-1px{
+.border-1px {
   border:1px solid #cfd8dc;
   border-radius:10px;
 }
+
+.border-t-1px {
+    border-top: 1px solid #e8e8e8;
+}
+
+
+.border-b-1px {
+    border-bottom: 1px solid #e8e8e8;
+}
+
 
 .color-gray {
 	color: #484848;
@@ -2530,8 +2573,9 @@ figure > img {
 .hidden {
  display: none;
 }
-
+.mT-8 { margin-top: 8px; }
 .mT-16 { margin-top: 16px; }
+.mT-32 { margin-top: 32px; }
 .mB-120 {
   margin-bottom: 120px;
 }
@@ -2556,6 +2600,7 @@ figure > img {
   padding-top: 30px;
 }
 .pT8 { padding-top: 8px; }
+.pT16 { padding-top: 16px; }
 .pB8 { padding-bottom: 8px; }
 .pB16 { padding-bottom: 16px; }
 .pL-8 { padding-left: 8px;}
@@ -2659,6 +2704,16 @@ max-width:480px
 
 .fa {
   font-size: 24px;
+}
+
+.info-txt {
+    font-size: 13px;
+    line-height: 18px;
+    font-weight: 300;
+	color: #757575 !important;
+}
+.info-txt a {
+	color: #365899;
 }
 
 /* Print media CSS */
@@ -3020,4 +3075,316 @@ width:60%
 
 .progress-bar {
 	width:100%;
+}
+
+/* CSS talk bubble */
+.talk-bubble {
+  margin: 20px;
+  display: inline-block;
+  position: relative;
+  max-width: 200px;
+  min-height:50px;
+  height: auto;
+  background-color: lightblue;
+}
+.border{
+  border: 8px solid #666;
+}
+.round{
+  border-radius: 30px;
+	-webkit-border-radius: 30px;
+	-moz-border-radius: 30px;
+
+}
+
+/* Right triangle placed top left flush. */
+.tri-right.border.left-top:before {
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+  	left: -40px;
+	right: auto;
+	top: -8px;
+	bottom: auto;
+	border: 32px solid;
+	border-color: #666 transparent transparent transparent;
+}
+.tri-right.left-top:after{
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+  left: -20px;
+	right: auto;
+  top: 0px;
+	bottom: auto;
+	border: 22px solid;
+	border-color: lightblue transparent transparent transparent;
+}
+
+/* Right triangle, left side slightly down */
+.tri-right.border.left-in:before {
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+  left: -40px;
+	right: auto;
+  top: 30px;
+	bottom: auto;
+	border: 20px solid;
+	border-color: #666 #666 transparent transparent;
+}
+.tri-right.left-in:after{
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+  left: -20px;
+	right: auto;
+  top: 15px;
+	bottom: auto;
+	border: 12px solid;
+	border-color: lightblue lightblue transparent transparent;
+}
+
+/*Right triangle, placed bottom left side slightly in*/
+.tri-right.border.btm-left:before {
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+	left: -8px;
+  right: auto;
+  top: auto;
+	bottom: -40px;
+	border: 32px solid;
+	border-color: transparent transparent transparent #666;
+}
+.tri-right.btm-left:after{
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+	left: 0px;
+  right: auto;
+  top: auto;
+	bottom: -20px;
+	border: 22px solid;
+	border-color: transparent transparent transparent lightblue;
+}
+
+/*Right triangle, placed bottom left side slightly in*/
+.tri-right.border.btm-left-in:before {
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+	left: 30px;
+  right: auto;
+  top: auto;
+	bottom: -40px;
+	border: 20px solid;
+	border-color: #666 transparent transparent #666;
+}
+.tri-right.btm-left-in:after{
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+	left: 38px;
+  right: auto;
+  top: auto;
+	bottom: -20px;
+	border: 12px solid;
+	border-color: lightblue transparent transparent lightblue;
+}
+
+/*Right triangle, placed bottom right side slightly in*/
+.tri-right.border.btm-right-in:before {
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+  	left: auto;
+	right: 30px;
+	bottom: -40px;
+	border: 20px solid;
+	border-color: #666 #666 transparent transparent;
+}
+.tri-right.btm-right-in:after{
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+  	left: auto;
+	right: 38px;
+	bottom: -20px;
+	border: 12px solid;
+	border-color: lightblue lightblue transparent transparent;
+}
+/*
+	left: -8px;
+  right: auto;
+  top: auto;
+	bottom: -40px;
+	border: 32px solid;
+	border-color: transparent transparent transparent #666;
+	left: 0px;
+  right: auto;
+  top: auto;
+	bottom: -20px;
+	border: 22px solid;
+	border-color: transparent transparent transparent lightyellow;
+
+/*Right triangle, placed bottom right side slightly in*/
+.tri-right.border.btm-right:before {
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+ 	left: auto;
+	right: -8px;
+	bottom: -40px;
+	border: 20px solid;
+	border-color: #666 #666 transparent transparent;
+}
+.tri-right.btm-right:after{
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+ 	left: auto;
+	right: 0px;
+	bottom: -20px;
+	border: 12px solid;
+	border-color: lightblue lightblue transparent transparent;
+}
+
+/* Right triangle, right side slightly down*/
+.tri-right.border.right-in:before {
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+  left: auto;
+	right: -40px;
+  top: 30px;
+	bottom: auto;
+	border: 20px solid;
+	border-color: #666 transparent transparent #666;
+}
+.tri-right.right-in:after{
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+  left: auto;
+	right: -20px;
+  top: 38px;
+	bottom: auto;
+	border: 12px solid;
+	border-color: lightblue transparent transparent lightblue;
+}
+
+/* Right triangle placed top right flush. */
+.tri-right.border.right-top:before {
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+ 	left: auto;
+	right: -40px;
+  	top: -8px;
+	bottom: auto;
+	border: 32px solid;
+	border-color: #666 transparent transparent transparent;
+}
+.tri-right.right-top:after{
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+  left: auto;
+	right: -10px;
+  top: 0px;
+	bottom: auto;
+	border: 20px solid;
+	border-color: lightblue transparent transparent transparent;
+}
+
+/* talk bubble contents */
+.talktext{
+  padding: 1em;
+	text-align: left;
+  line-height: 1.5em;
+}
+.talktext p{
+  /* remove webkit p margins */
+  -webkit-margin-before: 0em;
+  -webkit-margin-after: 0em;
+}
+
+.chat-window {
+  display:flex;
+  flex-direction:column;
+}
+
+.vertical-top {
+  vertical-align:top;
+}
+
+/* timestamp */
+
+.chat-start .timestamp {
+    background-color: #fff;
+    padding: 0 5px;
+    position: relative;
+    top: -8px;
+}
+
+.chat-start-1 .timestamp {
+    background-color: #fff;
+    padding: 0 5px;
+    position: relative;
+    top: -8px;
+}
+
+
+.chat-start-1 {
+    color: #bec2c9;
+    font-size: 11px;
+    margin: 17px 20px 2px;
+    text-align: center;
+}
+
+
+.chat-start {
+    border-top: 1px solid #e8e8e8;
+    color: #bec2c9;
+    font-size: 11px;
+    margin: 17px 20px 2px;
+    text-align: center;
+}
+
+abbr {
+    border-bottom: none;
+    text-decoration: none;
+}
+
+.js-click {
+
+cursor: pointer;
+}
+
+.post-card.sm {
+    min-height: 128px;
+}
+
+.light-txt {
+    font-size: 12px;
+    line-height: 17px;
+    font-weight: 300;
+    color: #757575 !important;
 }

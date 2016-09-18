@@ -25,7 +25,7 @@ Home
       <div class="wrapper main-aux mdl-grid">
           <div class="content mdl-cell mdl-cell--5-col mdl-cell--12-col-tablet mdl-cell--12-col-phone mdl-color-text--white">
             <h2 class="heading mdl-typography--font-light">
-               Get started. Start now Know more Lets do it Like to experiment and learn?
+               Get started. Like to experiment and learn? Start Now!!!
             </h2>
             <p>
               Have a flair for simplifying the complex? Contribute to our open source endeavours, <a href="#">Join us!</a>
@@ -38,7 +38,7 @@ Home
       <div class="wrapper main-aux mdl-grid">
           <div class="content mdl-cell mdl-cell--5-col mdl-cell--12-col-tablet mdl-cell--12-col-phone mdl-color-text--white">
             <h2 class="heading mdl-typography--font-light">
-                Share the good word
+                Share the good word!
             </h2>
             <p>
               join us on social networks and help to spread the words!
@@ -101,7 +101,7 @@ Home
             {% get_promoted_bookmarks 4 as bookmarks %}
             {% for el in bookmarks %}
 	          <div class="content__item content__item--bookmark mdl-shadow-2dp">
-	            <div class="bookmark__image" style="background-image: url('{{ el.get_image_url }}')">
+	            <div class="bookmark__image js-click" data-url="{{ el.get_absolute_url }}" style="background-image: url('{{ el.get_image_url }}')">
 	            </div>
 	            <div class="bookmark__body">
 	              <h4 class="bookmark__title">

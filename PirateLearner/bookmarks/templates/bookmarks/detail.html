@@ -76,6 +76,11 @@
               </div>
             </div>
           </article>
+          {% if can_edit %}
+          	{% url "bookmarks:update_bookmark_instance" bookmark.pk as url %}
+          	{% include "common/button-floating-edit.html" with url=url %}
+          {% endif %}
+          
         </div> <!-- Blog post end -->
 
 

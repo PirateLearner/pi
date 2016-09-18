@@ -4,24 +4,20 @@
 
 import sys
 from django.template import RequestContext, loader
-from django.shortcuts import get_object_or_404, render_to_response, render
-from django.contrib import auth
-from django.http.request import HttpRequest
+from django.shortcuts import render_to_response, render
 from django.http import HttpResponseRedirect, Http404 , HttpResponseBadRequest, JsonResponse
 from blogging.models import *
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from blogging.forms import *
-from blogging.create_class import CreateClass
-from formtools.wizard.views import SessionWizardView
 from django.forms.formsets import formset_factory
 from django.utils.html import escape
 from blogging.utils import *
 from blogging.wrapper import *
 import os, errno
 from django.db.models import Q
-from django.core.mail import send_mail, mail_admins
+from django.core.mail import mail_admins
 from django.core.exceptions import ObjectDoesNotExist
 from django.template.defaultfilters import slugify
 import reversion
@@ -29,18 +25,14 @@ import reversion
 from django.contrib.contenttypes.models import ContentType
 
 from meta_tags.views import Meta 
-from blogging.utils import strip_image_from_data
-from blogging.tag_lib import strip_tag_from_data
-from blogging.utils import truncatewords,slugify_name
+from blogging.utils import slugify_name
 from django.utils.html import strip_tags
 
 import traceback
 from django.views.generic import View, TemplateView
 from django.views.generic.edit import FormView
-from blogging.db_migrate import migrate
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
-from taggit.models import Tag
 
 from events.signals import generate_event
 from django.utils import timezone
@@ -135,6 +127,7 @@ def new_post(request):
 			if content_info_obj.is_leaf:
 				blog = BlogContent()
 				blog.section = post_form.cleaned_data["section"]
+				blog.publication_start = None
 			else:
 				blog = BlogParent()
 				blog.parent = post_form.cleaned_data["parent"]
@@ -161,19 +154,11 @@ def new_post(request):
 				reversion.set_comment("Created first draft")
 
 			if action == 'Publish':				
-# 				subject = 'Review: mail from PirateLearner'
-# 				message = " "+ str(blog.get_menu_title()) + "has been submitted for review by " + str(request.user.profile.get_name()) + "\n"
-# 				html_message = '<a href="'+ "http:"+ str(settings.DOMAIN_URL) + str(blog.get_absolute_url()) + '" target="_blank"> <strong> ' + str(blog.get_title()) + '</strong> ' + "has been submitted for review by " + str(request.user.profile.get_name())
-# 				 
-# 				mail_admins(subject, message,fail_silently=True,html_message = html_message)
 				generate_event.send(sender = blog.__class__, event_label = "blogging_content_submit", 
 								user = request.user, source_content_type = ContentType.objects.get_for_model(blog), source_object_id= blog.pk)
 
 			del request.session['content_info_id']
 			return HttpResponseRedirect(blog.get_absolute_url())
-# 			return render_to_response(
-# 									"blogging/create_page.html",
-# 	    				context, context_instance=RequestContext(request))
 
 	else:
 		initial = {'pid_count': '0'}
@@ -234,11 +219,6 @@ def edit_post(request,post_id):
 			wrapper_form_class = find_class('blogging.custom.'+blog.content_type.__str__().lower(),str(blog.content_type).capitalize()+'Form')
 			print "LOGS: Wrapper Form Class ", wrapper_form_class
 			print "LOGS: Content Class ", blog
-# 			json_obj = json.loads(blog.data)
-# 			print json_obj
-# 			json_obj['title'] = blog.title
-# 			json_obj['section'] = blog.section
-# 			json_obj['tags'] = blog.tags.all()
 			post_form = wrapper_form_class(reverse('blogging:edit-post',args = (post_id,)),instance=blog)
 
 		context = {'form':post_form}
@@ -368,9 +348,6 @@ def index(request):
 	except EmptyPage:
 		# If page is out of range (e.g. 9999), deliver last page of results.
 		pages = paginator.page(paginator.num_pages)
-
-	
-	#log.info("[ Index page ] is called") 
 	context ={
 				'parent': None,
                'nodes': pages,

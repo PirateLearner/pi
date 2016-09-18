@@ -4,9 +4,16 @@
 <div class="mdl-color--grey-100 mdl-color-text--grey-700">
 
 <section class="centered">
-	<div class="head__banner small">
+	<div class="head__banner">
 		<div class="mdl-layout-title logo site-name">
-	    	<a href="/">pirate learner</a>
+			<div>
+				<a href="/"><img alt="" src="{{ STATIC_URL }}images/LOGO_V5.svg" style="width: 120px;height:120px"></a>
+			</div>
+			<div>
+	    		<a href="/">
+	    		pirate learner
+	    		</a>
+	    	</div>
 		</div>
 	</div>				
 </section>
@@ -20,9 +27,9 @@
 			<footer class="mdl-mini-footer">
 				<div class="mdl-mini-footer__left-section">
 					<ul class="mdl-mini-footer__link-list">
-				    	<li><a href="#">About</a></li>
-				    	<li><a href="#">Privacy & Terms</a></li>
-				    	<li><a href="#">Help</a></li>
+				    	<li><a href="{% url "about" %}">About</a></li>
+				    	<li><a href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_GB">Privacy & Terms</a></li>
+				    	<li><a href="{% url "faq" %}">FAQ</a></li>
 				    </ul>
 				</div>				
 			</footer>

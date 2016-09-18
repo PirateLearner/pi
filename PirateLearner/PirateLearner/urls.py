@@ -1,4 +1,4 @@
-from django.conf.urls import url, include
+from django.conf.urls import url, include, handler400
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
@@ -27,7 +27,7 @@ tip_dict = {
 handler500 = curry(server_error, template_name='error_404.html')
 handler404 = curry(page_not_found, template_name='error_404.html')
 handler403 = curry(permission_denied, template_name='error_404.html')
-
+handler400 = curry(bad_request, template_name='error_404.html')
 sitemaps =  {'blog':BlogSitemap,'sections':BlogParentSitemap,'bookmarks':BookmarkSitemap}
 
 admin.autodiscover()
