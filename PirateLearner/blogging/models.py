@@ -50,8 +50,8 @@ LATEST_PLUGIN_TEMPLATES = (
 
 class RelatedManager(models.Manager):
 
-    def get_query_set(self):
-        qs = super(RelatedManager, self).get_query_set()
+    def get_queryset(self):
+        qs = super(RelatedManager, self).get_queryset()
         return qs
 
     def get_tags(self, language):
@@ -77,8 +77,8 @@ class RelatedManager(models.Manager):
         return sorted(tags, key=lambda x: -x.count)
 
 class PublishedManager(RelatedManager):
-    def get_query_set(self):
-        qs = super(PublishedManager, self).get_query_set()
+    def get_queryset(self):
+        qs = super(PublishedManager, self).get_queryset()
         now = timezone.now()
         qs = qs.filter(publication_start__lte=now)
         qs = qs.filter(Q(published_flag=True)).order_by('-publication_start')
