@@ -2,10 +2,14 @@
 
 {% load i18n %}
 
-{% block head_title %}{% trans "Social Network Login Failure" %}{% endblock %}
+{% block title %}Social Network Login Failure - {{ site.name }}{% endblock %}
 
-{% block content %}
-<h1>{% trans "Social Network Login Failure" %}</h1>
-
-<p>{% trans "An error occurred while attempting to login via your social network account." %}</p>
+{% block main %}
+<div class="notice-card tAc wFull">
+	<h1 class="col-err">Social Network Login Failure</h1>
+	<p>
+		<span>An error occurred while attempting to login via your social network account.</span>
+		<a href={% url 'account_login' %}>Retry.</a>	
+	</p>
+</div>	
 {% endblock %}

@@ -3,15 +3,73 @@
 {% load tags %}
 {% load humanize %}
 
-{% comment %}  
-
-{% block css %}
-    <link href="{% static "css/jquery.jscrollpane.css" %}" rel="stylesheet"/>
+{% block title %}
+Messages
 {% endblock %}
 
-{% endcomment %}
 
 {% block content %}
+
+<div class="mB-120">
+
+	<div class="section fixed-width mdl-grid">
+		<div class="mdl-cell mdl-cell--12-col mdl-grid">
+			<div class="author-card--lg wFull mT-32 ">
+				<div class="card__title pB16 border-b-1px">
+					<span class="title-text dark">Chat with {% for el in thread.participants.all %}
+						{% if el != request.user %}
+							{{ el.profile.get_profile_name }}
+						{% endif %}
+					{% endfor %}</span>
+				</div>
+	            <div class="mdl-card__supporting-text">
+	            	{% regroup chats|dictsort:"created" by created.date as message_list %}
+					<div class="chat-window">
+					{% for msg in message_list %}
+					    {% if forloop.first %}
+					    <div class="chat-start-1"> 
+					    	<abbr class="timestamp" >Conversation started {{ msg.grouper }}</abbr>
+					    </div>
+					     {% else %}
+					    <div class="chat-start"> 
+					    	<abbr class="timestamp" >{{ msg.grouper }}</abbr>
+					    </div>
+					     {% endif %}
+				        {% for item in msg.list %}
+				        <div class="abs-right">
+				        	<img class="img-circle mT-8 vertical-top" style="width:32px;height:32px" src="{{ item.sender.profile.get_avatar_url }}"></img>
+							<div class="talk-bubble tri-right round left-top">
+							  <div class="talktext">
+							    <p>{{ item.body }}</p>
+							  </div>
+							</div>
+						</div>
+				        {% endfor %}
+					{% endfor %}
+                    <div class="section__block--form mT-32">
+                      <form  class="formbox" method="post" action="{% url 'messages:thread_messages' thread.pk %}">
+                      {% csrf_token %}
+                        <div class="form__field form__field--name">
+                        	<div class="mdl-textfield mdl-js-textfield is-upgraded">
+                          		<input name="body" class="mdl-textfield__input" type="text"></input>
+                          		<label class="mdl-textfield__label" for="name">Message</label>
+                          	</div>
+                          	<span class="input-group-btn">
+	                            <button type="submit" class="feature-button feature-button--submit mdl-button mdl-js-button mdl-button--raised">
+	                            	<i class="material-icons">send</i>
+								</button>
+                          	</span>
+                        </div>
+                      </form>
+                    </div><!-- /.box-footer-->
+
+	            </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% comment %}  
     <div class="container-fluid">
         <div class="row">
             {% include 'leftbar.html' %}
@@ -72,6 +130,7 @@
             </div>
         </div>
     </div>
+    {% endcomment %}
 {% endblock %}
 
 {% comment %}  

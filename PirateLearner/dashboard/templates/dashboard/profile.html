@@ -13,7 +13,7 @@
     <div class="section fixed-width mdl-grid">
         <div class="mdl-cell mdl-cell--12-col mdl-grid">
 	        <div class="author-card--lg wFull mT-32">
-	            <div class="column center pB16">
+	            <div class="card__title text-center pB16">
 	                {% with profile_img_url=profile.get_avatar_url %}
 	                {% if profile_img_url %}
 	                <img class="avatar border" width="120" height="120" src={{ profile_img_url }}>
@@ -51,86 +51,99 @@
 	            </div>
 	            <div class="mdl-card__supporting-text">
 	            </div>
-            {% comment %} Put the articles here {% endcomment %}
-            <p class="subhead mdl-color-text--grey-500 column center">
-                Your recent contibutions to pirate society.
-            </p>
-            {% if articles|length > 0 %}
-	            {% for el in articles %}
-	                <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
-	                    <div class="mdl-card mdl-cell mdl-cell--12-col">
-	                      <div class="mdl-card__supporting-text">
-	                        <h4>{{ el.get_title }}</h4>
-	                        {{ el.get_summary }}
-	                      </div>
-	                      <div class="mdl-card__actions">
-	                        <a href="{{ el.get_absolute_url }}" class="mdl-button">Read More</a>
-	                        {% if el.published_flag %}
-	                            <i class="material-icons mdl-color-text--green-600 post-status" title="published">check</i>
-	                            {% elif el.special_flag %}
-	                            <i class="material-icons mdl-color-text--red-600 post-status" title="in draft">cancel</i>
-	                            {% else %}
-	                            <i class="material-icons mdl-color-text--red-300 post-status" title="pending for review" >close</i>
-	                        {% endif %}
-	                      </div>
-	                    </div>
-	              </section>
-	            {% endfor %}
-             {% else %}
-                    <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
-                        <div class="mdl-card mdl-cell mdl-cell--12-col">
-                          <div class="mdl-card__supporting-text">
-                            <h4>Not yet started?</h4>
-                            Everyone think diffrently. Let the others know the methods that helps you understand things.
-                          </div>
-                          <div class="mdl-card__actions">
-                            <a href="{% url "blogging:content-type" %}" class="mdl-button">Contribute Now</a>
-                          </div>
-                        </div>
-                  </section>
-            {% endif %}
-            {% comment %} Put the articles here {% endcomment %}
-            <p class="subhead mdl-color-text--grey-500 column center">
-                Your recent bookmarks for safekeeping.
-            </p>
-            {% if bookmarks|length > 0 %}
-                {% for el in bookmarks %}
-                    <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
-                        <div class="mdl-card mdl-cell mdl-cell--12-col">
-                          <div class="mdl-card__supporting-text">
-                            <h4>{{ el.get_title }}</h4>
-                            {{ el.get_summary|truncatewords:30 }}
-                          </div>
-                          <div class="mdl-card__actions">
-                            <a href="{{ el.get_absolute_url }}" class="mdl-button">Read More</a>
-                                {% if el.privacy_level == "pub" %}
-                                    <i class="material-icons mdl-color-text--blue-600" title="public">people</i>
-                                {% else %}
-                                    <i class="material-icons" title="private">person</i>
-                                {% endif %}
-                                
-                                {% if el.is_promoted %}
-                                <i class="material-icons mdl-color-text--green-600" title="promoted">check</i>
-                                {% else %}
-                                <i class="material-icons mdl-color-text--red-300" title="Not promoted" >close</i>
-                                {% endif %}
-                          </div>
-                        </div>
-                  </section>
-                {% endfor %}
-             {% else %}
-                    <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
-                        <div class="mdl-card mdl-cell mdl-cell--12-col">
-                          <div class="mdl-card__supporting-text">
-                            <h4>No Bookarks?</h4>
-                            Bookmarks help you keep track of web pages you like or think important. Manage your favorite sites now.
-                          </div>
-                          <div class="mdl-card__actions">
-                            <a href="{% url "blogging:content-type" %}" class="mdl-button">Create Bookmark</a>
-                          </div>
-                        </div>
-                  </section>
-            {% endif %}
+	            {% comment %} Put the articles here {% endcomment %}
+	            <p class="subhead mdl-color-text--grey-500 center">
+	                Your recent contibutions to pirate society.
+	            </p>
+		        {% if articles|length > 0 %}
+		            {% for el in articles %}
+		                <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+		                    <div class="post-card sm mdl-card mdl-cell mdl-cell--12-col">
+		                      <div class="mdl-card__supporting-text">
+		                        <h4>{{ el.get_title }}</h4>
+		                        {{ el.get_summary }}
+								<div class="light-txt mT-8">
+		                      		<span>{{ el.publication_start }}</span>
+		                      	</div>
+		                      </div>
+		                      <div class="mdl-card__actions row fill">
+		                        <div>
+		                        {% if el.published_flag %}
+		                            <i class="material-icons mdl-color-text--green-600 post-status" title="published">check</i>
+		                            {% elif el.special_flag %}
+		                            <i class="material-icons mdl-color-text--red-600 post-status" title="in draft">cancel</i>
+		                            {% else %}
+		                            <i class="material-icons mdl-color-text--red-300 post-status" title="pending for review" >close</i>
+		                        {% endif %}
+		                        </div>
+		                        <a href="{{ el.get_absolute_url }}" class="mdl-button">Read More</a>
+		                      </div>
+		                    </div>
+		              </section>
+		            {% endfor %}
+		         {% else %}
+		                <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+		                    <div class="post-card sm mdl-card mdl-cell mdl-cell--12-col">
+		                      <div class="mdl-card__supporting-text">
+		                        <h4>Not yet started?</h4>
+		                        Everyone think diffrently. Let the others know the methods that helps you understand things.
+		                      </div>
+		                      <div class="mdl-card__actions">
+		                        <a href="{% url "blogging:content-type" %}" class="mdl-button">Contribute Now</a>
+		                      </div>
+		                    </div>
+		              </section>
+		        {% endif %}
+		        {% comment %} Put the articles here {% endcomment %}
+		        <p class="subhead mdl-color-text--grey-500 center">
+		            Your recent bookmarks for safekeeping.
+		        </p>
+	            {% if bookmarks|length > 0 %}
+	                {% for el in bookmarks %}
+	                    <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+	                        <div class="post-card sm mdl-card mdl-cell mdl-cell--12-col">
+	                          <div class="mdl-card__supporting-text">
+	                            <h4>{{ el.get_title }}</h4>
+	                            {{ el.get_summary|truncatewords:30 }}
+								<div class="light-txt mT-8">
+		                      		<span>{{ el.bookmark.added }}</span>
+		                      	</div>
+	                          </div>
+	                          <div class="mdl-card__actions row fill">
+	                          	<div>
+                                	<span>
+	                                {% if el.is_promoted %}
+	                                	<i class="material-icons mdl-color-text--green-600" title="promoted">check</i>
+	                                {% else %}
+	                                	<i class="material-icons mdl-color-text--red-300" title="Not promoted" >close</i>
+	                                {% endif %}
+	                                </span>
+	                          		<span>
+	                                {% if el.privacy_level == "pub" %}
+	                                    <i class="material-icons mdl-color-text--blue-600" title="public">people</i>
+	                                {% else %}
+	                                    <i class="material-icons" title="private">person</i>
+	                                {% endif %}
+                                	</span>
+	                            </div>
+								<a href="{{ el.get_absolute_url }}" class="mdl-button">Read More</a>
+	                          </div>
+	                        </div>
+	                  </section>
+	                {% endfor %}
+	             {% else %}
+	                    <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+	                        <div class="mdl-card mdl-cell mdl-cell--12-col">
+	                          <div class="mdl-card__supporting-text">
+	                            <h4>No Bookarks?</h4>
+	                            Bookmarks help you keep track of web pages you like or think important. Manage your favorite sites now.
+	                          </div>
+	                          <div class="mdl-card__actions">
+	                            <a href="{% url "blogging:content-type" %}" class="mdl-button">Create Bookmark</a>
+	                          </div>
+	                        </div>
+	                  </section>
+	            {% endif %}
         </div>
 
         </div>

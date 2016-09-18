@@ -1,5 +1,24 @@
 $(document).ready(function(){
-  $('.carousel').slick({
+
+$(".js-click").click(function(e){
+//extract data-url and then go to url
+var ele = $(e.target);
+var final_element;
+if (ele.data("url") === undefined)
+{	
+	console.log("Did not found the url serach for parent");
+	final_element = ele.closest(".js-click")
+	console.log(final_element);
+}
+else {
+	final_element = ele;
+}
+console.log("Hey "+ final_element.data("url"));
+window.location.href = final_element.data("url");
+return false;
+});  
+
+$('.carousel').slick({
     dots: true,
     infinite: true,
     slidesToScroll: 1,

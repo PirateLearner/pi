@@ -30,14 +30,27 @@
 {% comment %}   {% include 'blogging/section_title.html' with page=page %} {% endcomment %}
           <article class=" section section--main" role="article">
             <div class="mdl-grid fixed-width ">
-              <div class=" section__block mdl-cell mdl-cell--7-col mdl-cell--12-col-tablet ">
+              <div itemscope itemtype="http://schema.org/Article" class=" section__block mdl-cell mdl-cell--7-col mdl-cell--12-col-tablet ">
                 <!-- main blog content start -->
                 <span class="hidden rest" data-id="{{ nodes.id }}" data-content-type="{{ nodes.get_content_type }}"></span>
-                <h3 class="blog-post__title">{{ content.title }}</h3>
+                <h3 itemprop="name" class="blog-post__title">{{ content.title }}</h3>
                 <div class="blog-post__meta">
                   <span>
-                    <span class="blog-post__author"><a href="{{ content.author.profile.get_profile_page }}">{{ content.author.profile.get_profile_name|title }}</a></span>
+                    <span class="blog-post__author">
+	                    <a href="{{ content.author.profile.get_profile_page }}">
+	                    	<span itemprop="author" itemscope itemtype="http://schema.org/Person">
+	                    		<span itemprop="name">{{ content.author.profile.get_profile_name|title }}</span>
+	                    	</span>
+	                    </a>
+	                </span>
+                	<span itemprop="publisher" itemscope itemtype="http://schema.org/Person">
+                		<meta itemprop="name" content="PirateLearner" />
+                	</span>
+
+	                <meta itemprop="headline" content="{{ content.title }}"/>
                     <meta itemprop="datePublished" content=" {{ meta.date_time }} "/>
+                    <meta itemprop="dateModified" content=" {{ meta.date_time }} "/>
+                    <meta itemprop="url" content=" {{ request.path|safe }}"/>
                     <time datetime="2016-06-30" class="blog-post__time"> {{ meta.date_time|naturaltime }} </time>
                   </span>
                   <div class="blog-post__share hide-for-print">
@@ -107,6 +120,10 @@
               </div>
             </div>
           </article>
+{% if request.user.is_staff == True or can_edit %}
+    {% include "common/button-floating-edit.html" with url=content.edit %}
+{% endif %}
+          
         </div> <!-- Blog post end -->
 
 

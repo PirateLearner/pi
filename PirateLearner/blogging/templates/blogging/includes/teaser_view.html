@@ -3,8 +3,8 @@
 <div class="maia-cols cards-container">
       {% for el in articles %}
         <div class="maia-col-4 card mdl-card mdl-shadow--2dp">
-          <div class="image mdl-card__title" style="background-image:url('{{ el.get_image_url }}');"></div>
-          <div class="content mdl-card__supporting-text mdl-color-text--grey-800">
+          <div class="image mdl-card__title js-click" data-url="{{ el.get_absolute_url }}" style="background-image:url('{{ el.get_image_url }}');"></div>
+          <div class="content mdl-card__supporting-text mdl-color-text--grey-800 js-click" data-url="{{ el.get_absolute_url }}">
             <h3 class="mdl-card__title-text subhead mdl-typography--font-regular">
               {{ el.title }}
             </h3>
