@@ -162,7 +162,7 @@ def insert_tag_id(data,id_count):
         
         # add description itemproperty in the first paragraph
         soup('p')[0]['itemprop'] = "description"
-        
+        soup('p')[0]['class'] = "blog-post__extract"
         for tag in soup.body.children:
             
             if tag.name == 'p' and has_no_id(tag):
