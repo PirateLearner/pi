@@ -1,29 +1,23 @@
 {% extends "base.html" %}
 
 {% block body %}
-<div class="mdl-color--grey-100 mdl-color-text--grey-700">
-
-<section class="centered">
-	<div class="head__banner">
-		<div class="mdl-layout-title logo site-name">
-			<div>
-				<a href="/"><img alt="" src="{{ STATIC_URL }}images/LOGO_V5.svg" style="width: 120px;height:120px"></a>
+<div class="pad"></div>
+<div class="_layout mdl-grid mdl-color-text--grey-700">
+	<div class="pB16 centered mdl-cell mdl-cell--6-col ">
+		<div class="head__banner">
+			<div class="pL-8">
+				<a href="/"><img alt="" src="{{ STATIC_URL }}images/LOGO_V5.svg" style="width: 240px;height:240px"></a>
 			</div>
-			<div>
-	    		<a href="/">
-	    		pirate learner
-	    		</a>
+			<div class="logo site-name">
+		    	<a class="fS40" href="/">pirate learner</a>
 	    	</div>
-		</div>
-	</div>				
-</section>
-<div id="priSect" class="pT8 pB16">
-	<div class="_layout layout-L mdl-grid">			
-		<section class="__c mdl-cell mdl-cell--12-col pA0">
+		</div>				
+	</div>
+	<div class="pB16 centered mdl-cell mdl-cell--6-col">
+		<div class="">			
 			<div class="banner">
 			{% block main %}{% endblock %}		
 			</div>
-			
 			<footer class="mdl-mini-footer">
 				<div class="mdl-mini-footer__left-section">
 					<ul class="mdl-mini-footer__link-list">
@@ -33,28 +27,22 @@
 				    </ul>
 				</div>				
 			</footer>
-
-		</section>			
-	</div>		
+		</div>		
+	</div>
 </div>
-</div>
-        <div class="section section--support section--grey">
-          <div class="main-aux">
-            <div class="mdl-grid">
-              <div class="mdl-cell mdl-cell--6-col help-item">
-                <h3> Questons?</h3>
-                <p>
-                  Check out the <a href="{% url "about" %}">About Us</a>
-                </p>
-              </div>
-              <div class="mdl-cell mdl-cell--6-col help-item">
-                <h3>Intereseted?</h3>
-                <p>
-                  Reach out to us at <a href="{% url "contact" %}">Contact</a>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
+{% comment %}
+<div class="section section--support">
+  <div class="main-aux">
+    <div class="mdl-grid">
+      <div class="mdl-cell mdl-cell--6-col help-item">
+        <h3> Questons?</h3>
+        <p>Check out the <a href="{% url "about" %}">About Us</a></p>
+      </div>
+      <div class="mdl-cell mdl-cell--6-col help-item">
+        <h3>Intereseted?</h3>
+        <p>Reach out to us at <a href="{% url "contact" %}">Contact</a></p>
+      </div>
+    </div>
+  </div>
+</div>{% endcomment %}
 {% endblock %}

@@ -57,4 +57,7 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
             # if it does not, let allauth take care of this new social account
             except User.DoesNotExist:
                 return
+    def is_open_for_signup(self, request, sociallogin):
+        # To disable social account signup, return False. Otherwise return True(Default). 
+        return True 
 

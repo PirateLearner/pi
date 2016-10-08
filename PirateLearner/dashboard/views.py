@@ -16,6 +16,7 @@ from allauth.account.views import LoginView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView
 from django.core.urlresolvers import reverse_lazy
+from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.socialaccount.models import SocialAccount
 
@@ -36,6 +37,19 @@ from voting.models import Vote
 from pl_messages.models import get_notification_count, get_user_notifications
 
 from events.signals import generate_event
+
+
+
+
+class CustomAccountAdapter(DefaultAccountAdapter):
+    '''
+    @summary: custom account adapter class. To make it work,
+    add following line in settings.py 
+    ACCOUNT_ADAPTER='dashboard.views.CustomAccountAdapter'
+    '''    
+    def is_open_for_signup(self, request):
+        # To disable account signup, return False. Otherwise return True(Default). 
+        return False
 
 
 @receiver(user_logged_in)

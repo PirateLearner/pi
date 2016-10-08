@@ -5,11 +5,11 @@
 {% load account socialaccount %}
 
 
-{% block title %}Login to {{ site.name }}{% endblock %}
+{% block title %}Login to {{ site.name }} {% endblock %}
 
 {% block main %}
 
-	<div class="login-card transp bS-1 wFull">						
+	<div class="login-card transp wFull">						
 	{% get_providers as socialaccount_providers %}					
 	{% if socialaccount_providers %}
 		<h1 class="text-center">Log in with</h1>
