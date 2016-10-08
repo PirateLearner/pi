@@ -167,7 +167,7 @@ SOCIALACCOUNT_PROVIDERS = {
         'METHOD': 'js_sdk'  # instead of 'oauth2'
     }
 }
-
+ACCOUNT_ADAPTER = 'dashboard.views.CustomAccountAdapter'
 SOCIALACCOUNT_ADAPTER = 'dashboard.SocialAdapter.SocialAccountAdapter'
 
 # Password validation

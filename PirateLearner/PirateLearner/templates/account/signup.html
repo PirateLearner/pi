@@ -1,9 +1,11 @@
 {% extends "account/base.html" %}
-
-{% load url from future %}
+{% comment %}
+	Sign Up other than using social account is not allowed.
+	It is diabled by overriding ``is_open_for_signup`` method
+{% endcomment %}
 {% load i18n %}
 
-{% block head_title %}{% trans "Signup" %}{% endblock %}
+{% block title %}Sign Up for {{ site.name }}{% endblock %}
 
 {% block content %}
 <h1>{% trans "Sign Up" %}</h1>
@@ -19,7 +21,4 @@
   <button type="submit">{% trans "Sign Up" %} &raquo;</button>
 </form>
 
-
 {% endblock %}
-
-
