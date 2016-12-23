@@ -73,18 +73,18 @@
   {% block body %}
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <header class="mdl-layout__header site-header box-shadow-medium">
-      {% if request.user.is_authenticated %}
+{% comment %}        {% if request.user.is_authenticated %} {% endcomment %}
 	  	<div class="mdl-layout__drawer-button">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" enable-background="new 0 0 50 50" width="24" height="24" style="fill: rgb(51, 51, 51);vertical-align: initial;">
 			    <path style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans" d="M 0 9 L 0 11 L 50 11 L 50 9 L 0 9 z M 0 24 L 0 26 L 50 26 L 50 24 L 0 24 z M 0 39 L 0 41 L 50 41 L 50 39 L 0 39 z" color="#000" overflow="visible" enable-background="accumulate" font-family="Bitstream Vera Sans"/>
 			</svg>	  		
 		</div>
-	  {% endif %}      
+{% comment %}    {% endif %} {% endcomment %}	      
         <div class="mdl-layout__header-row">
           <!-- Title -->
-          <h2 class="site-header__title">
-            PirateLearner
-          </h2>
+          <div class="mdl-layout-title logo site-name">
+            <a href="/">pirate learner</a>
+          </div>
           <!-- Add spacer, to align navigation to the right -->
           <div class="mdl-layout-spacer"></div>
           <!-- Navigation. We hide it in small screens. -->
@@ -136,8 +136,6 @@
           </nav>
         </div>
       </header>
-      {% if request.user.is_authenticated %}
-      
       
 	  	<div id="id-drawer" class="mdl-layout__drawer mdl-color--white mdl-color-text--grey-700">
 			<div class="mdl-layout__drawer-button"
@@ -151,15 +149,15 @@
 		      </div>
 		    <nav class="mdl-navigation dashboard-navigation mdl-color-text--grey-800">
 		        {% url 'home' as url %}
-		        <a class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link hide-large" href="{{ url }}">Home</a>
+		        <a class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link " href="{{ url }}">Home</a>
 		        {% url 'about' as url %}
-		    	<a class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link hide-large" href="{{ url }}">About</a>
+		    	<a class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link " href="{{ url }}">About</a>
 		    	{% url "contact" as url%}
-		    	<a class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link hide-large" href="{{ url }}">Contact</a>
+		    	<a class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link " href="{{ url }}">Contact</a>
 		    	{% url "blogging:teaser-view" "blog" as url %}
-		    	<a class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link hide-large" href="{{ url }}">Blog</a>
+		    	<a class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link " href="{{ url }}">Blog</a>
 		    	{% url "blogging:teaser-view" "course" as url %}
-		    	<a class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link hide-large" href="{{ url }}">Explore</a>
+		    	<a class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link " href="{{ url }}">Explore</a>
 				<div class="separator hide-large"></div>			
 			{% if request.user.is_authenticated %}
 			    {% url 'dashboard:dashboard-home' as url %}
@@ -209,7 +207,6 @@
 				</div>
 			</footer>	        
 		</div>
-	{% endif %}
       <main class="mdl-layout__content main-content-wrapper">
 		<!-- Main content goes here -->
 		{% block content %}
