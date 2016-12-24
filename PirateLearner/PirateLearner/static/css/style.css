@@ -1600,9 +1600,9 @@ border-bottom:1px solid #cfd8dc;color:#5c7b89;cursor:pointer;font-size:14px;font
 .blog-post-page .section--main{
 background-color:#fff;
 box-sizing: border-box;
-display: -webkit-flex;
+/*display: -webkit-flex;
 display: -ms-flexbox;
-display: flex;
+display: flex;*/
 }
 
 @media only screen and (min-width:841px){
@@ -1613,7 +1613,8 @@ width:675px
 
 @media only screen and (min-width:841px){
 .blog-post-page .section.fixed-width,.blog-post-page .section>.fixed-width{
-padding-left:50px;padding-right:50px
+padding-left:50px;padding-right:50px;
+max-width: 675px;
 }
 }
 
@@ -2602,6 +2603,14 @@ figure > img {
 .mT-32 { margin-top: 32px; }
 .mB-120 {
   margin-bottom: 120px;
+}
+
+.mB8 {
+  margin-bottom: 8px;
+}
+
+.mB16 {
+  margin-bottom: 16px;
 }
 
 .mL-10 {
