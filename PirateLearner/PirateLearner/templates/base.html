@@ -192,8 +192,10 @@
 				Compose</a>
 				{% url 'messages:home_message' as url%}
 				<a href="{{ url }}" class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link">
-				<span class="mdl-badge" data-badge="{{ notification_count }}">Inbox</span> </a>						
-		    	
+				<span class="mdl-badge" data-badge="{{ notification_count }}">Inbox</span> </a>
+				<a href="{% url 'account_logout' %}?next={{ request.path|safe }}" class="mdl-navigation__link">Logout</a>						
+		    {% else %}
+		    	<a class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link" href="{% url 'account_login' %}?next={{ request.path|safe }}">Login</a>	
 		    {% endif %}
 		    </nav>
 			<footer class="mdl-mini-footer">
