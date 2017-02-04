@@ -17,7 +17,6 @@ var setupUser = function(user){
 					};
 				}		
 		//console.log(pirateLearnerGlobal.user);
-	};
 
 (function($)
 {
