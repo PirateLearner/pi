@@ -130,6 +130,7 @@ INSTALLED_APPS = (
     'blogging',
     'annotations',
     'ckeditor',
+    'ckeditor_uploader',
     'disqus',
     'dashboard',
     'bookmarks',
