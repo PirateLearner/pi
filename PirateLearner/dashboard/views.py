@@ -295,10 +295,11 @@ def bookmark_articles(request):
 class TagCreate(CreateView):
     model = Tag
     fields = ['name','slug']
-
+    success_url = reverse_lazy("dashboard:tag-list")
 class TagUpdate(UpdateView):
     model = Tag
     fields = ['name','slug']
+    success_url = reverse_lazy("dashboard:tag-list")
 
 class TagDelete(DeleteView):
     model = Tag
