@@ -50,20 +50,21 @@
 	                <meta itemprop="headline" content="{{ content.title }}"/>
                     <meta itemprop="datePublished" content=" {{ meta.date_time }} "/>
                     <meta itemprop="dateModified" content=" {{ meta.date_time }} "/>
-                    <meta itemprop="url" content=" {{ request.path|safe }}"/>
+                    <meta itemprop="url" content=" {{ request.build_absolute_uri|urlencode }}"/>
                     <time datetime="2016-06-30" class="blog-post__time"> {{ meta.date_time|naturaltime }} </time>
                   </div>
                   <div class="blog-post__share hide-for-print mB16">
-                    <a href="https://plus.google.com/share?url={{ request.path|safe }}" title="Google+" target="_blank" class="share__link analytics-event" >
+                    <a href="https://plus.google.com/share?url={{ request.build_absolute_uri|urlencode }}" title="Google+" target="_blank" class="share__link analytics-event" >
                       <i class="fa fa-google"></i>
                     </a>
-                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.path|safe }}" title="Facebook" target="_blank" class="share__link analytics-event" data-analytics-event-category="blog" data-analytics-event-action="share" data-analytics-event-label="facebook">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}" title="Facebook" target="_blank" class="share__link analytics-event" data-analytics-event-category="blog" data-analytics-event-action="share" data-analytics-event-label="facebook">
                       <i class="fa fa-facebook"></i>
                     </a>
-                    <a href="https://twitter.com/home?status=checkout this awesome article " title="Twitter" target="_blank" class="share__link analytics-event" data-analytics-event-category="blog" data-analytics-event-action="share" data-analytics-event-label="twitter">
+                    <a 
+                    href="https://twitter.com/share?url={{ request.build_absolute_uri|urlencode }}&text={{ nodes.get_title }} " title="Twitter" target="_blank" class="share__link analytics-event" data-analytics-event-category="blog" data-analytics-event-action="share" data-analytics-event-label="twitter">
                       <i class="fa fa-twitter"></i>
                     </a>
-                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.path|safe }}&title={{ nodes.get_title }}&summary={{ nodes.get_summary }}&source=" title="LinkedIn" target="_blank" class="share__link">
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri|urlencode }}&title={{ nodes.get_title }}&summary={{ nodes.get_summary }}&source=" title="LinkedIn" target="_blank" class="share__link">
                       <i class="fa fa-linkedin"></i>
                     </a>
                     
