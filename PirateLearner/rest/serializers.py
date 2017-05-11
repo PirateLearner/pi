@@ -61,6 +61,25 @@ class AnonymousUserSerializer(serializers.Serializer):
 #Blogging App serializer Classes
 
 class BlogContentSerializer(serializers.ModelSerializer):
+    """
+    Model Serializer converts model fields into common serializer objects out of the box
+    
+    Modify only those we are not satisfied with
+    Use print(repr(serializer)) to see what was created:
+    
+        id = IntegerField(label='ID', read_only=True)
+        title = CharField(max_length=100)
+        create_date = DateTimeField(label='Date created', read_only=True)
+        data = CharField(style={'base_template': 'textarea.html'})
+        url_path = CharField(max_length=255)
+        author_id = PrimaryKeyRelatedField(queryset=User.objects.all())
+        published_flag = BooleanField(label='Is published?', required=False)
+        section = PrimaryKeyRelatedField(queryset=BlogParent.objects.all())
+        content_type = PrimaryKeyRelatedField(allow_null=True, queryset=BlogContentType.objects.all(), required=False)
+        annotations = SerializerMethodField()
+        vote = SerializerMethodField()
+        uservote = SerializerMethodField()
+    """
     #Tell BlogContent that it has a relation on Annotations    
     annotations = serializers.SerializerMethodField()
     vote = serializers.SerializerMethodField()
@@ -71,6 +90,34 @@ class BlogContentSerializer(serializers.ModelSerializer):
         fields =('id', 'title', 'create_date', 'data', 'url_path', 
                  'author_id', 'published_flag', 'section', 'content_type',
                  'annotations', 'vote', 'uservote',)
+        
+    def create(self, validated_data):
+        """
+        Create and return a new `Snippet` instance, given the validated data.
+        
+        Q. When is .create() called?
+        
+        .create is called when .save is called for the serializer without an `instance`
+        """
+        return BlogContent.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        """
+        Update and return an existing `Snippet` instance, given the validated data.
+        
+        Q. When is .update() called?
+        
+        .update is called when .save is called for the serializer with an `instance`
+        """
+        instance.title = validated_data.get('title', instance.title)
+        instance.data = validated_data.get('data', instance.data)
+        instance.url_path = validated_data.get('url_path', instance.url_path)
+        instance.published_flag = validated_data.get('published_flag', instance.published_flag)
+        instance.section = validated_data.get('section', instance.section)
+        instance.content_type = validated_data.get('content_type', instance.content_type)
+        
+        instance.save()
+        return instance
      
     def get_annotations(self, obj):
         content_object = ContentType.objects.get_for_model(obj)

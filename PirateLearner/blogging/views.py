@@ -37,6 +37,8 @@ from django.conf import settings
 from events.signals import generate_event
 from django.utils import timezone
 
+from rest_framework import serializers
+from django.db import models
 @login_required
 @group_required('Administrator','Author','Editor')
 def content_type(request):
@@ -97,6 +99,7 @@ def content_type(request):
 	return render_to_response(
 	    "blogging/content_type.html",
 	    locals(), context_instance=RequestContext(request))	
+
 
 @login_required
 @group_required('Administrator','Editor','Author')
@@ -231,6 +234,20 @@ def edit_post(request,post_id):
 			fname,lineno,fn,text = frame
 			print "Error in %s on line %d" % (fname, lineno)
 		raise Http404
+
+def blogging_rest_view(request, post_id):
+	"""
+	The restriction is that this won't work until the user saves the first draft. Or else, we don't have a primary key.
+	
+	"""
+	try:
+		blog = BlogContent.objects.get(pk=post_id)
+		request.session['content_info_id'] = blog.content_type.id
+		serializer_class = find_class('blogging.custom.'+blog.content_type.__str__().lower(),str(blog.content_type).capitalize()+'Serializer')
+		if request.method == "POST":
+			action = request.POST.get('submit')
+	except:
+		pass
 
 @login_required
 @group_required('Administrator')
