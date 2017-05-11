@@ -222,7 +222,7 @@ class BlogContent(BaseContentClass):
             try:
                 tmp = {}
                 tmp['name'] = tag.name
-                kwargs = {'tag': tag.name,}
+                kwargs = {'tag': tag.slug,}
                 tmp['url'] = reverse('blogging:tagged-posts',kwargs=kwargs)
                 tag_list.append(tmp)
             except:
