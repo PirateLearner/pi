@@ -1,18 +1,12 @@
 {% extends "bookmarks/base.html" %}
 
 {% block extra_script %}
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/css/forms.css"/>
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/css/base.css"/>
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/css/widgets.css"/>
-<script type="text/javascript" src="/admin/jsi18n/"></script>
+
+<script type="text/javascript" src="{{ STATIC_URL }}js/bookmark.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}ckeditor/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}ckeditor/ckeditor-init.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}admin/js/core.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}admin/js/admin/RelatedObjectLookups.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/jquery.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/jquery.init.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/actions.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/calendar.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/admin/DateTimeShortcuts.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}js/bookmark.js"></script>
 
 {{ bookmark_form.media }}
 
@@ -24,15 +18,68 @@
 
 {% block bookmark_content %}
 
-{% if messages %}
-<ul class="messages" id="message_head">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %} >{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
+<div class="mB-120 ">
+      <div class="section section--hero">
+        <div class="section__block fixed-width">
+          <div class="section--hero__text">
+            <h2 class="hero__title">Bookmark.</h2>
+            <p class="hero__subtitle">
+              Create/Update the bookmark of sites that interests you by entring the URL!!!.
+            </p>
+          </div>
+        </div>
+      </div>
+      
+    <div class="section fixed-width mdl-grid">
+        <div class="mdl-cell mdl-cell--8-col section__block section__block--form">
+        <form action="" id="id-BookmarkInstanceUpdateForm" method="POST" class="formbox">
+            {% csrf_token %}
 
-{% comment %}
-{% crispy bookmark_form bookmark_form.helper %}
-{% endcomment %}
-{% endblock %}	
+                 
+                <div class="form__field form__field--name" id="div_id_title">
+                  <label for="id_title" class="form__outer-label">Title :</label>
+                  <div class="mdl-textfield mdl-js-textfield is-upgraded">
+                    <input class="mdl-textfield__input" id="id_title" name="title" type="text" value="{% if bookmark_form.title.value %}{{ bookmark_form.title.value }}{% endif %}" required>
+                    <span class="formbox__errors {% if bookmark_form.title.errors %} is-visible {% endif %}">{{ bookmark_form.title.errors }}</span>
+                  </div>
+                </div>
+                
+                <div class="form__field form__field--name" id="div_id_folder" >
+                    <label for="folder" class="form__outer-label">Folder:</label>
+                    <div class="material-select mdl-textfield mdl-js-textfield mdl-textfield--floating-label">{{ bookmark_form.folder }}</div>
+                    <span class="formbox__errors {% if bookmark_form.folder.errors %} is-visible {% endif %}">{{ bookmark_form.folder.errors }}</span>
+                 </div>
+                
+                
+                <div class="form__field form__field--message" id="div_id_description">
+                  <div class="mdl-textfield mdl-js-textfield ">
+                    <textarea class="mdl-textfield__input" rows="3" id="id_description" name="description"></textarea>
+                    <label class="mdl-textfield__label" for="id_description">Description of Bookmark</label>
+                    <span class="formbox__errors {% if bookmark_form.description.errors %} is-visible {% endif %}">{{ bookmark_form.description.errors }}</span>
+                  </div>
+                </div>                      
+
+                <div class="form__field form__field--message" id="div_id_note">
+                <label class="form__outer-label" for="id_note"> Note: </label>
+                  <div class="mdl-textfield mdl-js-textfield ">
+                    {{ bookmark_form.note }}
+                    <span class="formbox__errors {% if bookmark_form.note.errors %} is-visible {% endif %}">{{ bookmark_form.note.errors }}</span>
+                  </div>
+                </div>                      
+
+                <div class="form__field form__field--name" id="div_id_privacy_level">
+                    <label for="id_privacy_level" class="form__outer-label">Privacy:</label>
+                    <div class="material-select mdl-textfield mdl-js-textfield mdl-textfield--floating-label">{{ bookmark_form.privacy_level }}</div>
+                    <span class="formbox__errors {% if bookmark_form.privacy_level.errors %} is-visible {% endif %}">{{ bookmark_form.privacy_level.errors }}</span>
+                 </div>
+                {% include "tags.html" with form=bookmark_form %}
+            <div class="form__field form__field--submit pT40">
+                <input class="feature-button feature-button--submit mdl-button mdl-js-button mdl-button--raised" name="submit" value="Delete" type="submit">
+                <input class="feature-button feature-button--submit mdl-button mdl-js-button mdl-button--raised" name="submit" value="Update" type="submit">
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+	{% endblock %}	

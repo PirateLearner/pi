@@ -126,17 +126,17 @@ var createSnippet = function(numImages){
 			}
 		}
 		if(numImages>0){
-			imageContainer.append('<div class="bookmark-form-image__slide close-cross"><span class="glyphicon glyphicon-remove"></span></div>');
+			imageContainer.append('<div class="bookmark-form-image__slide close-cross"><span class="material-icons">clear</span></div>');
 		}
 		if(numImages>1){
 			/* Allow arrows to cycle through images and select one*/
-			imageContainer.append('<div class="bookmark-form-image__slide left-arrow"><span class="glyphicon glyphicon-chevron-left"></span></div>');
-			imageContainer.append('<div class="bookmark-form-image__slide right-arrow"><span class="glyphicon glyphicon-chevron-right"></span></div>');
+			imageContainer.append('<div class="bookmark-form-image__slide left-arrow"><span class="material-icons">keyboard_arrow_left</span></div>');
+			imageContainer.append('<div class="bookmark-form-image__slide right-arrow"><span class="material-icons">keyboard_arrow_right</span></div>');
 		}
 		else{
 			/* We'll still have arrows, but hidden. This is to prevent unbind errors */
-			imageContainer.append('<div class="bookmark-form-image__slide left-arrow hidden"><span class="glyphicon glyphicon-chevron-left"></span></div>');
-			imageContainer.append('<div class="bookmark-form-image__slide right-arrow hidden"><span class="glyphicon glyphicon-chevron-right"></span></div>');			
+			imageContainer.append('<div class="bookmark-form-image__slide left-arrow hidden"><span class="material-icons">keyboard_arrow_left</span></div>');
+			imageContainer.append('<div class="bookmark-form-image__slide right-arrow hidden"><span class="material-icons">keyboard_arrow_right</span></div>');			
 		}
 		pirateLearnerGlobal.snippetElement.append(imageContainer);
 		/* Also add the title and description field */
@@ -178,17 +178,17 @@ var createSnippet = function(numImages){
 			}
 		}
 		if(numImages>0){
-			imageContainer.append('<div class="bookmark-form-image__slide close-cross"><span class="glyphicon glyphicon-remove"></span></div>');
+			imageContainer.append('<div class="bookmark-form-image__slide close-cross"><span class="material-icons">clear</span></div>');
 		}
 		if(numImages>1){
 			/* Allow arrows to cycle through images and select one*/
-			imageContainer.append('<div class="bookmark-form-image__slide left-arrow"><span class="glyphicon glyphicon-chevron-left"></span></div>');
-			imageContainer.append('<div class="bookmark-form-image__slide right-arrow"><span class="glyphicon glyphicon-chevron-right"></span></div>');
+			imageContainer.append('<div class="bookmark-form-image__slide left-arrow"><span class="material-icons">keyboard_arrow_left</span></div>');
+			imageContainer.append('<div class="bookmark-form-image__slide right-arrow"><span class="material-icons">keyboard_arrow_right</span></div>');
 		}
 		else{
 			/* We'll still have arrows, but hidden. This is to prevent unbind errors */
-			imageContainer.append('<div class="bookmark-form-image__slide left-arrow hidden"><span class="glyphicon glyphicon-chevron-left"></span></div>');
-			imageContainer.append('<div class="bookmark-form-image__slide right-arrow hidden"><span class="glyphicon glyphicon-chevron-right"></span></div>');			
+			imageContainer.append('<div class="bookmark-form-image__slide left-arrow hidden"><span class="material-icons">keyboard_arrow_left</span></div>');
+			imageContainer.append('<div class="bookmark-form-image__slide right-arrow hidden"><span class="material-icons">keyboard_arrow_right</span></div>');			
 		}
 
 		pirateLearnerGlobal.snippetElement.prepend(imageContainer);
