@@ -8,7 +8,7 @@ from bookmarks.models import Bookmark, BookmarkFolderInstance, BookmarkInstance,
 from bookmarks import utils
 
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, HttpResponse, Http404, JsonResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext, loader
 from django.utils.translation import ugettext_lazy as _
@@ -138,7 +138,7 @@ def update(request, bookmark_instance_id):
                     print "LOGS: bookamrk attributes: ", bookmark_instance.description
                     print "LOGS: bookamrk attributes: ", bookmark_instance.note
                     print "LOGS: bookamrk attributes: ", bookmark_instance.privacy_level
-                    print "LOGS: bookamrk attributes: ", bookmark_instance.tags 
+#                     print "LOGS: bookamrk attributes: ", bookmark_instance.tags 
                     bookmark_instance.save(bookmark_instance.bookmark.url)
                     print "LOGS: tags to be saved are : ", bookmark_form.cleaned_data['tags']
                     bookmark_instance.tags.set(*bookmark_form.cleaned_data['tags'])
@@ -146,10 +146,16 @@ def update(request, bookmark_instance_id):
                             "title": bookmark_instance.title
                         })
                     return HttpResponseRedirect(reverse("bookmarks:all_bookmarks"))
+                else:
+                    return render_to_response("bookmarks/update.html", 
+                                              {"bookmark_form": bookmark_form,}, 
+                                              context_instance=RequestContext(request))
             elif action == 'Delete':
                 bookmark_instance.delete()
                 messages.error(request, "Bookmark Deleted" )
                 return HttpResponseRedirect(reverse("bookmarks:all_bookmarks"))
+            else:
+                return HttpResponseBadRequest
         else:
             initial = {
                        "folder":bookmark_instance.folder,
@@ -167,7 +173,7 @@ def update(request, bookmark_instance_id):
         for frame in traceback.extract_tb(sys.exc_info()[2]):
             fname,lineno,fn,text = frame
             print "Error in %s on line %d" % (fname, lineno)
-        return Http404
+        raise Http404
 
 
 
@@ -230,10 +236,10 @@ def bookmark_details(request,slug):
             for frame in traceback.extract_tb(sys.exc_info()[2]):
                 fname,lineno,fn,text = frame
                 print "Error in %s on line %d" % (fname, lineno)
-            return Http404
+            raise Http404
     except ValueError:
         print "Unexpected error invalid URL:", sys.exc_info()[0]
-        return Http404
+        raise Http404
         
 @group_required('Administrator')
 def manage(request):
