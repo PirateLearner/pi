@@ -71,8 +71,8 @@
 </head>
   <body>
   {% block body %}
-    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-      <header class="mdl-layout__header site-header box-shadow-medium">
+    <div class="mdl-layout mdl-js-layout ">
+      <header class="mdl-layout__header page-header mdl-layout__header--scroll">
 {% comment %}        {% if request.user.is_authenticated %} {% endcomment %}
 	  	<div class="mdl-layout__drawer-button">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" enable-background="new 0 0 50 50" width="24" height="24" style="fill: rgb(51, 51, 51);vertical-align: initial;">
@@ -80,11 +80,15 @@
 			</svg>	  		
 		</div>
 {% comment %}    {% endif %} {% endcomment %}	      
-        <div class="mdl-layout__header-row">
+        <div class="mdl-layout__header-row page-header--row">
           <!-- Title -->
+          	<div class="mdl-layout-title logo image">
+		  	  	<a href="/"><img class="sm" alt="" src="{{ STATIC_URL }}images/LOGO_V5.svg"></a>
+		    </div>
           <div class="mdl-layout-title logo site-name">
             <a href="/">pirate learner</a>
           </div>
+
           <!-- Add spacer, to align navigation to the right -->
           <div class="mdl-layout-spacer"></div>
           <!-- Navigation. We hide it in small screens. -->
@@ -144,8 +148,8 @@
 				    <path style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans" d="M 7.71875 6.28125 L 6.28125 7.71875 L 23.5625 25 L 6.28125 42.28125 L 7.71875 43.71875 L 25 26.4375 L 42.28125 43.71875 L 43.71875 42.28125 L 26.4375 25 L 43.71875 7.71875 L 42.28125 6.28125 L 25 23.5625 L 7.71875 6.28125 z" color="#000" overflow="visible" enable-background="accumulate" font-family="Bitstream Vera Sans"/>
 				</svg>	
 			</div>
-		  	  <div class="mdl-layout-title logo site-name">
-		      	<a href="/">pirate learner</a>
+		  	  <div class="mdl-layout-title logo">
+		  	  	<a href="/"><img alt="" src="{{ STATIC_URL }}images/LOGO_V5.svg" style="width: 120px;height:120px"></a>
 		      </div>
 		    <nav class="mdl-navigation dashboard-navigation mdl-color-text--grey-800">
 		        {% url 'home' as url %}
@@ -210,10 +214,12 @@
 			</footer>	        
 		</div>
       <main class="mdl-layout__content main-content-wrapper">
+      
+      {% comment %}  search block {% endcomment %}
+      {% block search %} {% endblock %}
+      
 		<!-- Main content goes here -->
-		{% block content %}
-		
-		{% endblock %}
+		{% block content %} {% endblock %}
         <!-- social icons and footer -->
         <div class="section--grey">
           <div class="page-content">

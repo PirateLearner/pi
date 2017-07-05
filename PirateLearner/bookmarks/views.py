@@ -34,7 +34,7 @@ from blogging.utils import group_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.defaultfilters import length
 
-
+from readability import Readability
 
 def bookmarks(request):
     bookmarks = BookmarkInstance.objects.filter(is_promoted=True).exclude(privacy_level='priv').order_by("-saved")
@@ -99,14 +99,13 @@ def add(request):
                         initial['title'] = bookmark_instance.title
                         initial['description'] = bookmark_instance.description
                     else:
-                        initial = utils.fetch_bookmark(initial["url"])
-                        if initial:
+#                         initial = utils.fetch_bookmark(initial["url"])
+                        initial = Readability(initial["url"]).parse()
+                        if initial['content'] is not None:
                             initial['message'] = "fetching successful!!!"
                             initial['message_type'] = "success" 
                             return HttpResponse(json.dumps(initial), content_type="application/json")
                         else:
-                            initial = {}
-                            initial['message'] = "Error in fetching !!!!"
                             initial['message_type'] = "danger"
                             return HttpResponse(json.dumps(initial), content_type="application/json")
             else:
@@ -116,6 +115,19 @@ def add(request):
         "form": bookmark_form,
     }, context_instance=RequestContext(request))
 
+def snippet_testing(request):
+    if request.method == "GET":
+        if "url" in request.GET:
+            initial = {}
+            initial["url"] = request.GET["url"]
+            initial = Readability(initial["url"]).parse()
+            return render_to_response("bookmarks/snippet_test.html", {
+        "data": initial,
+    }, context_instance=RequestContext(request))
+        else:
+            raise HttpResponseBadRequest
+    else:
+        raise HttpResponseBadRequest
 
 @permission_required('bookmarks.change_bookmarks','bookmarks.delete_bookmarks')
 def update(request, bookmark_instance_id):
@@ -222,7 +234,7 @@ def bookmark_details(request,slug):
             description = strip_tags(bookmark.note)
             if count_words(description)<5:
                 description = bookmark.description
-            meta = Meta(title = bookmark.title, description = truncatewords(description,120), section= bookmark.folder.title, url = bookmark.get_absolute_url(),
+            meta = Meta(title = bookmark.title, description = bookmark.get_summary(), section= bookmark.folder.title, url = bookmark.get_absolute_url(),
                     image = bookmark.get_image_url(), author = bookmark.user, date_time = bookmark.saved ,
                     object_type = 'article', keywords = [ tags.name for tags in bookmark.tags.all()])
             if request.user.is_authenticated():
