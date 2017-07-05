@@ -7,7 +7,7 @@
 <script type="text/javascript" src="{{ STATIC_URL }}ckeditor/ckeditor/ckeditor.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}ckeditor/ckeditor-init.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}admin/js/core.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/admin/RelatedObjectLookups.js"></script>
+{#<script type="text/javascript" src="{{ STATIC_URL }}admin/js/admin/RelatedObjectLookups.js"></script>#}
 
 {% endblock %}
 
@@ -28,17 +28,45 @@
           </div>
         </div>
       </div>
+      {% comment %}  
+      
+      Adding Dialog here for user to show
+      
+      {% endcomment %}
+      
+     <dialog class="mdl-dialog" style="width:625px;">
+        <h4 class="mdl-dialog__title"></h4>
+        <div class="mdl-dialog__content">
+        </div>
+        <div class="mdl-dialog__actions">
+            <button type="button" class="mdl-button close" id="dialog_close">Close</button>
+        </div>
+    </dialog>
+      
       
     <div class="section fixed-width mdl-grid">
         <div class="mdl-cell mdl-cell--8-col section__block section__block--form">
+        
+        <div id="flash_message" class="mdl-js-snackbar mdl-snackbar">
+            <div class="mdl-snackbar__text"></div>
+            <button class="mdl-snackbar__action" type="button"></button>
+        </div>
+        
         <form action="/en/bookmarks/add/" id="id-BookmarkInstanceForm" method="POST" class="formbox">
             {% csrf_token %}
                 <div class="form__field form__field--name" id="div_id_url">
                   <label for="id_url" class="form__outer-label">URL :</label>
-                  <div class="mdl-textfield mdl-js-textfield is-upgraded">
+                  <div class="mdl-textfield mdl-js-textfield">
                     <input class="mdl-textfield__input" id="id_url" name="url" type="url" value="{% if form.url.value %}{{ form.url.value }}{% endif %}" required>
+                    <button class="mdl-button mdl-js-button" id="preview_button">
+                        <i class="material-icons" id="preview_html">visibility_off</i>
+                    </button>
+                    <div class="mdl-tooltip mdl-tooltip--large" for="preview_button">
+                        See the preview of page once fetching is done!
+                    </div>
                     <span class="formbox__errors {% if form.url.errors %} is-visible {% endif %}">{{ form.url.errors }}</span>
                   </div>
+                  
                 </div>
 
                 <div class="form__field form__field--name" id="div_id_folder" >
@@ -47,20 +75,20 @@
                     <span class="formbox__errors {% if form.folder.errors %} is-visible {% endif %}">{{ form.folder.errors }}</span>
                  </div>
                  
-                <div class="form__field form__field--name" id="div_id_title">
-                  <label for="id_title" class="form__outer-label">Title :</label>
-                  <div class="mdl-textfield mdl-js-textfield is-upgraded">
-                    <input class="mdl-textfield__input" id="id_title" name="title" type="text" value="{% if form.title.value %}{{ form.title.value }}{% endif %}" required>
-                    <span class="formbox__errors {% if form.title.errors %} is-visible {% endif %}">{{ form.title.errors }}</span>
-                  </div>
-                </div>
-                <div class="form__field form__field--message" id="div_id_description">
-                  <div class="mdl-textfield mdl-js-textfield ">
-                    <textarea class="mdl-textfield__input" rows="3" id="id_description" name="description"></textarea>
-                    <label class="mdl-textfield__label" for="id_description">Description of Bookmark</label>
-                    <span class="formbox__errors {% if form.description.errors %} is-visible {% endif %}">{{ form.description.errors }}</span>
-                  </div>
-                </div>                      
+{#                <div class="form__field form__field--name" id="div_id_title">#}
+{#                  <label for="id_title" class="form__outer-label">Title :</label>#}
+{#                  <div class="mdl-textfield mdl-js-textfield is-upgraded">#}
+                    <input class="hidden" id="id_title" name="title" type="text" value="{% if form.title.value %}{{ form.title.value }}{% endif %}" required>
+{#                    <span class="formbox__errors {% if form.title.errors %} is-visible {% endif %}">{{ form.title.errors }}</span>#}
+{#                  </div>#}
+{#                </div>#}
+{#                <div class="form__field form__field--message" id="div_id_description">#}
+{#                  <div class="mdl-textfield mdl-js-textfield ">#}
+                    <textarea class="hidden" rows="3" id="id_description" name="description"></textarea>
+{#                    <label class="mdl-textfield__label" for="id_description">Description of Bookmark</label>#}
+{#                    <span class="formbox__errors {% if form.description.errors %} is-visible {% endif %}">{{ form.description.errors }}</span>#}
+{#                  </div>#}
+{#                </div>                      #}
 
                 <div class="form__field form__field--message" id="div_id_note">
                 <label class="form__outer-label" for="id_note"> Note: </label>

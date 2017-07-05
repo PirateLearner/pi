@@ -1,0 +1,35 @@
+{% extends "bookmarks/base.html" %}
+
+
+{% block title %}
+{{ data.title }} | {{ request.get_host }}
+{% endblock %}
+
+
+{% block bookmark_content %}
+       <div class="mB-120">
+{% comment %}   {% include 'blogging/section_title.html' with page=page %} {% endcomment %}
+          <article class="" role="article">
+            <h3 class="">{{ data.title }}</h3>
+            <div class="mdl-grid">
+              <div class="mdl-cell mdl-cell--6-col">
+                <div>
+	                <h3> HTML CONTENT </h3>
+	                {% autoescape off %}
+	                    {{ data.content }}
+	                {% endautoescape %}
+                </div>
+              </div>
+              
+              <div class="mdl-cell mdl-cell--6-col">
+                <h3> TEXT CONTENT </h3>
+                <pre>
+                {{ data.textContent }}
+                </pre>
+              </div
+            </div>
+          </article>
+        </div> <!-- Blog post end -->
+
+{% endblock %}
+
