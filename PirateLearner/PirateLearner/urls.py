@@ -32,7 +32,7 @@ sitemaps =  {'blog':BlogSitemap,'sections':BlogParentSitemap,'bookmarks':Bookmar
 
 admin.autodiscover()
 
-urlpatterns = i18n_patterns('',
+urlpatterns = i18n_patterns(
 #    url(r'^polls/', include('polls.urls')),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
     url(r'^C/', include('blogging.urls',namespace='blogging')),

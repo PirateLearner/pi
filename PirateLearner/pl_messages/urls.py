@@ -1,6 +1,5 @@
-__author__ = 'aquasan'
 
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from .views import *
 urlpatterns = [
     url(r'^$', home, name='home_message'),

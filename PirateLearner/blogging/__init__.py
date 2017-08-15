@@ -6,3 +6,4 @@ try:
 except:
     pass
 
+default_app_config = 'blogging.apps.BloggingConfig'

@@ -1,4 +1,4 @@
-Django==1.9.6
+Django
 MySQL-python
 Pillow
 PyYAML
@@ -14,7 +14,7 @@ django-classy-tags
 django-disqus
 django-filer
 django-filter
-django-mathjax
+#django-mathjax
 django-mptt
 django-polymorphic
 django-reversion

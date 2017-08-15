@@ -4,7 +4,7 @@
 
 import sys
 from django.template import RequestContext, loader
-from django.shortcuts import render_to_response, render
+from django.shortcuts import render
 from django.http import HttpResponseRedirect, Http404 , HttpResponseBadRequest, JsonResponse
 from blogging.models import *
 from django.http import HttpResponse
@@ -96,9 +96,10 @@ def content_type(request):
 				form = ContentTypeForm()
 		else:
 			form = ContentTypeForm()
-	return render_to_response(
+	return render(
+	    request,
 	    "blogging/content_type.html",
-	    locals(), context_instance=RequestContext(request))	
+	    locals())	
 
 
 @login_required
@@ -167,9 +168,10 @@ def new_post(request):
 		initial = {'pid_count': '0'}
 		post_form = form(reverse('blogging:create-post'),initial=initial)
 	context = {'form':post_form}
-	return render_to_response(
+	return render(
+	    request,
 	    "blogging/create_page.html",
-	    context, context_instance=RequestContext(request))
+	    context)
 
 @login_required
 @group_required('Administrator','Editor','Author')
@@ -225,9 +227,10 @@ def edit_post(request,post_id):
 			post_form = wrapper_form_class(reverse('blogging:edit-post',args = (post_id,)),instance=blog)
 
 		context = {'form':post_form}
-		return render_to_response(
+		return render(
+		    request,
 		    "blogging/create_page.html",
-		    context, context_instance=RequestContext(request))	
+		    context)	
 	except:
 		print "Unexpected error:", sys.exc_info()[0]
 		for frame in traceback.extract_tb(sys.exc_info()[2]):
@@ -288,9 +291,10 @@ def edit_section(request,section_id):
 			post_form = wrapper_form_class(reverse('blogging:edit-section',args = (section_id,)),instance=section)
 
 		context = {'form':post_form}
-		return render_to_response(
+		return render(
+		    request,
 		    "blogging/create_page.html",
-		    context, context_instance=RequestContext(request))	
+		    context)	
 	except:
 		print "Unexpected error:", sys.exc_info()[0]
 		for frame in traceback.extract_tb(sys.exc_info()[2]):
@@ -337,11 +341,11 @@ def add_new_model(request, model_name):
                 	(escape(new_obj._get_pk_val()), escape(new_obj)))
 				else:
 					page_context = {'form1': form1,'formset':form2,  'field': normal_model_name}
-					return render_to_response('blogging/includes/add_content_type.html', page_context, context_instance=RequestContext(request))
+					return render(request, 'blogging/includes/add_content_type.html', page_context)
 			else:
 				print "form is not valid form1 ", form1.is_valid(), " form 2 ", form2.is_valid() 	
 				page_context = {'form1': form1,'formset':form2,  'field': normal_model_name}
-				return render_to_response('blogging/includes/add_content_type.html', page_context, context_instance=RequestContext(request))
+				return render(request, 'blogging/includes/add_content_type.html', page_context)
 
 		else:
 			form = ContentTypeCreationForm()
@@ -349,7 +353,7 @@ def add_new_model(request, model_name):
 			print form.as_table()
 
 			page_context = {'form1': form,'formset':formset,  'field': normal_model_name }
-			return render_to_response('blogging/includes/add_content_type.html', page_context, context_instance=RequestContext(request))
+			return render(request, 'blogging/includes/add_content_type.html', page_context)
 
 def index(request):
 	template = loader.get_template('blogging/section.html')

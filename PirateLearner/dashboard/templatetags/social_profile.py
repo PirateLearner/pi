@@ -37,12 +37,16 @@ class SocialProfile(InclusionTag):
         try:
             template = self.get_template(context, **kwargs)
             data = self.get_context(context, **kwargs)
-            output = render_to_string(template, data)
-#             print output
+            output = render_to_string(template, data.flatten(), request=context['request'])
+            #print output
             context.pop()
             return output
         except:
             print "Unexpected error:", sys.exc_info()[0]
+            for frame in traceback.extract_tb(sys.exc_info()[2]):
+                fname,lineno,fn,text = frame
+                print "Error in %s on line %d" % (fname, lineno)
+
             return "Http404"
 
         
@@ -89,7 +93,7 @@ class SocialProfile(InclusionTag):
         """
         provider is required, if userid is not provided then use current logged-in user.
         """
-        extra_context = self._get_data_context(context, provider, userid)
+        extra_context = self._get_data_context(context, provider.lower(), userid)
         return extra_context
 
 register.tag(SocialProfile)

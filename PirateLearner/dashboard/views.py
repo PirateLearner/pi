@@ -84,10 +84,13 @@ def CreateProfile(sender, request, user,**kwargs):
             print "LOGS: Gender does not exist in social account"
         profile.save()
         # add user to Author Group
-        g = Group.objects.get(name='Author')
-        g.user_set.add(user)
-        generate_event.send(sender = user.__class__, event_label = "user_signed_up", 
+        try:
+            g = Group.objects.get(name='Author')
+            g.user_set.add(user)
+            generate_event.send(sender = user.__class__, event_label = "user_signed_up", 
                                 user = user, source_content_type = ContentType.objects.get_for_model(user), source_object_id= user.pk)
+        except:
+            print "LOGS: Group does not exist."
 
               
 
@@ -109,10 +112,12 @@ def dashboard_home(request):
     stats['annotations_count'] = get_annotations_count(request.user)
     stats['voting_count'] = Vote.objects.get_for_user_in_bulk(request.user).count()
     stats['notification_count'] = get_notification_count(request.user)
-    context = RequestContext(request, {
-                                       "profile":profile,"stats":stats,'active':'dashboard'
-                                      })
-    return HttpResponse(template.render(context))
+    context = {
+               "profile":profile,
+               "stats":stats,
+               "active":"dashboard"
+              }
+    return HttpResponse(template.render(context, request))
 
 def dashboard_profile(request,user_id):
     print "LOGS: DashBoard Profile called with user id " , user_id
@@ -170,7 +175,7 @@ def my_profile(request):
     user_bookmarks = get_user_bookmark(request.user.id)
     if len(articles) > 10:
         articles = articles[:10]
-    if len(user_bookmarks) > 10:
+    if user_bookmarks is not None and len(user_bookmarks) > 10:
         user_bookmarks = user_bookmarks[:10]
         
     # Get groups name
@@ -199,24 +204,24 @@ def my_profile(request):
             except User.DoesNotExist:
                 raise Http404
         else:
-            context = RequestContext(request, {
-                                       'profile': profile,
-                                       'profile_form': form,
-                                      'social' : social_info,
-                                       'articles':articles,
-                                       'bookmarks': user_bookmarks,
-                                        'groups': groups,
-                                      })
+            context = {
+		       'profile': profile,
+		       'profile_form': form,
+		       'social' : social_info,
+		       'articles':articles,
+		       'bookmarks': user_bookmarks,
+		       'groups': groups,
+                      }
     else:
-        context = RequestContext(request, {
-                                       'profile': profile,
-                                       'profile_form': form,
-                                       'social' : social_info,
-                                       'articles':articles,
-                                       'bookmarks': user_bookmarks,
-                                       'groups': groups,
-                                      })
-    return HttpResponse(template.render(context))
+        context = {
+                       'profile': profile,
+                       'profile_form': form,
+                       'social' : social_info,
+                       'articles':articles,
+                       'bookmarks': user_bookmarks,
+                       'groups': groups,
+                  }
+    return HttpResponse(template.render(context, request))
     
 def public_profile(request,user_id):
     
@@ -247,14 +252,14 @@ def public_profile(request,user_id):
         articles = get_top_articles(user_id)
         user_bookmarks = get_user_bookmark(user_id,'pub')
         
-        context = RequestContext(request, {
-                                           'profile':profile,
-                                           'social' : social_info,
-                                           'articles':articles,
-                                           'bookmarks': user_bookmarks,
-                                           'groups': groups,
-                                      })
-        return HttpResponse(template.render(context))
+        context = {
+                   'profile':profile,
+                   'social' : social_info,
+                   'articles':articles,
+                   'bookmarks': user_bookmarks,
+                   'groups': groups,
+                   }
+        return HttpResponse(template.render(context, request))
     
     except User.DoesNotExist:
         raise Http404
@@ -264,34 +269,34 @@ def manage_articles(request):
     template = loader.get_template('dashboard/manage.html')
     profile = UserProfile.objects.get(user=request.user.id) or None
     
-    context = RequestContext(request, {
-                                       "profile":profile,
-                                      })
-    return HttpResponse(template.render(context))
+    context = {
+               "profile":profile,
+              }
+    return HttpResponse(template.render(context, request))
 
 @login_required
 def published_articles(request):
     template = loader.get_template('dashboard/published.html')
-    context = RequestContext(request, {})
-    return HttpResponse(template.render(context))
+    context = {}
+    return HttpResponse(template.render(context, request))
 
 @login_required
 def pending_articles(request):
     template = loader.get_template('dashboard/pending.html')
-    context = RequestContext(request, {})
-    return HttpResponse(template.render(context))
+    context = {}
+    return HttpResponse(template.render(context, request))
 
 @login_required
 def draft_articles(request):
     template = loader.get_template('dashboard/draft.html')
-    context = RequestContext(request, {})
-    return HttpResponse(template.render(context))
+    context = {}
+    return HttpResponse(template.render(context, request))
 
 @login_required
 def bookmark_articles(request):
     template = loader.get_template('dashboard/bookmark.html')
-    context = RequestContext(request, {})
-    return HttpResponse(template.render(context))
+    context = {}
+    return HttpResponse(template.render(context, request))
 
 class TagCreate(CreateView):
     model = Tag
