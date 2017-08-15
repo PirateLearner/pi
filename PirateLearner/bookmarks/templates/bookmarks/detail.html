@@ -24,24 +24,24 @@
                 <h3 class="blog-post__title">{{ bookmark.get_title }}</h3>
                 <div class="blog-post__meta">
                   <span>
-                    <span class="blog-post__author"><a href="{{ bookmark.user.profile.get_profile_page }}">{{ bookmark.user.profile.get_profile_name|title }}</a></span>
+                    <span class="blog-post__author"><a href="{{ bookmark.user.profile.get_profile_page }}" target="_blank" rel="nofollow">{{ bookmark.user.profile.get_profile_name|title }}</a></span>
                     <meta itemprop="datePublished" content=" {{ meta.date_time }} "/>
-                    <time datetime="2016-06-30" class="blog-post__time"> {{ meta.date_time|naturaltime }} </time>
+{#                    <time datetime="2016-06-30" class="blog-post__time"> {{ meta.date_time|naturaltime }} </time>#}
                   </span>
                   <div class="blog-post__share hide-for-print">
-                    <a href="#" title="Google+" target="_blank" class="share__link analytics-event" data-analytics-event-category="blog" data-analytics-event-action="share" data-analytics-event-label="google+">
+                    <a href="https://plus.google.com/share?url={{ request.build_absolute_uri|urlencode }}" title="Google+" target="_blank" class="share__link analytics-event" data-analytics-event-category="blog" data-analytics-event-action="share" data-analytics-event-label="google+">
                       <i class="fa fa-google"></i>
                     </a>
-                    <a href="#" title="Facebook" target="_blank" class="share__link analytics-event" data-analytics-event-category="blog" data-analytics-event-action="share" data-analytics-event-label="facebook">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}" title="Facebook" target="_blank" class="share__link analytics-event" data-analytics-event-category="blog" data-analytics-event-action="share" data-analytics-event-label="facebook">
                       <i class="fa fa-facebook"></i>
                     </a>
-                    <a href="#" title="Twitter" target="_blank" class="share__link analytics-event" data-analytics-event-category="blog" data-analytics-event-action="share" data-analytics-event-label="twitter">
+                    <a href="https://twitter.com/share?url={{ request.build_absolute_uri|urlencode }}&text={{ bookmark.get_title }} " title="Twitter" target="_blank" class="share__link analytics-event" data-analytics-event-category="blog" data-analytics-event-action="share" data-analytics-event-label="twitter">
                       <i class="fa fa-twitter"></i>
                     </a>
-                    <a href="#" title="LinkedIn" target="_blank" class="share__link">
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri|urlencode }}&title={{ bookmark.get_title }}&summary={{ bookmark.get_summary }}&source=" title="LinkedIn" target="_blank" class="share__link">
                       <i class="fa fa-linkedin"></i>
                     </a>
-                    <a href="mailto:?subject=Check out this blog from PirateLerner &amp;body=" title="Email" target="_blank" class="share__link">
+                    <a href="mailto:?subject=Check out this page from PirateLerner &amp;body=" title="Email" target="_blank" class="share__link">
                       <i class="fa fa-envelope"></i>
                     </a>
                     <a title="Print" target="_blank" class="share__link" href="javascript:window.print();">
@@ -49,23 +49,43 @@
                     </a>
                   </div>
                 </div>
+                
+                <div>
+                  <span>
+                    <span class="blog-post__author"><a href="{{ bookmark.get_external_url }}">{{ bookmark.get_url_domain }}</a></span>
+                    <time datetime="2016-06-30" class="blog-post__time"> cached {{ meta.date_time|naturaltime }} </time>                  
+                  </span>
+                </div>
+                
                 <div class="blog-post__subjects hide-for-print">
                 </div>
                 <div class="blog-post__body markdown">
-                <div class="img_container">
-                    <img class="img-responsive article-image" src="{{ bookmark.get_image_url }}"/>
+{#	                <div class="img_container">#}
+{#	                    <img class="img-responsive article-image" src="{{ bookmark.get_image_url }}"/>#}
+{#	                </div>#}
+	                {% autoescape off %}
+	                    {{ bookmark.get_note }}
+	                {% endautoescape %}
                 </div>
-                {% autoescape off %}
-                    {{ bookmark.get_note }}
-                {% endautoescape %}
+
+                <div class="bookmark-footer text-right">
+                    <i>CACHED ENTRY</i>
+                </div>
+                
+                <div class="blog-post__body markdown">
+                    {% autoescape off %}
+                        {{ bookmark.get_description }}
+                    {% endautoescape %}
                 </div>
                 <!-- main blog content end -->
-            <div class="bookmark-footer">
-                <div class="bookmark-button">
-                    <a class="feature-button feature-button--submit mdl-button mdl-js-button mdl-button--raised" href="{{ bookmark.get_external_url }}" 
-                target="_blank" rel="nofollow">Visit Page</a>
+                <div class="bookmark-footer">
+                    <div class="bookmark-button">
+                        <a class="feature-button feature-button--submit mdl-button mdl-js-button mdl-button--raised" href="{{ bookmark.get_external_url }}" 
+                    target="_blank" rel="nofollow">Visit Page</a>
+                    </div>
                 </div>
-            </div>
+
+
                 
                 
                 {% ifequal bookmark.privacy_level 'pub' %}            

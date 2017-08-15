@@ -10,11 +10,6 @@ from bookmarks import settings
 from ckeditor.widgets import CKEditorWidget
 
 
-# class TagField(AutoModelSelect2TagField):
-#     queryset = Tag.objects.all()
-#     search_fields = ['name__icontains', ]
-#     def get_model_field_values(self, value):
-#         return {'name': value}
 
 
 class Select2ChoiceField(ModelMultipleChoiceField):
@@ -117,6 +112,7 @@ class BookmarkInstanceUpdateForm(forms.Form):
                     widget=SelectWithPopUp)
     
     privacy_level = forms.ChoiceField(choices=PRIVACY, required=True) 
+    tags = Select2ChoiceField(queryset=Tag.objects.filter())
     
     def __init__(self,user,bookmark_id, *args, **kwargs):
         super(BookmarkInstanceUpdateForm, self).__init__(*args, **kwargs)
@@ -124,33 +120,6 @@ class BookmarkInstanceUpdateForm(forms.Form):
         self.fields['folder'].queryset = BookmarkFolderInstance.objects.filter(adder=user)
         self.bookmark_id = bookmark_id
         self.fields.keyOrder = ["title","folder", "description","note", "privacy_level","tags"]
-        #super(BookmarkInstanceForm, self).__init__(*args, **kwargs)
-#         self.helper = FormHelper()
-#         
-#         self.helper.form_id = 'id-BookmarkInstanceUpdateForm'
-# #        self.helper.form_class = 'blueForms'
-#         self.helper.form_class = 'form-horizontal'
-#         self.helper.label_class = 'col-lg-2'
-#         self.helper.field_class = 'col-lg-8'
-#         self.helper.form_method = 'post'
-#         self.helper.form_action = reverse('bookmarks:update_bookmark_instance',args = bookmark_id)
-#         self.helper.layout = Layout(
-#                 Fieldset(
-#                 'EDIT BOOKMARK!!!',
-#                 'folder',
-#                 'title',
-#                 'description',
-#                 'note',
-#                 'privacy_level',
-#                 'tags',
-#             ),
-#             
-#             ButtonHolder(
-#                 Submit('submit', 'Update', css_class='button white'),
-#                 Submit('submit', 'Delete', css_class='button white')
-#             ),
-# 
-#             )
     
     def save(self, commit=True):
         instance = BookmarkInstance.objects.get(pk=self.bookmark_id)
@@ -161,14 +130,3 @@ class BookmarkInstanceUpdateForm(forms.Form):
         instance.privacy_level = self.cleaned_data["privacy_level"]
         return instance
 
-# class TagSelectField(AutoModelSelect2MultipleField):
-#     queryset = Tag.objects.all()
-#     search_fields = ['name__icontains', ]
-#     def get_model_field_values(self, value):
-#         return {'name': value}
-
-    
-# class LatestBookmarksForm(forms.ModelForm):
-#     tags = TagSelectField()
-#     class Meta:
-#         model = LatestBookmarksPlugin

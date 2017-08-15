@@ -16,8 +16,15 @@ if 'cms' in global_settings.INSTALLED_APPS:
 import traceback
 import sys
 from django.template.defaultfilters import slugify
+from django.utils import timezone
+
 
 from PirateLearner.models import BaseContentClass
+
+from django.utils.html import strip_tags
+from django.utils.safestring import mark_safe
+
+from bookmarks.utils import truncate_words
 
 PRIVACY = (
     ('pub','public'),
@@ -93,6 +100,7 @@ class BookmarkInstance(BaseContentClass):
                 self.is_promoted = False
              
         self.bookmark = bookmark
+        self.saved = timezone.now()
         super(BookmarkInstance, self).save(force_insert, force_update)
     
     def delete(self):
@@ -111,6 +119,9 @@ class BookmarkInstance(BaseContentClass):
     def get_external_url(self):
         return self.bookmark.url
     
+    def get_url_domain(self):
+        parsed_uri = urlparse.urlparse( self.bookmark.url )
+        return '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
     
     def get_image_url(self):
         if len(self.image_url)>0:
@@ -126,7 +137,8 @@ class BookmarkInstance(BaseContentClass):
 
 
     def get_summary(self):
-        return self.description
+        description = strip_tags(self.description)
+        return mark_safe(truncate_words(description,120))
     
     def get_description(self):
         return self.description

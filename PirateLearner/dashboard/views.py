@@ -8,6 +8,7 @@ from django.http import HttpResponse, Http404
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from dashboard.forms import ProfileEditForm
+from django.contrib.contenttypes.models import ContentType
 #from allauth.account.models import EmailAccount
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
