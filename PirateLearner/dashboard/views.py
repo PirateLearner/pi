@@ -168,9 +168,9 @@ def my_profile(request):
     ## fetch the latest articles by this author
     articles = get_top_articles(request.user.id)
     user_bookmarks = get_user_bookmark(request.user.id)
-    if len(articles) > 10:
+    if articles is not None and len(articles) > 10:
         articles = articles[:10]
-    if len(user_bookmarks) > 10:
+    if user_bookmarks is not None and len(user_bookmarks) > 10:
         user_bookmarks = user_bookmarks[:10]
         
     # Get groups name

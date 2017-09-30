@@ -150,7 +150,9 @@ def update(request, bookmark_instance_id):
                     print "LOGS: bookamrk attributes: ", bookmark_instance.description
                     print "LOGS: bookamrk attributes: ", bookmark_instance.note
                     print "LOGS: bookamrk attributes: ", bookmark_instance.privacy_level
-#                     print "LOGS: bookamrk attributes: ", bookmark_instance.tags 
+                    content = Readability(bookmark_instance.bookmark.url).parse()
+                    if content['content'] is not None:
+                        bookmark_instance.description = content['content']
                     bookmark_instance.save(bookmark_instance.bookmark.url)
                     print "LOGS: tags to be saved are : ", bookmark_form.cleaned_data['tags']
                     bookmark_instance.tags.set(*bookmark_form.cleaned_data['tags'])

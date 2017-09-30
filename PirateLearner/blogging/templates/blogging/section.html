@@ -22,7 +22,7 @@ This template will include 4 major html files: section_title.html, indext_tree.h
         <div class="mB-120 sections-page">
           {% include 'blogging/section_title.html' with page=page %}
           <div class="section fixed-width mdl-grid">
-            <div class="mdl-cell mdl-cell--3-col section__block section__block--indexes">
+            <div class="mdl-cell mdl-cell--3-col section__block section__block--indexes hide-small">
 				{% include 'blogging/index_tree.html' with parent=parent %}
             </div>
             <div class="mdl-cell mdl-cell--9-col section__block section__block--list">

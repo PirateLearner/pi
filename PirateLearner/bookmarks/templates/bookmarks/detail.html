@@ -14,6 +14,12 @@
 {% endblock %}
 
 
+{% block extra_style %}
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}js/syntaxhighlighter/styles/shCore.css">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}js/syntaxhighlighter/styles/shThemeDefault.css">
+{% endblock %}
+
+
 {% block bookmark_content %}
        <div class="mB-120 blog-post-page">
 {% comment %}   {% include 'blogging/section_title.html' with page=page %} {% endcomment %}
@@ -142,4 +148,14 @@
 {% endcomment %}		
 		
 {% endblock %}
+
+{% block extra_script %}
+
+<!-- Syntax Highlight -->
+    <script type="text/javascript">
+         SyntaxHighlighter.all()
+    </script>
+
+{% endblock %}
+
 

@@ -6,3 +6,4 @@ def site_processor(request):
     return {
         'site': SimpleLazyObject(lambda: get_current_site(request)),
     }
+    

@@ -4,7 +4,7 @@
 {% if nodes|length > 0 %}
 	{% for node in nodes %}
     <div class="content__item content__item--teaser mdl-shadow--2dp">
-      <div class="teaser__image border-1px" style="background-image: url('{{ node.get_image_url }}')">
+      <div class="teaser__image border-1px hide-small" style="background-image: url('{{ node.get_image_url }}')">
       </div>
       <div class="teaser__body">
         <h3 class="teaser__title">
