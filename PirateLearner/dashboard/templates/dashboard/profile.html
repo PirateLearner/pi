@@ -39,7 +39,9 @@
 	                       <button class="curve mdl-button c-{{ group|lower }}">{{ group|title }}</button>
 	                    {% endfor %}
 	                </div>
-	                <div class="__row center">
+	                <div class="__row center mT-16">
+	                <a href="{% url 'socialaccount_connections' %}" class="mdl-button">Social Connections</a>
+	                {% comment %}  
 	                {% for account in social_accounts %}
 	                    <div class="social circle">
 	                        <a class="soc-button" title="View {{ account.provider_name }} profile" href="{{ account.profile_url }}">
@@ -47,6 +49,7 @@
 	                        </a>
 	                    </div>
 	                {% endfor %}
+	                {% endcomment %}
 	                </div>
 	            </div>
 	            <div class="mdl-card__supporting-text">

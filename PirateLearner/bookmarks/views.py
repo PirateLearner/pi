@@ -62,8 +62,9 @@ def your_bookmarks(request):
     bookmark_instances = BookmarkInstance.objects.filter(
         user=request.user
     ).order_by("-saved")
-    return render_to_response("bookmarks/your_bookmarks.html", {
-        "bookmark_instances": bookmark_instances,
+    return render_to_response("bookmarks/bookmarks.html", {
+        "bookmarks": bookmark_instances,
+        'result_title':'Bookmarks',
     }, context_instance=RequestContext(request))
 
 

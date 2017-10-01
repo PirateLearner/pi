@@ -171,6 +171,9 @@
 			    {% url 'dashboard:dashboard-home' as url %}
 				<a href="{{ url }}" class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link">
 					Dashboard</a>
+				{% url 'bookmarks:your_bookmarks' as url %}
+                <a href="{{ url }}" class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link">
+                    My Bookmarks</a>
 				{% url 'dashboard:dashboard-profile' user_id=request.user.id as url %}
 				<a href="{{ url }}" 
 				class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link">Profile</a>
@@ -185,10 +188,10 @@
 				{% if request.user.is_staff %}
                 {% url 'bookmarks:manage_bookmarks' as url%}
 					<a href="{{ url }} " class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link"> 
-							Bookmarks</a>
+							Manage Bookmarks</a>
 					{% url 'blogging:manage_articles' as url%}
 					<a href="{{ url }} " class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link"> 
-							Articles</a>
+							Manage Articles</a>
                     {% url 'dashboard:tag-list' as url%}
                     <a href="{{ url }} " class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link">Tags</a> 
 							    	
