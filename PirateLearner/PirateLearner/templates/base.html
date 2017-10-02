@@ -1,4 +1,6 @@
 {% load staticfiles %}
+{% load blogging_tags %}
+
 <!DOCTYPE html>
 
 <!-- HTML5 Boilerplate -->
@@ -54,6 +56,8 @@
 	<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushXml.js"></script>
 	<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushBash.js"></script>
 	<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushPerl.js"></script>
+	<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushPlain.js"></script>
+	<script src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushCss.js"></script>
     <!-- GPLus Script -->
 	<script src="https://apis.google.com/js/platform.js" async defer></script>
 
@@ -167,6 +171,9 @@
 			    {% url 'dashboard:dashboard-home' as url %}
 				<a href="{{ url }}" class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link">
 					Dashboard</a>
+				{% url 'bookmarks:your_bookmarks' as url %}
+                <a href="{{ url }}" class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link">
+                    My Bookmarks</a>
 				{% url 'dashboard:dashboard-profile' user_id=request.user.id as url %}
 				<a href="{{ url }}" 
 				class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link">Profile</a>
@@ -178,13 +185,13 @@
 				{% url 'bookmarks:add_bookmark' as url%}
 				<a href="{{ url }}" class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link">
 					Create Bookmarks</a>
+				{% if request.user.is_staff %}
                 {% url 'bookmarks:manage_bookmarks' as url%}
-				<a href="{{ url }} " class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link"> 
-						Bookmarks</a>
-				{% url 'blogging:manage_articles' as url%}
-				<a href="{{ url }} " class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link"> 
-						Articles</a>
-		    	{% if request.user.is_staff %}
+					<a href="{{ url }} " class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link"> 
+							Manage Bookmarks</a>
+					{% url 'blogging:manage_articles' as url%}
+					<a href="{{ url }} " class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link"> 
+							Manage Articles</a>
                     {% url 'dashboard:tag-list' as url%}
                     <a href="{{ url }} " class="{% if request.path == url %} is-active {% endif %} mdl-navigation__link">Tags</a> 
 							    	

@@ -45,6 +45,7 @@ class Readability():
     Patter_prevLink = re.compile(r'(prev|earl|old|new|<|Â«)', flags = re.IGNORECASE)
     Patter_whitespace = re.compile(r'^\s*$', flags = re.IGNORECASE)
     Patter_hasContent = re.compile(r'\S$', flags = re.IGNORECASE)
+    Patter_codes =  re.compile(r'(as3|bash|xml|cf|as|vb|csharp|cpp|css|delphi|diff|erl|groovy|hx|jscript|java|perl|php|plain|ps|python|ruby|scss|sql|tap|ts|vb)', flags= re.IGNORECASE)
      
     def __init__(self,url, *args, **kwargs):
         self._uri = urlparse(url)
@@ -1238,6 +1239,22 @@ class Readability():
                 img["src"] =  toAbsoluteURI(src);
 
 
+    def _fixCodeClasses(self, content):
+        for e in content.findAll(True):
+            if type(e) is bs_element.Tag:
+                class_string = " ".join(e.get('class', []))
+                sre =  self.Patter_codes.search(class_string)
+                if sre:
+                    e['class'] = "brush: " + sre.group(1) + ';'
+                
+                if e.name == 'code' and type(e.parent) is bs_element.Tag and e.parent.name == 'pre':
+                    if sre:
+                        e.parent['class'] = "brush: " + sre.group(1) + ';'
+                    else:
+                        e.parent['class'] = "brush: " + 'plain;'; ## TODO identify the language inside the pre
+                    e.unwrap()
+
+
 
     def _postProcessContent(self,content):
         """
@@ -1250,6 +1267,7 @@ class Readability():
         """
         ## Readability cannot open relative uris so we convert them to absolute uris.
         self._fixRelativeUris(content);
+        self._fixCodeClasses(content);
 
         pass
 
