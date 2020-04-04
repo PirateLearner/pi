@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 import blogging.views as view
 from blogging.forms import *
 

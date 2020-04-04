@@ -15,7 +15,7 @@ from django.views.generic import TemplateView
 from blogging.models import BlogContent
 from dashboard.views import custom_login
 from blogging.views import ContactUs
-from utils import tags
+from PirateLearner.utils import tags
 
 tip_dict = {
     'model': BlogContent,
