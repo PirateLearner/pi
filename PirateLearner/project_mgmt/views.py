@@ -1,5 +1,5 @@
 # Create your views here.
-import ConfigParser
+import configparser
 from django.template import RequestContext, loader
 from django.http import HttpResponse
 from .utils import parse_feature
@@ -21,9 +21,9 @@ def index(request):
             started.append(element)
         else:
             pending.append(element)
-              
-    render_list = completed[0:2] + started[0:2] + pending[0:1] 
-    
+
+    render_list = completed[0:2] + started[0:2] + pending[0:1]
+
     template = loader.get_template('project_mgmt/wishlist.html')
     context = RequestContext(request, {
                                        'features': render_list,

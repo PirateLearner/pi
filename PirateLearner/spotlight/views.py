@@ -3,7 +3,7 @@
 
 
 from spotlight.models import Spotlight, TYPE
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
@@ -25,7 +25,7 @@ def index(request):
     featured_posts = Spotlight.objects.all().order_by("-added")
     print "LOGS: index SPOTLIGHT", featured_posts
     featured_list = []
-    
+
     for post in featured_posts:
         tmp = {}
         tmp['type'] = dict(TYPE)[post.type]
@@ -39,12 +39,12 @@ def index(request):
 def tagged_spotlight(request,tag):
     try:
         featured_posts = Spotlight.objects.all().order_by("-added")
-        
+
         featured_list = []
-        
+
         for post in featured_posts:
             if tag in post.content_object.get_tags():
-                tmp = {}                
+                tmp = {}
                 tmp['type'] = dict(TYPE)[post.type]
                 tmp['object'] = post.content_object
                 featured_list.append(tmp)
@@ -54,12 +54,12 @@ def tagged_spotlight(request,tag):
 
 def featured(request):
     featured_posts = Spotlight.objects.all().order_by("-added")
-    
+
     featured_list = []
-    
+
     for post in featured_posts:
         if 0 == post.type:
-            tmp = {}                
+            tmp = {}
             tmp['type'] = dict(TYPE)[post.type]
             tmp['object'] = post.content_object
             featured_list.append(tmp)
@@ -69,12 +69,12 @@ def featured(request):
 
 def promoted(request):
     featured_posts = Spotlight.objects.all().order_by("-added")
-    
+
     featured_list = []
-    
+
     for post in featured_posts:
         if 1 == post.type:
-            tmp = {}                
+            tmp = {}
             tmp['type'] = post.type
             tmp['object'] = post.content_object
             featured_list.append(tmp)
@@ -86,17 +86,17 @@ def promoted(request):
 
 @login_required
 def add_spotlight(request):
-    
+
     if request.method == "POST":
         print "LOGS: ADD SPOTLIGHT BY POST"
         spotlight_form = SpotlightForm(request.POST)
-        
+
         app_map = {'C': 'blogging', 'bookmarks': 'bookmarks'}
-        
+
         if spotlight_form.is_valid():
             spotlight_instance = Spotlight()
             spotlight_instance.adder = request.user
-            spotlight_instance.type = spotlight_form.clean()['type'] 
+            spotlight_instance.type = spotlight_form.clean()['type']
             site_name = get_current_site(request)
             print "LOGS:", site_name
             pattern = r'^.*%(site)s/(\w+)/(\w*)/.+/([0-9]+)/?/'% {'site':site_name}
@@ -122,7 +122,7 @@ def add_spotlight(request):
             else:
                 ValidationError(_('Invalid URL'), code='invalid')
         else:
-            print "LOGS: form is not valid ", spotlight_form.errors 
+            print "LOGS: form is not valid ", spotlight_form.errors
     else:
         spotlight_form = SpotlightForm(request.POST)
     return render_to_response("spotlight/add.html", {
@@ -142,7 +142,7 @@ def delete_spotlight(request, spotlight_instance_id):
         spotlight_instance.delete()
         messages.error(request, "Spotlight Deleted" )
         return HttpResponseRedirect(reverse("spotlight:all_spotlight"))
-   
+
     except:
         print "Unexpected error:", sys.exc_info()[0]
         for frame in traceback.extract_tb(sys.exc_info()[2]):
@@ -165,6 +165,6 @@ def delete_spotlight(request, spotlight_instance_id):
 
 
 
-    
+
 
 

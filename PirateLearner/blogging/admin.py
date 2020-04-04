@@ -9,8 +9,8 @@ if 'cms' in settings.INSTALLED_APPS:
     try:
         from cms.admin.placeholderadmin import FrontendEditableAdmin, PlaceholderAdmin
     except ImportError:
-        print 'CMS not installed'
-    
+        print('CMS not installed')
+
 import reversion
 
 def mark_published(modeladmin, request, queryset):
@@ -44,7 +44,7 @@ if 'cms' in settings.INSTALLED_APPS:
                      ('Info',     {'fields': ['title','slug', 'data','publication_start']} ),
                      ('Other',     {'fields': ['section', 'author_id', 'published_flag', 'special_flag', 'content_type','tags']} )
                      ]
-        
+
 
 
 admin.site.register(BlogParent, ParentAdmin)

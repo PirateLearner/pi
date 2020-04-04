@@ -24,46 +24,46 @@ class SocialProfile(InclusionTag):
     def __init__(self, parser, tokens):
         self.parser = parser
         super(SocialProfile, self).__init__(parser, tokens)
-        
+
     def get_template(self, context, **kwargs):
         return self.template
-    
+
     def render_tag(self, context, **kwargs):
         """
         Overridden from InclusionTag to push / pop context to avoid leaks
         """
         context.push()
-        print "LOGS: social profile tag is called"
+        print("LOGS: social profile tag is called")
         try:
             template = self.get_template(context, **kwargs)
             data = self.get_context(context, **kwargs)
             output = render_to_string(template, data)
-#             print output
+#             print(output)
             context.pop()
             return output
         except:
-            print "Unexpected error:", sys.exc_info()[0]
+            print("Unexpected error:", sys.exc_info()[0])
             return "Http404"
 
-        
+
     def _get_data_context(self,context,provider,userid):
         extra_context = copy(context)
-        print "LOGS: _get_data_context called "
+        print ("LOGS: _get_data_context called ")
         if userid:
-            print "atrribute ", userid
+            print("atrribute ", userid)
             try:
                 profile = UserProfile.objects.get(user = userid)
             except UserProfile.DoesNotExist:
-                print "LOGS: User Does Not exist"
-                return extra_context        
+                print("LOGS: User Does Not exist")
+                return extra_context
         else:
             try:
                 profile = UserProfile.objects.get(user = extra_context["request"].user)
-                print "LOGS: _get_data_context--> profile  ", profile
+                print("LOGS: _get_data_context--> profile  ", profile)
             except UserProfile.DoesNotExist:
-                print "LOGS: User Does Not exist"
-                return extra_context        
-            
+                print("LOGS: User Does Not exist")
+                return extra_context
+
         try:
             if profile.is_social_account_exist(provider):
                 extra_context['provider_name'] = profile.get_provider_name(provider)
@@ -78,12 +78,12 @@ class SocialProfile(InclusionTag):
                 extra_context['profile_username'] = profile.get_name(provider)
                 extra_context['profile_image'] = profile.get_avatar_url(provider)
         except:
-            print "Unexpected error:", sys.exc_info()[0]
+            print("Unexpected error:", sys.exc_info()[0])
             for frame in traceback.extract_tb(sys.exc_info()[2]):
                 fname,lineno,fn,text = frame
-                print "Error in %s on line %d" % (fname, lineno)
+                print("Error in %s on line %d" % (fname, lineno))
         return extra_context
-            
+
 
     def get_context(self, context,provider, userid=None):
         """

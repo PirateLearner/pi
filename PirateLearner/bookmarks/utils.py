@@ -3,8 +3,7 @@ import requests
 import traceback
 import sys
 from lxml import etree
-from urllib import urlencode
-from urlparse import urlparse, parse_qs, urlunparse
+from urllib.parse import urlencode, urlparse, parse_qs, urlunparse
 from blogging.utils import get_imageurl_from_data
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
@@ -17,20 +16,20 @@ def count_words(str):
 
 def truncate_words(mystring,numberofwords=100):
     return ' '.join(mystring.split()[:numberofwords])
-    
+
 
 def get_domain_from_url(url,image):
     # first check if netloc exist in image (for wikipedia)
     parsed_image = urlparse( image )
-    print "Getting domain of ", image
-    print "After parsing ", parsed_image
+    print("Getting domain of ", image)
+    print("After parsing ", parsed_image)
 #     net_loc = '{uri.netloc}/'.format(uri=parsed_image)
-    print "Net location is ", parsed_image.netloc
+    print("Net location is ", parsed_image.netloc)
     if parsed_image.netloc:
         parsed_uri = urlparse( url )
         domain = '{uri.scheme}:'.format(uri=parsed_uri)
-#         domain = parsed_uri.scheme 
-        print domain
+#         domain = parsed_uri.scheme
+        print(domain)
         return domain
     else:
         parsed_uri = urlparse( url )
@@ -39,11 +38,11 @@ def get_domain_from_url(url,image):
             domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
         else:
             relative_loc = parsed_uri.path.split('/')[:-1]
-            print relative_loc
+            print(relative_loc)
             relative_loc = '/'.join(x for x in relative_loc)
             domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
             domain = domain + relative_loc + '/'
-        print domain
+        print(domain)
         return domain
 
 def validate_image_url(image):
@@ -51,13 +50,13 @@ def validate_image_url(image):
     try:
         validate(image)
         return True
-    except ValidationError, e:
-        print e
+    except ValidationError as e:
+        print( e)
         return False
 
 def convert_rel_images(image_list,url):
     image_list = [image if validate_image_url(image) else get_domain_from_url(url,image)+image for image in image_list]
-    print "LOGS: after conversion ", image_list
+    print("LOGS: after conversion ", image_list)
     return image_list
 
 
@@ -73,7 +72,7 @@ def strip_url(url):
         urlencode(filtered, doseq=True), # query string
         parsed.fragment
     ])
-    print "LOGS: url after strip is: ", newurl
+    print("LOGS: url after strip is: ", newurl)
     return newurl
 
 def fetch_bookmark(url):
@@ -88,16 +87,16 @@ def fetch_bookmark(url):
             return_dict['url'] = url
             return_dict['tags'] = []
             return_dict['image_list'] = convert_rel_images(return_dict['image_list'], url)
-            print "LOGS: Printing the fetched bookmark dictionary--> ", return_dict
+            print("LOGS: Printing the fetched bookmark dictionary--> ", return_dict)
             return return_dict
         else:
             return None
     except:
-        print "LOGS: Some error in parsing !!!"
-        print "Unexpected error:", sys.exc_info()[0]
+        print("LOGS: Some error in parsing !!!")
+        print("Unexpected error:", sys.exc_info()[0])
         for frame in traceback.extract_tb(sys.exc_info()[2]):
             fname,lineno,fn,text = frame
-            print "Error in %s on line %d" % (fname, lineno)
+            print("Error in %s on line %d" % (fname, lineno))
         return None
 
 
@@ -108,24 +107,24 @@ def is_empty(data):
         return True
 
 def extract_data(data):
-    
-    print "First parsing it with lxml "
+
+    print("First parsing it with lxml ")
 #     html.fromstring(page.text) todo: in some site explore it
     hparser = etree.HTMLParser(encoding='utf-8')
     html = etree.HTML(data,parser=hparser)
 #     result = etree.tostring(html, pretty_print=True, method="html")
 #     print(result)
-    
+
     #soup = BeautifulSoup(data)
     # todo find the content from data in a order open graph, google and twitter cards
-    
+
     return_dict = {}
 
     for provider in settings.BOOKMARK_FETCH_PRIORITY:
         return_dict['title'] = parse_title(html,provider)
         if return_dict['title']:
             break
-    
+
     for provider in settings.BOOKMARK_FETCH_PRIORITY:
         return_dict['description'] = parse_description(html,provider)
         if return_dict['description']:
@@ -153,7 +152,7 @@ def parse_title(tree,provider):
         else:
             return extarct_para_info(tree,'title')
     except:
-        print "LOGS: title not found in %(provider)s meta"%{'provider':provider}
+        print("LOGS: title not found in %(provider)s meta"%{'provider':provider})
         return None
 
 def parse_description(tree,provider):
@@ -169,7 +168,7 @@ def parse_description(tree,provider):
         else:
             return extarct_para_info(tree,'description')
     except:
-        print "LOGS: description not found in %(provider)s meta"%{'provider':provider}
+        print("LOGS: description not found in %(provider)s meta"%{'provider':provider})
         return None
 
 def parse_image(tree,provider):
@@ -189,49 +188,48 @@ def parse_image(tree,provider):
             else:
                 return image
     except:
-        print "LOGS: image not found in %(provider)s meta"%{'provider':provider}
-        print "Unexpected error:", sys.exc_info()[0]
+        print("LOGS: image not found in %(provider)s meta"%{'provider':provider})
+        print("Unexpected error:", sys.exc_info()[0])
         for frame in traceback.extract_tb(sys.exc_info()[2]):
             fname,lineno,fn,text = frame
-            print "Error in %s on line %d" % (fname, lineno)
+            print("Error in %s on line %d" % (fname, lineno))
         return []
- 
-    
+
+
 def extarct_para_info(tree,context):
     # extract the title, description and image from first paragraph
-    print 'extract the title, description and image from opengraph meta tags'
-  
+    print('extract the title, description and image from opengraph meta tags')
+
     try:
         if context == 'title':
             return tree.xpath("/html/head/title/text()")[0].encode('utf-8')
-            
+
         elif context == 'description':
-            
+
 #             regexpNS = "http://exslt.org/regular-expressions"
 #             para = tree.xpath("//div[re:test(@class, '^.*content*')]/text()", namespaces={'re': regexpNS})
             para = tree.xpath("/descendant-or-self::node()/child::p/descendant::text()")
-            print "LOGS: printing text in body --> ", para
+            print("LOGS: printing text in body --> ", para)
             final_string = " ".join(x.encode('utf-8') for x in para)
-            print "LOGS: before strip --> ", final_string
-            print "LOGS: No of words in para are ", count_words(final_string)
+            print("LOGS: before strip --> ", final_string)
+            print("LOGS: No of words in para are ", count_words(final_string))
             if count_words(final_string) > 100:
-                print truncate_words(final_string)
+                print(truncate_words(final_string))
                 return truncate_words(final_string)
         elif context == 'image':
             para = tree.xpath("//img")
             final_images = [image.get("src").encode('utf-8') for image in para ]
-            print "LOGS: Number of images found --> ", len(final_images)
-            print "LOGS: Number of images found --> ", type(final_images)
+            print("LOGS: Number of images found --> ", len(final_images))
+            print("LOGS: Number of images found --> ", type(final_images))
             if len(final_images) < MAX_NO_IMAGE:
                 return final_images
             else:
                 return final_images[:MAX_NO_IMAGE]
     except:
-        print "Unexpected error:", sys.exc_info()[0]
+        print("Unexpected error:", sys.exc_info()[0])
         for frame in traceback.extract_tb(sys.exc_info()[2]):
             fname,lineno,fn,text = frame
-            print "Error in %s on line %d" % (fname, lineno)
+            print("Error in %s on line %d" % (fname, lineno))
         return None
-        
+
     return None
-    

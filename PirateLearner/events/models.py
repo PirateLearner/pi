@@ -6,9 +6,9 @@ from django.db.models.query import QuerySet
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import get_language, activate
-from django.utils.encoding import python_2_unicode_compatible
-from django.utils.six.moves import cPickle as pickle  # pylint: disable-msg=F
-from django.utils import six
+from six import python_2_unicode_compatible
+from six.moves import cPickle as pickle  # pylint: disable-msg=F
+import six
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 
@@ -24,7 +24,7 @@ class InvalidEvent(Exception):
     """ Easy to understand naming conventions work best! """
     def __init__(self, value):
         self.value = value
-        
+
     def __str__(self):
         return "{0} does not exist in EventType! please create it first.".format(repr(self.value))
 
@@ -92,7 +92,7 @@ class EventFilter(models.Model):
     class Meta:
         verbose_name = _("event filter")
         verbose_name_plural = _("event filters")
-        unique_together = ("user", "event_type", "action", "scoping_content_type", "scoping_object_id")        
+        unique_together = ("user", "event_type", "action", "scoping_content_type", "scoping_object_id")
 
 
 class EventQueueBatch(models.Model):
@@ -116,22 +116,22 @@ def send(to, label, sender=None, **kwargs):
     1. get all user from given gruop if to is str object;
         otherwise to is a list of users objects
     @todo
-    
-    2. via field indicates the backend which will be used to send the Notifications. 
+
+    2. via field indicates the backend which will be used to send the Notifications.
         It should be one of the EVENTS_NOTIFICATIONS_BACKENDS defined in settings.
         If it is not a list of strings convert it to one.
-    
+
     """
     sent = False
-    
-    extra_context = kwargs.get("extra_context",{})   
+
+    extra_context = kwargs.get("extra_context",{})
     scoping = kwargs.get("scoping",None)
     notice_type = EventType.objects.get(label=label)
 
     users = to
     if isinstance(to, six.string_types):
         users = User.objects.filter(groups__name=to)
-   
+
 
     for user in users:
         for backend in settings.EVENTS_NOTIFICATIONS_BACKENDS.values():

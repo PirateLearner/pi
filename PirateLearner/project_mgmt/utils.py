@@ -1,14 +1,14 @@
 
 import sys
 import os
-import ConfigParser
+import configparser
 
 def parse_feature():
     """
-    open the feature.ini file and pass each section to the funtion pase_section() and reture list of dictionary 
+    open the feature.ini file and pass each section to the funtion pase_section() and reture list of dictionary
     """
     try:
-        Config = ConfigParser.ConfigParser()
+        Config = configparser.configparser()
         filename = os.path.abspath(os.path.dirname(__file__))+"/"+ "features.ini"
         Config.read(filename)
         return_list = []
@@ -20,7 +20,7 @@ def parse_feature():
 
 def parse_section(Config, section):
     """
-    parse the options in the section given and return the dictionary 
+    parse the options in the section given and return the dictionary
     """
     dict1 = {}
     options = Config.options(section)

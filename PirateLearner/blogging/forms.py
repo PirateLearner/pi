@@ -9,7 +9,7 @@ from blogging.widgets import SelectWithPopUp
 from django.db import models
 from ckeditor.widgets import CKEditorWidget
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.encoding import force_text, smart_text
 import json
 from blogging import tag_lib
@@ -34,11 +34,11 @@ CONTACT_TYPE = (
 
 class Select2ChoiceField(ModelMultipleChoiceField):
     '''
-    In case you are populating the fields using ajax request then 'to_python' must be 
-    overridden, as default queryset is None and this function originally check if 
+    In case you are populating the fields using ajax request then 'to_python' must be
+    overridden, as default queryset is None and this function originally check if
     returned value is in the queryset which in turns raise validation error "invalid_choice".
     '''
-                
+
     def to_python(self, value):
         if value in self.empty_values:
             return None
@@ -59,7 +59,7 @@ class TagField(forms.MultipleChoiceField):
 		if not value:
 			return []
 		return list(self._check_values(value))
-	
+
 	def _check_values(self, value):
 		"""
 		Given a list of possible PK values, returns a QuerySet of the
@@ -99,7 +99,7 @@ class TagField(forms.MultipleChoiceField):
 
 	def valid_value(self, value):
 		"Check to see if the provided value is a valid choice"
-		print "LOGS: valid_value is called "
+		print("LOGS: valid_value is called ")
 		text_value = force_text(value.id)
 		for k, v in self.choices:
 			if isinstance(v, (list, tuple)):
@@ -111,7 +111,7 @@ class TagField(forms.MultipleChoiceField):
 				if value.id == k or text_value == force_text(k):
 					return True
 		return False
-	
+
 def validate_empty(value):
 	if value :
 		raise ValidationError(u'It seems you are not human!!!')
@@ -133,14 +133,14 @@ class LatestEntriesForm(forms.ModelForm):
 #         options['tokenSeparators'] = [',', ]
 #         kwargs['select2_options'] = options
 #         super(PostTagWidget, self).__init__(*args, **kwargs)
-# 
+#
 #     def render_js_code(self, *args, **kwargs):
 #         js_code = super(PostTagWidget, self).render_js_code(*args, **kwargs)
 #         return js_code.replace('$', 'jQuery')
-# 
-# 
+#
+#
 # class PostForm(forms.ModelForm):
-# 
+#
 # 	data = forms.CharField(label="Data Field", widget=CKEditorWidget())
 # 	class Meta:
 # 		widgets = {'tags': PostTagWidget, }
@@ -152,7 +152,7 @@ class ParentForm(forms.ModelForm):
 	class Meta:
 		model = BlogParent
 		exclude = ('slug',)
-		
+
 
 class ContentTypeForm(forms.Form):
 	ContentType = forms.ModelChoiceField(
@@ -164,7 +164,7 @@ class ContentTypeForm(forms.Form):
 	def __init__(self, *args, **kwargs):
 		super(ContentTypeForm, self).__init__(*args, **kwargs)
 # 		self.helper = FormHelper()
-# 		
+#
 # 		self.helper.form_id = 'id-ContentTypeForm'
 # #		self.helper.form_class = 'blueForms'
 # 		self.helper.form_class = 'form-horizontal'
@@ -177,13 +177,13 @@ class ContentTypeForm(forms.Form):
 #                 'You can select the existing Content Type or Create New for your Post.',
 #                 'ContentType',
 #             ),
-# 			
+#
 #             ButtonHolder(
 #                 Submit('submit', 'next', css_class='button white'),
 #                 Submit('submit', 'delete', css_class='btn-danger')
-#                 
+#
 #             ),
-# 			
+#
 # 			)
 
 
@@ -192,9 +192,9 @@ class ContentTypeCreationForm(forms.ModelForm):
 # 	helper1 = FormHelper()
 
 	def __init__(self, *args, **kwargs):
-		
+
 		super(ContentTypeCreationForm, self).__init__(*args, **kwargs)
-		
+
 # 		self.helper1.form_id = 'id-ContentTypeCreationForm'
 # 		#		self.helper.form_class = 'blueForms'
 # 		self.helper1.form_class = 'form-inline'
@@ -203,7 +203,7 @@ class ContentTypeCreationForm(forms.ModelForm):
 #		self.helper1.template = 'blogging/inline_field.html'
 
 
-	
+
 	class Meta:
 		model = BlogContentType
 		fields = ['content_type', 'is_leaf']
@@ -211,17 +211,17 @@ class ContentTypeCreationForm(forms.ModelForm):
 class FieldTypeForm(forms.Form):
 	field_name = forms.CharField()
 	field_type = forms.ChoiceField(widget = forms.Select(),choices=CUSTOM_FIELD_TYPE)
-	
+
 	def clean_field_name(self):
-		print "LOGS: clean_field_name called"
+		print("LOGS: clean_field_name called")
 		data = slugify_name(self.cleaned_data['field_name'])
 		return data
 
-	
+
 # class FormsetHelper(FormHelper):
 # 	def __init__(self, *args, **kwargs):
 # 		super(FormsetHelper, self).__init__(*args, **kwargs)
-# 		
+#
 # 		self.form_id = 'id-FieldTypeForm'
 # #		self.helper.form_class = 'blueForms'
 # 		self.form_class = 'form-inline'
@@ -233,14 +233,14 @@ class FieldTypeForm(forms.Form):
 #                 'field_name',
 #                 'field_type',
 # 			)
-	
+
 class ContentForm(forms.ModelForm):
 	class Meta:
 		model = BlogContent
 		exclude = ('slug',)
 
 # class PostEditForm(forms.ModelForm):
-# 
+#
 # 	class Meta:
 # 	    model = BlogContent
 # 	    widgets = {'tags': PostTagWidget,
@@ -264,12 +264,12 @@ if 'cms' in settings.INSTALLED_APPS:
 	        widgets = {
 	            'tags': django_select2.Select2MultipleWidget
 	        }
-        
+
 	class SectionPluginForm(forms.ModelForm):
-		
+
 		class Meta:
 			model = SectionPlugin
-		
+
 		def __init__(self, *args, **kwargs):
 			super(SectionPluginForm, self).__init__(*args, **kwargs)
 			choices = [self.fields['parent_section'].choices.__iter__().next()]
@@ -278,7 +278,7 @@ if 'cms' in settings.INSTALLED_APPS:
 					(page.id, ''.join(['-' * page.level, page.__unicode__()]))
 				)
 			self.fields['parent_section'].choices = choices
-		
+
 class ContactForm(forms.Form):
 	contact_type = forms.ChoiceField(label="Choose Type of Contact",required=True,
 									widget=forms.RadioSelect,choices=CONTACT_TYPE)
@@ -287,7 +287,7 @@ class ContactForm(forms.Form):
         max_length=80,
         required=True,
     )
-	
+
 	email = forms.EmailField(
 			label="Your email?",
 			required=True,
@@ -305,11 +305,11 @@ class ContactForm(forms.Form):
 							required=False,
 							validators=[validate_empty],
 							)
-	
+
 	def __init__(self, *args, **kwargs):
 		super(ContactForm, self).__init__(*args, **kwargs)
 # 		self.helper = FormHelper()
-# 		
+#
 # 		self.helper.form_id = 'id-ContactForm'
 # #		self.helper.form_class = 'blueForms'
 # 		self.helper.form_class = 'form-horizontal'
@@ -327,11 +327,11 @@ class ContactForm(forms.Form):
 #                 'extra',
 # 				Field('honeypot', type="hidden"),
 #             ),
-# 			
+#
 #             ButtonHolder(
 #                 Submit('submit', 'Submit', css_class='button white')
 #             ),
-# 			
+#
 # 			)
 #		self.helper.add_input(Submit('submit', 'Submit'))
 
@@ -344,7 +344,7 @@ class ContactForm(forms.Form):
 # 	pid_count = forms.IntegerField(required=False)
 # 	def __init__(self, *args, **kwargs):
 # 		self.helper = FormHelper()
-# 		
+#
 # 		self.helper.form_id = 'id-TestFormClass'
 # #		self.helper.form_class = 'blueForms'
 # 		self.helper.form_class = 'form-horizontal'
@@ -362,19 +362,19 @@ class ContactForm(forms.Form):
 #                 'section',
 #                 Field('pid_count', type="hidden"),
 #             ),
-# 			
+#
 #             ButtonHolder(
 #                 Submit('submit', 'Submit', css_class='button white')
 #             ),
-# 			
+#
 # 			)
 # 		super(TestFormClass, self).__init__(*args, **kwargs)
-# 
-# 	
+#
+#
 # 	def save(self,post,db_instance=None):
-# 		print "LOGS: Section --> ", post.pop('section')
-# 		print "LOGS: Tags --> ", post.pop('tags')
-# 		print "LOGS: Tags --> ", post.pop('title')
+# 		print("LOGS: Section --> ", post.pop('section'))
+# 		print("LOGS: Tags --> ", post.pop('tags'))
+# 		print("LOGS: Tags --> ", post.pop('title'))
 # 		post.pop('csrfmiddlewaretoken')
 # 		post.pop('submit')
 # 		if db_instance != None:
@@ -383,19 +383,19 @@ class ContactForm(forms.Form):
 # 			instance = BlogContent()
 # 		instance.title = self.cleaned_data["title"]
 # 		instance.section = self.cleaned_data["section"]
-# 
+#
 # 		for k,v in post.iteritems():
 # 			if str(k) != 'pid_count' :
 # 				tmp = {}
 # 				tmp = tag_lib.insert_tag_id(str(v),self.cleaned_data["pid_count"])
 # 				post[k] = tmp['content']
 # 				post['pid_count'] = tmp['pid_count']
-# 			
+#
 # 		json_str = json.dumps(post.dict())
 # 		instance.data = str(json_str)
-# 		print "LOGS: printing the json_str", json_str
+# 		print("LOGS: printing the json_str", json_str)
 # 		return instance
-		
+
 
 """
 class PageForm(forms.Form):

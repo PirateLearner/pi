@@ -79,7 +79,7 @@ LOGGING = {
         },
         'PirateLearner': {
             'handlers': ['console'],
-            'level': 'DEBUG',                          
+            'level': 'DEBUG',
         },
     }
 }
@@ -131,7 +131,7 @@ INSTALLED_APPS = (
     'annotations',
     'ckeditor',
     'ckeditor_uploader',
-    'disqus',
+    #'disqus',
     'dashboard',
     'bookmarks',
     'pl_messages',

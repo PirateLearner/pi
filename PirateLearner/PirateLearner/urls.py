@@ -5,10 +5,10 @@ from django.contrib import admin
 from django.conf import settings
 from blogging.sitemaps import BlogSitemap,BlogParentSitemap
 from bookmarks.sitemaps import BookmarkSitemap
-from django.utils.functional import curry
+from functools import partialmethod
 from django.views.defaults import *
 from django.conf.urls.static import static
-from django.contrib.auth.views import logout
+from django.contrib.auth import logout
 from django.contrib.sitemaps.views import sitemap
 from django.views.generic import TemplateView
 
@@ -24,10 +24,10 @@ tip_dict = {
     'allow_xmlhttprequest': 'true',
 }
 
-handler500 = curry(server_error, template_name='error_404.html')
-handler404 = curry(page_not_found, template_name='error_404.html')
-handler403 = curry(permission_denied, template_name='error_404.html')
-handler400 = curry(bad_request, template_name='error_404.html')
+handler500 = partialmethod(server_error, template_name='error_404.html')
+handler404 = partialmethod(page_not_found, template_name='error_404.html')
+handler403 = partialmethod(permission_denied, template_name='error_404.html')
+handler400 = partialmethod(bad_request, template_name='error_404.html')
 sitemaps =  {'blog':BlogSitemap,'sections':BlogParentSitemap,'bookmarks':BookmarkSitemap}
 
 admin.autodiscover()

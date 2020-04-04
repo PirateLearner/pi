@@ -18,7 +18,7 @@ def get_class(user, thread):
         return 'unread'
     return ''
 
-@register.assignment_tag
+@register.simple_tag
 def get_user(user, thread):
     participants = thread.participants.all()
     for u in participants:

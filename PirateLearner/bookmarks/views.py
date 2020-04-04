@@ -7,7 +7,7 @@ import urllib2
 from bookmarks.models import Bookmark, BookmarkFolderInstance, BookmarkInstance, get_user_bookmark, get_bookmark
 from bookmarks import utils
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponse, Http404, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext, loader
@@ -23,7 +23,7 @@ import traceback
 from django.contrib.auth.decorators import permission_required
 import sys
 from django.core.exceptions import ObjectDoesNotExist
-from meta_tags.views import Meta 
+from meta_tags.views import Meta
 from blogging.utils import truncatewords
 from bookmarks.utils import count_words
 
@@ -71,7 +71,7 @@ def your_bookmarks(request):
 @login_required
 def add(request):
     if request.method == "POST":
-        print "LOGS: ADD BOOKMARKS BY POST"
+        print("LOGS: ADD BOOKMARKS BY POST")
         bookmark_form = BookmarkInstanceForm(request.user, request.POST)
         if bookmark_form.is_valid():
             bookmark_instance = bookmark_form.save(commit=False)
@@ -86,7 +86,7 @@ def add(request):
         initial = {}
         if request.method == "GET":
             if "url" in request.GET:
-                print "LOGS: ADD BOOKMARKS BY GET URL %(url)s" % {'url':request.GET["url"]}
+                print("LOGS: ADD BOOKMARKS BY GET URL %(url)s" % {'url':request.GET["url"]})
                 initial["url"] = request.GET["url"]
                 bookmark_instance = get_user_bookmark(initial["url"], request.user)
                 if bookmark_instance:
@@ -104,14 +104,14 @@ def add(request):
                         initial = Readability(initial["url"]).parse()
                         if initial['content'] is not None:
                             initial['message'] = "fetching successful!!!"
-                            initial['message_type'] = "success" 
+                            initial['message_type'] = "success"
                             return HttpResponse(json.dumps(initial), content_type="application/json")
                         else:
                             initial['message_type'] = "danger"
                             return HttpResponse(json.dumps(initial), content_type="application/json")
             else:
                 bookmark_form = BookmarkInstanceForm(request.user)
-   
+
     return render_to_response("bookmarks/add.html", {
         "form": bookmark_form,
     }, context_instance=RequestContext(request))
@@ -142,28 +142,28 @@ def update(request, bookmark_instance_id):
         if request.method == "POST":
             action = request.POST.get('submit')
             if action == 'Update':
-                print "LOGS: ADD BOOKMARKS BY POST"
+                print("LOGS: ADD BOOKMARKS BY POST")
                 bookmark_form = BookmarkInstanceUpdateForm(bookmark_instance.user,bookmark_instance_id,request.POST)
                 if bookmark_form.is_valid():
                     bookmark_instance = bookmark_form.save(commit=False)
-                    print "LOGS: bookamrk attributes: ", bookmark_instance.bookmark.url
-                    print "LOGS: bookamrk attributes: ", bookmark_instance.title
-                    print "LOGS: bookamrk attributes: ", bookmark_instance.description
-                    print "LOGS: bookamrk attributes: ", bookmark_instance.note
-                    print "LOGS: bookamrk attributes: ", bookmark_instance.privacy_level
+                    print("LOGS: bookamrk attributes: ", bookmark_instance.bookmark.url)
+                    print("LOGS: bookamrk attributes: ", bookmark_instance.title)
+                    print("LOGS: bookamrk attributes: ", bookmark_instance.description)
+                    print("LOGS: bookamrk attributes: ", bookmark_instance.note)
+                    print("LOGS: bookamrk attributes: ", bookmark_instance.privacy_level)
                     content = Readability(bookmark_instance.bookmark.url).parse()
                     if content['content'] is not None:
                         bookmark_instance.description = content['content']
                     bookmark_instance.save(bookmark_instance.bookmark.url)
-                    print "LOGS: tags to be saved are : ", bookmark_form.cleaned_data['tags']
+                    print("LOGS: tags to be saved are : ", bookmark_form.cleaned_data['tags'])
                     bookmark_instance.tags.set(*bookmark_form.cleaned_data['tags'])
                     messages.success(request, _("You have updated bookmark '%(title)s'") % {
                             "title": bookmark_instance.title
                         })
                     return HttpResponseRedirect(reverse("bookmarks:all_bookmarks"))
                 else:
-                    return render_to_response("bookmarks/update.html", 
-                                              {"bookmark_form": bookmark_form,}, 
+                    return render_to_response("bookmarks/update.html",
+                                              {"bookmark_form": bookmark_form,},
                                               context_instance=RequestContext(request))
             elif action == 'Delete':
                 bookmark_instance.delete()
@@ -178,16 +178,16 @@ def update(request, bookmark_instance_id):
                        "description":str(bookmark_instance.description),
                        "note":bookmark_instance.note,
                        "privacy_level":bookmark_instance.privacy_level,
-                       "tags":bookmark_instance.tags.all(), 
-                       
+                       "tags":bookmark_instance.tags.all(),
+
                        }
             bookmark_form = BookmarkInstanceUpdateForm(bookmark_instance.user,bookmark_instance_id,initial = initial)
         return render_to_response("bookmarks/update.html", {"bookmark_form": bookmark_form,}, context_instance=RequestContext(request))
     except:
-        print "Unexpected error:", sys.exc_info()[0]
+        print("Unexpected error:", sys.exc_info()[0])
         for frame in traceback.extract_tb(sys.exc_info()[2]):
             fname,lineno,fn,text = frame
-            print "Error in %s on line %d" % (fname, lineno)
+            print("Error in %s on line %d" % (fname, lineno))
         raise Http404
 
 
@@ -216,22 +216,22 @@ def add_folder(request,model_name):
             else:
                 page_context = {'form': bookmark_form,  'field': normal_model_name }
                 return render_to_response('bookmarks/add_folder.html', page_context, context_instance=RequestContext(request))
-            
+
         else:
             bookmark_form = BookmarkFolderForm(request.user, request.POST)
             page_context = {'form': bookmark_form,  'field': normal_model_name }
             return render_to_response('bookmarks/add_folder.html', page_context, context_instance=RequestContext(request))
-            
-    
+
+
 
 
 
 def bookmark_details(request,slug):
     current_section = slug.split("/")[-1]
-#     print current_section
+#     print(current_section)
     try:
         post_id = int(current_section)
-        print "LOGS:: This is Detail page of bookmarks"
+        print("LOGS:: This is Detail page of bookmarks")
         try:
             bookmark = BookmarkInstance.objects.get(pk=post_id)
             description = strip_tags(bookmark.note)
@@ -241,21 +241,21 @@ def bookmark_details(request,slug):
                     image = bookmark.get_image_url(), author = bookmark.user, date_time = bookmark.saved ,
                     object_type = 'article', keywords = [ tags.name for tags in bookmark.tags.all()])
             if request.user.is_authenticated():
-                can_edit = (request.user.is_staff == True) or request.user == bookmark.user 
+                can_edit = (request.user.is_staff == True) or request.user == bookmark.user
             else:
-                can_edit = False 
+                can_edit = False
             return render_to_response("bookmarks/detail.html", {'bookmark':bookmark,'meta':meta,'can_edit':can_edit } ,context_instance=RequestContext(request))
 
         except:
-            print "Unexpected error:", sys.exc_info()[0]
+            print("Unexpected error:", sys.exc_info()[0])
             for frame in traceback.extract_tb(sys.exc_info()[2]):
                 fname,lineno,fn,text = frame
-                print "Error in %s on line %d" % (fname, lineno)
+                print("Error in %s on line %d" % (fname, lineno))
             raise Http404
     except ValueError:
-        print "Unexpected error invalid URL:", sys.exc_info()[0]
+        print("Unexpected error invalid URL:", sys.exc_info()[0])
         raise Http404
-        
+
 @group_required('Administrator')
 def manage(request):
     """
@@ -263,29 +263,29 @@ def manage(request):
     """
      # Check the parameters passed in the URL and process accordingly
     action = request.GET.get('action', None)
-    bookmark_ids = request.GET.get('ids', None)    
+    bookmark_ids = request.GET.get('ids', None)
 
     if request.is_ajax() and request.method == "POST":
         if action is None or bookmark_ids is None:
-            print "Error: manage: No parameter(s) passed."
+            print("Error: manage: No parameter(s) passed.")
             res = {}
             res['result'] = 'failure'
             res['return_text'] = 'No parameter(s) passed'
             return JsonResponse(res)
         bookmark_ids = [x.strip() for x in bookmark_ids.split(',')]
-        # remove comma from the 
+        # remove comma from the
         if not bookmark_ids[-1]:
             bookmark_ids = bookmark_ids[:-1]
         action = action.strip()
-        print "manage: action=", action, "bookmarks=", bookmark_ids
+        print("manage: action=", action, "bookmarks=", bookmark_ids)
         count = 0
         try:
             if len(bookmark_ids):
                 res = {}
                 objs = BookmarkInstance.objects.filter(pk__in=bookmark_ids)
-                
+
                 if action == 'Promote':
-                    print "LOGS: Promote the given bookmarks"
+                    print("LOGS: Promote the given bookmarks")
                     obj_errors = []
                     obj_published = []
                     for obj in objs:
@@ -313,7 +313,7 @@ def manage(request):
                     res['action'] = "Delete"
 
                 elif action == "Demote":
-                    print "LOGS: Promote the given bookmarks"
+                    print("LOGS: Promote the given bookmarks")
                     obj_published = []
                     for obj in objs:
                         obj.is_promoted = False
@@ -326,7 +326,7 @@ def manage(request):
                     res['action'] = "Unpublish"
 
                 elif action == "Make public":
-                    print "LOGS: Promote the given bookmarks"
+                    print("LOGS: Promote the given bookmarks")
                     obj_errors = []
                     obj_published = []
                     for obj in objs:
@@ -347,12 +347,12 @@ def manage(request):
                         res['result'] = 'failure'
 
                 elif action == "Make private":
-                    print "LOGS: Promote the given bookmarks"
+                    print("LOGS: Promote the given bookmarks")
                     obj_errors = []
                     obj_published = []
 
                     for obj in objs:
-                        if obj.user == request.user:                        
+                        if obj.user == request.user:
                             obj.privacy_level = "priv"
                             obj.save(obj.bookmark.url)
                             obj_published.append(obj.id)
@@ -367,16 +367,16 @@ def manage(request):
                         res['return_text'] += '\n'
                         res['return_text'] += '\n'.join(obj_errors)
                         res['result'] = 'failure'
-                print "manage_articles: Total", count
+                print("manage_articles: Total", count)
                 return JsonResponse(res)
         except:
-            print "Unexpected error:", sys.exc_info()[0]
+            print("Unexpected error:", sys.exc_info()[0])
             for frame in traceback.extract_tb(sys.exc_info()[2]):
                 fname,lineno,fn,text = frame
-                print "Error in %s on line %d" % (fname, lineno)
+                print("Error in %s on line %d" % (fname, lineno))
             res = {}
             res['result'] = 'error'
-            return JsonResponse(res) 
+            return JsonResponse(res)
 
     page = request.GET.get('page',None)
     tab = request.GET.get('tab','all')
@@ -402,7 +402,7 @@ def manage(request):
             bookmarks = base_queryset
             result_title = 'all bookmarks'
 
-        
+
         paginator = Paginator(bookmarks, 50,orphans=30)
         try:
             pages = paginator.page(page)
@@ -419,45 +419,45 @@ def manage(request):
                    {"name":"Make private", "help":"set visibility as private bookmark"},
                    ]
         tab_css_class = ['is-active']
-        query_tabs = [ 
-                    {     'name': 'All', 
-                        'url': reverse("bookmarks:manage_bookmarks")+'?tab=all', 
+        query_tabs = [
+                    {     'name': 'All',
+                        'url': reverse("bookmarks:manage_bookmarks")+'?tab=all',
                         'css': ' '.join(tab_css_class) if tab == 'all' else '',
                         'help_text': 'List of all bookmarks.'
                     },
-                    {     'name': 'Promoted', 
-                        'url': reverse("bookmarks:manage_bookmarks")+'?tab=promoted', 
+                    {     'name': 'Promoted',
+                        'url': reverse("bookmarks:manage_bookmarks")+'?tab=promoted',
                         'css': ' '.join(tab_css_class) if tab == 'promoted' else '',
                         'help_text': 'List of all promoted bookmarks.'
                     },
-                    {     'name': 'Public', 
-                        'url': reverse("bookmarks:manage_bookmarks")+'?tab=public', 
+                    {     'name': 'Public',
+                        'url': reverse("bookmarks:manage_bookmarks")+'?tab=public',
                         'css':  ' '.join(tab_css_class) if tab == 'public' else '',
                         'help_text': 'List of public bookmarks.'
                     },
-                    {     'name': 'Private', 
-                        'url': reverse("bookmarks:manage_bookmarks")+'?tab=private', 
+                    {     'name': 'Private',
+                        'url': reverse("bookmarks:manage_bookmarks")+'?tab=private',
                         'css': ' '.join(tab_css_class) if tab == 'private' else '',
                         'help_text': 'List of private bookmarks.'
                     }
                     ]
-        
+
         template = loader.get_template('bookmarks/manage.html')
         context = {"bookmarks": pages, "actions": actions, 'query_tabs':query_tabs,'result_title':result_title
                    }
         return HttpResponse(template.render(context,request))
     except:
-        print "Unexpected error:", sys.exc_info()[0]
+        print("Unexpected error:", sys.exc_info()[0])
         for frame in traceback.extract_tb(sys.exc_info()[2]):
             fname,lineno,fn,text = frame
-            print "Error in %s on line %d" % (fname, lineno)
+            print("Error in %s on line %d" % (fname, lineno))
         raise Http404
-    
 
 
 
 
 
-    
+
+
 
 

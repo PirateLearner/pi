@@ -8,7 +8,7 @@ Models for Project Management :
 Project will have following fields:
 a) Owner
 b) contributors
-c) name 
+c) name
 d) slug
 e) description
 f) start date
@@ -24,7 +24,7 @@ f) start date
 
 Task:
 a) Apps (Unique)
-b) name 
+b) name
 c) owner
 d) Start date
 e) status
@@ -40,7 +40,7 @@ a) Project estimation
 b) Progress report
 
 
-Features will be disjoint from project and Apps but it will depend upon the tasks related to it. It wil derive it's 
+Features will be disjoint from project and Apps but it will depend upon the tasks related to it. It wil derive it's
 completion report from the task involved.
 
 """
@@ -74,7 +74,7 @@ class ProjectTime(models.Model):
 """
 """
     Make entry in this table when Any App related to the project submitted. put the end value when completed and calculate the _time
-    
+
 """
 """
     creation_date = models.DateTimeField(auto_now_add=True)
@@ -92,7 +92,7 @@ class App(models.Model):
     description = models.TextField(blank=True)
     completed = models.BooleanField(db_index=True)
     creation_date = models.DateTimeField(auto_now_add=True)
-    
+
 class Task(models.Model):
     COMPLETED = 'CP'
     STARTED = 'ST'
@@ -130,17 +130,17 @@ class Task(models.Model):
     estimated_hours = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     applied_hours = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
 """
-if 'cms' in global_settings.INSTALLED_APPS:     
+if 'cms' in global_settings.INSTALLED_APPS:
     class WishlistPlugin(CMSPlugin):
         completed_number = models.IntegerField(default= '2')
         started_number = models.IntegerField(default= '1')
         pending_number = models.IntegerField(default= '2')
-     
+
         def __unicode__(self):
             return 'WishlistPlugin'
-        
+
         def get_suggestion_url(self):
             #page = Page.objects.get(title='Contact Us') or None
-            from django.core.urlresolvers import reverse
+            from django.urls import reverse
             return (settings.DOMAIN_URL+'en/contact-us/?contact_type=Feature')
 

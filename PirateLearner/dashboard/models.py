@@ -7,7 +7,7 @@ from django.utils import timezone
 
 from PirateLearner.models import BaseContentClass
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 # Create your models here.
 
@@ -59,7 +59,7 @@ class Profile(models.Model):
     @property
     def get_reputation_score(self):
         return self.reputation_score
-        
+
 """
 
 OCCUPATION = ((0, 'Student'),
@@ -69,7 +69,7 @@ OCCUPATION = ((0, 'Student'),
                  (4, 'Algorithm'),
                  (5, 'Analog'),
                  (6, 'Digital'))
- 
+
 GENDERS = (
            ('M','Male'),
            ('F','Female'),
@@ -85,17 +85,17 @@ class UserProfile(BaseContentClass):
     website = models.CharField(max_length = 100,blank=True,null=True)
     interest = TaggableManager(blank=True)
     date_of_birth = models.DateField(blank=True,null=True)
-    gender = models.CharField(choices=GENDERS, 
+    gender = models.CharField(choices=GENDERS,
                                max_length=20)
     signin_date = models.DateTimeField('date created', auto_now_add=True)
-    
+
     def __unicode__(self):
         return "{}'s profile".format(self.user.username)
- 
+
     class Meta:
         db_table = 'user_profile'
-    
-    
+
+
     def _get_social_account(self,provider=None):
         """
         Return the social account object of Facebook, Google and Twitter in that order if provier is None else return the provider account.
@@ -106,16 +106,16 @@ class UserProfile(BaseContentClass):
                 return account_uid[0]
             else:
                 return None
-            
+
         try:
             account_uid = SocialAccount.objects.filter(user_id=self.user.id, provider='facebook')
             if len(account_uid):
                 return account_uid[0]
-    
+
             account_uid = SocialAccount.objects.filter(user_id=self.user.id, provider='google')
             if len(account_uid):
                 return account_uid[0]
-    
+
             account_uid = SocialAccount.objects.filter(user_id=self.user.id, provider='twitter')
             if len(account_uid):
                 return account_uid[0]
@@ -123,15 +123,15 @@ class UserProfile(BaseContentClass):
             return None
         else:
             return None
-    
+
     def is_social_account_exist(self,provider):
             account_uid = SocialAccount.objects.filter(user_id=self.user.id, provider=provider)
             if len(account_uid):
                 return True
             else:
                 return False
-        
-    
+
+
     def get_avatar_url(self,provider=None):
         """
         Return the avatar of social account Facebook, Google and Twitter in that order, if provider is None.
@@ -142,14 +142,14 @@ class UserProfile(BaseContentClass):
             return profile.get_avatar_url()
         else:
             return settings.STATIC_URL + "images/add_new.png"
-    
+
     def get_profile_name(self):
         name  = self.get_first_name(None)
         if name is None:
             name = self.get_username(None)
-        
+
         return name
-    
+
     def get_username(self,provider=None):
         """
         Return the username of social account Facebook, Google and Twitter in that order, if provider is None.
@@ -189,7 +189,7 @@ class UserProfile(BaseContentClass):
                 return self.user.first_name
         else:
             return self.user.first_name
-    
+
     def get_last_name(self,provider=None):
         """
         Return the last name from social account Facebook, Google and Twitter in that order, if provider is None.
@@ -247,7 +247,7 @@ class UserProfile(BaseContentClass):
         """
         profile = self._get_social_account(provider)
         if profile != None:
-            print profile.extra_data
+            print(profile.extra_data)
             if self.get_provider_name(profile.provider) == 'facebook':
                 return self._get_fb_link(profile)
             elif self.get_provider_name(profile.provider) == 'google':
@@ -258,7 +258,7 @@ class UserProfile(BaseContentClass):
                 return ""
         else:
             return ""
-       
+
     def get_provider_name(self,provider=None):
         """
         Return the provider name of social account Facebook, Google and Twitter in that order, if provider is None.
@@ -269,37 +269,37 @@ class UserProfile(BaseContentClass):
             return profile.provider
         else:
             return provider
-    
+
 
     def get_occupation(self):
             tmp = dict(OCCUPATION)
             return tmp[self.occupation]
 
     def get_address(self):
-        return self.address                        
+        return self.address
 
     def get_website(self):
-        return self.website                        
- 
+        return self.website
+
     def get_interest(self):
-        return self.interest.all()                        
+        return self.interest.all()
 
     def get_birthday(self):
-        return self.date_of_birth  
-    
+        return self.date_of_birth
+
     def get_signin_time(self):
         return self.signin_date
-    
+
     def get_profile_page(self):
         return reverse('dashboard:dashboard-profile', kwargs={'user_id': self.user.id})
 
     """
     Private functions for retrieving the fname, lname, email etc. from GooGle, Facebook and twitter
     TODO define these functions for twitter also
-    """    
+    """
     def _get_google_fname(self,profile):
         return str(profile.extra_data['name']).split(' ')[0].encode('utf-8')
-    
+
     def _get_google_lname(self,profile):
         return profile.extra_data['family_name'].encode('utf-8')
 
@@ -317,7 +317,7 @@ class UserProfile(BaseContentClass):
 
     def _get_fb_fname(self,profile):
         return profile.extra_data['first_name'].encode('utf-8')
-    
+
     def _get_fb_lname(self,profile):
         return profile.extra_data['last_name'].encode('utf-8')
 
@@ -329,7 +329,7 @@ class UserProfile(BaseContentClass):
 
     def _get_fb_link(self,profile):
         return profile.extra_data['link']
-    
+
     def _get_tw_fname(self,profile):
         return str(profile.extra_data['name']).split(' ')[0].encode('utf-8')
 

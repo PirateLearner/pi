@@ -1,11 +1,10 @@
 import os
-from functools import wraps
-from django.utils.decorators import available_attrs
+from functools import wraps, WRAPPER_ASSIGNMENTS
 
 from blogging.create_class import CreateClass, CreateTemplate
 import re
-from django.utils.functional import allow_lazy
-from django.utils import six
+from django.utils.functional import keep_lazy as allow_lazy
+import six
 from django.utils.safestring import mark_safe
 from django.contrib.auth.decorators import user_passes_test
 import unicodedata
@@ -30,30 +29,30 @@ def create_content_type(name,form_dict,is_leaf):
 		create_class_object = CreateClass(name, form_dict,is_leaf)
 		form_string = create_class_object.form_string()
 		template_object = CreateTemplate(name, form_dict,is_leaf)
-		template_string = template_object.form_string() 
-		
+		template_string = template_object.form_string()
+
 		try:
-			fd = os.fdopen(os.open(form_filename,os.O_CREAT| os.O_RDWR , 0555),'w')
+			fd = os.fdopen(os.open(form_filename,os.O_CREAT| os.O_RDWR , 0o555),'w')
 			fd.write(form_string)
 			fd.close()
-			fd = os.fdopen(os.open(template_filename,os.O_CREAT| os.O_RDWR , 0555),'w')
+			fd = os.fdopen(os.open(template_filename,os.O_CREAT| os.O_RDWR , 0o555),'w')
 			fd.write(template_string)
 			fd.close()
-			
-			print file(form_filename).read()
+
+			print (file(form_filename).read())
 			return True
 		except IOError:
-			print "Error Opening File for Writing"
+			print ("Error Opening File for Writing")
 			return False
 	else:
 		return False
 
-	
-	
-	
+
+
+
 
 def get_imageurl_from_data(data):
-	
+
 	try:
 		matches = re.findall(
 				r'(<img[^>].*?src\s*=\s*"([^"]+)")', data
@@ -63,16 +62,16 @@ def get_imageurl_from_data(data):
 		else:
 			return None
 	except:
-		print "Error in get_imageurl_from_data"
+		print("Error in get_imageurl_from_data")
 		return None
 
 
-def strip_image_from_data(data):	
+def strip_image_from_data(data):
 	p = re.compile(r'<img.*?/>',flags=re.DOTALL)
 	line = p.sub('', data)
-	print "LOGS:: Stripping images from data"
+	print ("LOGS:: Stripping images from data")
 	return line
-	
+
 def truncatewords(Value,limit=30):
 	try:
 		limit = int(limit)
@@ -111,7 +110,7 @@ def user_has_group(test_func):
     """
 
     def decorator(view_func):
-        @wraps(view_func, assigned=available_attrs(view_func))
+        @wraps(view_func, assigned=WRAPPER_ASSIGNMENTS)
         def _wrapped_view(request, *args, **kwargs):
             if test_func(request.user):
                 return view_func(request, *args, **kwargs)

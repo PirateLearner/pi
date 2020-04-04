@@ -21,13 +21,13 @@ if 'cms' in settings.INSTALLED_APPS:
         from cms.models.pluginmodel import CMSPlugin
         from djangocms_text_ckeditor.models import Text
     except ImportError:
-        print 'CMS not installed'
-    
+        print ('CMS not installed')
+
 from blogging.utils import get_imageurl_from_data, truncatewords, slugify_name
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 import reversion
 
@@ -46,7 +46,7 @@ LATEST_PLUGIN_TEMPLATES = (
   ('blogging/plugin/sidebar_list.html', 'Text List'),
   ('blogging/plugin/teaser_list.html', 'Stacked List'),
 )
- 
+
 
 class RelatedManager(models.Manager):
 
@@ -91,7 +91,7 @@ class BlogContentType(BaseContentClass):
 
     def __unicode__(self):
         return self.content_type
-    
+
     def save(self, *args, **kwargs):
         self.content_type = slugify_name(self.content_type)
         super(BlogContentType, self).save(*args, **kwargs)
@@ -114,15 +114,15 @@ class BlogParent(MPTTModel):
                     blog.section = orphan_parent
                     blog.save()
             except:
-                print 'FATAL ERROR CAN DO NOTHING'            
+                print ('FATAL ERROR CAN DO NOTHING')
         super(BlogParent, self).save(*args, **kwargs)
-    
+
     def form_url(self):
         parent_list = self.get_ancestors(include_self=True)
         return_path = '/'.join(word.slug for word in parent_list)
-        #print "inside absolute URL ", return_path
+        #print( "inside absolute URL ", return_path)
         return return_path
-    
+
     def get_image_url(self):
         try:
             json_obj = json.loads(self.data)
@@ -133,23 +133,23 @@ class BlogParent(MPTTModel):
         except:
             return get_imageurl_from_data(self.data)
         return ""
-    
+
     def get_absolute_url(self):
         kwargs = {'slug': str(self.form_url())}
         return reverse('blogging:teaser-view', kwargs=kwargs)
     def get_menu_title(self):
         return self.title
-    
+
     def get_child_count(self):
         return self.children.count()
-    
+
     def get_article_count(self):
         return BlogContent.published.filter(section = self).count()
-    
-    
+
+
     def get_title(self):
         return self.title
-    
+
     class MPTTMeta:
             order_insertion_by = ['title']
 
@@ -168,16 +168,16 @@ class BlogContent(BaseContentClass):
     slug = models.SlugField(max_length= 100)
     tags = TaggableManager(blank=True)
     publication_start = models.DateTimeField(('Published Since'), default=timezone.now, help_text=('Used for automatic delayed publication. For this feature to work published_flag must be on.'))
-    objects = RelatedManager()    
+    objects = RelatedManager()
     published = PublishedManager()
-    
+
     annotation = GenericRelation(Annotation, content_type_field='content_type', object_id_field='object_id')
 
     def get_absolute_url(self):
         kwargs = {'slug': self.url_path,}
-        print "LOGS:: Fetching URI for node"
+        print ("LOGS:: Fetching URI for node")
         return reverse('blogging:teaser-view', kwargs=kwargs)
-    
+
     def get_image_url(self):
         try:
             json_obj = json.loads(self.data)
@@ -197,16 +197,16 @@ class BlogContent(BaseContentClass):
         description = strip_tags(json_obj.values()[0])
         return mark_safe(truncatewords(description,120))
 
-    
+
     def get_title(self):
         return self.title
-    
-    
-    def find_path(self,section): 
+
+
+    def find_path(self,section):
         parent_list = section.get_ancestors(include_self=True)
         return_path = '/'.join(word.slug for word in parent_list)
         return_path = return_path + str("/") + self.slug + str("/") + str(self.id)
-        print return_path
+        print (return_path)
         return return_path
 
     def get_menu_title(self):
@@ -226,31 +226,31 @@ class BlogContent(BaseContentClass):
                 tmp['url'] = reverse('blogging:tagged-posts',kwargs=kwargs)
                 tag_list.append(tmp)
             except:
-                print "Unexpected error:", sys.exc_info()[0]
+                print ("Unexpected error:", sys.exc_info()[0])
                 for frame in traceback.extract_tb(sys.exc_info()[2]):
                     fname,lineno,fn,text = frame
-                    print "Error in %s on line %d" % (fname, lineno)
+                    print ("Error in %s on line %d" % (fname, lineno))
         return tag_list
-    
+
     def get_author(self):
-        print self.author_id #Anshul: Changed, don't remember why. Maybe in REST
+        print (self.author_id) #Anshul: Changed, don't remember why. Maybe in REST
         return self.author_id
-        #return self.author_id.first_name or self.author_id.username  
+        #return self.author_id.first_name or self.author_id.username
     def get_modified_year(self):
-        print "LAst Modified year is ", self.last_modified.year
+        print ("LAst Modified year is ", self.last_modified.year)
         return self.last_modified.year
-    
+
     def get_modified_month(self):
         return self.last_modified.month
     def get_modified_day(self):
         return self.last_modified.day
-    
+
     def get_modified_time(self):
         current_year = timezone.now().year
         current_day = timezone.now().day
-        print "Printing localtime ", timezone.localtime(self.last_modified)
+        print ("Printing localtime ", timezone.localtime(self.last_modified))
         desired_time = timezone.localtime(self.last_modified)
-        
+
         if(self.last_modified.year < current_year):
             return self.last_modified.strftime("%d/%m/%Y")
         elif(current_day == self.last_modified.day):
@@ -258,14 +258,14 @@ class BlogContent(BaseContentClass):
             #return self.last_modified
         else:
             return self.last_modified.strftime("%B, %d")
-    
+
     def get_published_year(self):
         pass
     def get_published_month(self):
         pass
     def get_published_day(self):
         pass
-    
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
@@ -281,7 +281,7 @@ class BlogContent(BaseContentClass):
 
 if 'cms' in settings.INSTALLED_APPS:
     class LatestEntriesPlugin(CMSPlugin):
-    
+
         latest_entries = models.IntegerField(default=5, help_text=('The number of latests entries to be displayed.'))
         parent_section = models.ForeignKey(BlogParent,null=True,blank=True)
         tags = models.ManyToManyField('taggit.Tag', blank=True, help_text=('Show only the blog posts tagged with chosen tags.'))
@@ -289,10 +289,10 @@ if 'cms' in settings.INSTALLED_APPS:
                                     choices = LATEST_PLUGIN_TEMPLATES, default='blogging/plugin/plugin_teaser.html')
         def __unicode__(self):
             return str(self.latest_entries)
-    
+
         def copy_relations(self, oldinstance):
             self.tags = oldinstance.tags.all()
-    
+
         def get_posts(self):
             if self.parent_section:
                 if self.parent_section.is_leaf_node():
@@ -302,25 +302,25 @@ if 'cms' in settings.INSTALLED_APPS:
                     posts = BlogContent.published.filter(section__in=parent_list)
             else:
                 posts = BlogContent.published.all()
-            
+
             tags = list(self.tags.all())
             if tags:
                 posts = posts.filter(tags__in=tags)
             return posts[:self.latest_entries]
-        
+
         def get_section(self):
             return self.parent_section
-    
-        
-        
+
+
+
     class SectionPlugin(CMSPlugin):
-    
+
         section_count = models.IntegerField(default=None, blank=True,null=True, help_text=('The number of sections to be displayed.'))
         parent_section = models.ForeignKey(BlogParent,null=True,blank=True)
-    
+
         def __unicode__(self):
             return str(self.section_count)
-    
+
         def get_sections(self):
             if self.parent_section:
                 sections = self.parent_section.get_children()
@@ -329,7 +329,7 @@ if 'cms' in settings.INSTALLED_APPS:
             if self.section_count:
                 return sections[:self.section_count]
             return sections
-    
+
     class ContactPlugin(CMSPlugin):
         to_email = models.EmailField(default= 'captain@piratelearner.com')
         thanks_text = models.CharField(max_length=100,default = 'Thanks for reaching out to Us. We will get back to you soon.')
@@ -360,7 +360,7 @@ def get_draft_count(user = None):
 def get_contribution_count(user):
     if user:
         return BlogContent.objects.filter(author_id=user).count()
-    else:    
+    else:
         return None
 def get_top_articles(user = None, limit = 5):
     if user:

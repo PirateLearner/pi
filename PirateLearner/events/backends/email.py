@@ -23,7 +23,7 @@ class EmailBackend(BaseBackend):
                 notice_type --> Instace of EventType
                 extra_context --> named argument
                 html --> named argument can be True or False
-                template_name --> named argument Name of template if html is True. If None in case of html=True then 
+                template_name --> named argument Name of template if html is True. If None in case of html=True then
                                 default template would be used.
         """
 
@@ -32,7 +32,7 @@ class EmailBackend(BaseBackend):
             sender = settings.DEFAULT_FROM_EMAIL
         else:
             sender = sender.email
-        
+
         extra_context = kwargs.get('extra_context',None)
 
         context.update({
@@ -55,7 +55,7 @@ class EmailBackend(BaseBackend):
             subject = "".join(render_to_string("events/notifications/email_subject.txt", {
                 "message": messages["short.txt"],
             }, context).splitlines())
-        
+
         html = kwargs.get('html',False)
         ## check if it is html message or not
         if html:
@@ -63,26 +63,26 @@ class EmailBackend(BaseBackend):
             html_part = template.render(context)
             text_part = strip_tags(html_part)
             files = kwargs.get('files', None)
-                    
+
             msg = EmailMultiAlternatives(subject,
                                         text_part,
                                         sender,
                                         [recipient.email])
             msg.attach_alternative(html_part, "text/html")
-        
+
             if files:
                 if type(files) != list:
                     files = [files,]
-        
+
                 for file in files:
                     msg.attach_file(file)
-            print "Sending html mail to ", recipient.email, " sender ", sender        
+            print("Sending html mail to ", recipient.email, " sender ", sender        )
             return msg.send(fail_silently = True)
 
-        else: 
-    
+        else:
+
             body = render_to_string("events/notifications/email_body.txt", {
                 "message": messages["full.txt"],
             }, context)
-            print "Sending text mail to ", recipient.email, " sender ", sender
+            print("Sending text mail to ", recipient.email, " sender ", sender)
             return send_mail(subject, body, sender, [recipient.email])

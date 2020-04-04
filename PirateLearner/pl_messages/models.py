@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import F
 import datetime
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from PirateLearner.models import BaseContentClass
 
@@ -48,7 +48,7 @@ class Thread(BaseContentClass):
             self.created = datetime.datetime.today()
         return super(Thread, self).save(*args, **kwargs)
     def get_absolute_url(self):
-        print "get_absolute_url for thread is called"
+        print("get_absolute_url for thread is called")
         return reverse('messages:thread_messages', args=(self.pk,))
 
 class ParticipantThreads(BaseContentClass):
