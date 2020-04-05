@@ -1,7 +1,8 @@
-__author__ = 'aquasan'
-
 from django.conf.urls import patterns, include, url
 from .views import *
+
+app_name="pl_messages"
+
 urlpatterns = [
     url(r'^$', home, name='home_message'),
     url(r'^compose/$', new_message, name='new_message'),

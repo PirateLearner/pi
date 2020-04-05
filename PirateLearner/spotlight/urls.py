@@ -2,6 +2,7 @@
 from django.conf.urls import patterns,url
 from .views import *
 
+app_name="spotlight"
 
 urlpatterns = [
     url(r"^$", index, name="all_spotlight"),

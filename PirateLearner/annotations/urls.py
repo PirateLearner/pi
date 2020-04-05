@@ -3,14 +3,15 @@ from annotations import views
 
 from rest_framework.urlpatterns import format_suffix_patterns
 
+app_name="annotations"
 '''
 from annotations.views import (
-           BlogContentViewSet, UserViewSet, AnnotationViewSet, 
+           BlogContentViewSet, UserViewSet, AnnotationViewSet,
            BlogContentCommentView, CurrentUserView,
            api_root)
 
 blogcontent_list = BlogContentViewSet.as_view({
-    'get': 'list'                                           
+    'get': 'list'
     })
 blogcontent_detail = BlogContentViewSet.as_view({
     'get': 'retrieve',
