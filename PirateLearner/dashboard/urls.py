@@ -1,7 +1,10 @@
 __author__ = 'aquasan'
 
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from .views import *
+
+app_name='dashboard'
+
 urlpatterns = [
 
     url(r'^$',dashboard_home, name='dashboard-home'),

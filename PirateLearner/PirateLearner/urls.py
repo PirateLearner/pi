@@ -15,7 +15,9 @@ from django.views.generic import TemplateView
 from blogging.models import BlogContent
 from dashboard.views import custom_login
 from blogging.views import ContactUs
-from utils import tags
+from PirateLearner.utils import tags
+
+app_name="piratelearner"
 
 tip_dict = {
     'model': BlogContent,
@@ -32,7 +34,7 @@ sitemaps =  {'blog':BlogSitemap,'sections':BlogParentSitemap,'bookmarks':Bookmar
 
 admin.autodiscover()
 
-urlpatterns = i18n_patterns('',
+urlpatterns = i18n_patterns(
 #    url(r'^polls/', include('polls.urls')),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
     url(r'^C/', include('blogging.urls',namespace='blogging')),
@@ -44,7 +46,7 @@ urlpatterns = i18n_patterns('',
 #    url(r'^voting/', include('voting.urls', namespace='voting')),
 #    url(r'^annotations/', include('annotations.urls', namespace='annotations')),
     url(r'^messages/', include("pl_messages.urls", namespace="messages")),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
     #url(r'^user/', include('user_mgmt.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^accounts/login/$', custom_login),

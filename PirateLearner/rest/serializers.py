@@ -47,8 +47,8 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'first_name', 'last_name', 'annotations', 'gravatar', 'url', 'voted','saved_bookmarks','bookmarks_folder',)
         
     def get_gravatar(self, obj):
-        print "in get_gravatar"
-        print obj
+        print("in get_gravatar")
+        print(obj)
         return UserProfile.objects.get(user=obj).get_avatar_url()
     
     def get_url(self, obj):
@@ -74,11 +74,11 @@ class BlogContentSerializer(serializers.ModelSerializer):
      
     def get_annotations(self, obj):
         content_object = ContentType.objects.get_for_model(obj)
-        print "In BlogContentSerializer"
-        print obj
+        print("In BlogContentSerializer")
+        print(obj)
         annotations =  Annotation.objects.filter(content_type=content_object.id, object_id=obj.id)
         if len(annotations) is not 0:
-            print AnnotationSerializer(annotations, many=True).data
+            print(AnnotationSerializer(annotations, many=True).data)
             return (AnnotationSerializer(annotations, many=True).data)
         else:
             return None
@@ -110,7 +110,7 @@ class VoteSerializer(serializers.ModelSerializer):
                   )
     
     def create(self, validated_data):
-        print 'In create'        
+        print('In create')        
         vote = Vote()
         vote.voter = validated_data.get('voter')
         vote.vote = validated_data.get('vote')
@@ -150,7 +150,7 @@ class VoteSerializer(serializers.ModelSerializer):
                     return
                 vote_obj = Vote.objects.create(voter=vote.voter, content_type=vote.content_type, object_id=vote.object_id, vote=vote.vote)                        
             except:
-                print '{file}: something went wrong in creating a vote object at {line}'.format(file=str('__FILE__'), line=str('__LINE__'))
+                print('{file}: something went wrong in creating a vote object at {line}'.format(file=str('__FILE__'), line=str('__LINE__')))
                 raise ObjectDoesNotExist    
         
         return vote_obj
@@ -182,12 +182,12 @@ class SerializeReadOnlyField(ReadOnlyField):
 class SerializeAnnotationsField(serializers.SerializerMethodField):
     
     def to_representation(self, value):
-        print 'to_repr'
-        print type(value)
+        print('to_repr')
+        print(type(value))
         if isinstance(value, Annotation):
             return AnnotationSerializer(value)
         if isinstance(value, dict):
-            print 'Is annotations'
+            print('Is annotations')
             return AnnotationSerializer(value, many=True)
 
 class AnnotationShareMapSerializer(serializers.ModelSerializer):    
@@ -212,8 +212,8 @@ class AnnotationSerializer(serializers.ModelSerializer):
                   'privacy', 'privacy_override', )  
     
     def create(self, validated_data):
-        print "In create"
-        print validated_data
+        print("In create")
+        print(validated_data)
         annotation = Annotation()
         annotation.author = validated_data.get('author')
         annotation.body = validated_data.get('body')
@@ -229,10 +229,10 @@ class AnnotationSerializer(serializers.ModelSerializer):
         
         annotation.content_object = content_object.model_class().objects.get(id=annotation.object_id)
         
-        print annotation.content_object          
+        print(annotation.content_object)          
         annotation.save()
 
-        print validated_data.get('shared_with')
+        print(validated_data.get('shared_with'))
         for user in validated_data.get('shared_with'):
             sharing = AnnotationShareMap(annotation=annotation, 
                                                     user=user)
@@ -241,7 +241,7 @@ class AnnotationSerializer(serializers.ModelSerializer):
         return annotation
     
     def update(self, instance, validated_data):
-        print "In update"
+        print("In update")
         annotation = instance
         annotation.author = validated_data.get('author', annotation.author)
         annotation.body = validated_data.get('body', annotation.body)
@@ -256,11 +256,11 @@ class AnnotationSerializer(serializers.ModelSerializer):
         content_object = ContentType.objects.get_for_id(annotation.content_type.id)        
         annotation.content_object = content_object.model_class().objects.get(id=annotation.object_id)        
         
-        print annotation.content_object     
+        print(annotation.content_object)     
                 
         annotation.save()
         
-        print validated_data.get('shared_with')
+        print(validated_data.get('shared_with'))
         for user in validated_data.get('shared_with'):
             sharing = AnnotationShareMap(annotation=annotation, 
                                                     user=user)

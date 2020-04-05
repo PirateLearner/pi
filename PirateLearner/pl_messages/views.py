@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response, render
+from django.shortcuts import  render
 from django.template import RequestContext
 from django.contrib import messages as mm
 from django.shortcuts import get_object_or_404

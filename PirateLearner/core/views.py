@@ -12,7 +12,7 @@ from taggit.models import Tag
 from allauth.account.views import LoginView
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.socialaccount.models import SocialAccount
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 
 from core import utils
 from core.forms import PreviewForm
@@ -27,7 +27,7 @@ def details(request):
     """
     preview_form = PreviewForm()
     plugins = [p for p in ActionProvider.plugins]
-    return render_to_response("core/canvas.html", {'form':preview_form,'plugins':plugins }, context_instance=RequestContext(request))
+    return render(request,"core/canvas.html", {'form':preview_form,'plugins':plugins })
 
 
 

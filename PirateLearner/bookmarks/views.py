@@ -1,7 +1,6 @@
 # Create your views here.
 
 import datetime
-import urllib2
 
 
 from bookmarks.models import Bookmark, BookmarkFolderInstance, BookmarkInstance, get_user_bookmark, get_bookmark
@@ -9,7 +8,7 @@ from bookmarks import utils
 
 from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponse, Http404, HttpResponseBadRequest, JsonResponse
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext, loader
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
@@ -34,7 +33,7 @@ from blogging.utils import group_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.defaultfilters import length
 
-from readability import Readability
+from bookmarks.readability import Readability
 
 def bookmarks(request):
     bookmarks = BookmarkInstance.objects.filter(is_promoted=True).exclude(privacy_level='priv').order_by("-saved")
@@ -44,16 +43,16 @@ def bookmarks(request):
 #         )
 #     else:
 #         user_bookmarks = []
-    return render_to_response("bookmarks/bookmarks.html", {
+    return render(request, "bookmarks/bookmarks.html", {
         "bookmarks": bookmarks,
         'result_title':'Bookmarks',
 #         "user_bookmarks": user_bookmarks,
-    }, context_instance=RequestContext(request))
+    })
 
 def tagged_bookmarks(request,tag):
     try:
         bookmarks = BookmarkInstance.objects.filter(tags__slug = tag, is_promoted = True).exclude(privacy_level='priv')
-        return render_to_response("bookmarks/bookmarks.html", {'bookmarks':bookmarks,} ,context_instance=RequestContext(request))
+        return render(request, "bookmarks/bookmarks.html", {'bookmarks':bookmarks,})
     except ObjectDoesNotExist:
         raise Http404
 
@@ -62,10 +61,10 @@ def your_bookmarks(request):
     bookmark_instances = BookmarkInstance.objects.filter(
         user=request.user
     ).order_by("-saved")
-    return render_to_response("bookmarks/bookmarks.html", {
+    return render(request, "bookmarks/bookmarks.html", {
         "bookmarks": bookmark_instances,
         'result_title':'Bookmarks',
-    }, context_instance=RequestContext(request))
+    })
 
 
 @login_required
@@ -112,9 +111,9 @@ def add(request):
             else:
                 bookmark_form = BookmarkInstanceForm(request.user)
 
-    return render_to_response("bookmarks/add.html", {
+    return render(request, "bookmarks/add.html", {
         "form": bookmark_form,
-    }, context_instance=RequestContext(request))
+    })
 
 def snippet_testing(request):
     if request.method == "GET":
@@ -162,9 +161,8 @@ def update(request, bookmark_instance_id):
                         })
                     return HttpResponseRedirect(reverse("bookmarks:all_bookmarks"))
                 else:
-                    return render_to_response("bookmarks/update.html",
-                                              {"bookmark_form": bookmark_form,},
-                                              context_instance=RequestContext(request))
+                    return render(request, "bookmarks/update.html",
+                                              {"bookmark_form": bookmark_form,})
             elif action == 'Delete':
                 bookmark_instance.delete()
                 messages.error(request, "Bookmark Deleted" )
@@ -215,12 +213,12 @@ def add_folder(request,model_name):
                     (escape(bookmark_instance._get_pk_val()), escape(bookmark_instance)))
             else:
                 page_context = {'form': bookmark_form,  'field': normal_model_name }
-                return render_to_response('bookmarks/add_folder.html', page_context, context_instance=RequestContext(request))
+                return render(request, 'bookmarks/add_folder.html', page_context)
 
         else:
             bookmark_form = BookmarkFolderForm(request.user, request.POST)
             page_context = {'form': bookmark_form,  'field': normal_model_name }
-            return render_to_response('bookmarks/add_folder.html', page_context, context_instance=RequestContext(request))
+            return render(request, 'bookmarks/add_folder.html', page_context)
 
 
 
@@ -244,7 +242,7 @@ def bookmark_details(request,slug):
                 can_edit = (request.user.is_staff == True) or request.user == bookmark.user
             else:
                 can_edit = False
-            return render_to_response("bookmarks/detail.html", {'bookmark':bookmark,'meta':meta,'can_edit':can_edit } ,context_instance=RequestContext(request))
+            return render(request, "bookmarks/detail.html", {'bookmark':bookmark,'meta':meta,'can_edit':can_edit })
 
         except:
             print("Unexpected error:", sys.exc_info()[0])

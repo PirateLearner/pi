@@ -24,10 +24,10 @@ def normalize_query(query_string,
     try:
         ret = [normspace(' ', (t[0] or t[1]).strip()) for t in findterms(query_string)]
     except:
-        print ("Error: Unexpected error:", sys.exc_info()[0])
+        print(("Error: Unexpected error:", sys.exc_info()[0]))
         for frame in traceback.extract_tb(sys.exc_info()[2]):
             fname,lineno,fn,text = frame
-            print ("DBG:: Error in %s on line %d" % (fname, lineno))
+            print(("DBG:: Error in %s on line %d" % (fname, lineno)))
         ret = []
                 
     return ret 
@@ -54,10 +54,10 @@ def get_query(query_string, search_fields):
             else:
                 query = query & or_query
     except:
-        print ("Error: Unexpected error:", sys.exc_info()[0])
+        print(("Error: Unexpected error:", sys.exc_info()[0]))
         for frame in traceback.extract_tb(sys.exc_info()[2]):
             fname,lineno,fn,text = frame
-            print ("DBG:: Error in %s on line %d" % (fname, lineno))            
+            print(("DBG:: Error in %s on line %d" % (fname, lineno)))            
             
     return query
 
@@ -80,7 +80,7 @@ def tags(request):
         data['name'] = obj.name
         data['slug'] = obj.slug
         result.append(data)
-    print "LOGS:: Sending tags", result
+    print("LOGS:: Sending tags", result)
     r = json.dumps(result)
                   
     return HttpResponse(r, content_type="application/json")

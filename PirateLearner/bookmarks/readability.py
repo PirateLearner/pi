@@ -4,10 +4,10 @@ import re
 import six
 from bs4 import BeautifulSoup, Comment
 from bs4 import element as bs_element
-from __builtin__ import str
+from builtins import str
 from sre_parse import Pattern
 import math
-from urlparse import urlparse
+from urllib.parse import urlparse
 import requests
 import collections
 import copy

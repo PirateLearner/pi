@@ -1,7 +1,8 @@
 
-from django.conf.urls import patterns,url
+from django.conf.urls import url
 from .views import *
 
+app_name='spotlight'
 
 urlpatterns = [
     url(r"^$", index, name="all_spotlight"),

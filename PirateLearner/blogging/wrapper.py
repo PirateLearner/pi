@@ -4,7 +4,7 @@ import importlib
 
 def project_path():
     PROJECT_PATH = os.path.abspath(os.path.dirname(__name__))
-    print PROJECT_PATH
+    print(PROJECT_PATH)
 
 def get_pattern(current_tag):
     tag_start_pattern = "\\%\\% " + str(current_tag['name']) + " \\%\\%"
@@ -26,10 +26,10 @@ def parse_content(data, tag):
 def insert_tag_into_content(data,tag):
     tag_start = "\%\% " + str(tag["name"]) + " \%\%" 
     tag_end = "\%\% endtag " + str(tag["name"]) + " \%\%" 
-    print type(data)
-    print data
+    print(type(data))
+    print(data)
     return_field = tag_start + str(data) + tag_end
-    print "rebuilding tags " + return_field
+    print("rebuilding tags " + return_field)
     return return_field
          
 def find_class(module_name,class_name):
