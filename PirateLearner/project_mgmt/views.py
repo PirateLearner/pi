@@ -14,7 +14,7 @@ def index(request):
     started = []
     pending = []
     for element in feature_list:
-        print element['status'], element['completed']
+        print(element['status'], element['completed'])
         if element['completed'] == 'YES':
             completed.append(element)
         elif element['status'] != '0':

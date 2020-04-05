@@ -157,10 +157,10 @@ class BookmarkInstance(BaseContentClass):
                 tmp['url'] = reverse('bookmarks:tagged-bookmarks',kwargs=kwargs)
                 tag_list.append(tmp)
             except:
-                print("Unexpected error:", sys.exc_info()[0])
+                print(("Unexpected error:", sys.exc_info()[0]))
                 for frame in traceback.extract_tb(sys.exc_info()[2]):
                     fname,lineno,fn,text = frame
-                    print("Error in %s on line %d" % (fname, lineno))
+                    print(("Error in %s on line %d" % (fname, lineno)))
         return tag_list
 
 if 'cms' in global_settings.INSTALLED_APPS:

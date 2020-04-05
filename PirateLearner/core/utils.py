@@ -27,7 +27,7 @@ class HtmlTree:
 
     def add_attribute(self,node,**kwargs):
         
-        for k,v in kwargs.iteritems():
+        for k,v in kwargs.items():
             node.set(k,v)
     
     def add_text(self,node,text):
@@ -57,7 +57,7 @@ class plugins:
         else:
             return False
     def print_node(self):
-        print("( "+ str(self.x) + " - "+ str(self.y) +", "+ str(self.width) +", "+ str(self.height) + ")")
+        print(("( "+ str(self.x) + " - "+ str(self.y) +", "+ str(self.width) +", "+ str(self.height) + ")"))
     
     def node_str(self):
         return str("( "+ str(self.x) + " - "+ str(self.y) +", "+ str(self.width) +", "+ str(self.height) + ")")

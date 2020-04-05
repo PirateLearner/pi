@@ -37,7 +37,7 @@ class EventFilterView(TemplateView):
         @todo: change according to our model. if val is on then delete corresponding entry else create it
         '''
         val = self.request.POST.get(label)
-        print "process_cell: ", label, "val ", val
+        print(("process_cell: ", label, "val ", val))
         _, pk, action_id = label.split("-")
         event_type = EventType.objects.get(pk=pk)
         setting = self.filter_for_user(event_type, action_id)
@@ -46,7 +46,7 @@ class EventFilterView(TemplateView):
         elif setting is None and val is None:
             create_filter_for_user(self.request.user, event_type, action_id)
         else:
-            print "process_cell: Nothing to do for ", label
+            print(("process_cell: Nothing to do for ", label))
 
     def settings_table(self):
         event_types = EventType.objects.all()

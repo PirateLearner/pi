@@ -42,7 +42,7 @@ class SocialProfile(InclusionTag):
             context.pop()
             return output
         except:
-            print("Unexpected error:", sys.exc_info()[0])
+            print(("Unexpected error:", sys.exc_info()[0]))
             return "Http404"
 
 
@@ -50,7 +50,7 @@ class SocialProfile(InclusionTag):
         extra_context = copy(context)
         print ("LOGS: _get_data_context called ")
         if userid:
-            print("atrribute ", userid)
+            print(("atrribute ", userid))
             try:
                 profile = UserProfile.objects.get(user = userid)
             except UserProfile.DoesNotExist:
@@ -59,7 +59,7 @@ class SocialProfile(InclusionTag):
         else:
             try:
                 profile = UserProfile.objects.get(user = extra_context["request"].user)
-                print("LOGS: _get_data_context--> profile  ", profile)
+                print(("LOGS: _get_data_context--> profile  ", profile))
             except UserProfile.DoesNotExist:
                 print("LOGS: User Does Not exist")
                 return extra_context
@@ -78,10 +78,10 @@ class SocialProfile(InclusionTag):
                 extra_context['profile_username'] = profile.get_name(provider)
                 extra_context['profile_image'] = profile.get_avatar_url(provider)
         except:
-            print("Unexpected error:", sys.exc_info()[0])
+            print(("Unexpected error:", sys.exc_info()[0]))
             for frame in traceback.extract_tb(sys.exc_info()[2]):
                 fname,lineno,fn,text = frame
-                print("Error in %s on line %d" % (fname, lineno))
+                print(("Error in %s on line %d" % (fname, lineno)))
         return extra_context
 
 

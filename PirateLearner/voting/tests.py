@@ -338,6 +338,6 @@ class ViewTests(VotingTests):
         self._require_login('craft','craft')
         response = self.client.get('/voting/blogcontent/1/')
         
-        print response.content.decode()
+        print(response.content.decode())
        
     

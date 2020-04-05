@@ -28,10 +28,10 @@ def parse_content(db_object, tag):
     if str(tag['name']) == 'title_tag':
         return db_object.title
     final_pattern = get_pattern(tag)
-    print("pattern to be found ", final_pattern)
+    print(("pattern to be found ", final_pattern))
     ## DOTALL flag for including new line also
     patt = re.compile(final_pattern,flags=re.DOTALL)
-    print("pattern  ", patt)
+    print(("pattern  ", patt))
 
 #     print("data ", db_object.data)
     result = patt.search(db_object.data)
@@ -50,7 +50,7 @@ def strip_tag_from_data(data):
 
 def has_no_id(tag):
 
-    print("tag return has no id ", tag.has_attr('id'))
+    print(("tag return has no id ", tag.has_attr('id')))
     return  not tag.has_attr('id')
 
 
@@ -59,18 +59,18 @@ def has_enough_length(tag):
     """
     check for tag.string --> if it is None then it has more than one children.
     """
-    print("has_enough_length()-->", tag.name)
+    print(("has_enough_length()-->", tag.name))
 
     if tag.string is None:
         tag_string = ''.join(str(tag_child.encode('utf-8')) for tag_child in tag.contents)
-        print("Printing contents string ", tag_string )
+        print(("Printing contents string ", tag_string ))
         flag = len(tag_string) > 100
-        print("returning ", flag)
+        print(("returning ", flag))
         return flag
     else:
-        print("Printing string ", tag.string.encode('utf-8'))
+        print(("Printing string ", tag.string.encode('utf-8')))
         flag = len(tag.string.encode('utf-8')) > 100
-        print("returning ", flag)
+        print(("returning ", flag))
         return flag
 #
 #
@@ -133,15 +133,15 @@ def insert_tag_id(data,id_count):
 
     filter_elements = ['p','span','img']
 
-    if isinstance(id_count, unicode):
-        print("s is unicode, %r" % id_count)
+    if isinstance(id_count, str):
+        print(("s is unicode, %r" % id_count))
         id_count = str(id_count)
 
-    print(type(id_count))
+    print((type(id_count)))
 
     if isinstance(id_count, six.string_types):
         if len(id_count) == 0:
-            print("LOGS: PID_COUNT IS ", id_count)
+            print(("LOGS: PID_COUNT IS ", id_count))
             id_count = 0
         else:
             id_count = int(id_count)
@@ -174,11 +174,11 @@ def insert_tag_id(data,id_count):
                 if has_eligible_child(tag) == True:
                     for tag_child in tag.contents:
                         if tag_child.name == 'li' and has_no_id(tag_child):
-                            print("setting tag ",tag_child.name )
+                            print(("setting tag ",tag_child.name ))
                             id_count = id_count + 1
                             tag_child['id'] = id_count
                 else:
-                    print("setting tag ", tag.name)
+                    print(("setting tag ", tag.name))
                     id_count = id_count + 1
                     tag['id'] =  id_count
             elif tag.name == 'img' and has_no_id(tag):

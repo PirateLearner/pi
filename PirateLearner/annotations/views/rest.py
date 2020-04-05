@@ -1,13 +1,13 @@
-from annotations.models import Annotation
+from .annotations.models import Annotation
 from blogging.models import BlogContent, BlogParent
 from django.contrib.auth.models import User
 
 from rest_framework import viewsets
 
-from annotations.serializers import *
+from .annotations.serializers import *
 
 from rest_framework import permissions
-from utils import IsOwnerOrReadOnly, AnnotationIsOwnerOrReadOnly
+from .utils import IsOwnerOrReadOnly, AnnotationIsOwnerOrReadOnly
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -54,7 +54,7 @@ class BlogContentCommentView(APIView):
         #Then, get the content type instance
         content_type = ContentType.objects.get_for_model(obj)
         annotations = Annotation.objects.filter(content_type= content_type.id, object_pk=obj.id)
-        print annotations
+        print(annotations)
         
         #Now, put them into a serializer
         serializer = AnnotationSerializer(annotations, many=True)
@@ -69,7 +69,7 @@ class CurrentUserView(APIView):
             serializer = UserSerializer(user_obj)
         else:
             serializer = AnonymousUserSerializer(user_obj)
-            print(serializer.data)
+            print((serializer.data))
              
         return Response(serializer.data)
 

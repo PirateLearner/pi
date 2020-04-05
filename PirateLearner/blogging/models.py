@@ -71,7 +71,7 @@ class RelatedManager(models.Manager):
                                       .values_list('tag', 'count'))
 
         # and finally get the results
-        tags = Tag.objects.filter(pk__in=counted_tags.keys())
+        tags = Tag.objects.filter(pk__in=list(counted_tags.keys()))
         for tag in tags:
             tag.count = counted_tags[tag.pk]
         return sorted(tags, key=lambda x: -x.count)
@@ -126,7 +126,7 @@ class BlogParent(MPTTModel):
     def get_image_url(self):
         try:
             json_obj = json.loads(self.data)
-            for value in json_obj.itervalues():
+            for value in json_obj.values():
                 image =  get_imageurl_from_data(value)
                 if image:
                     return image
@@ -181,7 +181,7 @@ class BlogContent(BaseContentClass):
     def get_image_url(self):
         try:
             json_obj = json.loads(self.data)
-            for value in json_obj.itervalues():
+            for value in json_obj.values():
                 image =  get_imageurl_from_data(value)
                 if image:
                     return image
@@ -194,7 +194,7 @@ class BlogContent(BaseContentClass):
     def get_summary(self):
         json_obj = json.loads(self.data)
         # Instantiate the Meta class
-        description = strip_tags(json_obj.values()[0])
+        description = strip_tags(list(json_obj.values())[0])
         return mark_safe(truncatewords(description,120))
 
 
@@ -226,18 +226,18 @@ class BlogContent(BaseContentClass):
                 tmp['url'] = reverse('blogging:tagged-posts',kwargs=kwargs)
                 tag_list.append(tmp)
             except:
-                print ("Unexpected error:", sys.exc_info()[0])
+                print(("Unexpected error:", sys.exc_info()[0]))
                 for frame in traceback.extract_tb(sys.exc_info()[2]):
                     fname,lineno,fn,text = frame
-                    print ("Error in %s on line %d" % (fname, lineno))
+                    print(("Error in %s on line %d" % (fname, lineno)))
         return tag_list
 
     def get_author(self):
-        print (self.author_id) #Anshul: Changed, don't remember why. Maybe in REST
+        print((self.author_id)) #Anshul: Changed, don't remember why. Maybe in REST
         return self.author_id
         #return self.author_id.first_name or self.author_id.username
     def get_modified_year(self):
-        print ("LAst Modified year is ", self.last_modified.year)
+        print(("LAst Modified year is ", self.last_modified.year))
         return self.last_modified.year
 
     def get_modified_month(self):
@@ -248,7 +248,7 @@ class BlogContent(BaseContentClass):
     def get_modified_time(self):
         current_year = timezone.now().year
         current_day = timezone.now().day
-        print ("Printing localtime ", timezone.localtime(self.last_modified))
+        print(("Printing localtime ", timezone.localtime(self.last_modified)))
         desired_time = timezone.localtime(self.last_modified)
 
         if(self.last_modified.year < current_year):

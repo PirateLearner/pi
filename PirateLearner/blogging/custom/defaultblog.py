@@ -59,7 +59,7 @@ class DefaultblogForm(forms.Form):
         if commit == False:
             return json.dumps(post.dict())
         
-        for k,v in post.iteritems():
+        for k,v in post.items():
             if str(k) != 'pid_count' :
                 tmp = {}
                 tmp = tag_lib.insert_tag_id(str(v),self.cleaned_data["pid_count"])

@@ -3,7 +3,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, routers
 from django.contrib.contenttypes.views import shortcut
 
-from views import (api_root, BlogContentViewSet,
+from .views import (api_root, BlogContentViewSet,
                    UserViewSet, AnnotationViewSet,
                    BlogContentCommentView, CurrentUserView,
                    VoteList, VoteDetail, VoteViewSet, BookmarkList,BookmarkDetail)

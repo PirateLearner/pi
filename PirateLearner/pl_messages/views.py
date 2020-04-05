@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response, render
+from django.shortcuts import render
 from django.template import RequestContext
 from django.contrib import messages as mm
 from django.shortcuts import get_object_or_404
@@ -16,7 +16,7 @@ def home(request):
     threads = get_user_threads(user=request.user)
     context = {
         'threads': threads,
-        
+
     }
     return render(request, 'inbox.html', context)
 
@@ -93,7 +93,7 @@ def new_message(request):
     if request.method == 'POST':
         save_message(request)
     dest = request.GET.get('to',None)
-    
+
     if dest:
         dest = User.objects.get(pk=dest)
         form = MessageForm(dest)

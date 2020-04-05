@@ -1,4 +1,4 @@
 try:
-    import handlers
+    from . import handlers
 except:
     pass

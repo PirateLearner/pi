@@ -1,5 +1,5 @@
 from threading import Thread
-import signals
+from . import signals
 from events.models import EventType, InvalidEvent
 from django.core.exceptions import ObjectDoesNotExist
 

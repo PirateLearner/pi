@@ -33,11 +33,11 @@ def handle_submit_event(sender, *args,**kwargs):
     template_name = "events/notifications/{0}/welcome.html".format(label)
 
     ret  = send([user],label,extra_context = extra_context, html=True, template_name=template_name)
-    print("Send to user return ", ret)
+    print(("Send to user return ", ret))
 
     extra_context = { "subject": "User signed-up!!!", "user": obj}
     template_name = "events/notifications/{0}/admin.html".format(label)
     ret  = send("Administrator",label,extra_context = extra_context, html=True, template_name=template_name)
-    print("Send to Admistrator return ", ret)
+    print(("Send to Admistrator return ", ret))
 
 

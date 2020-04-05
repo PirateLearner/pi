@@ -54,7 +54,7 @@ if 'cms' in settings.INSTALLED_APPS:
             if tags:
                 temp = []
                 for post in posts:
-                    if bool(sum(map(lambda x: x in tags, post.content_object.tags.all()))):
+                    if bool(sum([x in tags for x in post.content_object.tags.all()])):
                         temp.append(post)
                 posts= temp
             print(posts)

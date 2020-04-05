@@ -78,13 +78,13 @@ class VoteList(APIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,VoteIsOwnerOrReadOnly,)
     
     def get(self, request, format=None):
-        print 'in get'
+        print('in get')
         votes = Vote.objects.all()
         serializer = VoteSerializer(votes, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        print 'in post'
+        print('in post')
         serializer = VoteSerializer(data=request.data)
         if serializer.is_valid():
             content_type = serializer.validated_data.get('content_type')
@@ -149,7 +149,7 @@ class BlogContentCommentView(APIView):
         #Then, get the content type instance
         content_type = ContentType.objects.get_for_model(obj)
         annotations = Annotation.objects.filter(content_type= content_type.id, object_id=obj.id)
-        print annotations
+        print(annotations)
         
         #Now, put them into a serializer
         serializer = AnnotationSerializer(annotations, many=True)

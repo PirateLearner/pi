@@ -18,9 +18,7 @@ class MultiSelectFormField(forms.MultipleChoiceField):
         return value
  
  
-class MultiSelectField(models.Field):
-    __metaclass__ = models.SubfieldBase
- 
+class MultiSelectField(models.Field, metaclass=models.SubfieldBase):
     def get_internal_type(self):
         return "CharField"
  
@@ -41,7 +39,7 @@ class MultiSelectField(models.Field):
         return MultiSelectFormField(**defaults)
  
     def get_db_prep_value(self, value, connection, prepared=False):
-        if isinstance(value, basestring):
+        if isinstance(value, str):
             return value
         elif isinstance(value, list):
             return ",".join(value)

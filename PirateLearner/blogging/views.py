@@ -56,7 +56,7 @@ def content_type(request):
 			content_info = form.cleaned_data['ContentType']
 
 			if action == 'next':
-				print (content_info, type(content_info))
+				print((content_info, type(content_info)))
 				request.session['content_info_id'] = content_info.id
 				return HttpResponseRedirect(
 		            reverse("blogging:create-post"))
@@ -116,7 +116,7 @@ def new_post(request):
 	content_info_obj = BlogContentType.objects.get(
 	        id=request.session['content_info_id']
     )
-	print(request.session['content_info_id'], content_info_obj)
+	print((request.session['content_info_id'], content_info_obj))
 	form = find_class('blogging.custom.'+content_info_obj.__str__().lower(),str(content_info_obj).capitalize()+'Form' )
 
 	if request.method == "POST":
@@ -148,7 +148,7 @@ def new_post(request):
 			with reversion.create_revision():
 				blog.save()
 				if content_info_obj.is_leaf:
-					print("LOGS: tags are ", post_form.cleaned_data['tags'])
+					print(("LOGS: tags are ", post_form.cleaned_data['tags']))
 					blog.tags.add(*post_form.cleaned_data['tags'])
 				reversion.set_user(request.user)
 				reversion.set_comment("Created first draft")
@@ -180,9 +180,9 @@ def edit_post(request,post_id):
 	try:
 		blog = BlogContent.objects.get(pk=post_id)
 		request.session['content_info_id'] = blog.content_type.id
-		print("LOGS: EDIT ", blog.__str__())
+		print(("LOGS: EDIT ", blog.__str__()))
 		form = find_class('blogging.custom.'+blog.content_type.__str__().lower(),str(blog.content_type).capitalize()+'Form' )
-		print("LOGS: ContentType ", blog.content_type.__str__().lower())
+		print(("LOGS: ContentType ", blog.content_type.__str__().lower()))
 		if request.method == "POST":
 			post_form = form(reverse('blogging:edit-post',args = (post_id,)),request.POST,instance=blog)
 			action = request.POST.get('submit')
@@ -206,7 +206,7 @@ def edit_post(request,post_id):
 				# create the reversion for version control and revert back the deleted post
 				with reversion.create_revision():
 					blog.save()
-					print("LOGS: tags are ", post_form.cleaned_data['tags'])
+					print(("LOGS: tags are ", post_form.cleaned_data['tags']))
 					blog.tags.set(*post_form.cleaned_data['tags'])
 					reversion.set_user(request.user)
 					reversion.set_comment("Saving the Blog Content changes...")
@@ -217,8 +217,8 @@ def edit_post(request,post_id):
 				return HttpResponseRedirect(blog.get_absolute_url())
 		else:
 			wrapper_form_class = find_class('blogging.custom.'+blog.content_type.__str__().lower(),str(blog.content_type).capitalize()+'Form')
-			print("LOGS: Wrapper Form Class ", wrapper_form_class)
-			print("LOGS: Content Class ", blog)
+			print(("LOGS: Wrapper Form Class ", wrapper_form_class))
+			print(("LOGS: Content Class ", blog))
 			post_form = wrapper_form_class(reverse('blogging:edit-post',args = (post_id,)),instance=blog)
 
 		context = {'form':post_form}
@@ -226,10 +226,10 @@ def edit_post(request,post_id):
 		    "blogging/create_page.html",
 		    context, context_instance=RequestContext(request))
 	except:
-		print("Unexpected error:", sys.exc_info()[0])
+		print(("Unexpected error:", sys.exc_info()[0]))
 		for frame in traceback.extract_tb(sys.exc_info()[2]):
 			fname,lineno,fn,text = frame
-			print("Error in %s on line %d" % (fname, lineno))
+			print(("Error in %s on line %d" % (fname, lineno)))
 		raise Http404
 
 @login_required
@@ -242,7 +242,7 @@ def edit_section(request,section_id):
 	try:
 		section = BlogParent.objects.get(pk=section_id)
 		form = find_class('blogging.custom.'+section.content_type.__str__().lower(),str(section.content_type).capitalize()+'Form' )
-		print("LOGS: ContentType ", section.content_type.__str__().lower())
+		print(("LOGS: ContentType ", section.content_type.__str__().lower()))
 		if request.method == "POST":
 			post_form = form(reverse('blogging:edit-section',args = (section_id,)),request.POST)
 			action = request.POST.get('submit')
@@ -275,10 +275,10 @@ def edit_section(request,section_id):
 		    "blogging/create_page.html",
 		    context, context_instance=RequestContext(request))
 	except:
-		print("Unexpected error:", sys.exc_info()[0])
+		print(("Unexpected error:", sys.exc_info()[0]))
 		for frame in traceback.extract_tb(sys.exc_info()[2]):
 			fname,lineno,fn,text = frame
-			print("Error in %s on line %d" % (fname, lineno))
+			print(("Error in %s on line %d" % (fname, lineno)))
 		raise Http404
 
 @login_required
@@ -304,15 +304,15 @@ def add_new_model(request, model_name):
 				try:
 					form_dict = {}
 					for form in form2:
-						print(form.cleaned_data)
+						print((form.cleaned_data))
 						form_dict[form.cleaned_data['field_name']] = form.cleaned_data['field_type']
-					print("LOGS: printing fomr dictionary: ", form_dict)
+					print(("LOGS: printing fomr dictionary: ", form_dict))
 
 
 					if (create_content_type(slugify_name(form1.cleaned_data['content_type']),form_dict,form1.cleaned_data['is_leaf']) == False ):
 						raise forms.ValidationError("something got wronged")
 					new_obj = form1.save() #TODO many things
-					print(new_obj.content_type)
+					print((new_obj.content_type))
 				except forms.ValidationError:
 					new_obj = None
 				if new_obj:
@@ -322,14 +322,14 @@ def add_new_model(request, model_name):
 					page_context = {'form1': form1,'formset':form2,  'field': normal_model_name}
 					return render_to_response('blogging/includes/add_content_type.html', page_context, context_instance=RequestContext(request))
 			else:
-				print("form is not valid form1 ", form1.is_valid(), " form 2 ", form2.is_valid())
+				print(("form is not valid form1 ", form1.is_valid(), " form 2 ", form2.is_valid()))
 				page_context = {'form1': form1,'formset':form2,  'field': normal_model_name}
 				return render_to_response('blogging/includes/add_content_type.html', page_context, context_instance=RequestContext(request))
 
 		else:
 			form = ContentTypeCreationForm()
 			formset = FieldFormSet()
-			print(form.as_table())
+			print((form.as_table()))
 
 			page_context = {'form1': form,'formset':formset,  'field': normal_model_name }
 			return render_to_response('blogging/includes/add_content_type.html', page_context, context_instance=RequestContext(request))
@@ -369,7 +369,7 @@ def archive(request):
 
 def teaser(request,slug):
 	current_section = slug.split("/")[-1]
-	print( "Printing slug ", slug)
+	print(( "Printing slug ", slug))
 	if len(slug) == 0:
 		return  ""
 	try:
@@ -385,7 +385,7 @@ def teaser(request,slug):
 		try:
 			json_obj = json.loads(blogs.data)
 			# Instantiate the Meta class
-			description = strip_tags(json_obj.values()[0])
+			description = strip_tags(list(json_obj.values())[0])
 			meta = Meta(title = blogs.title, description = blogs.get_summary(), section= blogs.section.title, url = blogs.get_absolute_url(),
 					image = blogs.get_image_url(), author = blogs.author_id, date_time = blogs.publication_start ,
 					object_type = 'article', keywords = [ tags.name for tags in blogs.tags.all()])
@@ -403,11 +403,11 @@ def teaser(request,slug):
 # 				patch_html = generate_diffs(old_version, new_version, "data",cleanup="semantic")
 		except:
 # 			log.user(self.request, "~SN~FRFailed~FY to fetch ~FGoriginal text~FY: Unexpected error '{0}'".format(sys.exc_info()[0]),logger)
-			print("Unexpected error:", sys.exc_info()[0])
+			print(("Unexpected error:", sys.exc_info()[0]))
 			for frame in traceback.extract_tb(sys.exc_info()[2]):
 				fname,lineno,fn,text = frame
 # 				logging.error("~SN~FRError~FY in %s on line ~FG%d~FY" % (fname, lineno),logger)
-				print("Error in %s on line %d" % (fname, lineno))
+				print(("Error in %s on line %d" % (fname, lineno)))
 			raise Http404
 
 		context = {
@@ -427,10 +427,10 @@ def teaser(request,slug):
 				return HttpResponseRedirect(reverse('blogging:edit-section',args = (section.id,)))
 
 		except (BlogParent.DoesNotExist):
-			print("Unexpected error:", sys.exc_info()[0])
+			print(("Unexpected error:", sys.exc_info()[0]))
 			for frame in traceback.extract_tb(sys.exc_info()[2]):
 				fname,lineno,fn,text = frame
-				print("Error in %s on line %d" % (fname, lineno))
+				print(("Error in %s on line %d" % (fname, lineno)))
 			raise Http404
 
 		max_entry = getattr(settings, 'BLOGGING_MAX_ENTRY_PER_PAGE', 10)
@@ -457,7 +457,7 @@ def teaser(request,slug):
                       }
 			return HttpResponse(template.render(context,request))
 		template = loader.get_template('blogging/section.html')
-		print("LOGS:: This is NON Leaf Node ", section.get_children())
+		print(("LOGS:: This is NON Leaf Node ", section.get_children()))
 		paginator = Paginator(section.get_children(), max_entry)
 		page = request.GET.get('page')
 		try:
@@ -539,7 +539,7 @@ def BuildIndex(request):
 		section = None
 		try:
 			parent  = request.GET.get('section',None)
-			print("Parent id from request ", parent)
+			print(("Parent id from request ", parent))
 			if parent:
 				section = BlogParent.objects.get(pk=parent)
 		except:
@@ -606,7 +606,7 @@ def manage(request):
 		if not article_ids[-1]:
 			article_ids = article_ids[:-1]
 		action = action.strip()
-		print("manage: action=", action, "articles=", article_ids)
+		print(("manage: action=", action, "articles=", article_ids))
 		count = 0
 		try:
 			if len(article_ids):
@@ -665,14 +665,14 @@ def manage(request):
 					res['result'] = 'success'
 					res['action'] = "Delete"
 
-				print("manage_articles: Total", count)
+				print(("manage_articles: Total", count))
 
 				return JsonResponse(res)
 		except:
-			print("Unexpected error:", sys.exc_info()[0])
+			print(("Unexpected error:", sys.exc_info()[0]))
 			for frame in traceback.extract_tb(sys.exc_info()[2]):
 				fname,lineno,fn,text = frame
-				print("Error in %s on line %d" % (fname, lineno))
+				print(("Error in %s on line %d" % (fname, lineno)))
 			res = {}
 			res['result'] = 'error'
 			return JsonResponse(res)
@@ -745,8 +745,8 @@ def manage(request):
 				   }
 		return HttpResponse(template.render(context,request))
 	except:
-		print("Unexpected error:", sys.exc_info()[0])
+		print(("Unexpected error:", sys.exc_info()[0]))
 		for frame in traceback.extract_tb(sys.exc_info()[2]):
 			fname,lineno,fn,text = frame
-			print("Error in %s on line %d" % (fname, lineno))
+			print(("Error in %s on line %d" % (fname, lineno)))
 		raise Http404

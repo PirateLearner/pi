@@ -32,15 +32,19 @@ tip_dict = {
     'allow_xmlhttprequest': 'true',
 }
 
-handler500 = partialmethod(server_error, template_name='error_404.html')
-handler404 = partialmethod(page_not_found, template_name='error_404.html')
-handler403 = partialmethod(permission_denied, template_name='error_404.html')
-handler400 = partialmethod(bad_request, template_name='error_404.html')
+ERROR_404_TEMPLATE_NAME = 'error_404.html'
+ERROR_500_TEMPLATE_NAME = 'error_404.html'
+ERROR_403_TEMPLATE_NAME = 'error_404.html'
+ERROR_400_TEMPLATE_NAME = 'error_404.html'
+#handler500 = partialmethod(server_error, template_name='error_404.html')
+#handler404 = partialmethod(page_not_found, template_name='error_404.html')
+#handler403 = partialmethod(permission_denied, template_name='error_404.html')
+#handler400 = partialmethod(bad_request, template_name='error_404.html')
 sitemaps =  {'blog':BlogSitemap,'sections':BlogParentSitemap,'bookmarks':BookmarkSitemap}
 
 admin.autodiscover()
 
-urlpatterns = i18n_patterns('',
+urlpatterns = i18n_patterns(
 #    url(r'^polls/', include('polls.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('C/', include('blogging.urls', namespace='blogging'), name='blogging'),
@@ -52,11 +56,11 @@ urlpatterns = i18n_patterns('',
 #    path('voting/', include('voting.urls', namespace='voting')),
 #    path('annotations/', include('annotations.urls', namespace='annotations')),
     path('messages/', include("pl_messages.urls", namespace="messages"), name='messages'),
-    path('admin/', include(admin.site.urls)),
+    path('admin/', admin.site.urls),
     #path('user/', include('user_mgmt.urls')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('accounts/login/$', custom_login),
-    path('accounts/logout/$', logout,{'next_page': '/'}),
+    path('accounts/login/', custom_login),
+    path('accounts/logout/', logout,{'next_page': '/'}),
     path('accounts/', include('allauth.urls')),
     re_path(r'^sitemap\.xml$', sitemap, {'sitemaps':sitemaps}),
     re_path(r'^search/tags/?$', tags, name="tags-ajax"),

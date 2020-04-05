@@ -26,10 +26,10 @@ def parse_content(data, tag):
 def insert_tag_into_content(data,tag):
     tag_start = "\%\% " + str(tag["name"]) + " \%\%"
     tag_end = "\%\% endtag " + str(tag["name"]) + " \%\%"
-    print(type(data))
+    print((type(data)))
     print(data)
     return_field = tag_start + str(data) + tag_end
-    print("rebuilding tags " + return_field)
+    print(("rebuilding tags " + return_field))
     return return_field
 
 def find_class(module_name,class_name):

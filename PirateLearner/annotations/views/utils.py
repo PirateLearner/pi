@@ -6,7 +6,7 @@ import textwrap
 try:
     from urllib.parse import urlencode
 except ImportError:     # Python 2
-    from urllib import urlencode
+    from urllib.parse import urlencode
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, resolve_url
@@ -14,7 +14,7 @@ from django.template import RequestContext
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.http import is_safe_url
 
-import annotations
+from . import annotations
 
 def next_redirect(request, fallback, **get_kwargs):
     """

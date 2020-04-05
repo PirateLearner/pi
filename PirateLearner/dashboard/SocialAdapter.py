@@ -30,7 +30,7 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
             return
 
         email = sociallogin.account.extra_data['email'].lower()
-        print("LOGS: Email found in Social Account ", email)
+        print(("LOGS: Email found in Social Account ", email))
 
 
         # check if given email address already exists.

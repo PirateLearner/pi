@@ -194,7 +194,7 @@ class TestSerializers(TestAnnotations):
     def _create_annotation(self, content=None):
         #use test client to POST a request
         self._require_login()
-        print(self.user.is_authenticated()) # returns True
+        print((self.user.is_authenticated())) # returns True
         string_data = {
                     'content_type': content['content_type'],
                     'object_id':content['object_id'],
@@ -231,7 +231,7 @@ class TestSerializers(TestAnnotations):
 
         #Try to get all the annotations. Count should be 1, and it must be ours.
         print( "Response")
-        print(response.content.decode()       )
+        print((response.content.decode()       ))
         self.assertEqual(Annotation.objects.all().count(), 1)
         annotation = Annotation.objects.all()[0]
         #print( 'Annotation content_object')
@@ -241,7 +241,7 @@ class TestSerializers(TestAnnotations):
 
         map = AnnotationShareMap.objects.all()
         for share in map:
-            print(str(share))
+            print((str(share)))
         #check if the redirected page is the same as previous one
         #the response MUST contain the annotations we just posted
 
@@ -277,7 +277,7 @@ class TestSerializers(TestAnnotations):
          )
 
         print( "Response")
-        print(response.content.decode()       )
+        print((response.content.decode()       ))
         self.assertEqual(Annotation.objects.all().count(), 1)
         annotation = Annotation.objects.all()[0]
         #print( 'Annotation content_object')
