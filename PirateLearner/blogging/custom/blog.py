@@ -57,15 +57,15 @@ class BlogForm(forms.Form):
 		post.pop('submit')
 
 		if commit == False:
-			for k,v in post.iteritems():
+			for k,v in post.items():
 				if str(k) == 'pid_count' :
 					post['pid_count'] = self.cleaned_data["pid_count"]
 				else:
 					post[k] = str(v.encode('utf-8'))
 			return json.dumps(post.dict())
 		
-		print "LOGS: Going to insert id's"
-		for k,v in post.iteritems():
+		print("LOGS: Going to insert id's")
+		for k,v in post.items():
 			if str(k) != 'pid_count' :
 				tmp = {}
 				tmp = tag_lib.insert_tag_id(str(v.encode('utf-8')),self.cleaned_data["pid_count"])

@@ -81,7 +81,7 @@ class VoteManager(models.Manager):
                     return
                 vote_obj = self.create(voter=user, content_type=content_type, object_id=obj._get_pk_val(), vote=vote)
             except:
-                print( '{file}: something went wrong in creating a vote object at {line}'.format(file=str('__FILE__'), line=str('__LINE__')))
+                print(( '{file}: something went wrong in creating a vote object at {line}'.format(file=str('__FILE__'), line=str('__LINE__'))))
                 raise ObjectDoesNotExist
 
         return vote_obj

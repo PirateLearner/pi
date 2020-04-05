@@ -70,7 +70,7 @@ def CreateProfile(sender, request, user,**kwargs):
         profile.user = user
         try:
             sociallogin = SocialAccount.objects.get(user=user)
-            print("LOGS: Caught the signal--> printing extra data of the account: \n", sociallogin.extra_data)
+            print(("LOGS: Caught the signal--> printing extra data of the account: \n", sociallogin.extra_data))
             if('google' == sociallogin.provider ):
                 user.first_name = sociallogin.extra_data['given_name']
                 user.last_name = sociallogin.extra_data['family_name']
@@ -115,9 +115,9 @@ def dashboard_home(request):
     return HttpResponse(template.render(context))
 
 def dashboard_profile(request,user_id):
-    print("LOGS: DashBoard Profile called with user id " , user_id)
+    print(("LOGS: DashBoard Profile called with user id " , user_id))
 
-    print("LOGS: User in request is ", request.user.id)
+    print(("LOGS: User in request is ", request.user.id))
 
     try:
         user_id = int(user_id)
@@ -133,7 +133,7 @@ def dashboard_profile(request,user_id):
         else:
             return public_profile(request,user_id)
     except ValueError:
-        print("LOGS:invalid request for user_id ", user_id)
+        print(("LOGS:invalid request for user_id ", user_id))
         raise Http404
 
 
@@ -176,14 +176,14 @@ def my_profile(request):
     # Get groups name
     groups = list(request.user.groups.values_list('name',flat=True))
     if request.user.is_staff:
-        groups.append(u'staff')
+        groups.append('staff')
 
     if request.method == 'POST':
         form = ProfileEditForm(request.POST)
 
         if form.is_valid():
             #form.save()
-            print("printing form data", form.cleaned_data['address'] , form.cleaned_data['interest'])
+            print(("printing form data", form.cleaned_data['address'] , form.cleaned_data['interest']))
             print("LOGS: Profile form is Valid ")
             try:
                 profile = UserProfile.objects.get(user=request.user)
@@ -194,7 +194,7 @@ def my_profile(request):
                 profile.interest.set(*form.cleaned_data['interest'])
                 profile.save()
                 profile = UserProfile.objects.get(user=request.user)
-                print("printing interest after save ", profile.interest)
+                print(("printing interest after save ", profile.interest))
                 return HttpResponseRedirect(reverse('dashboard:dashboard-profile',kwargs = { 'user_id': int(profile.user.id) }))
             except User.DoesNotExist:
                 raise Http404
@@ -227,7 +227,7 @@ def public_profile(request,user_id):
         # Get groups name
         groups = list(user.groups.values_list('name',flat=True))
         if user.is_staff:
-            groups.append(u'staff')
+            groups.append('staff')
 
         social_info = []
         providers = ["Facebook", "Google", "Twitter"]
@@ -309,7 +309,7 @@ class TagDelete(DeleteView):
     def get_related_objects(self):
         collector = NestedObjects(using=DEFAULT_DB_ALIAS)
         collector.collect([self.get_object()])
-        print(collector.nested())
+        print((collector.nested()))
         return collector.nested()
 
 class TagList(ListView):

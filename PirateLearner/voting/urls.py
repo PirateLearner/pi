@@ -8,14 +8,16 @@ from voting import views
 
 from rest_framework.urlpatterns import format_suffix_patterns
 
+app_name="voting"
+
 '''
 from voting.views import (
-           BlogContentViewSet, UserViewSet, VoteViewSet, 
+           BlogContentViewSet, UserViewSet, VoteViewSet,
            BlogContentVoteView, CurrentUserView,
            api_root, VoteList, VoteDetail)
 
 blogcontent_list = BlogContentViewSet.as_view({
-    'get': 'list'                                           
+    'get': 'list'
     })
 blogcontent_detail = BlogContentViewSet.as_view({
     'get': 'retrieve',

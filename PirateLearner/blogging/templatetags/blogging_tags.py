@@ -54,30 +54,30 @@ class ContentRender(InclusionTag):
             context.pop()
             return output
         except:
-            print("Unexpected error:", sys.exc_info()[0])
+            print(("Unexpected error:", sys.exc_info()[0]))
             return "Http404"
 
 
     def _get_data_context(self,context,instance,attribute):
         extra_context = copy(context)
         if attribute:
-            print("atrribute ", attribute)
+            print(("atrribute ", attribute))
             extra_context['attribute_name'] = attribute.__str__()
             extra_context['attribute'] = getattr(instance, attribute, '')
         else:
-            print("tag list ", instance.tag_list)
+            print(("tag list ", instance.tag_list))
             attribute_list = []
             for tag in instance.tag_list:
                 if tag['name'] == "pid_count_tag":
                     continue
                 attribute_name = get_field_name_from_tag(tag['name'])
-                print("tag field name ", attribute_name)
+                print(("tag field name ", attribute_name))
                 attribute_value = getattr(instance, attribute_name, '')
                 if attribute_name == 'title':
                     extra_context['title'] = attribute_value
                 else:
                     attribute_list.append({'name':attribute_name,'value':attribute_value})
-            print("attribute list ", attribute_list)
+            print(("attribute list ", attribute_list))
             extra_context['attribute_list'] = attribute_list
         return extra_context
 
@@ -111,7 +111,7 @@ class ContactTag(InclusionTag):
         if contact_type is None:
             contact_type = 'Queries'
 
-        print("Contact form contact_type : ", contact_type)
+        print(("Contact form contact_type : ", contact_type))
 
         if request.method == "POST":
             print("Contact form inside post")
@@ -148,7 +148,7 @@ class ContactTag(InclusionTag):
             print(output)
             return output
         except:
-            print("Unexpected error:", sys.exc_info()[0])
+            print(("Unexpected error:", sys.exc_info()[0]))
             return "Http404"
 
 class DraftTag(InclusionTag):
@@ -178,10 +178,10 @@ class DraftTag(InclusionTag):
             print(output)
             return output
         except:
-            print("Unexpected error:", sys.exc_info()[0])
+            print(("Unexpected error:", sys.exc_info()[0]))
             for frame in traceback.extract_tb(sys.exc_info()[2]):
                 fname,lineno,fn,text = frame
-                print("Error in %s on line %d" % (fname, lineno))
+                print(("Error in %s on line %d" % (fname, lineno)))
             return "Http404"
     def _get_context(self,context, user):
         extra_context = {}
@@ -218,10 +218,10 @@ class PendingTag(InclusionTag):
             context.pop()
             return output
         except:
-            print("Unexpected error:", sys.exc_info()[0])
+            print(("Unexpected error:", sys.exc_info()[0]))
             for frame in traceback.extract_tb(sys.exc_info()[2]):
                 fname,lineno,fn,text = frame
-                print("Error in %s on line %d" % (fname, lineno))
+                print(("Error in %s on line %d" % (fname, lineno)))
 
             return "Http404"
 
@@ -229,9 +229,9 @@ class PendingTag(InclusionTag):
     def _get_data_context(self,context,user):
         extra_context = copy(context)
         if user:
-            print("User ", user)
+            print(("User ", user))
             extra_context['pending'] = BlogContent.objects.filter(published_flag=False,special_flag=False,author_id=user)
-            print("Printing pending articles ", extra_context['pending'])
+            print(("Printing pending articles ", extra_context['pending']))
         else:
             extra_context['pending'] = BlogContent.objects.filter(published_flag=False,special_flag=False)
         return extra_context
@@ -272,10 +272,10 @@ class ReviewTag(InclusionTag):
             print(output)
             return output
         except:
-            print("Unexpected error:", sys.exc_info()[0])
+            print(("Unexpected error:", sys.exc_info()[0]))
             for frame in traceback.extract_tb(sys.exc_info()[2]):
                 fname,lineno,fn,text = frame
-                print("Error in %s on line %d" % (fname, lineno))
+                print(("Error in %s on line %d" % (fname, lineno)))
             return "Http404"
     def _get_context(self,context, **kwargs):
         extra_context = {}
@@ -310,10 +310,10 @@ class PublishedTag(InclusionTag):
             context.pop()
             return output
         except:
-            print("Unexpected error:", sys.exc_info()[0])
+            print(("Unexpected error:", sys.exc_info()[0]))
             for frame in traceback.extract_tb(sys.exc_info()[2]):
                 fname,lineno,fn,text = frame
-                print("Error in %s on line %d" % (fname, lineno))
+                print(("Error in %s on line %d" % (fname, lineno)))
 
             return "Http404"
 
@@ -321,9 +321,9 @@ class PublishedTag(InclusionTag):
     def _get_data_context(self,context,user):
         extra_context = copy(context)
         if user:
-            print("User ", user)
+            print(("User ", user))
             extra_context['published'] = BlogContent.objects.filter(published_flag=True,author_id=user)
-            print("Printing published articles ", extra_context['published'])
+            print(("Printing published articles ", extra_context['published']))
         else:
             extra_context['published'] = BlogContent.objects.filter(published_flag=True)
         return extra_context
@@ -349,10 +349,10 @@ def get_blogging_tags():
             else:
                 continue
         except:
-            print("Unexpected error:", sys.exc_info()[0])
+            print(("Unexpected error:", sys.exc_info()[0]))
             for frame in traceback.extract_tb(sys.exc_info()[2]):
                 fname,lineno,fn,text = frame
-                print("Error in %s on line %d" % (fname, lineno))
+                print(("Error in %s on line %d" % (fname, lineno)))
     return tag_list
 
 @register.simple_tag

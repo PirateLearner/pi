@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 
 from django import http
 from django.conf import settings
@@ -173,7 +173,7 @@ def post_annotation_ajax(request, using=None):
     if ctype is None or object_pk is None:
         return AnnotationPostBadRequest("Missing content_type or object_pk field.")
     try:
-        object_pk = long(object_pk)
+        object_pk = int(object_pk)
         model = models.get_model(*ctype.split(".", 1))
         target = model._default_manager.using(using).get(pk=object_pk)
     except ValueError:

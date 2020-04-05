@@ -19,7 +19,7 @@ class Command(BaseCommand):
         bookmark_instances = BookmarkInstance.objects.all()
         parsed_dict = {}
         for ele in bookmark_instances:
-            print('****Updating bookmark instance id ', ele.id, ' *********');
+            print(('****Updating bookmark instance id ', ele.id, ' *********'));
             parsed_dict = Readability(ele.get_external_url()).parse()
             if parsed_dict['content'] is not None:
                 ele.description = parsed_dict['content']

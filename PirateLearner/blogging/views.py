@@ -1,4 +1,4 @@
-"""@package PirateDocs 
+"""@package PirateDocs
 	This is main view module for Blogging app supporting various view provided to the User.
 """
 
@@ -24,7 +24,7 @@ import reversion
 # from reversion.helpers import generate_diffs
 from django.contrib.contenttypes.models import ContentType
 
-from meta_tags.views import Meta 
+from meta_tags.views import Meta
 from blogging.utils import slugify_name
 from django.utils.html import strip_tags
 
@@ -41,14 +41,14 @@ from django.utils import timezone
 @group_required('Administrator','Author','Editor')
 def content_type(request):
 	"""
-	This view ask user to choose content type from the existing one or 
+	This view ask user to choose content type from the existing one or
 	create new content type to fit for his/her needs to create post.
-	Operations: 
+	Operations:
 	NEXT -- Go to next page for creation of New content based on selected content type.
 	DELETE -- Delete the current selected content type (requires admin authorizations )
 	NEW -- Create New content type.
-	"""	
-	
+	"""
+
 	if request.method == "POST":
 		form = ContentTypeForm(request.POST)
 		if form.is_valid():
@@ -63,7 +63,7 @@ def content_type(request):
 			elif action == 'delete':
 				if not request.user.is_staff:
 					# return permission denied
-					return HttpResponse(status=403)				
+					return HttpResponse(status=403)
 				try:
 					filename = os.path.abspath(os.path.dirname(__file__))+"/custom/"+content_info.__str__().lower()+".py"
 					os.remove(filename)
@@ -74,14 +74,14 @@ def content_type(request):
 					raise # re-raise exception if a different error occured
 			else:
 				return HttpResponseBadRequest()
-				
+
 	else:
 
 		if bool(request.user.groups.filter(name__in=['Author','Editor'])):
 			request.session['content_info_id'] = 5
 			return HttpResponseRedirect(
 		            reverse("blogging:create-post"))
-		
+
 		if 'content_info_id' in request.session:
 			try:
 				content_info_obj = BlogContentType.objects.get(
@@ -95,8 +95,13 @@ def content_type(request):
 		else:
 			form = ContentTypeForm()
 	return render(request,
+<<<<<<< HEAD
 	    "blogging/content_type.html",
 	    locals())	
+=======
+				    "blogging/content_type.html",
+				    locals(), context_instance=RequestContext(request))
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 
 @login_required
 @group_required('Administrator','Editor','Author')
@@ -108,7 +113,7 @@ def new_post(request):
 	BACK -- Go back to previous step for selecting new content type.
 	SAVE -- Save the content as draft for later revision. todo:
 
-	SUBMIT -- Submit the post for moderation and publication. 
+	SUBMIT -- Submit the post for moderation and publication.
 	"""
 	if 'content_info_id' not in request.session:
 		return HttpResponseRedirect(reverse("blogging:content-type"))
@@ -144,17 +149,21 @@ def new_post(request):
 				# for now change the special_flag to True TODO integrate it in project management App
 				blog.special_flag = True
 				blog.data = post_form.save(post)
-			
-			with reversion.create_revision():	
+
+			with reversion.create_revision():
 				blog.save()
 				if content_info_obj.is_leaf:
+<<<<<<< HEAD
 					print("LOGS: tags are ", post_form.cleaned_data['tags'])
+=======
+					print(("LOGS: tags are ", post_form.cleaned_data['tags']))
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 					blog.tags.add(*post_form.cleaned_data['tags'])
 				reversion.set_user(request.user)
 				reversion.set_comment("Created first draft")
 
-			if action == 'Publish':				
-				generate_event.send(sender = blog.__class__, event_label = "blogging_content_submit", 
+			if action == 'Publish':
+				generate_event.send(sender = blog.__class__, event_label = "blogging_content_submit",
 								user = request.user, source_content_type = ContentType.objects.get_for_model(blog), source_object_id= blog.pk)
 
 			del request.session['content_info_id']
@@ -174,19 +183,25 @@ def edit_post(request,post_id):
 	"""
 	Used for editing existing post depending upon the post_id in the request.
 	SAVE -- Save the content as draft for later revision. todo:
-	SUBMIT -- Submit the post for moderation and publication. 
+	SUBMIT -- Submit the post for moderation and publication.
 	"""
-	
+
 	try:
 		blog = BlogContent.objects.get(pk=post_id)
 		request.session['content_info_id'] = blog.content_type.id
+<<<<<<< HEAD
 		print("LOGS: EDIT ", blog.__str__())
 		form = find_class('blogging.custom.'+blog.content_type.__str__().lower(),str(blog.content_type).capitalize()+'Form' )
 		print("LOGS: ContentType ", blog.content_type.__str__().lower())
+=======
+		print(("LOGS: EDIT ", blog.__str__()))
+		form = find_class('blogging.custom.'+blog.content_type.__str__().lower(),str(blog.content_type).capitalize()+'Form' )
+		print(("LOGS: ContentType ", blog.content_type.__str__().lower()))
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 		if request.method == "POST":
 			post_form = form(reverse('blogging:edit-post',args = (post_id,)),request.POST,instance=blog)
 			action = request.POST.get('submit')
-			
+
 			if post_form.is_valid():
 				post = request.POST.copy()
 				blog.title = post_form.cleaned_data["title"]
@@ -202,21 +217,26 @@ def edit_post(request,post_id):
 					blog.data = post_form.save(post)
 					# for now change the special_flag to False TODO integrate it in project management App
 					blog.special_flag = True
-				
+
 				# create the reversion for version control and revert back the deleted post
-				with reversion.create_revision():	
+				with reversion.create_revision():
 					blog.save()
+<<<<<<< HEAD
 					print("LOGS: tags are ", post_form.cleaned_data['tags'])
+=======
+					print(("LOGS: tags are ", post_form.cleaned_data['tags']))
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 					blog.tags.set(*post_form.cleaned_data['tags'])
 					reversion.set_user(request.user)
 					reversion.set_comment("Saving the Blog Content changes...")
-					
-				if action == 'Publish':				
+
+				if action == 'Publish':
 					generate_event.send(sender = blog.__class__, event_label = "blogging_content_submit", user = request.user, source_content_type = ContentType.objects.get_for_model(blog), source_object_id= blog.pk)
-								
+
 				return HttpResponseRedirect(blog.get_absolute_url())
 		else:
 			wrapper_form_class = find_class('blogging.custom.'+blog.content_type.__str__().lower(),str(blog.content_type).capitalize()+'Form')
+<<<<<<< HEAD
 			print("LOGS: Wrapper Form Class ", wrapper_form_class)
 			print("LOGS: Content Class ", blog)
 			post_form = wrapper_form_class(reverse('blogging:edit-post',args = (post_id,)),instance=blog)
@@ -229,6 +249,21 @@ def edit_post(request,post_id):
 		for frame in traceback.extract_tb(sys.exc_info()[2]):
 			fname,lineno,fn,text = frame
 			print("Error in %s on line %d" % (fname, lineno))
+=======
+			print(("LOGS: Wrapper Form Class ", wrapper_form_class))
+			print(("LOGS: Content Class ", blog))
+			post_form = wrapper_form_class(reverse('blogging:edit-post',args = (post_id,)),instance=blog)
+
+		context = {'form':post_form}
+		return render_to_response(
+		    "blogging/create_page.html",
+		    context, context_instance=RequestContext(request))
+	except:
+		print(("Unexpected error:", sys.exc_info()[0]))
+		for frame in traceback.extract_tb(sys.exc_info()[2]):
+			fname,lineno,fn,text = frame
+			print(("Error in %s on line %d" % (fname, lineno)))
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 		raise Http404
 
 @login_required
@@ -236,12 +271,16 @@ def edit_post(request,post_id):
 def edit_section(request,section_id):
 	"""
 	Used for editing existing sections depending upon the section_id in the request.
-	SUBMIT -- Submit the changes made in section. 
+	SUBMIT -- Submit the changes made in section.
 	"""
 	try:
 		section = BlogParent.objects.get(pk=section_id)
 		form = find_class('blogging.custom.'+section.content_type.__str__().lower(),str(section.content_type).capitalize()+'Form' )
+<<<<<<< HEAD
 		print("LOGS: ContentType ", section.content_type.__str__().lower())
+=======
+		print(("LOGS: ContentType ", section.content_type.__str__().lower()))
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 		if request.method == "POST":
 			post_form = form(reverse('blogging:edit-section',args = (section_id,)),request.POST)
 			action = request.POST.get('submit')
@@ -257,11 +296,11 @@ def edit_section(request,section_id):
 				elif action == 'Save Draft':
 					section.data = post_form.save(post)
 				# create the reversion for version control and revert back the deleted post
-				with reversion.create_revision():	
+				with reversion.create_revision():
 					section.save()
 					reversion.set_user(request.user)
 					reversion.set_comment("Saving the Blog Content changes...")
-								
+
 				return HttpResponseRedirect(section.get_absolute_url())
 
 		else:
@@ -272,14 +311,23 @@ def edit_section(request,section_id):
 		context = {'form':post_form}
 		return render(request,
 		    "blogging/create_page.html",
+<<<<<<< HEAD
 		    context)	
 	except:
 		print("Unexpected error:", sys.exc_info()[0])
 		for frame in traceback.extract_tb(sys.exc_info()[2]):
 			fname,lineno,fn,text = frame
 			print("Error in %s on line %d" % (fname, lineno))
+=======
+		    context, context_instance=RequestContext(request))
+	except:
+		print(("Unexpected error:", sys.exc_info()[0]))
+		for frame in traceback.extract_tb(sys.exc_info()[2]):
+			fname,lineno,fn,text = frame
+			print(("Error in %s on line %d" % (fname, lineno)))
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 		raise Http404
-	
+
 @login_required
 @group_required('Administrator')
 def add_new_model(request, model_name):
@@ -288,13 +336,17 @@ def add_new_model(request, model_name):
 	else:
 		normal_model_name = model_name
 	print(normal_model_name)
+<<<<<<< HEAD
 	
+=======
+
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 	if normal_model_name == 'ContentType' :
-		
+
 		if not request.user.is_staff:
 			# return permission denied
 			return HttpResponse(status=403)
-		
+
 		FieldFormSet = formset_factory(FieldTypeForm,extra=1)
 		if request.method == 'POST':
 			form1 = ContentTypeCreationForm(request.POST)
@@ -303,6 +355,7 @@ def add_new_model(request, model_name):
 				try:
 					form_dict = {}
 					for form in form2:
+<<<<<<< HEAD
 						print(form.cleaned_data)
 						form_dict[form.cleaned_data['field_name']] = form.cleaned_data['field_type']
 					print("LOGS: Printing fomr dictionary: ", form_dict) 
@@ -312,6 +365,17 @@ def add_new_model(request, model_name):
 						raise forms.ValidationError("something got wronged")
 					new_obj = form1.save() #TODO many things
 					print(new_obj.content_type)
+=======
+						print((form.cleaned_data))
+						form_dict[form.cleaned_data['field_name']] = form.cleaned_data['field_type']
+					print(("LOGS: printing fomr dictionary: ", form_dict))
+
+
+					if (create_content_type(slugify_name(form1.cleaned_data['content_type']),form_dict,form1.cleaned_data['is_leaf']) == False ):
+						raise forms.ValidationError("something got wronged")
+					new_obj = form1.save() #TODO many things
+					print((new_obj.content_type))
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 				except forms.ValidationError:
 					new_obj = None
 				if new_obj:
@@ -321,14 +385,22 @@ def add_new_model(request, model_name):
 					page_context = {'form1': form1,'formset':form2,  'field': normal_model_name}
 					return render(request,'blogging/includes/add_content_type.html', page_context)
 			else:
+<<<<<<< HEAD
 				print("form is not valid form1 ", form1.is_valid(), " form 2 ", form2.is_valid()) 	
+=======
+				print(("form is not valid form1 ", form1.is_valid(), " form 2 ", form2.is_valid()))
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 				page_context = {'form1': form1,'formset':form2,  'field': normal_model_name}
 				return render(request, 'blogging/includes/add_content_type.html', page_context)
 
 		else:
 			form = ContentTypeCreationForm()
 			formset = FieldFormSet()
+<<<<<<< HEAD
 			print(form.as_table())
+=======
+			print((form.as_table()))
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 
 			page_context = {'form1': form,'formset':formset,  'field': normal_model_name }
 			return render_to_response('blogging/includes/add_content_type.html', page_context, context_instance=RequestContext(request))
@@ -363,12 +435,16 @@ def authors_list(request):
 def author_post(request,slug,post_id):
 	return HttpResponse("Hi This is author post view")
 
-def archive(request):	
+def archive(request):
 	return HttpResponse("Hi This is archive view")
 
 def teaser(request,slug):
 	current_section = slug.split("/")[-1]
+<<<<<<< HEAD
 	print("Printing slug ", slug)
+=======
+	print(( "Printing slug ", slug))
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 	if len(slug) == 0:
 		return  ""
 	try:
@@ -393,7 +469,7 @@ def teaser(request,slug):
 			json_obj['edit'] = reverse('blogging:edit-post',args = (post_id,))
 			json_obj['author'] = blogs.author_id
 			json_obj['published'] = blogs.published_flag
-			
+
 # 			available_versions = reversion.get_for_object(blogs)
 			patch_html = ""
 # 			if len(available_versions) > 1 :
@@ -402,21 +478,29 @@ def teaser(request,slug):
 # 				patch_html = generate_diffs(old_version, new_version, "data",cleanup="semantic")
 		except:
 # 			log.user(self.request, "~SN~FRFailed~FY to fetch ~FGoriginal text~FY: Unexpected error '{0}'".format(sys.exc_info()[0]),logger)
+<<<<<<< HEAD
 			print("Unexpected error:", sys.exc_info()[0])
 			for frame in traceback.extract_tb(sys.exc_info()[2]):
 				fname,lineno,fn,text = frame
 # 				logging.error("~SN~FRError~FY in %s on line ~FG%d~FY" % (fname, lineno),logger)
 				print("Error in %s on line %d" % (fname, lineno))
+=======
+			print(("Unexpected error:", sys.exc_info()[0]))
+			for frame in traceback.extract_tb(sys.exc_info()[2]):
+				fname,lineno,fn,text = frame
+# 				logging.error("~SN~FRError~FY in %s on line ~FG%d~FY" % (fname, lineno),logger)
+				print(("Error in %s on line %d" % (fname, lineno)))
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 			raise Http404
 
 		context = {
-					'parent': blogs.section,		
+					'parent': blogs.section,
 					'nodes': blogs,
                    	'content':json_obj,
                     'page': {'title':'Pirate Learner', 'tagline':'We learn from stolen stuff'},
                     'patch': patch_html,
                     'meta' : meta,
-                    'can_edit':(not blogs.published_flag) and blogs.author_id == request.user , 
+                    'can_edit':(not blogs.published_flag) and blogs.author_id == request.user ,
                    }
 		return HttpResponse(template.render(context,request))
 	except (ValueError):
@@ -425,13 +509,21 @@ def teaser(request,slug):
 			if request.GET.get('edit',None) == 'True':
 				return HttpResponseRedirect(reverse('blogging:edit-section',args = (section.id,)))
 
+<<<<<<< HEAD
 		except (BlogParent.DoesNotExist):	
 			print("Unexpected error:", sys.exc_info()[0])
 			for frame in traceback.extract_tb(sys.exc_info()[2]):
 				fname,lineno,fn,text = frame
 				print("Error in %s on line %d" % (fname, lineno))
+=======
+		except (BlogParent.DoesNotExist):
+			print(("Unexpected error:", sys.exc_info()[0]))
+			for frame in traceback.extract_tb(sys.exc_info()[2]):
+				fname,lineno,fn,text = frame
+				print(("Error in %s on line %d" % (fname, lineno)))
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 			raise Http404
-		
+
 		max_entry = getattr(settings, 'BLOGGING_MAX_ENTRY_PER_PAGE', 10)
 
 		if section.is_leaf_node():
@@ -456,7 +548,11 @@ def teaser(request,slug):
                       }
 			return HttpResponse(template.render(context,request))
 		template = loader.get_template('blogging/section.html')
+<<<<<<< HEAD
 		print("LOGS:: This is NON Leaf Node ", section.get_children())
+=======
+		print(("LOGS:: This is NON Leaf Node ", section.get_children()))
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 		paginator = Paginator(section.get_children(), max_entry)
 		page = request.GET.get('page')
 		try:
@@ -479,7 +575,7 @@ def tagged_post(request,tag):
 	try:
 		posts = BlogContent.objects.filter(tags__slug = tag)
 		max_entry = getattr(settings, 'BLOGGING_MAX_ENTRY_PER_PAGE', 3)
-		
+
 		page = request.GET.get('page')
 		paginator = Paginator(posts, max_entry)
 		try:
@@ -509,7 +605,7 @@ def ContactUs(request):
 		User = request.user
 		name = User.profile.get_profile_name()
 		email = User.profile.get_email()
-	
+
 	if contact_type is None:
 		contact_type = 'Queries'
 
@@ -538,16 +634,20 @@ def BuildIndex(request):
 		section = None
 		try:
 			parent  = request.GET.get('section',None)
+<<<<<<< HEAD
 			print("Parent id from request ", parent)
+=======
+			print(("Parent id from request ", parent))
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 			if parent:
 				section = BlogParent.objects.get(pk=parent)
 		except:
-			section = None 
-		
+			section = None
+
 		context = RequestContext(request, {
 # 	                                       'nodes': course.get_descendants(include_self=True),
 											'nodes': BlogParent.objects.filter(~Q(title="Orphan")),
-	                                       'active': section 
+	                                       'active': section
 	                                      })
 		return HttpResponse(template.render(context))
 	else:
@@ -556,30 +656,30 @@ def BuildIndex(request):
 
 def testCase(request):
 
-	generate_event.send(sender = request.user.__class__, event_label = "user_signed_up", 
+	generate_event.send(sender = request.user.__class__, event_label = "user_signed_up",
                                 	user = request.user, source_content_type = ContentType.objects.get_for_model(request.user), source_object_id= request.user.pk)
 	template = loader.get_template('index_tree.html')
 	course = BlogParent.objects.get(title='Course')
-	Django = BlogParent.objects.get(title='Computer Science') 
-	
+	Django = BlogParent.objects.get(title='Computer Science')
+
 	context = RequestContext(request, {
                                        'nodes': course.get_descendants(include_self=True),
-                                       'active': Django 
+                                       'active': Django
                                       })
 	return HttpResponse(template.render(context))
-# 	
-# 	
-# 	
+#
+#
+#
 # 	try:
 # 		migrate()
 # 		return render_to_response('blogging/Test_page.html', {}, context_instance=RequestContext(request))
 # 	except:
-# 		print "Unexpected error:", sys.exc_info()[0]
+# 		print("Unexpected error:", sys.exc_info()[0])
 # 		for frame in traceback.extract_tb(sys.exc_info()[2]):
 # 			fname,lineno,fn,text = frame
-# 			print "Error in %s on line %d" % (fname, lineno)
+# 			print("Error in %s on line %d" % (fname, lineno))
 # 		raise Http404
-	
+
 
 @login_required
 @group_required('Administrator')
@@ -590,8 +690,8 @@ def manage(request):
 
 	# Check the parameters passed in the URL and process accordingly
 	action = request.GET.get('action', None)
-	article_ids = request.GET.get('ids', None)	
-	
+	article_ids = request.GET.get('ids', None)
+
 	if request.is_ajax() and request.method == "POST":
 		if action is None or article_ids is None:
 			# Return failure
@@ -601,15 +701,19 @@ def manage(request):
 			res['return_text'] = 'No parameter(s) passed'
 			return JsonResponse(res)
 		article_ids = [x.strip() for x in article_ids.split(',')]
-		# remove comma from the 
+		# remove comma from the
 		if not article_ids[-1]:
 			article_ids = article_ids[:-1]
 		action = action.strip()
+<<<<<<< HEAD
 		print("manage: action=", action, "articles=", article_ids)
+=======
+		print(("manage: action=", action, "articles=", article_ids))
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 		count = 0
 		try:
 			if len(article_ids):
-						
+
 				res = {}
 				objs = BlogContent.objects.filter(pk__in=article_ids)
 				if action == 'Promote':
@@ -624,7 +728,7 @@ def manage(request):
 						obj.publication_start = timezone.now()
 						obj.save()
 						obj_published.append(obj.id)
-						generate_event.send(sender = obj.__class__, event_label = "blogging_content_publish", 
+						generate_event.send(sender = obj.__class__, event_label = "blogging_content_publish",
 										user = obj.get_author(), source_content_type = ContentType.objects.get_for_model(obj), source_object_id= obj.pk)
 						count += 1
 					res['return_text'] = '{count} articles published sucessfully!!'.format(count=count)
@@ -644,7 +748,7 @@ def manage(request):
 						obj.publication_start = None
 						obj.save()
 						obj_published.append(obj.id)
-# 						generate_event.send(sender = obj.__class__, event_label = "blogging_content_publish", 
+# 						generate_event.send(sender = obj.__class__, event_label = "blogging_content_publish",
 # 										user = obj.get_author(), source_content_type = ContentType.objects.get_for_model(obj), source_object_id= obj.pk)
 						count += 1
 					res['return_text'] = '{count} articles unpublished sucessfully!!'.format(count=count)
@@ -663,6 +767,7 @@ def manage(request):
 					res['return_text'] = '{count} articles deleted sucessfully!!'.format(count=count)
 					res['result'] = 'success'
 					res['action'] = "Delete"
+<<<<<<< HEAD
 				
 				print("manage_articles: Total", count)
 				
@@ -672,10 +777,21 @@ def manage(request):
 			for frame in traceback.extract_tb(sys.exc_info()[2]):
 				fname,lineno,fn,text = frame
 				print("Error in %s on line %d" % (fname, lineno))
+=======
+
+				print(("manage_articles: Total", count))
+
+				return JsonResponse(res)
+		except:
+			print(("Unexpected error:", sys.exc_info()[0]))
+			for frame in traceback.extract_tb(sys.exc_info()[2]):
+				fname,lineno,fn,text = frame
+				print(("Error in %s on line %d" % (fname, lineno)))
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 			res = {}
 			res['result'] = 'error'
-			return JsonResponse(res) 
-									
+			return JsonResponse(res)
+
 	page = request.GET.get('page',None)
 	tab = request.GET.get('tab','all')
 
@@ -684,7 +800,7 @@ def manage(request):
 			base_queryset = BlogContent.objects.all()
 		else:
 			base_queryset = BlogContent.objects.all(author_id=request.user)
-		
+
 		if tab == "all":
 			articles = base_queryset
 			result_title = 'all articles'
@@ -700,7 +816,7 @@ def manage(request):
 		else:
 			articles = base_queryset
 			result_title = 'all articles'
-		
+
 		paginator = Paginator(articles, 50,orphans=30)
 		try:
 			pages = paginator.page(page)
@@ -717,24 +833,24 @@ def manage(request):
 				{"name":"Delete", "help":"Delete selected articles"},
 				]
 		tab_css_class = ['is-active']
-		query_tabs = [ 
-					{ 	'name': 'All', 
-						'url': reverse("blogging:manage_articles")+'?tab=all', 
+		query_tabs = [
+					{ 	'name': 'All',
+						'url': reverse("blogging:manage_articles")+'?tab=all',
 						'css': ' '.join(tab_css_class) if tab == 'all' else '',
 						'help_text': 'List of all articles.'
 					},
-					{ 	'name': 'Published', 
-						'url': reverse("blogging:manage_articles")+'?tab=published', 
+					{ 	'name': 'Published',
+						'url': reverse("blogging:manage_articles")+'?tab=published',
 						'css': ' '.join(tab_css_class) if tab == 'published' else '',
 						'help_text': 'List of all published articles.'
 					},
-					{ 	'name': 'Pending', 
-						'url': reverse("blogging:manage_articles")+'?tab=pending', 
+					{ 	'name': 'Pending',
+						'url': reverse("blogging:manage_articles")+'?tab=pending',
 						'css':  ' '.join(tab_css_class) if tab == 'pending' else '',
 						'help_text': 'List of pending articles.'
 					},
-					{ 	'name': 'Draft', 
-						'url': reverse("blogging:manage_articles")+'?tab=draft', 
+					{ 	'name': 'Draft',
+						'url': reverse("blogging:manage_articles")+'?tab=draft',
 						'css': ' '.join(tab_css_class) if tab == 'draft' else '',
 						'help_text': 'List of articles in draft.'
 					}
@@ -744,8 +860,15 @@ def manage(request):
 				   }
 		return HttpResponse(template.render(context,request))
 	except:
+<<<<<<< HEAD
 		print("Unexpected error:", sys.exc_info()[0])
 		for frame in traceback.extract_tb(sys.exc_info()[2]):
 			fname,lineno,fn,text = frame
 			print("Error in %s on line %d" % (fname, lineno))
+=======
+		print(("Unexpected error:", sys.exc_info()[0]))
+		for frame in traceback.extract_tb(sys.exc_info()[2]):
+			fname,lineno,fn,text = frame
+			print(("Error in %s on line %d" % (fname, lineno)))
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 		raise Http404

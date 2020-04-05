@@ -6,7 +6,7 @@ from events.conf import settings
 def load_media_defaults():
     media = []
     defaults = {}
-    for key, backend in settings.EVENTS_NOTIFICATIONS_BACKENDS.items():
+    for key, backend in list(settings.EVENTS_NOTIFICATIONS_BACKENDS.items()):
         # key is a tuple (action_id, backend_label)
         media.append(key)
         defaults[key[0]] = backend.spam_sensitivity

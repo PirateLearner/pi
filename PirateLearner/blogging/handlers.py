@@ -41,7 +41,7 @@ def handle_submit_event(sender, *args,**kwargs):
                      "title": obj.get_menu_title(), "blog_url":obj.get_absolute_url()}
     template_name = "events/notifications/{0}/admin.html".format(label)
     ret  = send("Administrator",label,extra_context = extra_context, html=True, template_name=template_name)
-    print "Send to Admistrator return ", ret
+    print("Send to Admistrator return ", ret)
     
 
 @register_handle("blogging_content_publish")
@@ -75,6 +75,6 @@ def handle_publish_event(sender, *args,**kwargs):
     template_name = "events/notifications/{0}/author.html".format(label)
      
     ret  = send([user],label,extra_context = extra_context, html=True, template_name=template_name)
-    print "Send to user return ", ret
+    print("Send to user return ", ret)
 
     

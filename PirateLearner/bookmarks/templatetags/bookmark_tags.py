@@ -47,10 +47,10 @@ class BookmarkRender(InclusionTag):
             context.pop()
             return output
         except:
-            print("Unexpected error:", sys.exc_info()[0])
+            print(("Unexpected error:", sys.exc_info()[0]))
             for frame in traceback.extract_tb(sys.exc_info()[2]):
                 fname,lineno,fn,text = frame
-                print("Error in %s on line %d" % (fname, lineno))
+                print(("Error in %s on line %d" % (fname, lineno)))
 
             return "Http404"
 
@@ -58,10 +58,10 @@ class BookmarkRender(InclusionTag):
     def _get_data_context(self,context,user):
         extra_context = copy(context)
         if user:
-            print("User ", user)
+            print(("User ", user))
             if user == context['request'].user:
                 extra_context['bookmarks'] =  BookmarkInstance.objects.filter(user=context['request'].user)
-                print("Printing Bookmarks", extra_context['bookmarks'] )
+                print(("Printing Bookmarks", extra_context['bookmarks'] ))
             else:
                 extra_context['bookmarks'] =  BookmarkInstance.objects.filter(user=context['request'].user,saved_instances__privacy_level = 'pub')
         else:
@@ -80,7 +80,7 @@ def is_bookmarked(user,url):
     """
 #     domain = getattr(settings, 'DOMAIN_URL', None)
 #     url = domain + url
-    print("is_bookmarked: ", user , url)
+    print(("is_bookmarked: ", user , url))
     if get_user_bookmark(url,user):
         return True
     else:

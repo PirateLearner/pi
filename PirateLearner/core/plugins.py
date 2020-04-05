@@ -19,7 +19,7 @@ class PluginMount(type):
         return cls.plugins
 
 
-class ActionProvider:
+class ActionProvider(metaclass=PluginMount):
     """
     Mount point for plugins which refer to actions that can be performed.
 
@@ -35,7 +35,6 @@ class ActionProvider:
     render_plugin    function that should return the HttpResponse
     ========  ========================================================
     """
-    __metaclass__ = PluginMount
     
     
     

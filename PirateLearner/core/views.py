@@ -45,13 +45,13 @@ def page_create(request):
 #     print request
     if request.method == 'POST':
         post_data = request.POST.get('object_list')
-        print post_data
+        print(post_data)
         json_data = json.loads(post_data)
         try:
             name = json_data['name']
-            print "LOGS: page create request is received with %(name)s" % {'name':name}
+            print("LOGS: page create request is received with %(name)s" % {'name':name})
             obj_list  = json_data['obj_list']
-            print "Object List is ", obj_list
+            print("Object List is ", obj_list)
             plugin_array = []
             for elm in obj_list:
                 plugin_obj = utils.plugins(elm['x'],elm['y'],elm['w'],elm['h'])
@@ -62,8 +62,8 @@ def page_create(request):
         return HttpResponse("Got json data")
 
     else:
-        print "Method is not POST"
-        print request.method
+        print("Method is not POST")
+        print(request.method)
         return HttpResponse("INVALID REQUEST")
 
 

@@ -32,7 +32,7 @@ def migrate():
     blogs = BlogParent.objects.all()
     content_type = BlogContentType.objects.get(content_type='DefaultSection')
     form_filename = os.path.abspath(os.path.dirname(__file__))+"/custom/"+"migrate_sections.txt"
-    fd = os.fdopen(os.open(form_filename,os.O_CREAT| os.O_RDWR , 0555),'w')
+    fd = os.fdopen(os.open(form_filename,os.O_CREAT| os.O_RDWR , 0o555),'w')
     
     for blog in blogs:
 
@@ -57,7 +57,7 @@ def migrate():
             blog.save()
             continue        
         else:
-            print "NO TAGs FOUND in " + blog.title
+            print("NO TAGs FOUND in " + blog.title)
             tmp = {}
             tmp['content'] = blog.data
             tmp['pid_count'] = '0'
@@ -65,7 +65,7 @@ def migrate():
             fd.write(json.dumps(tmp) + "\n\n")
             blog.data = json.dumps(tmp)
             blog.content_type = content_type
-            print " Going to save " , blog , blog.content_type
+            print(" Going to save " , blog , blog.content_type)
             blog.save()
     fd.close()
             

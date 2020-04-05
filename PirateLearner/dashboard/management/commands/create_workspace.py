@@ -418,17 +418,17 @@ def create_news_and_rss_dashboard_entries(user, workspace):
         layout_uid = AndroidLayout.uid,
         placeholder_uid = AndroidMainPlaceholder.uid,
         plugin_uid = 'dummy_2x1',
-        plugin_data = clean_extra_spaces("""{"text": "\u03a3\u03bfc\u03b9\u03b9\u03c3 \u03b5\u03b3\u03b5\u03c4
-            \u03c4\u03b9\u03bdc\u03b9\u03b4\u03b8\u03bd\u03c4 \u03b1c,
-            \u03c6\u03c1\u03b9\u03bd\u03b3\u03b9\u03bb\u03bb\u03b1 \u03b1c. V\u03b5 \u03b1\u03b8c\u03c4\u03bf\u03c1
-            \u03b8\u03c4 \u03c0\u03c1\u03b1\u03b5\u03c3\u03b5\u03bd\u03c4 v\u03b1\u03c1\u03b9\u03b8\u03c3,
-            \u03bf\u03c1\u03bd\u03b1\u03c1\u03b5 \u03bd\u03b5c, \u03b1\u03b8c\u03c4\u03bf\u03c1, \u03b1\u03b4,
-            \u03bb\u03bf\u03c1\u03b5\u03bc c\u03bf\u03bd\u03b4\u03b9\u03bc\u03b5\u03bd\u03c4\u03b8\u03bc.
-            \u03a0\u03bf\u03c4\u03b5\u03bd\u03c4\u03b9. \u0391\u03bb\u03b9q\u03b8\u03b1\u03bc.
-            \u03a3\u03bf\u03bb\u03bb\u03b9c\u03b9\u03c4\u03b8\u03b4\u03b9\u03bd
-            \u03b4\u03b9c\u03c4\u03b8\u03bc \u03b8\u03c4 \u03bd\u03bf\u03c3\u03c4\u03c1\u03b1 \u03b4\u03b9\u03c3.
-            \u0391\u03bd\u03c4\u03b5 c\u03bf\u03bd\u03b8\u03b2\u03b9\u03b1 \u03c1\u03b8\u03c4\u03c1\u03b8\u03bc,
-            \u03c0\u03b7\u03b1\u03c3\u03b5\u03bb\u03bb\u03b8\u03c3 ...", "lipsum_max_chars": 200,
+        plugin_data = clean_extra_spaces("""{"text": "\\u03a3\\u03bfc\\u03b9\\u03b9\\u03c3 \\u03b5\\u03b3\\u03b5\\u03c4
+            \\u03c4\\u03b9\\u03bdc\\u03b9\\u03b4\\u03b8\\u03bd\\u03c4 \\u03b1c,
+            \\u03c6\\u03c1\\u03b9\\u03bd\\u03b3\\u03b9\\u03bb\\u03bb\\u03b1 \\u03b1c. V\\u03b5 \\u03b1\\u03b8c\\u03c4\\u03bf\\u03c1
+            \\u03b8\\u03c4 \\u03c0\\u03c1\\u03b1\\u03b5\\u03c3\\u03b5\\u03bd\\u03c4 v\\u03b1\\u03c1\\u03b9\\u03b8\\u03c3,
+            \\u03bf\\u03c1\\u03bd\\u03b1\\u03c1\\u03b5 \\u03bd\\u03b5c, \\u03b1\\u03b8c\\u03c4\\u03bf\\u03c1, \\u03b1\\u03b4,
+            \\u03bb\\u03bf\\u03c1\\u03b5\\u03bc c\\u03bf\\u03bd\\u03b4\\u03b9\\u03bc\\u03b5\\u03bd\\u03c4\\u03b8\\u03bc.
+            \\u03a0\\u03bf\\u03c4\\u03b5\\u03bd\\u03c4\\u03b9. \\u0391\\u03bb\\u03b9q\\u03b8\\u03b1\\u03bc.
+            \\u03a3\\u03bf\\u03bb\\u03bb\\u03b9c\\u03b9\\u03c4\\u03b8\\u03b4\\u03b9\\u03bd
+            \\u03b4\\u03b9c\\u03c4\\u03b8\\u03bc \\u03b8\\u03c4 \\u03bd\\u03bf\\u03c3\\u03c4\\u03c1\\u03b1 \\u03b4\\u03b9\\u03c3.
+            \\u0391\\u03bd\\u03c4\\u03b5 c\\u03bf\\u03bd\\u03b8\\u03b2\\u03b9\\u03b1 \\u03c1\\u03b8\\u03c4\\u03c1\\u03b8\\u03bc,
+            \\u03c0\\u03b7\\u03b1\\u03c3\\u03b5\\u03bb\\u03bb\\u03b8\\u03c3 ...", "lipsum_max_chars": 200,
             "lipsum_language": "el", "show_title": false, "generate_lipsum": true}"""),
         position = 23
         )
@@ -468,7 +468,7 @@ class Command(BaseCommand):
             
             if int(id) == 1:
             
-                print "Creating workspace for ID ", id
+                print("Creating workspace for ID ", id)
                 user = User.objects.get(pk = int(id))
         
                 # *********************************

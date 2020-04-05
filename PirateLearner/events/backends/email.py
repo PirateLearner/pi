@@ -76,7 +76,7 @@ class EmailBackend(BaseBackend):
 
                 for file in files:
                     msg.attach_file(file)
-            print("Sending html mail to ", recipient.email, " sender ", sender        )
+            print(("Sending html mail to ", recipient.email, " sender ", sender        ))
             return msg.send(fail_silently = True)
 
         else:
@@ -84,5 +84,5 @@ class EmailBackend(BaseBackend):
             body = render_to_string("events/notifications/email_body.txt", {
                 "message": messages["full.txt"],
             }, context)
-            print("Sending text mail to ", recipient.email, " sender ", sender)
+            print(("Sending text mail to ", recipient.email, " sender ", sender))
             return send_mail(subject, body, sender, [recipient.email])

@@ -114,7 +114,7 @@ class TagField(forms.MultipleChoiceField):
 
 def validate_empty(value):
 	if value :
-		raise ValidationError(u'It seems you are not human!!!')
+		raise ValidationError('It seems you are not human!!!')
 
 """
 class LatestEntriesForm(forms.ModelForm):
@@ -272,7 +272,7 @@ if 'cms' in settings.INSTALLED_APPS:
 
 		def __init__(self, *args, **kwargs):
 			super(SectionPluginForm, self).__init__(*args, **kwargs)
-			choices = [self.fields['parent_section'].choices.__iter__().next()]
+			choices = [next(self.fields['parent_section'].choices.__iter__())]
 			for page in self.fields['parent_section'].queryset:
 				choices.append(
 					(page.id, ''.join(['-' * page.level, page.__unicode__()]))

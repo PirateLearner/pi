@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.utils.encoding import smart_text
 
-import annotations
+from . import annotations
 
 from django.conf import settings
 from django.template import Node

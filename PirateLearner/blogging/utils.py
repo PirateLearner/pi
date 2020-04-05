@@ -39,7 +39,7 @@ def create_content_type(name,form_dict,is_leaf):
 			fd.write(template_string)
 			fd.close()
 
-			print (file(form_filename).read())
+			print((file(form_filename).read()))
 			return True
 		except IOError:
 			print ("Error Opening File for Writing")
@@ -81,7 +81,7 @@ def truncatewords(Value,limit=30):
 		return Value
 
 	# Make sure it's unicode
-	Value = unicode(Value)
+	Value = str(Value)
 
 	# Return the string itself if length is smaller or equal to the limit
 	if len(Value) <= limit:

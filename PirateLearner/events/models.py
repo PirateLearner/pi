@@ -61,11 +61,11 @@ class EventType(models.Model):
             if updated:
                 event_type.save()
                 if verbosity > 1:
-                    print("Updated %s EventType" % label)
+                    print(("Updated %s EventType" % label))
         except cls.DoesNotExist:
             cls(label=label, display=display, description=description).save()
             if verbosity > 1:
-                print("Created %s EventType" % label)
+                print(("Created %s EventType" % label))
 
 
 class EventFilter(models.Model):
@@ -134,7 +134,7 @@ def send(to, label, sender=None, **kwargs):
 
 
     for user in users:
-        for backend in settings.EVENTS_NOTIFICATIONS_BACKENDS.values():
+        for backend in list(settings.EVENTS_NOTIFICATIONS_BACKENDS.values()):
             if backend.can_send(user, notice_type, scoping=scoping):
                 backend.deliver(user, sender, notice_type, **kwargs)
                 sent = True

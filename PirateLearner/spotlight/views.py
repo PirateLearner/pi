@@ -32,7 +32,11 @@ def index(request):
         tmp['object'] = post.content_object
         featured_list.append(tmp)
 
+<<<<<<< HEAD
     return render(request, "spotlight/index.html", {
+=======
+    return render(request,"spotlight/index.html", {
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
         "featured_posts": featured_list,
     })
 
@@ -48,7 +52,11 @@ def tagged_spotlight(request,tag):
                 tmp['type'] = dict(TYPE)[post.type]
                 tmp['object'] = post.content_object
                 featured_list.append(tmp)
+<<<<<<< HEAD
         return render(request, "spotlight/index.html", {'featured_posts':featured_list,})
+=======
+        return render(request,"spotlight/index.html", {'featured_posts':featured_list,} ,context_instance=RequestContext(request))
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
     except ObjectDoesNotExist:
         raise Http404
 
@@ -78,7 +86,11 @@ def promoted(request):
             tmp['type'] = post.type
             tmp['object'] = post.content_object
             featured_list.append(tmp)
+<<<<<<< HEAD
     return render(request, "spotlight/index.html", {
+=======
+    return render(request,"spotlight/index.html", {
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
         "featured_posts": featured_list,
     })
 
@@ -125,7 +137,11 @@ def add_spotlight(request):
             print("LOGS: form is not valid ", spotlight_form.errors)
     else:
         spotlight_form = SpotlightForm(request.POST)
+<<<<<<< HEAD
     return render(request, "spotlight/add.html", {
+=======
+    return render(request,"spotlight/add.html", {
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
         "spotlight_form": spotlight_form,
     })
 

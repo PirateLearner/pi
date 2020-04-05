@@ -16,7 +16,7 @@ def get_field_name_from_tag(current_tag):
     field_name = current_tag.split("_")[0:-1]
     return_name = "_".join(str(tag) for tag in field_name)
     return return_name
-    
+
 def parse_content(data, tag):
     final_pattern = get_pattern(tag)
     patt = re.compile(final_pattern)
@@ -24,14 +24,23 @@ def parse_content(data, tag):
     return result.group(1)
 
 def insert_tag_into_content(data,tag):
+<<<<<<< HEAD
     tag_start = "\%\% " + str(tag["name"]) + " \%\%" 
     tag_end = "\%\% endtag " + str(tag["name"]) + " \%\%" 
     print(type(data))
     print(data)
     return_field = tag_start + str(data) + tag_end
     print("rebuilding tags " + return_field)
+=======
+    tag_start = "\%\% " + str(tag["name"]) + " \%\%"
+    tag_end = "\%\% endtag " + str(tag["name"]) + " \%\%"
+    print((type(data)))
+    print(data)
+    return_field = tag_start + str(data) + tag_end
+    print(("rebuilding tags " + return_field))
+>>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
     return return_field
-         
+
 def find_class(module_name,class_name):
     # load the module, will raise ImportError if module cannot be loaded
     m = importlib.import_module(module_name)
