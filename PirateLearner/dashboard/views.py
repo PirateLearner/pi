@@ -84,8 +84,14 @@ def CreateProfile(sender, request, user,**kwargs):
             print("LOGS: Gender does not exist in social account")
         profile.save()
         # add user to Author Group
-        g = Group.objects.get(name='Author')
-        g.user_set.add(user)
+        # during first login of a fresh setup when there is nothing 
+        # in the database the try to get a group Author and create one if not found
+        try:
+            g = Group.objects.get(name='Author')
+            g.user_set.add(user)
+        except Group.DoesNotExist:
+            g = Group.objects.create(name='Author')
+            g.user_set.add(user)
         generate_event.send(sender = user.__class__, event_label = "user_signed_up",
                                 user = user, source_content_type = ContentType.objects.get_for_model(user), source_object_id= user.pk)
 
@@ -121,7 +127,7 @@ def dashboard_profile(request,user_id):
 
     try:
         user_id = int(user_id)
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             if request.user.id == user_id:
                 scope = request.GET.get('viewas')
                 if scope == 'public':
@@ -199,23 +205,23 @@ def my_profile(request):
             except User.DoesNotExist:
                 raise Http404
         else:
-            context = RequestContext(request, {
+            context = {
                                        'profile': profile,
                                        'profile_form': form,
                                       'social' : social_info,
                                        'articles':articles,
                                        'bookmarks': user_bookmarks,
                                         'groups': groups,
-                                      })
+                                      }
     else:
-        context = RequestContext(request, {
+        context = {
                                        'profile': profile,
                                        'profile_form': form,
                                        'social' : social_info,
                                        'articles':articles,
                                        'bookmarks': user_bookmarks,
                                        'groups': groups,
-                                      })
+                                      }
     return HttpResponse(template.render(context))
 
 def public_profile(request,user_id):
@@ -247,13 +253,13 @@ def public_profile(request,user_id):
         articles = get_top_articles(user_id)
         user_bookmarks = get_user_bookmark(user_id,'pub')
 
-        context = RequestContext(request, {
+        context = {
                                            'profile':profile,
                                            'social' : social_info,
                                            'articles':articles,
                                            'bookmarks': user_bookmarks,
                                            'groups': groups,
-                                      })
+                                      }
         return HttpResponse(template.render(context))
 
     except User.DoesNotExist:
@@ -264,9 +270,7 @@ def manage_articles(request):
     template = loader.get_template('dashboard/manage.html')
     profile = UserProfile.objects.get(user=request.user.id) or None
 
-    context = RequestContext(request, {
-                                       "profile":profile,
-                                      })
+    context = {"profile":profile,}
     return HttpResponse(template.render(context))
 
 @login_required

@@ -134,16 +134,13 @@ class ContactTag(InclusionTag):
                 message = 'Name: ' + form.cleaned_data['name'] + '\n' + 'email: ' + form.cleaned_data['email'] + '\n Body: ' + form.cleaned_data['content']
                 mail_admins(subject, message, fail_silently=False)
 
-                data = RequestContext(request, {
-                                        'contact': instance,
-                                      })
+                data = {'contact': instance,
+                                      }
             else:
-                data = RequestContext(request, {
-                                        'contact': instance,
+                data = {'contact': instance,
                                         'form': form,
-
-                                      })
-            output = render_to_string(template, data)
+                                      }
+            output = render_to_string(template, data,request)
             context.pop()
             print(output)
             return output
@@ -377,9 +374,9 @@ def get_recent_articles():
 
 @register.filter('has_group')
 def has_group(user,groups):
-    if user.is_authenticated():
+    if user.is_authenticated:
         group_list = [s for s in groups.split(',')]
-        if user.is_authenticated():
+        if user.is_authenticated:
             if bool(user.groups.filter(name__in=group_list)) | user.is_superuser:
                 return True
         return False

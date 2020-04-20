@@ -194,7 +194,7 @@ class TestSerializers(TestAnnotations):
     def _create_annotation(self, content=None):
         #use test client to POST a request
         self._require_login()
-        print((self.user.is_authenticated())) # returns True
+        print((self.user.is_authenticated)) # returns True
         string_data = {
                     'content_type': content['content_type'],
                     'object_id':content['object_id'],
@@ -333,7 +333,7 @@ class TestAPIViews(TestCase):
 
     def test_ListAccounts_authenticated(self):
         self.client._require_login()
-        print(self.user.is_authenticated()) # returns True
+        print(self.user.is_authenticated # returns True
         request = self.factory.get('/accounts/')
         view = views.ListAccounts.as_view()
         response = view(request)

@@ -92,8 +92,12 @@ class BlogContentType(BaseContentClass):
     def __unicode__(self):
         return self.content_type
 
+    def __str__(self):
+        return str(self.content_type) or ''
+
     def save(self, *args, **kwargs):
         self.content_type = slugify_name(self.content_type)
+        print(self.content_type)
         super(BlogContentType, self).save(*args, **kwargs)
 
 class BlogParent(MPTTModel):
@@ -104,6 +108,10 @@ class BlogParent(MPTTModel):
     slug = models.SlugField()
     def __unicode__(self):
         return self.title
+
+    def __str__(self):
+        return self.title
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         blogs = BlogContent.objects.filter(section=self.parent)
@@ -274,7 +282,7 @@ class BlogContent(BaseContentClass):
         super(BlogContent, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.title
+        return self.title or ''
 
     class Meta:
         ordering = ['-publication_start']

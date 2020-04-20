@@ -1,17 +1,9 @@
-<<<<<<< HEAD
-from django.conf.urls import url
-import blogging.views as view
-from blogging.forms import *
-
-app_name = 'blogging'
-=======
 from django.urls import path, re_path
 
 import blogging.views as view
 from blogging.forms import *
 
 app_name="blogging"
->>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 
 urlpatterns = [
     path('', view.index, name='section-view'),

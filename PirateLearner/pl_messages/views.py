@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-from django.shortcuts import  render
-=======
 from django.shortcuts import render
->>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 from django.template import RequestContext
 from django.contrib import messages as mm
 from django.shortcuts import get_object_or_404

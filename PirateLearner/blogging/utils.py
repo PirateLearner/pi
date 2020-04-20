@@ -3,7 +3,7 @@ from functools import wraps, WRAPPER_ASSIGNMENTS
 
 from blogging.create_class import CreateClass, CreateTemplate
 import re
-from django.utils.functional import keep_lazy as allow_lazy
+from django.utils.functional import keep_lazy_text
 import six
 from django.utils.safestring import mark_safe
 from django.contrib.auth.decorators import user_passes_test
@@ -96,10 +96,11 @@ def truncatewords(Value,limit=30):
 	# Join the words and return
 	return ' '.join(words) + '...'
 
+@keep_lazy_text
 def slugify_name(value):
 	value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
 	value = re.sub('[^\w\s-]', '', value).strip().lower()
-	return mark_safe(re.sub('[-\s]+', '_', value))
+	return re.sub('[-\s]+', '_', value) 
 
 
 def user_has_group(test_func):
@@ -122,10 +123,10 @@ def user_has_group(test_func):
 def group_required(*group_names):
     """Requires user membership in at least one of the groups passed in."""
     def in_groups(u):
-        if u.is_authenticated():
+        if u.is_authenticated:
             if bool(u.groups.filter(name__in=group_names)) | u.is_superuser:
                 return True
         return False
     return user_has_group(in_groups)
 
-slugify_name = allow_lazy(slugify_name, six.text_type)
+#slugify_name = allow_lazy(slugify_name, six.text_type)

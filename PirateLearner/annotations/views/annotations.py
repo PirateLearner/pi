@@ -5,7 +5,6 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import models
 from django.shortcuts import render_to_response
-from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.utils.html import escape
 from django.views.decorators.csrf import csrf_protect
@@ -45,7 +44,7 @@ def post_annotation(request, next=None, using=None):
     """
     # Fill out some initial data fields from an authenticated user, if present
     data = request.POST.copy()
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         if not data.get('name', ''):
             data["name"] = request.user.get_full_name() or request.user.get_username()
         if not data.get('email', ''):
@@ -95,14 +94,12 @@ def post_annotation(request, next=None, using=None):
             "annotations/%s/preview.html" % model._meta.app_label,
             "annotations/preview.html",
         ]
-        return render_to_response(
+        return render(request,
             template_list, {
                 "body": form.data.get("body", ""),
                 "form": form,
                 "next": data.get("next", next),
-            },
-            RequestContext(request, {})
-        )
+            })
 
     # Otherwise create the comment
     # To create an annotations, the user must be logged in, thus that field must
@@ -112,7 +109,7 @@ def post_annotation(request, next=None, using=None):
     
     comment = form.get_comment_object(request)
     
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         comment.user = request.user
     
 
@@ -161,7 +158,7 @@ def post_annotation_ajax(request, using=None):
 
     # Fill out some initial data fields from an authenticated user, if present
     data = request.POST.copy()
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         if not data.get('name', ''):
             data["name"] = request.user.get_full_name() or request.user.username
         if not data.get('email', ''):
@@ -207,7 +204,7 @@ def post_annotation_ajax(request, using=None):
 
     # Otherwise create the comment
     comment = form.get_comment_object(request)
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         comment.user = request.user
 
     # Signal that the comment is about to be saved

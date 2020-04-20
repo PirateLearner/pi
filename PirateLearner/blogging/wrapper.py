@@ -24,21 +24,12 @@ def parse_content(data, tag):
     return result.group(1)
 
 def insert_tag_into_content(data,tag):
-<<<<<<< HEAD
     tag_start = "\%\% " + str(tag["name"]) + " \%\%" 
     tag_end = "\%\% endtag " + str(tag["name"]) + " \%\%" 
     print(type(data))
     print(data)
     return_field = tag_start + str(data) + tag_end
     print("rebuilding tags " + return_field)
-=======
-    tag_start = "\%\% " + str(tag["name"]) + " \%\%"
-    tag_end = "\%\% endtag " + str(tag["name"]) + " \%\%"
-    print((type(data)))
-    print(data)
-    return_field = tag_start + str(data) + tag_end
-    print(("rebuilding tags " + return_field))
->>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
     return return_field
 
 def find_class(module_name,class_name):

@@ -1,16 +1,7 @@
-<<<<<<< HEAD
-__author__ = 'aquasan'
-
-from django.conf.urls import include, url
-from .views import *
-
-app_name='dashboard'
-=======
 from django.urls import path, include, re_path
 from .views import *
 
 app_name="dashboard"
->>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 
 urlpatterns = [
 

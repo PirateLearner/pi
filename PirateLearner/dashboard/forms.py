@@ -15,11 +15,7 @@ from taggit.models import Tag
 class ProfileEditForm(forms.ModelForm):
 
     #interest = forms.MultipleChoiceField(widget = Select2MultipleWidget(choices = Tag.objects.all()))
-<<<<<<< HEAD
-    # print("LOGS: ProfileEditForm()--> interest are : ", Tag.objects.all())
-=======
     #print("LOGS: ProfileEditForm()--> interest are : ", Tag.objects.all())
->>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
     address = forms.Textarea()
     occupation = forms.ChoiceField(choices=OCCUPATION)
     website = forms.CharField()

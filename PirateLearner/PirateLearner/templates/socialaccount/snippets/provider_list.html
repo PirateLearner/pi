@@ -14,7 +14,7 @@
 		{% endfor %}
 	{% endif %}
 	
-	{% if provider.name = 'Facebook' %}
+	{% if provider.name == 'Facebook' %}
 	<a class="action-button social-icon facebook" title="{{provider.name}}"
 		href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
 		<svg xmlns="http://www.w3.org/2000/svg" height="46px" width="46px" style="enable-background:new 0 0 67 67;" viewBox="0 0 67 67">

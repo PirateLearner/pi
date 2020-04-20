@@ -215,7 +215,7 @@ class ViewTests(VotingTests):
     def _create_vote(self, content=None, user=None, password=None):
         #use test client to POST a request
         self._require_login(user, password)
-        #print(self.user.is_authenticated()) # returns True
+        #print(self.user.is_authenticated) # returns True
         string_data = {
                     'content_type': content['content_type'],
                     'object_id':content['object_id'],

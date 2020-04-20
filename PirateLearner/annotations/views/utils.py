@@ -54,9 +54,8 @@ def confirmation_view(template, doc="Display a confirmation view."):
                 comment = annotations.get_model().objects.get(pk=request.GET['c'])
             except (ObjectDoesNotExist, ValueError):
                 pass
-        return render_to_response(template,
+        return render(request, template,
             {'body': comment},
-            context_instance=RequestContext(request)
         )
 
     confirmed.__doc__ = textwrap.dedent("""\

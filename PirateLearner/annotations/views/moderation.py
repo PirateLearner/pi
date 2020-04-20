@@ -33,9 +33,8 @@ def delete(request, comment_id, next=None):
 
     # Render a form on GET
     else:
-        return render_to_response('annotations/delete.html',
+        return render(request, 'annotations/delete.html',
             {'body': comment, "next": next},
-            template.RequestContext(request)
         )
 
 @csrf_protect
@@ -61,9 +60,8 @@ def approve(request, comment_id, next=None):
 
     # Render a form on GET
     else:
-        return render_to_response('annotations/approve.html',
+        return render(request,'annotations/approve.html',
             {'body': comment, "next": next},
-            template.RequestContext(request)
         )
 
 # The following functions actually perform the various flag/aprove/delete

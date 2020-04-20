@@ -44,7 +44,7 @@ class ContactPlugin(BlogPlugin):
 
         name = ''
         email = ''
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             User = request.user
             name = User.profile.get_name()
             email = User.profile.get_email()

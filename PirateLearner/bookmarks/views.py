@@ -1,11 +1,7 @@
 # Create your views here.
 
 import datetime
-<<<<<<< HEAD
-=======
 import urllib.request, urllib.error, urllib.parse
->>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
-
 
 from bookmarks.models import Bookmark, BookmarkFolderInstance, BookmarkInstance, get_user_bookmark, get_bookmark
 from bookmarks import utils
@@ -37,15 +33,11 @@ from blogging.utils import group_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.defaultfilters import length
 
-<<<<<<< HEAD
-from bookmarks.readability import Readability
-=======
 from .readability import Readability
->>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 
 def bookmarks(request):
     bookmarks = BookmarkInstance.objects.filter(is_promoted=True).exclude(privacy_level='priv').order_by("-saved")
-#     if request.user.is_authenticated():
+#     if request.user.is_authenticated:
 #         user_bookmarks = Bookmark.objects.filter(
 #             saved_instances__user=request.user
 #         )
@@ -60,11 +52,7 @@ def bookmarks(request):
 def tagged_bookmarks(request,tag):
     try:
         bookmarks = BookmarkInstance.objects.filter(tags__slug = tag, is_promoted = True).exclude(privacy_level='priv')
-<<<<<<< HEAD
         return render(request, "bookmarks/bookmarks.html", {'bookmarks':bookmarks,})
-=======
-        return render(request,"bookmarks/bookmarks.html", {'bookmarks':bookmarks,} ,context_instance=RequestContext(request))
->>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
     except ObjectDoesNotExist:
         raise Http404
 
@@ -73,11 +61,7 @@ def your_bookmarks(request):
     bookmark_instances = BookmarkInstance.objects.filter(
         user=request.user
     ).order_by("-saved")
-<<<<<<< HEAD
     return render(request, "bookmarks/bookmarks.html", {
-=======
-    return render(request,"bookmarks/bookmarks.html", {
->>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
         "bookmarks": bookmark_instances,
         'result_title':'Bookmarks',
     })
@@ -127,11 +111,7 @@ def add(request):
             else:
                 bookmark_form = BookmarkInstanceForm(request.user)
 
-<<<<<<< HEAD
     return render(request, "bookmarks/add.html", {
-=======
-    return render(request,"bookmarks/add.html", {
->>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
         "form": bookmark_form,
     })
 
@@ -143,7 +123,7 @@ def snippet_testing(request):
             initial = Readability(initial["url"]).parse()
             return render(request,"bookmarks/snippet_test.html", {
         "data": initial,
-    }, context_instance=RequestContext(request))
+    })
         else:
             raise HttpResponseBadRequest
     else:
@@ -181,14 +161,8 @@ def update(request, bookmark_instance_id):
                         })
                     return HttpResponseRedirect(reverse("bookmarks:all_bookmarks"))
                 else:
-<<<<<<< HEAD
                     return render(request, "bookmarks/update.html",
                                               {"bookmark_form": bookmark_form,})
-=======
-                    return render(request,"bookmarks/update.html",
-                                              {"bookmark_form": bookmark_form,},
-                                              context_instance=RequestContext(request))
->>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
             elif action == 'Delete':
                 bookmark_instance.delete()
                 messages.error(request, "Bookmark Deleted" )
@@ -239,24 +213,11 @@ def add_folder(request,model_name):
                     (escape(bookmark_instance._get_pk_val()), escape(bookmark_instance)))
             else:
                 page_context = {'form': bookmark_form,  'field': normal_model_name }
-<<<<<<< HEAD
                 return render(request, 'bookmarks/add_folder.html', page_context)
-=======
-                return render(request,'bookmarks/add_folder.html', page_context, context_instance=RequestContext(request))
->>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
-
         else:
             bookmark_form = BookmarkFolderForm(request.user, request.POST)
             page_context = {'form': bookmark_form,  'field': normal_model_name }
-<<<<<<< HEAD
             return render(request, 'bookmarks/add_folder.html', page_context)
-=======
-            return render(request,'bookmarks/add_folder.html', page_context, context_instance=RequestContext(request))
->>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
-
-
-
-
 
 def bookmark_details(request,slug):
     current_section = slug.split("/")[-1]
@@ -272,16 +233,11 @@ def bookmark_details(request,slug):
             meta = Meta(title = bookmark.title, description = bookmark.get_summary(), section= bookmark.folder.title, url = bookmark.get_absolute_url(),
                     image = bookmark.get_image_url(), author = bookmark.user, date_time = bookmark.saved ,
                     object_type = 'article', keywords = [ tags.name for tags in bookmark.tags.all()])
-            if request.user.is_authenticated():
+            if request.user.is_authenticated:
                 can_edit = (request.user.is_staff == True) or request.user == bookmark.user
             else:
                 can_edit = False
-<<<<<<< HEAD
             return render(request, "bookmarks/detail.html", {'bookmark':bookmark,'meta':meta,'can_edit':can_edit })
-=======
-            return render(request,"bookmarks/detail.html", {'bookmark':bookmark,'meta':meta,'can_edit':can_edit } ,context_instance=RequestContext(request))
->>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
-
         except:
             print(("Unexpected error:", sys.exc_info()[0]))
             for frame in traceback.extract_tb(sys.exc_info()[2]):

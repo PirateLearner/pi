@@ -1,15 +1,7 @@
-
-<<<<<<< HEAD
-from django.conf.urls import url
-from .views import *
-
-app_name = 'bookmarks'
-=======
 from django.urls import path, include, re_path
 from .views import *
 
 app_name="bookmarks"
->>>>>>> e8b002fcfc6266dc0413bb189eda4781137a2a62
 
 urlpatterns = [
     path("", bookmarks, name="all_bookmarks"),

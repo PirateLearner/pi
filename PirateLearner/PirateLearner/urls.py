@@ -13,7 +13,7 @@ from bookmarks.sitemaps import BookmarkSitemap
 from functools import partialmethod
 from django.views.defaults import *
 
-from django.contrib.auth import logout
+from django.contrib.auth.views import LogoutView
 from django.contrib.sitemaps.views import sitemap
 from django.views.generic import TemplateView
 
@@ -58,7 +58,7 @@ urlpatterns = i18n_patterns(
     #path('user/', include('user_mgmt.urls')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('accounts/login/', custom_login),
-    path('accounts/logout/', logout,{'next_page': '/'}),
+    path('accounts/logout/', LogoutView.as_view(),{'next_page': '/'}),
     path('accounts/', include('allauth.urls')),
     re_path(r'^sitemap\.xml$', sitemap, {'sitemaps':sitemaps}),
     re_path(r'^search/tags/?$', tags, name="tags-ajax"),
