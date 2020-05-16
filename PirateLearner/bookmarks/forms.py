@@ -32,12 +32,12 @@ class Select2ChoiceField(ModelMultipleChoiceField):
 
 class BookmarkFolderForm(forms.ModelForm):
     description = forms.Textarea()
-
+    field_order = ["title", "description"]
     def __init__(self, user, *args, **kwargs):
         super(BookmarkFolderForm, self).__init__(*args, **kwargs)
         self.user = user
         # hack to order fields
-        self.fields.keyOrder = ["title", "description"]
+        # self.fields.keyOrder = ["title", "description"]
 
     def clean(self):
         if not self.cleaned_data.get("title", None):
@@ -65,13 +65,14 @@ class BookmarkInstanceForm(forms.ModelForm):
                     label = "Select Folder or Create New!",
                     widget=SelectWithPopUp)
     tags = Select2ChoiceField(queryset=Tag.objects.filter())
+    field_order = ["url", "folder", "title", "description","note", "image_url","privacy_level","tags"]
 
     def __init__(self, user, *args, **kwargs):
         super(BookmarkInstanceForm, self).__init__(*args, **kwargs)
         self.user = user
         self.fields['folder'].queryset = BookmarkFolderInstance.objects.filter(adder=user)
         # hack to order fields
-        self.fields.keyOrder = ["url", "folder", "title", "description","note", "image_url","privacy_level","tags"]
+        # self.fields.keyOrder = ["url", "folder", "title", "description","note", "image_url","privacy_level","tags"]
 
     def clean(self):
         if not self.cleaned_data.get("url", None):
