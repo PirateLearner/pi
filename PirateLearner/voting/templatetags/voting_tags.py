@@ -54,7 +54,7 @@ class VotesByUserNode(template.Node):
 
     def render(self, context):
         try:
-            user = template.Variable(self.user).resolve(context)
+            user = template.Variable(self.user).reslove(context)
             objects = template.Variable(self.objects).resolve(context)
         except template.VariableDoesNotExist:
             return ''
