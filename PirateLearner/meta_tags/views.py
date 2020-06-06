@@ -91,7 +91,7 @@ class Meta(object):
     def get_author_google_id(self):
         g_uid = self.author.socialaccount_set.filter(provider = "google")
         if len(g_uid):
-            return g_uid[0].extra_data['link']
+            return g_uid[0].extra_data.get('link', None)
         return ''
     
 

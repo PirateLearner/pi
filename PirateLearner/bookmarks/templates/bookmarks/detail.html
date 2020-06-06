@@ -1,8 +1,6 @@
 {% extends "bookmarks/base.html" %}
 
-{% load disqus_tags %}
 {% load humanize %}
-{% disqus_dev %}
 
 {% block meta %}
 {% include "meta.html" with meta=meta only %}
@@ -95,8 +93,6 @@
                 
                 
                 {% ifequal bookmark.privacy_level 'pub' %}            
-                    {% load disqus_tags %}
-                    {% disqus_show_comments %}
                 {% endifequal %}
                 
               </div>

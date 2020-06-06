@@ -115,9 +115,9 @@ def dashboard_home(request):
     stats['annotations_count'] = get_annotations_count(request.user)
     stats['voting_count'] = Vote.objects.get_for_user_in_bulk(request.user).count()
     stats['notification_count'] = get_notification_count(request.user)
-    context = RequestContext(request, {
-                                       "profile":profile,"stats":stats,'active':'dashboard'
-                                      })
+    context = {
+                                      "profile":profile,"stats":stats,'active':'dashboard'
+                                      }
     return HttpResponse(template.render(context))
 
 def dashboard_profile(request,user_id):
@@ -276,25 +276,25 @@ def manage_articles(request):
 @login_required
 def published_articles(request):
     template = loader.get_template('dashboard/published.html')
-    context = RequestContext(request, {})
+    context =  {}
     return HttpResponse(template.render(context))
 
 @login_required
 def pending_articles(request):
     template = loader.get_template('dashboard/pending.html')
-    context = RequestContext(request, {})
+    context =  {}
     return HttpResponse(template.render(context))
 
 @login_required
 def draft_articles(request):
     template = loader.get_template('dashboard/draft.html')
-    context = RequestContext(request, {})
+    context =  {}
     return HttpResponse(template.render(context))
 
 @login_required
 def bookmark_articles(request):
     template = loader.get_template('dashboard/bookmark.html')
-    context = RequestContext(request, {})
+    context =  {}
     return HttpResponse(template.render(context))
 
 class TagCreate(CreateView):

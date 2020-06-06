@@ -1,10 +1,8 @@
 {% extends "blogging/base.html" %}
 
-{% load disqus_tags %}
 {% load bookmark_tags %}
 {% load humanize %}
 
-{% disqus_dev %}
 {% block meta %}
 {% include "meta.html" with meta=meta only %}
 {% endblock %}
@@ -111,7 +109,6 @@
                   </div>
                 
                   <div class="mdl-tabs__panel is-active" id="discuss-panel">
-                  {% disqus_show_comments %}
                   </div>
                   <div class="mdl-tabs__panel article-adjunct-tab active comments-container" id="article-adjunct-tab-notes">
 
