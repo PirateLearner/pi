@@ -1,9 +1,6 @@
 {% extends "blogging/base.html" %}
 
-{% load disqus_tags %}
 
-
-{% disqus_dev %}
 {% block meta %}
 {% include "meta.html" with meta=meta only %}
 {% endblock %}
@@ -44,7 +41,7 @@
     </nav>
     <div class="article-adjunct-block">
         <div class="article-adjunct-tab" id="article-adjunct-tab-discuss">
-			{% disqus_show_comments %}
+			
         </div>
         <div class="article-adjunct-tab active comments-container" id="article-adjunct-tab-notes">
             

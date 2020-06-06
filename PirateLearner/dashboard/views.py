@@ -1,6 +1,6 @@
 # Create your views here.
 from django.dispatch import receiver
-from django.template import RequestContext, loader
+from django.template import loader
 from allauth.socialaccount.signals import pre_social_login, social_account_added
 from django.contrib.auth.decorators import login_required
 from dashboard.models import UserProfile
@@ -20,7 +20,7 @@ from django.urls import reverse_lazy
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.socialaccount.models import SocialAccount
-
+from django.shortcuts import render, get_object_or_404
 from django.contrib.admin.utils import NestedObjects
 from django.db import DEFAULT_DB_ALIAS
 
@@ -100,7 +100,6 @@ def CreateProfile(sender, request, user,**kwargs):
 
 @login_required
 def dashboard_home(request):
-    template = loader.get_template('dashboard/home.html')
     profile = UserProfile.objects.get(user=request.user.id) or None
     # acquire all the statistics of User
     # Number of articles contributed, published, pending, drafted.
@@ -115,10 +114,10 @@ def dashboard_home(request):
     stats['annotations_count'] = get_annotations_count(request.user)
     stats['voting_count'] = Vote.objects.get_for_user_in_bulk(request.user).count()
     stats['notification_count'] = get_notification_count(request.user)
-    context = RequestContext(request, {
-                                       "profile":profile,"stats":stats,'active':'dashboard'
-                                      })
-    return HttpResponse(template.render(context))
+    context = {
+                "profile":profile,"stats":stats,'active':'dashboard'
+              }
+    return render(request, 'dashboard/home.html', context)
 
 def dashboard_profile(request,user_id):
     print(("LOGS: DashBoard Profile called with user id " , user_id))
@@ -145,7 +144,6 @@ def dashboard_profile(request,user_id):
 
 @login_required
 def my_profile(request):
-    template = loader.get_template('dashboard/profile.html')
     profile = UserProfile.objects.get(user=request.user.id)
 
     data = {
@@ -222,7 +220,7 @@ def my_profile(request):
                                        'bookmarks': user_bookmarks,
                                        'groups': groups,
                                       }
-    return HttpResponse(template.render(context))
+    return render(request, 'dashboard/profile.html', context)
 
 def public_profile(request,user_id):
 
@@ -253,49 +251,38 @@ def public_profile(request,user_id):
         articles = get_top_articles(user_id)
         user_bookmarks = get_user_bookmark(user_id,'pub')
 
-        context = {
-                                           'profile':profile,
-                                           'social' : social_info,
-                                           'articles':articles,
-                                           'bookmarks': user_bookmarks,
-                                           'groups': groups,
+        context = {'profile':profile,
+                    'social' : social_info,
+                   'articles':articles,
+                   'bookmarks': user_bookmarks,
+                   'groups': groups,
                                       }
-        return HttpResponse(template.render(context))
+        return render(request, 'dashboard/profile.html',context)
 
     except User.DoesNotExist:
         raise Http404
 
 @login_required
 def manage_articles(request):
-    template = loader.get_template('dashboard/manage.html')
     profile = UserProfile.objects.get(user=request.user.id) or None
-
     context = {"profile":profile,}
-    return HttpResponse(template.render(context))
+    return render(request, 'dashboard/manage.html', context)
 
 @login_required
 def published_articles(request):
-    template = loader.get_template('dashboard/published.html')
-    context = RequestContext(request, {})
-    return HttpResponse(template.render(context))
+    return render(request, 'dashboard/published.html', {})
 
 @login_required
 def pending_articles(request):
-    template = loader.get_template('dashboard/pending.html')
-    context = RequestContext(request, {})
-    return HttpResponse(template.render(context))
+    return render(request, 'dashboard/pending.html', {})
 
 @login_required
 def draft_articles(request):
-    template = loader.get_template('dashboard/draft.html')
-    context = RequestContext(request, {})
-    return HttpResponse(template.render(context))
+    return render(request, 'dashboard/draft.html', {})
 
 @login_required
 def bookmark_articles(request):
-    template = loader.get_template('dashboard/bookmark.html')
-    context = RequestContext(request, {})
-    return HttpResponse(template.render(context))
+    return render(request, 'dashboard/bookmark.html', {})
 
 class TagCreate(CreateView):
     model = Tag
