@@ -72,12 +72,12 @@ def CreateProfile(sender, request, user,**kwargs):
             sociallogin = SocialAccount.objects.get(user=user)
             print(("LOGS: Caught the signal--> printing extra data of the account: \n", sociallogin.extra_data))
             if('google' == sociallogin.provider ):
-                user.first_name = sociallogin.extra_data['given_name']
-                user.last_name = sociallogin.extra_data['family_name']
+                user.first_name = sociallogin.extra_data.get('given_name', '')
+                user.last_name = sociallogin.extra_data.get('family_name', '')
                 user.save()
             elif ('facebook' == sociallogin.provider ):
-                user.first_name = sociallogin.extra_data['first_name']
-                user.last_name = sociallogin.extra_data['last_name']
+                user.first_name = sociallogin.extra_data.get('first_name', '')
+                user.last_name = sociallogin.extra_data.get('last_name', '')
                 user.save()
             profile.gender = sociallogin.extra_data.get('gender',None)
         except:

@@ -75,6 +75,9 @@ GENDERS = (
            ('F','Female'),
            )
 
+# Default ``gender`` value if not specified in data from social account
+GENDER_UNSPECIFIED = "---"
+
 class UserProfile(BaseContentClass):
     """
     User profile populated using social account from Facebook, Google and Twitter respectively.
@@ -217,14 +220,14 @@ class UserProfile(BaseContentClass):
         profile = self._get_social_account(provider)
         if profile != None:
             if self.get_provider_name(profile.provider) == 'twitter':
-                return "---"
+                return GENDER_UNSPECIFIED
             gender =  profile.extra_data.get('gender',None)
             if gender is None:
                 return self.gender
             else:
                 return gender
         else:
-            return "---"
+            return GENDER_UNSPECIFIED
 
     def get_email(self,provider=None):
         """
@@ -235,7 +238,7 @@ class UserProfile(BaseContentClass):
         if profile != None:
             if self.get_provider_name(profile.provider) == 'twitter':
                 return self.user.email
-            return profile.extra_data['email']
+            return profile.extra_data.get('email', '')
         else:
             return self.user.email
 
@@ -298,48 +301,49 @@ class UserProfile(BaseContentClass):
     TODO define these functions for twitter also
     """
     def _get_google_fname(self,profile):
-        return str(profile.extra_data['name']).split(' ')[0].encode('utf-8')
+        return profile.extra_data.get('name', '').split()[0]
 
     def _get_google_lname(self,profile):
-        return profile.extra_data['family_name'].encode('utf-8')
-
+        return profile.extra_data.get('family_name', '')
+    
     def _get_google_email(self,profile):
-        return profile.extra_data['email'].encode('utf-8')
-
-    def _get_google_email(self,profile):
-        return profile.extra_data['email'].encode('utf-8')
+        return profile.extra_data.get('email', '')
 
     def _get_google_username(self,profile):
-        return profile.extra_data['given_name'].encode('utf-8')
+        return profile.extra_data.get('given_name', '')
 
     def _get_google_link(self,profile):
-        return profile.extra_data['link']
+        return profile.extra_data.get('link', '')
 
     def _get_fb_fname(self,profile):
-        return profile.extra_data['first_name'].encode('utf-8')
+        return profile.extra_data.get('first_name', '')
 
     def _get_fb_lname(self,profile):
-        return profile.extra_data['last_name'].encode('utf-8')
+        return profile.extra_data.get('last_name', '')
 
     def _get_fb_email(self,profile):
-        return profile.extra_data['email'].encode('utf-8')
+        return profile.extra_data.get('email', '')
 
     def _get_fb_username(self,profile):
-        return profile.extra_data['name'].encode('utf-8')
+        return profile.extra_data.get('name', '')
 
     def _get_fb_link(self,profile):
-        return profile.extra_data['link']
+        return profile.extra_data.get('link', '')
 
     def _get_tw_fname(self,profile):
-        return str(profile.extra_data['name']).split(' ')[0].encode('utf-8')
+        return profile.extra_data.get('name', '').split()[0]
 
     def _get_tw_lname(self,profile):
-        return str(profile.extra_data['name']).split(' ')[-1].encode('utf-8')
+        names = profile.extra_data.get('name', '').split()
+        if len(names) > 1:
+            return names[-1]
+        else:
+            return ''
 
     def _get_tw_username(self,profile):
-        return profile.extra_data['screen_name'].encode('utf-8')
+        return profile.extra_data.get('screen_name', '')
 
     def _get_tw_link(self,profile):
-        return  "//twitter.com/" + str(profile.extra_data['screen_name'])
+        return  "//twitter.com/" + profile.extra_data.get('screen_name', '')
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])

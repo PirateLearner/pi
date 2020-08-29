@@ -387,7 +387,7 @@ def teaser(request,slug):
 			blogs = BlogContent.objects.get(pk=post_id)
 		except BlogContent.DoesNotExist:
 			raise Http404
-		template = loader.get_template('blogging/includes/'+ blogs.content_type.__str__().lower() + '.html')
+		template_name = 'blogging/includes/'+ blogs.content_type.__str__().lower() + '.html'
 		try:
 			json_obj = json.loads(blogs.data)
 			# Instantiate the Meta class
@@ -425,7 +425,7 @@ def teaser(request,slug):
                     'meta' : meta,
                     'can_edit':(not blogs.published_flag) and blogs.author_id == request.user ,
                    }
-		return HttpResponse(template.render(context,request))
+		return render(request, template_name, context)
 	except (ValueError):
 		try:
 			section = BlogParent.objects.get(slug = str(current_section))
@@ -461,7 +461,7 @@ def teaser(request,slug):
                         'page': {'title':section.title, 'tagline':'We learn from stolen stuff', 'image': section.get_image_url()},
                         'max_entry': max_entry,
                       }
-			return HttpResponse(template.render(context,request))
+			return render(request, 'blogging/teaser.html', context)
 		template = loader.get_template('blogging/section.html')
 		print("LOGS:: This is NON Leaf Node ", section.get_children())
 		paginator = Paginator(section.get_children(), max_entry)
@@ -480,7 +480,7 @@ def teaser(request,slug):
                     'page': {'title':section.title, 'tagline':'We learn from stolen stuff'},
                     'max_entry': max_entry,
                   }
-		return HttpResponse(template.render(context,request))
+		return render(request, 'blogging/section.html', context)
 
 def tagged_post(request,tag):
 	try:
@@ -504,7 +504,7 @@ def tagged_post(request,tag):
                                        'page': {'title':tag, 'tagline':'We learn from stolen stuff'},
                                        'max_entry': max_entry,
                                       }
-		return HttpResponse(template.render(context,request))
+		return render(request, 'blogging/teaser.html', context)
 	except ObjectDoesNotExist:
 		raise Http404
 
@@ -529,14 +529,14 @@ def ContactUs(request):
 			template = loader.get_template('blogging/contact_page.html')
 			form = ContactForm()
 			context = {'success':True, 'form':form}
-			return HttpResponse(template.render(context,request))
+			return render(request,'blogging/contact_page.html',  context)
 		else:
 			print("LOGS:: error in Contact form")
 	else:
 		form = ContactForm(initial={'contact_type':contact_type,'name': name, 'email': email})
 	template = loader.get_template('blogging/contact_page.html')
 	context = {'form': form}
-	return HttpResponse(template.render(context,request))
+	return render(request, 'blogging/contact_page.html',context)
 
 def BuildIndex(request):
 	if request.is_ajax():
@@ -681,7 +681,7 @@ def manage(request):
 			res['result'] = 'error'
 			return JsonResponse(res)
 
-	page = request.GET.get('page',None)
+	page = request.GET.get('page',1)
 	tab = request.GET.get('tab','all')
 
 	try:
@@ -708,13 +708,16 @@ def manage(request):
 
 		paginator = Paginator(articles, 50,orphans=30)
 		try:
-			pages = paginator.page(page)
+			pages = paginator.get_page(page)
+			print("we are in paginator 1");
 		except PageNotAnInteger:
 			# If page is not an integer, deliver first page.
-			pages = paginator.page(1)
+			pages = paginator.get_page(1)
+			print("we are in paginator 2");
 		except EmptyPage:
 			# If page is out of range (e.g. 9999), deliver last page of results.
-			pages = paginator.page(paginator.num_pages)
+			pages = paginator.get_page(paginator.num_pages)
+			print("we are in paginator 3");
 
 		# @todo: define actions based on the current tab
 		actions = [{"name":"Promote", "help":"Promote selected articles"},
@@ -744,10 +747,13 @@ def manage(request):
 						'help_text': 'List of articles in draft.'
 					}
 					]
+
 		template = loader.get_template('blogging/manage.html')
-		context = {"articles": pages, "actions": actions,'query_tabs':query_tabs,'result_title':result_title
+		print("Size of pages ",  paginator.count, " ", paginator.num_pages );
+		context = {"articles":list( pages), "actions": actions,'query_tabs':query_tabs,'result_title':result_title
 				   }
-		return HttpResponse(template.render(context,request))
+		return HttpResponse(template.render(context,request))	
+
 	except:
 		print("Unexpected error:", sys.exc_info()[0])
 		for frame in traceback.extract_tb(sys.exc_info()[2]):
