@@ -49,5 +49,6 @@ if 'cms' in settings.INSTALLED_APPS:
 
 admin.site.register(BlogParent, ParentAdmin)
 admin.site.register(BlogContentType)
+admin.site.register(BlogContent)
 if 'cms' in settings.INSTALLED_APPS:
     admin.site.register(BlogContent,ContentAdmin)

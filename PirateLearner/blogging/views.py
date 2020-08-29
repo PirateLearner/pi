@@ -455,6 +455,8 @@ def teaser(request,slug):
 			except EmptyPage:
 				# If page is out of range (e.g. 9999), deliver last page of results.
 				pages = paginator.page(paginator.num_pages)
+			print("printing objects")
+			print(pages.object_list)
 			context = {
 						'parent':section,
                        	'nodes': pages,
@@ -706,17 +708,17 @@ def manage(request):
 			articles = base_queryset
 			result_title = 'all articles'
 
-		paginator = Paginator(articles, 50,orphans=30)
+		paginator = Paginator(articles, 100,orphans=30)
 		try:
-			pages = paginator.get_page(page)
+			pages = paginator.page(page)
 			print("we are in paginator 1");
 		except PageNotAnInteger:
 			# If page is not an integer, deliver first page.
-			pages = paginator.get_page(1)
+			pages = paginator.page(1)
 			print("we are in paginator 2");
 		except EmptyPage:
 			# If page is out of range (e.g. 9999), deliver last page of results.
-			pages = paginator.get_page(paginator.num_pages)
+			pages = paginator.page(paginator.num_pages)
 			print("we are in paginator 3");
 
 		# @todo: define actions based on the current tab
@@ -748,11 +750,10 @@ def manage(request):
 					}
 					]
 
-		template = loader.get_template('blogging/manage.html')
 		print("Size of pages ",  paginator.count, " ", paginator.num_pages );
-		context = {"articles":list( pages), "actions": actions,'query_tabs':query_tabs,'result_title':result_title
+		context = {"articles":pages, "actions": actions,'query_tabs':query_tabs,'result_title':result_title
 				   }
-		return HttpResponse(template.render(context,request))	
+		return render(request, 'blogging/manage.html',context)	
 
 	except:
 		print("Unexpected error:", sys.exc_info()[0])

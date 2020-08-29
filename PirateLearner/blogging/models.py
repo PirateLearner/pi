@@ -273,6 +273,9 @@ class BlogContent(BaseContentClass):
         pass
     def get_published_day(self):
         pass
+    
+    def get_body_content(self):
+        return self.body.decode("utf-8");
 
     def save(self, *args, **kwargs):
         if not self.slug:
