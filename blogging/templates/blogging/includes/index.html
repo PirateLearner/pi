@@ -5,7 +5,7 @@
 
 {% recursetree nodes %}
     <li>
-        <a href="{{ node.get_absolute_url }}"  {% ifequal node active %} id = "active-index"{% endifequal %}>{{ node.get_menu_title }} </a>
+        <a href="{{ node.get_absolute_url }}"  {% if node == active %} id = "active-index"{% endif %}>{{ node.get_menu_title }} </a>
         {% if not node.is_leaf_node %}
             <ul>
                 {{ children }}

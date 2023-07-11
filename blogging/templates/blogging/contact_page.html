@@ -50,7 +50,7 @@ Contact-Us
                   <label class="form__radio-outer-label mdl-radio mdl-js-radio mdl-js-ripple-effect mdl-js-ripple-effect--ignore-events is-upgraded"
                     for="{{ choice.0 }}">
                         <input id="{{ choice.0 }}" class="mdl-radio__button" name="contact_type" value="{{ choice.0 }}" type="radio"
-                         {% ifequal form.contact_type.value choice.0 %} checked="checked" {% endifequal %} />
+                         {% if form.contact_type.value == choice.0 %} checked="checked" {% endif %} />
                         <span class="mdl-radio__label">{{ choice.1 }}</span>
                         <span class="mdl-radio__outer-circle"></span>
                         <span class="mdl-radio__inner-circle"></span>
