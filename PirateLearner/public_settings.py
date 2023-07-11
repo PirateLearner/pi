@@ -4,6 +4,7 @@ gettext = lambda s: s
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 ABSOLUTE_PATH = lambda x: os.path.join(os.path.abspath(os.path.dirname(__file__)), x)
 
+
 # Timezone
 TIME_ZONE = 'Asia/Kolkata'
 # Language code for this installation. All choices can be found here:
@@ -32,7 +33,7 @@ ROOT_URLCONF = 'PirateLearner.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'PirateLearner.wsgi.application'
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
-
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.

@@ -41,7 +41,7 @@ class Annotation(BaseContentClass):
     #Privacy reset for Spam protection, if annotations has been shared (and marked as offensive)
     privacy_override = models.BooleanField(default=False)
     #Shared with these users.
-    shared_with = models.ManyToManyField(User, through="AnnotationShareMap", null=True, blank=True)
+    shared_with = models.ManyToManyField(User, through="AnnotationShareMap", blank=True)
     
     #Statistics related stuff
     date_created = models.DateTimeField(auto_now_add=True)
