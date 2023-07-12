@@ -88,7 +88,7 @@ Messages
                 
                 {% for message in chats %}
                         <!-- Message. Default to the left -->
-                        {% ifequal message.sender request.user %}
+                        {% if message.sender == request.user %}
 
                         <!-- Message to the right -->
                         <div class="direct-chat-msg right">
@@ -111,7 +111,7 @@ Messages
                           </div><!-- /.direct-chat-text -->
                         </div><!-- /.direct-chat-msg -->
                         
-                        {% endifequal %}
+                        {% endif %}
                 {% endfor %}
                       </div><!--/.direct-chat-messages-->
 					</div><!-- /.box-body -->                

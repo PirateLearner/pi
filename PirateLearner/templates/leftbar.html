@@ -25,47 +25,47 @@
 	</div>
 	
     <ul class="nav nav-pills nav-stacked navbar-collapse collapse" id="sidenavbarCollapse">
-        <li><a href="{% url 'dashboard:dashboard-home' %}" class="{% ifequal active 'dashboard' %} active {% endifequal %}">
+        <li><a href="{% url 'dashboard:dashboard-home' %}" class="{% if active == 'dashboard' %} active {% endif %}">
         	<span class="glyphicon glyphicon-dashboard"></span> Dashboard</a>
         </li>
-        <li><a href="{% url 'dashboard:dashboard-profile' user_id=request.user.id %}" class="{% ifequal active 'profile' %} active {% endifequal %}">
+        <li><a href="{% url 'dashboard:dashboard-profile' user_id=request.user.id %}" class="{% if active == 'profile' %} active {% endif %}">
         	<span class="glyphicon glyphicon-user"></span> Profile</a>
         </li>
-        <li><a href="{% url 'dashboard:dashboard-bookmarks' %}" class="{% ifequal active 'bookmark' %} active {% endifequal %}">
+        <li><a href="{% url 'dashboard:dashboard-bookmarks' %}" class="{% if active == 'bookmark' %} active {% endif %}">
         	<span class="glyphicon glyphicon-bookmark"></span> Bookmarks</a>
         </li>
-		<li><a href="{% url 'blogging:content-type' %}" class="{% ifequal active 'create' %} active {% endifequal %}">
+		<li><a href="{% url 'blogging:content-type' %}" class="{% if active == 'create' %} active {% endif %}">
 			<span class="glyphicon glyphicon-plus-sign"></span> Create Article</a>
 		</li>
 		{% comment %}  Create Bookmarks {% endcomment %}
-		<li><a href="{% url 'bookmarks:add_bookmark' %}" class="{% ifequal active 'create_bookmark' %} active {% endifequal %}">
+		<li><a href="{% url 'bookmarks:add_bookmark' %}" class="{% if active == 'create_bookmark' %} active {% endif %}">
 			<span class="glyphicon glyphicon-plus-sign"></span> Create Bookmarks</a>
 		</li>                  		                  
-        <li><a href="{% url 'dashboard:dashboard-published' %}" class="{% ifequal active 'published' %} active {% endifequal %}">
+        <li><a href="{% url 'dashboard:dashboard-published' %}" class="{% if active == 'published' %} active {% endif %}">
         	<span class="glyphicon glyphicon-saved"></span> Publication</a>
         </li>
-        <li><a href="{% url 'dashboard:dashboard-pending' %}" class="{% ifequal active 'pending' %} active {% endifequal %}">
+        <li><a href="{% url 'dashboard:dashboard-pending' %}" class="{% if active == 'pending' %} active {% endif %}">
         	<span class="glyphicon glyphicon-export"></span> Pending</a>
         </li>                
-        <li><a href="{% url 'dashboard:dashboard-draft' %}" class="{% ifequal active 'draft' %} active {% endifequal %}">
+        <li><a href="{% url 'dashboard:dashboard-draft' %}" class="{% if active == 'draft' %} active {% endif %}">
         	<span class="glyphicon glyphicon-import"></span> Draft</a>
         </li>                                                        
 		{% if request.user.is_staff %}
-		<li><a href=" {% url 'dashboard:dashboard-admin-articles'%}" class="{% ifequal active 'manage' %} active {% endifequal %}"> 
+		<li><a href=" {% url 'dashboard:dashboard-admin-articles'%}" class="{% if active == 'manage' %} active {% endif %}"> 
 			<span class="glyphicon glyphicon-tasks"></span> Review</a>
 		</li>
-		<li><a href=" {% url 'bookmarks:manage_bookmarks'%}" class="{% ifequal active 'manage_bookmark' %} active {% endifequal %}"> 
+		<li><a href=" {% url 'bookmarks:manage_bookmarks'%}" class="{% if active == 'manage_bookmark' %} active {% endif %}"> 
 			<span class="glyphicon glyphicon-tasks"></span> Manage Bookmarks</a>
 		</li>
-		<li><a href=" {% url 'blogging:manage_articles'%}" class="{% ifequal active 'manage_articles' %} active {% endifequal %}"> 
+		<li><a href=" {% url 'blogging:manage_articles'%}" class="{% if active == 'manage_articles' %} active {% endif %}"> 
 			<span class="glyphicon glyphicon-tasks"></span> Manage Articles</a>
 		</li>
 		
 		{% endif %}
             	
     	<li class="divider-vertical">Messages</li>
-        <li><a href="{% url 'messages:new_message' %}" class="{% ifequal active 'compose' %} active {% endifequal %}"><span class="glyphicon glyphicon-pencil"></span> Compose</a></li>
-        <li><a href="{% url 'messages:home_message' %}" class="{% ifequal active 'inbox' %} active {% endifequal %}"><span class="glyphicon glyphicon-envelope"></span> Inbox</a></li>
+        <li><a href="{% url 'messages:new_message' %}" class="{% if active == 'compose' %} active {% endif %}"><span class="glyphicon glyphicon-pencil"></span> Compose</a></li>
+        <li><a href="{% url 'messages:home_message' %}" class="{% if active == 'inbox' %} active {% endif %}"><span class="glyphicon glyphicon-envelope"></span> Inbox</a></li>
     </ul>
 {% endif %}
 </div>
